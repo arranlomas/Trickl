@@ -1,0 +1,21 @@
+package com.schiwfty.tex.splash
+
+import android.content.Context
+
+/**
+ * Created by arran on 16/04/2017.
+ */
+interface SplashContract {
+    interface View{
+        fun progressToMain()
+        fun showError(stringId: Int)
+        fun showInfo(stringId: Int)
+        fun showSuccess(stringId: Int)
+    }
+
+    interface  Presenter{
+        fun setupConfluenceAsset(context: Context)
+        fun setup(view: SplashContract.View)
+        fun setClienctAddress()
+    }
+}

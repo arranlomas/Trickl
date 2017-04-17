@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Trickl</string>
+
+
+    <!--Splash-->
+    <string name="splash_copy_confluence_error">error setting up </string>
+    <string name="splash_start_confluence_error">error setting up</string>
+    <string name="splash_start_confluence_success">ready to go!</string>
+</resources>
