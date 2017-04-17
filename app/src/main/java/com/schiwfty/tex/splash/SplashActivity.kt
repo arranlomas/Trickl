@@ -15,12 +15,11 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        presenter.setup(this)
+        presenter.setup(this, this)
     }
 
     override fun onStart() {
         super.onStart()
-        presenter.setClienctAddress()
         presenter.startConfluenceDaemon(this)
     }
 

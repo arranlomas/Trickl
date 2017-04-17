@@ -15,7 +15,6 @@ interface SplashContract {
 
     interface  Presenter{
         fun startConfluenceDaemon(context: Context)
-        fun setup(view: SplashContract.View)
-        fun setClienctAddress()
+        fun setup(context: Context, view: SplashContract.View)
     }
 }

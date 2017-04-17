@@ -9,8 +9,9 @@ import android.support.v4.app.NotificationCompat
 import com.schiwfty.tex.R
 import com.schiwfty.tex.main.MainActivity
 import es.dmoral.toasty.Toasty
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
+
 /**
  * Created by arran on 17/04/2017.
  */

@@ -1,12 +1,13 @@
 package com.schiwfty.tex.confluence
 
 import android.content.Context
-import android.os.Environment
 import android.util.Log
 import com.schiwfty.tex.Constants
 import com.schiwfty.tex.extensions.copyInputStreamToFile
-import io.reactivex.Observable
-import java.io.*
+import rx.Observable
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
 import java.net.ServerSocket
 
 /**
