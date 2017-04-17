@@ -21,7 +21,7 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
     override fun onStart() {
         super.onStart()
         presenter.setClienctAddress()
-        presenter.setupConfluenceAsset(this)
+        presenter.startConfluenceDaemon(this)
     }
 
     override fun progressToMain() {
