@@ -2,11 +2,12 @@ package com.schiwfty.tex.confluence
 
 import android.content.Context
 import android.util.Log
-import com.schiwfty.tex.Constants
-import com.schiwfty.tex.dagger.utilities.JavaUtils
-import com.schiwfty.tex.dagger.utilities.captureOutput
+import com.schiwfty.tex.tools.Constants
+import com.schiwfty.tex.tools.JavaUtils
+import com.schiwfty.tex.tools.captureOutput
 import rx.Observable
-import java.io.*
+import java.io.IOException
+import java.io.InputStream
 import java.net.ServerSocket
 
 /**

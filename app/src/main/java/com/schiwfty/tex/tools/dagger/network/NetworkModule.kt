@@ -1,11 +1,11 @@
-package com.schiwfty.tex.dagger.network
+package com.schiwfty.tex.tools.dagger.network
 
 import android.content.Context
 
 
 import com.readystatesoftware.chuck.ChuckInterceptor
-import com.schiwfty.tex.Constants
-import com.schiwfty.tex.retrofit.ClientAPI
+import com.schiwfty.tex.tools.Constants
+import com.schiwfty.tex.tools.retrofit.ClientAPI
 
 import dagger.Module
 import dagger.Provides

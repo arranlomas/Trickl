@@ -1,4 +1,4 @@
-package com.schiwfty.tex.dagger.utilities
+package com.schiwfty.tex.tools
 
 
 import rx.Observable

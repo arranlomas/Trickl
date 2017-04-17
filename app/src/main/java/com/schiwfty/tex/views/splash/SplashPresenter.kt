@@ -1,15 +1,15 @@
-package com.schiwfty.tex.splash
+package com.schiwfty.tex.views.splash
 
 import android.content.Context
 import android.content.Intent
 import com.schiwfty.tex.R
 import com.schiwfty.tex.confluence.Confluence
 import com.schiwfty.tex.confluence.ConfluenceDaemonService
-import com.schiwfty.tex.dagger.context.ContextModule
-import com.schiwfty.tex.dagger.network.DaggerNetworkComponent
-import com.schiwfty.tex.dagger.network.NetworkModule
-import com.schiwfty.tex.dagger.utilities.composeIoWithRetry
-import com.schiwfty.tex.retrofit.HttpController
+import com.schiwfty.tex.tools.composeIoWithRetry
+import com.schiwfty.tex.tools.dagger.context.ContextModule
+import com.schiwfty.tex.tools.dagger.network.DaggerNetworkComponent
+import com.schiwfty.tex.tools.dagger.network.NetworkModule
+import com.schiwfty.tex.tools.retrofit.HttpController
 import rx.schedulers.Schedulers
 import javax.inject.Inject
 

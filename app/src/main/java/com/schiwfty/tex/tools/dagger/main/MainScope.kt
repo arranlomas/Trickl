@@ -1,4 +1,4 @@
-package com.schiwfty.tex.dagger.main
+package com.schiwfty.tex.tools.dagger.main
 
 import javax.inject.Scope
 

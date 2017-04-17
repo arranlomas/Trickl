@@ -1,10 +1,10 @@
-package com.schiwfty.tex.dagger.network
+package com.schiwfty.tex.tools.dagger.network
 
 
-import com.schiwfty.tex.dagger.context.ContextModule
-import com.schiwfty.tex.retrofit.HttpController
-import com.schiwfty.tex.splash.SplashActivity
-import com.schiwfty.tex.splash.SplashPresenter
+import com.schiwfty.tex.tools.dagger.context.ContextModule
+import com.schiwfty.tex.tools.retrofit.HttpController
+import com.schiwfty.tex.views.splash.SplashActivity
+import com.schiwfty.tex.views.splash.SplashPresenter
 
 import dagger.Component
 

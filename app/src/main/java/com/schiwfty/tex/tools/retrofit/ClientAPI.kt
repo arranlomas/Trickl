@@ -1,4 +1,4 @@
-package com.schiwfty.tex.retrofit
+package com.schiwfty.tex.tools.retrofit
 
 /**
  * Created by arran on 4/02/2017.

@@ -1,10 +1,9 @@
-package com.schiwfty.tex.dagger.utilities
+package com.schiwfty.tex.tools
 
 /**
  * Created by arran on 17/04/2017.
  */
 import android.util.Log
-import com.schiwfty.tex.dagger.utilities.RetryAfterTimeoutWithDelay
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers

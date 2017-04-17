@@ -1,8 +1,8 @@
-package com.schiwfty.tex.dagger.context
+package com.schiwfty.tex.tools.dagger.context
 
 import android.content.Context
 
-import com.schiwfty.tex.dagger.network.NetworkScope
+import com.schiwfty.tex.tools.dagger.network.NetworkScope
 
 import dagger.Module
 import dagger.Provides

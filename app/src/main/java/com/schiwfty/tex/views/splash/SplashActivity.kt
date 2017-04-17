@@ -1,11 +1,11 @@
-package com.schiwfty.tex.splash
+package com.schiwfty.tex.views.splash
 
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.schiwfty.tex.R
-import com.schiwfty.tex.main.MainActivity
+import com.schiwfty.tex.views.main.MainActivity
 import com.tbruyelle.rxpermissions.RxPermissions
 import es.dmoral.toasty.Toasty
 

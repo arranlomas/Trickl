@@ -1,4 +1,4 @@
-package com.schiwfty.tex.retrofit
+package com.schiwfty.tex.tools.retrofit
 
 
 import javax.inject.Inject

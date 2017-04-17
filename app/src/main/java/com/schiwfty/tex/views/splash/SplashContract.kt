@@ -1,4 +1,4 @@
-package com.schiwfty.tex.splash
+package com.schiwfty.tex.views.splash
 
 import android.content.Context
 

@@ -2,16 +2,13 @@ package com.schiwfty.tex.confluence
 
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 import com.schiwfty.tex.R
-import com.schiwfty.tex.dagger.utilities.composeIo
-import com.schiwfty.tex.main.MainActivity
+import com.schiwfty.tex.tools.composeIo
+import com.schiwfty.tex.views.main.MainActivity
 import es.dmoral.toasty.Toasty
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 /**
  * Created by arran on 17/04/2017.

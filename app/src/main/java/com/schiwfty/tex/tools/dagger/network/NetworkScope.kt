@@ -1,4 +1,4 @@
-package com.schiwfty.tex.dagger.network
+package com.schiwfty.tex.tools.dagger.network
 
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
