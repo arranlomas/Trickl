@@ -1,4 +1,4 @@
-package com.schiwfty.tex.views.splash
+package com.schiwfty.tex.views.splash.mvp
 
 import android.content.Context
 
@@ -15,6 +15,6 @@ interface SplashContract {
 
     interface  Presenter{
         fun startConfluenceDaemon(context: Context)
-        fun setup(context: Context, view: SplashContract.View)
+        fun setup(context: Context, view: View)
     }
 }

@@ -14,9 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.schiwfty.tex.views.main.MainActivity" />
+        <activity android:name="com.schiwfty.tex.views.main.mvp.MainActivity" />
 
-        <activity android:name="com.schiwfty.tex.views.splash.SplashActivity">
+        <activity android:name="com.schiwfty.tex.views.splash.mvp.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

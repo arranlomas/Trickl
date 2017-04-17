@@ -1,7 +1,7 @@
 package com.schiwfty.tex.tools.dagger.main
 
 import com.schiwfty.tex.tools.dagger.network.NetworkComponent
-import com.schiwfty.tex.views.main.MainActivity
+import com.schiwfty.tex.views.main.mvp.MainActivity
 
 import dagger.Component
 

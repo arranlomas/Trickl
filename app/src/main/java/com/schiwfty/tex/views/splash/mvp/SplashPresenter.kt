@@ -1,4 +1,4 @@
-package com.schiwfty.tex.views.splash
+package com.schiwfty.tex.views.splash.mvp
 
 import android.content.Context
 import android.content.Intent
