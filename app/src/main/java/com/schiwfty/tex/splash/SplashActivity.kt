@@ -1,30 +1,43 @@
 package com.schiwfty.tex.splash
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.schiwfty.tex.R
 import com.schiwfty.tex.main.MainActivity
+import com.tbruyelle.rxpermissions.RxPermissions
 import es.dmoral.toasty.Toasty
 
 
 class SplashActivity : AppCompatActivity(), SplashContract.View {
 
     val presenter = SplashPresenter()
+    lateinit var rxPermissions: RxPermissions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        rxPermissions = RxPermissions(this)
         presenter.setup(this, this)
     }
 
     override fun onStart() {
         super.onStart()
-        presenter.startConfluenceDaemon(this)
+        rxPermissions
+                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe { granted ->
+                    if (granted) {
+                        presenter.startConfluenceDaemon(this)
+                    } else {
+                        showError(R.string.write_permissions_error)
+                    }
+                }
     }
 
     override fun progressToMain() {
         intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
         finish()
     }
 

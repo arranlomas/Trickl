@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 import com.schiwfty.tex.R
+import com.schiwfty.tex.dagger.utilities.composeIo
 import com.schiwfty.tex.main.MainActivity
 import es.dmoral.toasty.Toasty
 import rx.android.schedulers.AndroidSchedulers
@@ -62,8 +63,7 @@ class ConfluenceDaemonService: Service() {
 
     private fun startConfluence(){
         Confluence.getSetupObservable(this)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+                .composeIo()
                 .subscribe({
                     if(it)Toasty.success(this, getString(R.string.splash_start_confluence_success))
                     else  Toasty.error(this, getString(R.string.splash_start_confluence_error))

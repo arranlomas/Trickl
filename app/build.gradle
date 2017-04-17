@@ -45,6 +45,9 @@ dependencies {
     compile group: 'io.reactivex', name: 'rxkotlin', version: '1.0.0'
     compile 'io.reactivex:rxandroid:1.2.1'
 
+    //RTXPERMISSIONS
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.3@aar'
+
     //TOASTY
     compile 'com.github.GrenderG:Toasty:1.1.4'
 

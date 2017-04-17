@@ -3,11 +3,10 @@ package com.schiwfty.tex.confluence
 import android.content.Context
 import android.util.Log
 import com.schiwfty.tex.Constants
-import com.schiwfty.tex.extensions.copyInputStreamToFile
+import com.schiwfty.tex.dagger.utilities.JavaUtils
+import com.schiwfty.tex.dagger.utilities.captureOutput
 import rx.Observable
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.IOException
+import java.io.*
 import java.net.ServerSocket
 
 /**
@@ -24,9 +23,6 @@ object Confluence {
     }
 
     private fun getCopyAndStartObservable(context: Context): Observable<Boolean> {
-        if (isConfluenceInstalled(context)) {
-            return getStartObservable(context)
-        }
         return getCopyObservable(context).flatMap { getStartObservable(context) }
     }
 
@@ -35,15 +31,13 @@ object Confluence {
     }
 
     private fun getStartObservable(context: Context): Observable<Boolean> {
-        if (isConfluenceInstalled(context)) {
-            return Observable.just(false).doOnNext { throw IllegalStateException("Confluence is not installed!") }
-        }
         return Observable.just(startConfluence(context))
     }
 
     private fun isConfluenceInstalled(context: Context): Boolean {
         val file = context.getFileStreamPath(Constants.confluenceFileName)
-        if (file == null || !file.exists()) {
+        if(!Constants.torrentRepo.exists()) Constants.torrentRepo.mkdirs()
+        if (file == null || !file.exists() || !Constants.torrentRepo.exists()) {
             return false
         }
         return true
@@ -62,45 +56,46 @@ object Confluence {
     @Throws(IOException::class)
     private fun executeCommand(context: Context): Process {
         val file = context.getFileStreamPath(Constants.confluenceFileName)
-        val url = Constants.localhostUrl
-        val port = Constants.daemonPort
-        val path = Constants.torrentRepo
-        val absolutePath = Constants.torrentRepo.absolutePath
-        val cmd = file.absolutePath + " -addr= $url $port  -fileDir= + $absolutePath +  -torrentGrace=-10h -seed=true"
-        return Runtime.getRuntime().exec(cmd, null, path)
+        file.setExecutable(true)
+        val workingDir = Constants.torrentRepo
+        Log.v("WORKING DIR", workingDir.getAbsolutePath())
+        if (!workingDir.exists()) workingDir.mkdirs()
+        val cmd = file.absolutePath + " -addr=" + Constants.localhostUrl + Constants.daemonPort + " -fileDir=" + workingDir.getAbsolutePath() + " -torrentGrace=-10h" + " -seed=true"
+
+        Log.v("COMMAND", cmd)
+        return Runtime.getRuntime().exec(cmd, null, workingDir)
     }
 
 
     private fun copyConfluenceAsset(context: Context): Boolean {
+        Log.v("DAEMON", "copying confluence asset")
+        val assetManager = context.assets
+        val files: Array<String>
         try {
-            Log.v("DAEMON", "copying confluence asset")
-            val assetManager = context.assets
-            val files: Array<String>
             files = assetManager.list("")
-            files.forEach {
-                if (it == Constants.confluenceFileName) {
-                    val input = assetManager.open(it)
-                    val outputFile = File(context.getFilesDir(), Constants.confluenceFileName)
-                    outputFile.copyInputStreamToFile(input)
-                }
-            }
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
+        } catch (e: IOException) {
+            Log.e("tag", "Failed to get asset file list.", e)
             return false
         }
 
+        for (filename in files) {
+            if (filename == Constants.confluenceFileName) {
+                val `in`: InputStream
+                try {
+                    `in` = assetManager.open(filename)
+                    val fos = context.openFileOutput(Constants.confluenceFileName, Context.MODE_PRIVATE)
+                    JavaUtils.copyFile(`in`, fos)
+                    `in`.close()
+                    fos.flush()
+                    fos.close()
+                } catch (e: IOException) {
+                    Log.e("tag", "Failed to copy asset file: " + filename, e)
+                    return false
+                }
+
+            }
+        }
         return isConfluenceInstalled(context)
-
-    }
-
-    internal fun Process.captureOutput() {
-        errorStream.bufferedReader().use {
-            Log.v("ERROR", "value: " + it.readText())
-        }
-
-        inputStream.bufferedReader().use {
-            Log.v("STD OUT", "value: " + it.readText())
-        }
     }
 
     fun setClientAddress() {
