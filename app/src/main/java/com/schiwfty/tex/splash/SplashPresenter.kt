@@ -51,7 +51,7 @@ class SplashPresenter : SplashContract.Presenter {
 
 
     fun listenForDaemon() {
-        httpController.getStatus().subscribeOn(Schedulers.io())
+        httpController.status.subscribeOn(Schedulers.io())
                 .composeForIoTasks()
                 .subscribe(object : Subscriber<ResponseBody>() {
                     override fun onCompleted() {
