@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--theme-->
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!--torrent list item-->
+    <color name="cardview_light_background">#FFFFFFFF</color>
+    <color name="divider">#E0E0E0</color>
+    <color name="blackoutBackground">#d9393939</color>
+    <color name="whiteText">#DDDDDD</color>
 </resources>

@@ -3,15 +3,16 @@ package com.schiwfty.tex.views.main.mvp
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.schiwfty.tex.R
-import com.schiwfty.tex.views.main.fragments.all.mvp.AllFragment
+import com.schiwfty.tex.views.all.mvp.AllFragment
 import es.dmoral.toasty.Toasty
 
 class MainActivity : AppCompatActivity(), MainContract.View {
-    val presenter = MainPresenter()
+    lateinit var presenter: MainContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        presenter = MainPresenter()
         presenter.setup(this, this)
         showAllFragment()
 
