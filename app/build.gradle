@@ -26,39 +26,32 @@ kapt {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-
     testCompile 'junit:junit:4.12'
-
     //DAGGER2
     compile 'com.google.dagger:dagger:2.9'
     kapt 'com.google.dagger:dagger-compiler:2.9'
-
     //RX
-    compile group: 'io.reactivex', name: 'rxkotlin', version: '1.0.0'
+    compile 'io.reactivex:rxkotlin:1.0.0'
     compile 'io.reactivex:rxandroid:1.2.1'
-
     //RTXPERMISSIONS
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.3@aar'
-
     //TOASTY
     compile 'com.github.GrenderG:Toasty:1.1.4'
-
     //RETROFIT
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
-
     //CHUCK
     debugCompile 'com.readystatesoftware.chuck:library:1.0.3'
     releaseCompile 'com.readystatesoftware.chuck:library-no-op:1.0.3'
+    compile files('libs/jTorrentParser.jar')
 }
 repositories {
     mavenCentral()

@@ -13,10 +13,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         presenter.setup(this, this)
+        showAllFragment()
 
-        val transaction = fragmentManager.beginTransaction()
-        transaction.add(R.id.main_content, AllFragment.newInstance())
-        transaction.commit()
     }
 
     override fun showError(stringId: Int) {
@@ -30,4 +28,12 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     override fun showSuccess(stringId: Int) {
         Toasty.success(this, getString(stringId))
     }
+
+    override fun showAllFragment() {
+        val transaction = fragmentManager.beginTransaction()
+        transaction.add(R.id.main_content, AllFragment.newInstance())
+        transaction.commit()
+    }
+
+
 }
