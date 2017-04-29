@@ -1,4 +1,4 @@
-package com.schiwfty.tex.tools
+package com.schiwfty.tex.utils
 
 
 import rx.Observable

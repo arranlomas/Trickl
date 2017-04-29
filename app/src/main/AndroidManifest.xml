@@ -12,7 +12,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".MyApplication">
 
         <activity android:name="com.schiwfty.tex.views.main.mvp.MainActivity" />
 
@@ -28,7 +29,6 @@
             android:name=".confluence.ConfluenceDaemonService"
             android:enabled="true"
             android:exported="false" />
-
 
 
     </application>

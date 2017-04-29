@@ -1,12 +1,13 @@
-package com.schiwfty.tex.tools.dagger.network
+package com.schiwfty.tex.dagger.network
+
 
 import android.content.Context
-
-
 import com.readystatesoftware.chuck.ChuckInterceptor
-import com.schiwfty.tex.tools.Constants
-import com.schiwfty.tex.tools.retrofit.ClientAPI
-
+import com.schiwfty.tex.repositories.ITorrentRepository
+import com.schiwfty.tex.repositories.TorrentRepository
+import com.schiwfty.tex.retrofit.ClientAPI
+import com.schiwfty.tex.retrofit.ConfluenceApi
+import com.schiwfty.tex.utils.Constants
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -19,6 +20,19 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 
 @Module
 class NetworkModule {
+
+    @Provides
+    @NetworkScope
+    internal fun provideTorrentRepository(confluenceApi: ConfluenceApi): ITorrentRepository {
+        return TorrentRepository(confluenceApi)
+
+    }
+
+    @Provides
+    @NetworkScope
+    internal fun providesHttpController(clientAPI: ClientAPI): ConfluenceApi {
+        return ConfluenceApi(clientAPI)
+    }
 
     @Provides
     @NetworkScope

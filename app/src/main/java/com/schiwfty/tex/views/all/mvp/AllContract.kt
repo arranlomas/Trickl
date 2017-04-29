@@ -1,4 +1,4 @@
-package com.schiwfty.tex.views.main.mvp
+package com.schiwfty.tex.views.all.mvp
 
 import android.content.Context
 
@@ -6,13 +6,14 @@ import android.content.Context
  * Created by arran on 16/04/2017.
  */
 interface AllContract {
-    interface View{
+    interface View {
         fun showError(stringId: Int)
         fun showInfo(stringId: Int)
         fun showSuccess(stringId: Int)
     }
 
-    interface  Presenter{
-        fun setup(context: Context, view: AllContract.View)
+    interface Presenter {
+        fun setup(context: Context, view: View)
+        fun getTorrentInfo(hash: String)
     }
 }

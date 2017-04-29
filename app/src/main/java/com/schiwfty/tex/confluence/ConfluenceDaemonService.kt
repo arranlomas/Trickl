@@ -6,18 +6,18 @@ import android.content.Intent
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 import com.schiwfty.tex.R
-import com.schiwfty.tex.tools.composeIo
+import com.schiwfty.tex.utils.composeIo
 import com.schiwfty.tex.views.main.mvp.MainActivity
 import es.dmoral.toasty.Toasty
 
 /**
  * Created by arran on 17/04/2017.
  */
-class ConfluenceDaemonService: Service() {
+class ConfluenceDaemonService : Service() {
     private val NOTIFICATION_ID = 12345
     var STOP_STRING = "STOP"
 
-    companion object{
+    companion object {
         val TAG = "DAEMON_SERVICE_TAG"
     }
 
@@ -58,12 +58,12 @@ class ConfluenceDaemonService: Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun startConfluence(){
+    private fun startConfluence() {
         Confluence.getSetupObservable(this)
                 .composeIo()
                 .subscribe({
-                    if(it)Toasty.success(this, getString(R.string.splash_start_confluence_success))
-                    else  Toasty.error(this, getString(R.string.splash_start_confluence_error))
+                    if (it) Toasty.success(this, getString(R.string.splash_start_confluence_success))
+                    else Toasty.error(this, getString(R.string.splash_start_confluence_error))
                 }, {
                     Toasty.error(this, getString(R.string.splash_start_confluence_error))
                 })

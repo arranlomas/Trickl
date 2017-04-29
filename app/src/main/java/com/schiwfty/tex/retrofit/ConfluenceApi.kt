@@ -1,7 +1,5 @@
-package com.schiwfty.tex.tools.retrofit
+package com.schiwfty.tex.retrofit
 
-
-import javax.inject.Inject
 
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -13,8 +11,7 @@ import rx.Observable
  */
 
 
-class HttpController @Inject
-constructor(private val clientAPI: ClientAPI) {
+class ConfluenceApi(private val clientAPI: ClientAPI) {
 
     fun getInfo(hash: String): Observable<ResponseBody> {
         return clientAPI.getInfo(hash)
@@ -25,8 +22,8 @@ constructor(private val clientAPI: ClientAPI) {
         return clientAPI.postTorrent(hash, requestBody)
     }
 
-    val status: Observable<ResponseBody>
-        get() = clientAPI.status
+    val getStatus: Observable<ResponseBody>
+        get() = clientAPI.getStatus()
 
 
 }

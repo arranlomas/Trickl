@@ -2,13 +2,14 @@ package com.schiwfty.tex.confluence
 
 import android.content.Context
 import android.util.Log
-import com.schiwfty.tex.tools.Constants
-import com.schiwfty.tex.tools.JavaUtils
-import com.schiwfty.tex.tools.captureOutput
+import com.schiwfty.tex.utils.Constants
+import com.schiwfty.tex.utils.JavaUtils
+import com.schiwfty.tex.utils.captureOutput
 import rx.Observable
 import java.io.IOException
 import java.io.InputStream
 import java.net.ServerSocket
+
 
 /**
  * Created by arran on 11/04/2017.
@@ -37,7 +38,7 @@ object Confluence {
 
     private fun isConfluenceInstalled(context: Context): Boolean {
         val file = context.getFileStreamPath(Constants.confluenceFileName)
-        if(!Constants.torrentRepo.exists()) Constants.torrentRepo.mkdirs()
+        if (!Constants.torrentRepo.exists()) Constants.torrentRepo.mkdirs()
         if (file == null || !file.exists() || !Constants.torrentRepo.exists()) {
             return false
         }
@@ -66,7 +67,6 @@ object Confluence {
         Log.v("COMMAND", cmd)
         return Runtime.getRuntime().exec(cmd, null, workingDir)
     }
-
 
     private fun copyConfluenceAsset(context: Context): Boolean {
         Log.v("DAEMON", "copying confluence asset")
@@ -100,14 +100,14 @@ object Confluence {
     }
 
     fun setClientAddress() {
-        val port = getAvaiablePort().toString()
+        val port = getAvailablePort().toString()
         val addr = "http://" + Constants.localhostUrl + port
         Log.v("AVAILABLE ADDR", addr)
         Constants.daemonPort = port
         Constants.fullUrl = addr
     }
 
-    private fun getAvaiablePort(): Int {
+    private fun getAvailablePort(): Int {
         var s: ServerSocket? = null
         var streamPort = -1
         try {
@@ -127,5 +127,7 @@ object Confluence {
         }
         return streamPort
     }
+
+
 
 }

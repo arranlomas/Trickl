@@ -1,4 +1,4 @@
-package com.schiwfty.tex.tools.retrofit
+package com.schiwfty.tex.retrofit
 
 /**
  * Created by arran on 4/02/2017.
@@ -22,6 +22,6 @@ interface ClientAPI {
     @GET("/info")
     fun getInfo(@Query("ih") info_hash: String): Observable<ResponseBody>
 
-    @get:GET("/status")
-    val status: Observable<ResponseBody>
+    @GET("/status")
+    fun getStatus(): Observable<ResponseBody>
 }

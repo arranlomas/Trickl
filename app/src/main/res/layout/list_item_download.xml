@@ -70,7 +70,7 @@
             android:layout_toEndOf="@+id/coverImage"
             android:singleLine="false"
             android:layout_toLeftOf="@+id/speed"
-            android:layout_toStartOf="@+id/speed"/>
+            android:layout_toStartOf="@+id/speed" />
 
         <TextView
             android:id="@+id/size"
@@ -215,8 +215,7 @@
                 android:layout_alignParentBottom="true"
                 android:id="@+id/download_hold_hint"
                 android:visibility="gone"
-                android:layout_marginBottom="2dp"/>
-
+                android:layout_marginBottom="2dp" />
 
 
         </RelativeLayout>

@@ -26,13 +26,18 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
         super.onStart()
         rxPermissions
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe { granted ->
-                    if (granted) {
+                .subscribe {
+                    if (it) {
                         presenter.startConfluenceDaemon(this)
                     } else {
                         showError(R.string.write_permissions_error)
                     }
                 }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
     }
 
     override fun progressToMain() {

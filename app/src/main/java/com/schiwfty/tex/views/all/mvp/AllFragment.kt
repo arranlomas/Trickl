@@ -7,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.tex.R
-import com.schiwfty.tex.models.Torrent
 import com.schiwfty.tex.views.all.list.AllAdapter
-import com.schiwfty.tex.views.main.mvp.AllContract
 import com.schiwfty.tex.views.main.mvp.AllPresenter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_all.*
@@ -17,11 +15,11 @@ import kotlinx.android.synthetic.main.frag_all.*
 /**
  * Created by arran on 17/04/2017.
  */
-class AllFragment private constructor(): Fragment(), AllContract.View {
+class AllFragment private constructor() : Fragment(), AllContract.View {
     lateinit var presenter: AllContract.Presenter
     lateinit var adapter: AllAdapter
 
-    companion object{
+    companion object {
         fun newInstance(): AllFragment {
             val allFragment = AllFragment()
             val args = Bundle()
@@ -46,7 +44,6 @@ class AllFragment private constructor(): Fragment(), AllContract.View {
         all_recycler_view.setHasFixedSize(true)
         all_recycler_view.layoutManager = LinearLayoutManager(activity)
         all_recycler_view.adapter = adapter
-
     }
 
     override fun showError(stringId: Int) {

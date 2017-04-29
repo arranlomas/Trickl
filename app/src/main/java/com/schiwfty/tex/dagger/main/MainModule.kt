@@ -1,7 +1,7 @@
-package com.schiwfty.tex.tools.dagger.main
+package com.schiwfty.tex.dagger.main
 
 
-import com.schiwfty.tex.tools.dagger.network.NetworkModule
+import com.schiwfty.tex.dagger.network.NetworkModule
 
 import dagger.Module
 
