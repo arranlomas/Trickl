@@ -10,4 +10,6 @@ class MyApplication : Application() {
     override fun onCreate() {
         TricklComponent.install(this)
     }
+
+
 }

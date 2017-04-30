@@ -1,8 +1,8 @@
 package com.schiwfty.tex.dagger.network
 
 
+import com.schiwfty.tex.confluence.ConfluenceHeartbeat
 import com.schiwfty.tex.dagger.context.ContextModule
-import com.schiwfty.tex.retrofit.ClientAPI
 import com.schiwfty.tex.views.splash.mvp.SplashPresenter
 import dagger.Component
 
@@ -13,8 +13,8 @@ import dagger.Component
 @NetworkScope
 @Component(modules = arrayOf(NetworkModule::class, ContextModule::class))
 interface NetworkComponent {
-    fun getClientApi(): ClientAPI
-    fun injectSplashPresenter(splashPresenter: SplashPresenter)
+    fun inject(splashPresenter: SplashPresenter)
+    fun inject(confluenceHeartbeat: ConfluenceHeartbeat)
 }
 
 
