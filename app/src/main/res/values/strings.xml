@@ -10,4 +10,5 @@
 
     <!--permissions-->
     <string name="write_permissions_error">Cannot proceed to use the app without storage permissions</string>
+    <string name="get_torrent_error">BALLS</string>
 </resources>

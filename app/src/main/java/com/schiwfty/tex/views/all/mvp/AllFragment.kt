@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.tex.R
 import com.schiwfty.tex.views.all.list.AllAdapter
-import com.schiwfty.tex.views.main.mvp.AllPresenter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_all.*
 
@@ -33,6 +32,8 @@ class AllFragment private constructor() : Fragment(), AllContract.View {
         presenter = AllPresenter()
         presenter.setup(activity, this)
         adapter = AllAdapter()
+
+        presenter.getTorrentInfo("test")
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {

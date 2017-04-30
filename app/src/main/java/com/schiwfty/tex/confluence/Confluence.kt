@@ -3,7 +3,6 @@ package com.schiwfty.tex.confluence
 import android.content.Context
 import android.util.Log
 import com.schiwfty.tex.utils.Constants
-import com.schiwfty.tex.utils.JavaUtils
 import com.schiwfty.tex.utils.captureOutput
 import rx.Observable
 import java.io.IOException
@@ -85,7 +84,7 @@ object Confluence {
                 try {
                     `in` = assetManager.open(filename)
                     val fos = context.openFileOutput(Constants.confluenceFileName, Context.MODE_PRIVATE)
-                    JavaUtils.copyFile(`in`, fos)
+                    `in`.copyTo(fos)
                     `in`.close()
                     fos.flush()
                     fos.close()
@@ -127,7 +126,6 @@ object Confluence {
         }
         return streamPort
     }
-
 
 
 }

@@ -18,14 +18,14 @@ object TricklComponent {
     var heartbeat: PublishSubject<Boolean> = PublishSubject.create<Boolean>()
 
     private val heartbeatThread = Thread({
-        while (running){
-          networkComponent.getClientApi().getStatus()
-                  .composeIo()
-                  .subscribe ({
-                      heartbeat.onNext(true)
-                  },{
-                      heartbeat.onNext(false)
-                  })
+        while (running) {
+            networkComponent.getClientApi().getStatus()
+                    .composeIo()
+                    .subscribe({
+                        heartbeat.onNext(true)
+                    }, {
+                        heartbeat.onNext(false)
+                    })
             Thread.sleep(1000)
         }
     })
@@ -40,7 +40,7 @@ object TricklComponent {
         Confluence.setClientAddress()
     }
 
-    fun shutdown(){
+    fun shutdown() {
         running = false
     }
 }

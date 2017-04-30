@@ -3,16 +3,13 @@ package com.schiwfty.tex.repositories
 import com.schiwfty.tex.retrofit.ConfluenceApi
 import com.schiwfty.tex.utils.composeIoWithRetry
 import rx.Observable
-import java.util.concurrent.TimeUnit
-import javax.xml.datatype.DatatypeConstants.SECONDS
-
 
 
 /**
  * Created by arran on 29/04/2017.
  */
 class TorrentRepository(val confluenceApi: ConfluenceApi) : ITorrentRepository {
-    var  runningHeartbeat = true
+    var runningHeartbeat = true
 
 //    override fun getClientHeartbeat(): Observable<Boolean> {
 ////        return Observable.fromCallable<Any> { confluenceApi.getGetStatus }

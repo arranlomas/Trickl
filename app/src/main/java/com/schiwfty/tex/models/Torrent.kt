@@ -1,7 +1,6 @@
 package com.schiwfty.tex.models
 
 /**
- * Created by arran on 19/04/2017.
+ * Created by arran on 30/04/2017.
  */
-class Torrent {
-}
+data class Torrent constructor(val name: String)

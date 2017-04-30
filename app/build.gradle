@@ -59,10 +59,12 @@ dependencies {
     //CHUCK
     debugCompile 'com.readystatesoftware.chuck:library:1.0.3'
     releaseCompile 'com.readystatesoftware.chuck:library-no-op:1.0.3'
-    compile files('libs/jTorrentParser.jar')
 
     //Number progress bar
     compile 'com.daimajia.numberprogressbar:library:1.2@aar'
+
+    // IO UTILS
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
 }
 repositories {
     mavenCentral()
