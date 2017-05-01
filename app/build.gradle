@@ -65,6 +65,8 @@ dependencies {
 
     // IO UTILS
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
+
+    compile project(':balls')
 }
 repositories {
     mavenCentral()
