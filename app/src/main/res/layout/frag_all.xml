@@ -4,6 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/allTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/all_recycler_view"
         android:scrollbars="vertical"

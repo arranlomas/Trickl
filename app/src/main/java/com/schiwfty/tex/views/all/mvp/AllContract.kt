@@ -10,10 +10,12 @@ interface AllContract {
         fun showError(stringId: Int)
         fun showInfo(stringId: Int)
         fun showSuccess(stringId: Int)
+        fun updateStatus(string: String)
     }
 
     interface Presenter {
         fun setup(context: Context, view: View)
         fun getTorrentInfo(hash: String)
+        fun updateStatus()
     }
 }

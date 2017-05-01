@@ -15,10 +15,12 @@ class TorrentRepository(val confluenceApi: ConfluenceApi) : ITorrentRepository {
     override fun getStatus(): Observable<String> {
         return confluenceApi.getStatus
                 .composeIo()
-                .map { it.toString() }
+                .map { it.string() }
     }
 
-    override fun getTorrentInfo(hash: String) {
-
+    override fun getTorrentInfo(hash: String): Observable<String> {
+        return confluenceApi.getInfo(hash)
+                .composeIo()
+                .map { it.toString() }
     }
 }

@@ -44,6 +44,7 @@ class SplashPresenter : SplashContract.Presenter {
                 .subscribe({
                     view.showSuccess(R.string.splash_start_confluence_success)
                     view.progressToMain()
+                    subscriptions.unsubscribe()
                 }, {
                     view.showError(R.string.splash_start_confluence_error)
                 }))

@@ -5,14 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".views.main.mvp.MainActivity">
 
-    <TextView
-        android:id="@+id/mainText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MainText"
-        tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="16dp" />
-
     <FrameLayout
         android:id="@+id/main_content"
         android:layout_width="368dp"

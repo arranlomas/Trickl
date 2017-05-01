@@ -10,6 +10,7 @@ import com.schiwfty.tex.R
 import com.schiwfty.tex.views.all.list.AllAdapter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_all.*
+import kotlin.concurrent.thread
 
 /**
  * Created by arran on 17/04/2017.
@@ -33,7 +34,16 @@ class AllFragment private constructor() : Fragment(), AllContract.View {
         presenter.setup(activity, this)
         adapter = AllAdapter()
 
-        presenter.getTorrentInfo("test")
+       thread {
+           presenter.updateStatus()
+           Thread.sleep(1000)
+           presenter.getTorrentInfo("70842956a125fc686984e5f7e5c5b82b497fcbd0")
+           Thread.sleep(1000)
+           do {
+               presenter.updateStatus()
+               Thread.sleep(1000)
+           }while (true)
+       }.start()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -57,5 +67,10 @@ class AllFragment private constructor() : Fragment(), AllContract.View {
 
     override fun showSuccess(stringId: Int) {
         Toasty.success(activity, getString(stringId))
+    }
+
+    override fun updateStatus(string: String) {
+        if(isAdded&&isVisible)
+        allTextView.text = string
     }
 }

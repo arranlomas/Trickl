@@ -15,91 +15,16 @@ import java.net.ServerSocket
  */
 object Confluence {
 
-    fun getSetupObservable(context: Context): Observable<Boolean> {
-        if (isConfluenceInstalled(context)) {
-            return getStartObservable(context)
-        } else {
-            return getCopyAndStartObservable(context)
+    fun startConfluence(): Boolean {
+        val mainThread = Thread{
+            balls.Balls.main()
         }
-    }
-
-    private fun getCopyAndStartObservable(context: Context): Observable<Boolean> {
-        return getCopyObservable(context).flatMap { getStartObservable(context) }
-    }
-
-    private fun getCopyObservable(context: Context): Observable<Boolean> {
-        return Observable.just(copyConfluenceAsset(context)).doOnError { e -> throw e }
-    }
-
-    private fun getStartObservable(context: Context): Observable<Boolean> {
-        return Observable.just(startConfluence(context))
-    }
-
-    private fun isConfluenceInstalled(context: Context): Boolean {
-        val file = context.getFileStreamPath(Constants.confluenceFileName)
-        if (!Constants.torrentRepo.exists()) Constants.torrentRepo.mkdirs()
-        if (file == null || !file.exists() || !Constants.torrentRepo.exists()) {
-            return false
-        }
+        mainThread.start()
         return true
     }
-
-    private fun startConfluence(context: Context): Boolean {
-        try {
-            executeCommand(context).captureOutput()
-            return true
-        } catch (e: IOException) {
-            e.printStackTrace()
-            return false
-        }
-    }
-
-    @Throws(IOException::class)
-    private fun executeCommand(context: Context): Process {
-        val file = context.getFileStreamPath(Constants.confluenceFileName)
-        file.setExecutable(true)
-        val workingDir = Constants.torrentRepo
-        Log.v("WORKING DIR", workingDir.getAbsolutePath())
-        if (!workingDir.exists()) workingDir.mkdirs()
-        val cmd = file.absolutePath + " -addr=" + Constants.localhostUrl + Constants.daemonPort + " -fileDir=" + workingDir.getAbsolutePath() + " -torrentGrace=-10h" + " -seed=true"
-
-        Log.v("COMMAND", cmd)
-        return Runtime.getRuntime().exec(cmd, null, workingDir)
-    }
-
-    private fun copyConfluenceAsset(context: Context): Boolean {
-        Log.v("DAEMON", "copying confluence asset")
-        val assetManager = context.assets
-        val files: Array<String>
-        try {
-            files = assetManager.list("")
-        } catch (e: IOException) {
-            Log.e("tag", "Failed to get asset file list.", e)
-            return false
-        }
-
-        for (filename in files) {
-            if (filename == Constants.confluenceFileName) {
-                val `in`: InputStream
-                try {
-                    `in` = assetManager.open(filename)
-                    val fos = context.openFileOutput(Constants.confluenceFileName, Context.MODE_PRIVATE)
-                    `in`.copyTo(fos)
-                    `in`.close()
-                    fos.flush()
-                    fos.close()
-                } catch (e: IOException) {
-                    Log.e("tag", "Failed to copy asset file: " + filename, e)
-                    return false
-                }
-
-            }
-        }
-        return isConfluenceInstalled(context)
-    }
-
     fun setClientAddress() {
-        val port = getAvailablePort().toString()
+        var port = getAvailablePort().toString()
+        port = "8080"
         val addr = "http://" + Constants.localhostUrl + port
         Log.v("AVAILABLE ADDR", addr)
         Constants.daemonPort = port
