@@ -1,5 +1,6 @@
 package com.schiwfty.tex.repositories
 
+import com.schiwfty.tex.models.TorrentInfo
 import rx.Observable
 
 /**
@@ -8,5 +9,5 @@ import rx.Observable
 interface ITorrentRepository {
     fun getStatus(): Observable<String>
 
-    fun getTorrentInfo(hash: String): Observable<String>
+    fun getTorrentInfo(hash: String): Observable<TorrentInfo>
 }

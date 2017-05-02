@@ -15,6 +15,7 @@ interface AllContract {
 
     interface Presenter {
         fun setup(context: Context, view: View)
+        fun testGetInfo(hash: String)
         fun getTorrentInfo(hash: String)
         fun updateStatus()
     }

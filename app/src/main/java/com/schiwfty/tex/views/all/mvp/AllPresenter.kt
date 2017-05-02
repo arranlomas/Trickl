@@ -31,18 +31,9 @@ class AllPresenter : AllContract.Presenter {
     override fun getTorrentInfo(hash: String) {
         torrentRepository.getTorrentInfo(hash)
                 .subscribe({
-                    it.length
+                    it.name
                 },{
                     it.printStackTrace()
-                })
-        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path + File.separator + "test.torrent")
-        Observable.fromCallable { file.getAsTorrent() }
-                .composeIo()
-                .subscribe({
-                    it?.name
-                }, {
-                    it.printStackTrace()
-                    view.showError(R.string.get_torrent_error)
                 })
     }
 
@@ -55,4 +46,24 @@ class AllPresenter : AllContract.Presenter {
                     it.printStackTrace()
                 })
     }
+
+    override fun testGetInfo(hash: String) {
+       torrentRepository.getStatus()
+               .flatMap {
+                   torrentRepository.getTorrentInfo(hash)
+               }
+               .flatMap {
+                   torrentRepository.getStatus()
+               }
+               .subscribe ({
+                   //SUCCESS
+               },{
+                   //ERROR
+               })
+    }
+
+    private fun testDownload(hash: String){
+
+    }
+
 }
