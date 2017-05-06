@@ -28,7 +28,7 @@ class ConfluenceDaemonService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        startConfluence()
+        Confluence.startConfluence()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -56,11 +56,6 @@ class ConfluenceDaemonService : Service() {
         }
 
         return super.onStartCommand(intent, flags, startId)
-    }
-
-    private fun startConfluence() {
-        Confluence.setClientAddress()
-        Confluence.startConfluence()
     }
 
 }

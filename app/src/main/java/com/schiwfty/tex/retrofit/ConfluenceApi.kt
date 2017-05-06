@@ -1,12 +1,10 @@
 package com.schiwfty.tex.retrofit
 
 
-import com.schiwfty.tex.utils.Constants
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import rx.Observable
-import java.io.File
 
 
 /**

@@ -1,8 +1,8 @@
 package com.schiwfty.tex.repositories
 
+import com.schiwfty.tex.confluence.Confluence.torrentRepo
 import com.schiwfty.tex.models.TorrentInfo
 import com.schiwfty.tex.retrofit.ConfluenceApi
-import com.schiwfty.tex.utils.Constants
 import com.schiwfty.tex.utils.composeIo
 import com.schiwfty.tex.utils.getAsTorrent
 import rx.Observable
@@ -25,16 +25,8 @@ class TorrentRepository(val confluenceApi: ConfluenceApi) : ITorrentRepository {
         return confluenceApi.getInfo(hash)
                 .composeIo()
                 .map {
-                    it.bytes()
-                }
-                .map {
-                    val file: File = File(Constants.torrentRepo, "$hash.torrent")
-                    file.createNewFile()
-                    file.writeBytes(it)
-                    file
-                }
-                .map {
-                    it.getAsTorrent()
+                    val file: File = File(torrentRepo, "$hash.torrent")
+                    file.getAsTorrent()
                 }
     }
 }

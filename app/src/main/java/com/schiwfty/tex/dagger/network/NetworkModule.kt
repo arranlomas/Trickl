@@ -7,7 +7,6 @@ import com.schiwfty.tex.repositories.ITorrentRepository
 import com.schiwfty.tex.repositories.TorrentRepository
 import com.schiwfty.tex.retrofit.ClientAPI
 import com.schiwfty.tex.retrofit.ConfluenceApi
-import com.schiwfty.tex.utils.Constants
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -64,7 +63,7 @@ class NetworkModule {
     @Provides
     @NetworkScope
     internal fun provideBaseUrl(): String {
-        return Constants.fullUrl
+        return "http://127.0.0.1:8080"
     }
 
 }

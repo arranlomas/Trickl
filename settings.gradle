@@ -1,1 +1,1 @@
-include ':app', ':balls'
+include ':app', ':trickl'

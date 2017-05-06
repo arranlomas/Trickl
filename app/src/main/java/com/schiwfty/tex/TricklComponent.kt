@@ -20,7 +20,7 @@ object TricklComponent {
                 .networkModule(NetworkModule())
                 .contextModule(ContextModule(context))
                 .build()
-        Confluence.setClientAddress()
+        //TODO set client address here!
         confluenceHeartbeat =  ConfluenceHeartbeat()
         networkComponent.inject(confluenceHeartbeat)
         confluenceHeartbeat.setup()

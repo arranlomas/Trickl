@@ -1,12 +1,9 @@
 package com.schiwfty.tex.confluence
 
-import android.content.Context
+import android.os.Environment
 import android.util.Log
-import com.schiwfty.tex.utils.Constants
-import com.schiwfty.tex.utils.captureOutput
-import rx.Observable
+import java.io.File
 import java.io.IOException
-import java.io.InputStream
 import java.net.ServerSocket
 
 
@@ -14,21 +11,19 @@ import java.net.ServerSocket
  * Created by arran on 11/04/2017.
  */
 object Confluence {
+    lateinit var fullUrl: String
+    val confluenceFileName = "confluence"
+    val localhostUrl = "127.0.0.1:"
+    lateinit var daemonPort: String
+    val workingDir: File = File(Environment.getExternalStorageDirectory().path + File.separator + "cloudburst")
+    val torrentRepo: File = File(workingDir.absolutePath + File.separator + "torrents")
 
     fun startConfluence(): Boolean {
         val mainThread = Thread{
-            balls.Balls.main()
+            trickl.Trickl.main(workingDir.absolutePath)
         }
         mainThread.start()
         return true
-    }
-    fun setClientAddress() {
-        var port = getAvailablePort().toString()
-        port = "8080"
-        val addr = "http://" + Constants.localhostUrl + port
-        Log.v("AVAILABLE ADDR", addr)
-        Constants.daemonPort = port
-        Constants.fullUrl = addr
     }
 
     private fun getAvailablePort(): Int {

@@ -29,11 +29,15 @@ class AllPresenter : AllContract.Presenter {
     }
 
     override fun getTorrentInfo(hash: String) {
-        torrentRepository.getTorrentInfo(hash)
-                .subscribe({
-                    it.name
+        torrentRepository.getStatus()
+                .flatMap {
+                    torrentRepository.getTorrentInfo(hash)
+                }
+                .subscribe ({
+                    torrentRepository.getStatus()
+                    //SUCCESS
                 },{
-                    it.printStackTrace()
+                    //ERROR
                 })
     }
 
@@ -48,18 +52,7 @@ class AllPresenter : AllContract.Presenter {
     }
 
     override fun testGetInfo(hash: String) {
-       torrentRepository.getStatus()
-               .flatMap {
-                   torrentRepository.getTorrentInfo(hash)
-               }
-               .flatMap {
-                   torrentRepository.getStatus()
-               }
-               .subscribe ({
-                   //SUCCESS
-               },{
-                   //ERROR
-               })
+
     }
 
     private fun testDownload(hash: String){
