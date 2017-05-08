@@ -67,6 +67,9 @@ dependencies {
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
 
     compile project(':trickl')
+
+    //Start Tab - https://github.com/ogaclejapan/SmartTabLayout
+    compile 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
 }
 repositories {
     mavenCentral()

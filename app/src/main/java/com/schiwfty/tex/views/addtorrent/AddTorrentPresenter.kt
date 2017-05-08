@@ -25,7 +25,7 @@ class AddTorrentPresenter : AddTorrentContract.Presenter {
         }
     }
 
-    override fun addTorrent(hash: String) {
+    override fun fetchTorrent(hash: String) {
         torrentRepository.getTorrentInfoFromCache(hash)
                 .subscribe({
                     //SUCCESS
@@ -34,6 +34,10 @@ class AddTorrentPresenter : AddTorrentContract.Presenter {
                     view.showError(R.string.error_get_torrent_info)
                     //ERROR
                 })
+    }
+
+    override fun notifyAddTorrentClicked(hash: String) {
+
     }
 
 

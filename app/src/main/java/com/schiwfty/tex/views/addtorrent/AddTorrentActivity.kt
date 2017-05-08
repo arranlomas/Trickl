@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.schiwfty.tex.R
-import com.schiwfty.tex.views.torrentdetails.mvp.TorrentDetailsFragment
-import com.schiwfty.tex.views.torrentfiles.mvp.TorrentFilesFragment
+import com.schiwfty.tex.views.addtorrent.tabs.AddTorrentPagerAdapter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_add_torrent.*
+
 
 /**
  * Created by arran on 7/05/2017.
@@ -26,8 +26,21 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
         setContentView(R.layout.activity_add_torrent)
         presenter = AddTorrentPresenter()
         presenter.setup(this, this, intent.extras)
-        presenter.addTorrent(presenter.torrentHash)
+        presenter.fetchTorrent(presenter.torrentHash)
+
+        addTorrentFab.setOnClickListener {
+            presenter.notifyAddTorrentClicked(presenter.torrentHash)
+        }
+
+        setSupportActionBar(addTorrentToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.title = getString(R.string.add_torrent_title)
+        addTorrentToolbar.setNavigationOnClickListener{
+            super.onBackPressed()
+        }
     }
+
 
     override fun showError(stringId: Int) {
         Toasty.error(this, getString(stringId))
@@ -41,23 +54,12 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
         Toasty.success(this, getString(stringId))
     }
 
-    fun showDetailsFragment() {
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.addTorrentFrameLayout, TorrentDetailsFragment.newInstance(presenter.torrentHash))
-                .commit()
-    }
-
-    fun showFilesFragment() {
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.addTorrentFrameLayout, TorrentFilesFragment.newInstance(presenter.torrentHash))
-                .commit()
-    }
-
 
     override fun notifyTorrentAdded() {
         addTorrentProgressBar.visibility = View.GONE
-        addTorrentFrameLayout.visibility = View.VISIBLE
-//        showDetailsFragment()
-        showFilesFragment()
+        addTorrentViewPager.visibility = View.VISIBLE
+        val adapter = AddTorrentPagerAdapter(supportFragmentManager, presenter.torrentHash)
+        addTorrentViewPager.adapter = adapter
+        addTorrentSmartTab.setViewPager(addTorrentViewPager)
     }
 }

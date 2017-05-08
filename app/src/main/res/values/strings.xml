@@ -23,4 +23,5 @@
     <string name="summary_torrent_creation_date_title">Torrent Creation Date</string>
     <string name="summary_torrent_created_by_title">TORRENT CREATED BY</string>
     <string name="error_get_torrent_info">Error fetching torrent info</string>
+    <string name="add_torrent_title">Add Torrent</string>
 </resources>
