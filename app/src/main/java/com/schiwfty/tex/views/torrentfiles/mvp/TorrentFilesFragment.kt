@@ -2,21 +2,15 @@ package com.schiwfty.tex.views.torrentfiles.mvp
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.tex.R
-import com.schiwfty.tex.confluence.Confluence
 import com.schiwfty.tex.models.TorrentInfo
-import com.schiwfty.tex.utils.formatBytesAsSize
 import com.schiwfty.tex.views.torrentfiles.list.TorrentFilesAdapter
-import com.schiwfty.tex.views.torrentfiles.mvp.TorrentFilesContract
-import com.schiwfty.tex.views.torrentfiles.mvp.TorrentFilesPresenter
-import kotlinx.android.synthetic.main.frag_torrent_details.*
 import kotlinx.android.synthetic.main.frag_torrent_files.*
-import java.io.File
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 
 
 /**
@@ -46,7 +40,7 @@ class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        if(inflater == null) throw IllegalStateException("Torrent Files Fragment layout inflater is null!")
+        if (inflater == null) throw IllegalStateException("Torrent Files Fragment layout inflater is null!")
         val view = inflater.inflate(R.layout.frag_torrent_files, container, false)
         return view
     }

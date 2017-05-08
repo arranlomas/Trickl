@@ -16,7 +16,7 @@ class TorrentFileCardHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         this.torrentFile = torrentFile
         var name = ""
         torrentFile.fileDirs?.forEachIndexed { index, s ->
-            if (index == (torrentFile.fileDirs.size-1))
+            if (index == (torrentFile.fileDirs.size - 1))
                 name += s
             else
                 name += "$s/"

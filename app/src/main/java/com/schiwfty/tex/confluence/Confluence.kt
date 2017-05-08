@@ -1,7 +1,6 @@
 package com.schiwfty.tex.confluence
 
 import android.os.Environment
-import android.util.Log
 import java.io.File
 import java.io.IOException
 import java.net.ServerSocket
@@ -12,14 +11,13 @@ import java.net.ServerSocket
  */
 object Confluence {
     lateinit var fullUrl: String
-    val confluenceFileName = "confluence"
     val localhostUrl = "127.0.0.1:"
     lateinit var daemonPort: String
     val workingDir: File = File(Environment.getExternalStorageDirectory().path + File.separator + "cloudburst")
     val torrentRepo: File = File(workingDir.absolutePath + File.separator + "torrents")
 
     fun startConfluence(): Boolean {
-        val mainThread = Thread{
+        val mainThread = Thread {
             trickl.Trickl.main(workingDir.absolutePath)
         }
         mainThread.start()

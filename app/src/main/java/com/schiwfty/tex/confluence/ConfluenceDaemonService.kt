@@ -6,9 +6,7 @@ import android.content.Intent
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 import com.schiwfty.tex.R
-import com.schiwfty.tex.utils.composeIo
 import com.schiwfty.tex.views.main.mvp.MainActivity
-import es.dmoral.toasty.Toasty
 
 /**
  * Created by arran on 17/04/2017.

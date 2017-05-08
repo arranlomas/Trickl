@@ -1,7 +1,6 @@
 package com.schiwfty.tex.views.main.mvp
 
 import android.content.Context
-import com.schiwfty.tex.R
 import com.schiwfty.tex.TricklComponent
 import com.schiwfty.tex.repositories.ITorrentRepository
 import javax.inject.Inject
@@ -18,7 +17,6 @@ class MainPresenter : MainContract.Presenter {
         this.view = view
         TricklComponent.networkComponent.inject(this)
     }
-
 
 
 }

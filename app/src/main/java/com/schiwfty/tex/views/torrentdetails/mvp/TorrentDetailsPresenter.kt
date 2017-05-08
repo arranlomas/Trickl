@@ -9,7 +9,7 @@ import javax.inject.Inject
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentDetailsPresenter: TorrentDetailsContract.Presenter {
+class TorrentDetailsPresenter : TorrentDetailsContract.Presenter {
 
     lateinit var view: TorrentDetailsContract.View
     lateinit override var torrentHash: String
@@ -20,7 +20,7 @@ class TorrentDetailsPresenter: TorrentDetailsContract.Presenter {
     override fun setup(context: Context, view: TorrentDetailsContract.View, arguments: Bundle?) {
         TricklComponent.networkComponent.inject(this)
         this.view = view
-        if(arguments?.containsKey(TorrentDetailsFragment.ARG_TORRENT_HASH) ?: false){
+        if (arguments?.containsKey(TorrentDetailsFragment.ARG_TORRENT_HASH) ?: false) {
             torrentHash = arguments?.getString(TorrentDetailsFragment.ARG_TORRENT_HASH) ?: ""
         }
 
@@ -28,9 +28,9 @@ class TorrentDetailsPresenter: TorrentDetailsContract.Presenter {
 
     override fun loadTorrent(torrentHash: String) {
         torrentRepository.getTorrentInfoFromCache(torrentHash)
-                .subscribe ({
+                .subscribe({
                     view.setupViewFromTorrentInfo(it)
-                },{
+                }, {
                     TODO("ERROR HANDLING")
                 })
 

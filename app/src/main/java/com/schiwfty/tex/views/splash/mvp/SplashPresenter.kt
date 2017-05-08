@@ -6,8 +6,6 @@ import com.schiwfty.tex.R
 import com.schiwfty.tex.TricklComponent
 import com.schiwfty.tex.confluence.ConfluenceDaemonService
 import com.schiwfty.tex.repositories.ITorrentRepository
-import com.schiwfty.tex.utils.composeIo
-import com.schiwfty.tex.utils.composeIoWithRetry
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 

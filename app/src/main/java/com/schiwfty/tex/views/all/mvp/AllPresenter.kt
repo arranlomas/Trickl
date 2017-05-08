@@ -1,15 +1,6 @@
 package com.schiwfty.tex.views.all.mvp
 
 import android.content.Context
-import android.os.Environment
-import com.schiwfty.tex.R
-import com.schiwfty.tex.TricklComponent
-import com.schiwfty.tex.repositories.ITorrentRepository
-import com.schiwfty.tex.utils.composeIo
-import com.schiwfty.tex.utils.getAsTorrent
-import rx.Observable
-import java.io.File
-import javax.inject.Inject
 
 /**
  * Created by arran on 16/04/2017.
