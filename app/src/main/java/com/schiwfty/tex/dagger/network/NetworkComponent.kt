@@ -1,9 +1,9 @@
 package com.schiwfty.tex.dagger.network
 
 
-import com.schiwfty.tex.confluence.ConfluenceHeartbeat
 import com.schiwfty.tex.dagger.context.ContextModule
-import com.schiwfty.tex.views.all.mvp.AllPresenter
+import com.schiwfty.tex.views.addtorrent.AddTorrentPresenter
+import com.schiwfty.tex.views.main.mvp.MainPresenter
 import com.schiwfty.tex.views.splash.mvp.SplashPresenter
 import dagger.Component
 
@@ -15,8 +15,8 @@ import dagger.Component
 @Component(modules = arrayOf(NetworkModule::class, ContextModule::class))
 interface NetworkComponent {
     fun inject(splashPresenter: SplashPresenter)
-    fun inject(confluenceHeartbeat: ConfluenceHeartbeat)
-    fun inject(allPresenter: AllPresenter)
+    fun inject(addTorrentPresenter: AddTorrentPresenter)
+    fun inject(mainPresenter: MainPresenter)
 }
 
 

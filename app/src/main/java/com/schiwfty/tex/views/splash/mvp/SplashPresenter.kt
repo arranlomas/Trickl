@@ -7,6 +7,7 @@ import com.schiwfty.tex.TricklComponent
 import com.schiwfty.tex.confluence.ConfluenceDaemonService
 import com.schiwfty.tex.repositories.ITorrentRepository
 import com.schiwfty.tex.utils.composeIo
+import com.schiwfty.tex.utils.composeIoWithRetry
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
@@ -26,10 +27,6 @@ class SplashPresenter : SplashContract.Presenter {
         TricklComponent.networkComponent.inject(this)
     }
 
-    override fun destroy() {
-        subscriptions.unsubscribe()
-    }
-
     override fun startConfluenceDaemon(context: Context) {
         val daemonIntent = Intent(context, ConfluenceDaemonService::class.java)
         daemonIntent.addCategory(ConfluenceDaemonService.TAG)
@@ -38,13 +35,13 @@ class SplashPresenter : SplashContract.Presenter {
     }
 
 
-    fun listenForDaemon() {
-        subscriptions.add(TricklComponent.confluenceHeartbeat.heartbeatObservable
-                .composeIo()
+    private fun listenForDaemon() {
+        subscriptions.add(torrentRepository.getStatus()
+                .retry()
                 .subscribe({
+                    subscriptions.unsubscribe()
                     view.showSuccess(R.string.splash_start_confluence_success)
                     view.progressToMain()
-                    subscriptions.unsubscribe()
                 }, {
                     view.showError(R.string.splash_start_confluence_error)
                 }))

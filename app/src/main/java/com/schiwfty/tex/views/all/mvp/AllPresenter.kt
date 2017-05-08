@@ -19,44 +19,10 @@ class AllPresenter : AllContract.Presenter {
     lateinit var view: AllContract.View
     lateinit var context: Context
 
-    @Inject
-    lateinit var torrentRepository: ITorrentRepository
-
     override fun setup(context: Context, view: AllContract.View) {
         this.view = view
         this.context = context
-        TricklComponent.networkComponent.inject(this)
     }
 
-    override fun getTorrentInfo(hash: String) {
-        torrentRepository.getStatus()
-                .flatMap {
-                    torrentRepository.getTorrentInfo(hash)
-                }
-                .subscribe ({
-                    torrentRepository.getStatus()
-                    //SUCCESS
-                },{
-                    //ERROR
-                })
-    }
-
-    override fun updateStatus() {
-        torrentRepository.getStatus()
-                .subscribe({
-                    view.updateStatus(it)
-                },{
-                    view.updateStatus(it.message ?: "ERROR")
-                    it.printStackTrace()
-                })
-    }
-
-    override fun testGetInfo(hash: String) {
-
-    }
-
-    private fun testDownload(hash: String){
-
-    }
 
 }

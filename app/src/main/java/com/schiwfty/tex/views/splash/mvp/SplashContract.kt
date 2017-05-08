@@ -16,6 +16,5 @@ interface SplashContract {
     interface Presenter {
         fun startConfluenceDaemon(context: Context)
         fun setup(context: Context, view: View)
-        fun destroy()
     }
 }

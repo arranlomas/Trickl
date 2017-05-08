@@ -35,15 +35,10 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
                 }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.destroy()
-    }
-
     override fun progressToMain() {
+        finish()
         intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
-        finish()
     }
 
     override fun showError(stringId: Int) {

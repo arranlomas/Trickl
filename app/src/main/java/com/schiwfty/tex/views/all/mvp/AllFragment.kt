@@ -32,7 +32,6 @@ class AllFragment : Fragment(), AllContract.View {
         presenter = AllPresenter()
         presenter.setup(activity, this)
         adapter = AllAdapter()
-        presenter.getTorrentInfo("70842956a125fc686984e5f7e5c5b82b497fcbd0")
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {

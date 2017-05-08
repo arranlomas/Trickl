@@ -11,6 +11,7 @@ interface MainContract {
         fun showInfo(stringId: Int)
         fun showSuccess(stringId: Int)
         fun showAllFragment()
+        fun showAddTorrentActivity(hash: String)
     }
 
     interface Presenter {

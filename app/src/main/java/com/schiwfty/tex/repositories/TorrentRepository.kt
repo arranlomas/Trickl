@@ -14,19 +14,29 @@ import java.io.File
  */
 class TorrentRepository(val confluenceApi: ConfluenceApi) : ITorrentRepository {
 
-
     override fun getStatus(): Observable<String> {
         return confluenceApi.getStatus
                 .composeIo()
                 .map { it.string() }
     }
 
-    override fun getTorrentInfo(hash: String): Observable<TorrentInfo> {
+    override fun downloadTorrentInfo(hash: String): Observable<TorrentInfo> {
         return confluenceApi.getInfo(hash)
                 .composeIo()
                 .map {
+                    //HERE TO GET THE INFO IF WE WANT IT
+//                    val infoFile: File = File(torrentRepo, "$hash.info")
+//                    infoFile.createNewFile()
+//                    infoFile.writeBytes(it.bytes())
                     val file: File = File(torrentRepo, "$hash.torrent")
                     file.getAsTorrent()
                 }
+    }
+
+    override fun getTorrentInfo(hash: String): Observable<TorrentInfo> {
+        val file: File = File(torrentRepo, "$hash.torrent")
+        if(file.exists()) return Observable.just(file.getAsTorrent())
+
+        return downloadTorrentInfo(hash)
     }
 }

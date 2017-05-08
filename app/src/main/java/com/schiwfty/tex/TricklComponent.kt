@@ -1,8 +1,7 @@
 package com.schiwfty.tex
 
+//import com.schiwfty.tex.dagger.network.DaggerNetworkComponent
 import android.content.Context
-import com.schiwfty.tex.confluence.Confluence
-import com.schiwfty.tex.confluence.ConfluenceHeartbeat
 import com.schiwfty.tex.dagger.context.ContextModule
 import com.schiwfty.tex.dagger.network.DaggerNetworkComponent
 import com.schiwfty.tex.dagger.network.NetworkComponent
@@ -13,7 +12,6 @@ import com.schiwfty.tex.dagger.network.NetworkModule
  */
 object TricklComponent {
     lateinit var networkComponent: NetworkComponent
-    lateinit var confluenceHeartbeat: ConfluenceHeartbeat
 
     fun install(context: Context) {
         networkComponent = DaggerNetworkComponent.builder()
@@ -21,13 +19,5 @@ object TricklComponent {
                 .contextModule(ContextModule(context))
                 .build()
         //TODO set client address here!
-        confluenceHeartbeat =  ConfluenceHeartbeat()
-        networkComponent.inject(confluenceHeartbeat)
-        confluenceHeartbeat.setup()
-        confluenceHeartbeat.start()
-    }
-
-    fun shutdown() {
-        confluenceHeartbeat.stop()
     }
 }

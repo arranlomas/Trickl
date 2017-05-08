@@ -10,5 +10,18 @@
 
     <!--permissions-->
     <string name="write_permissions_error">Cannot proceed to use the app without storage permissions</string>
-    <string name="get_torrent_error">BALLS</string>
+
+
+    <string name="torrent_added">Torrent Added</string>
+
+    <!--Summary page-->
+    <string name="details_name_title">NAME</string>
+    <string name="details_storage_path_title">STORAGE PATH</string>
+    <string name="summary_size_title">TOTAL SIZE</string>
+    <string name="summary_number_of_files_title">NUMBER OF FILES</string>
+    <string name="summary_hash_title">HASH</string>
+    <string name="summary_comment_title">COMMENT</string>
+    <string name="summary_torrent_creation_date_title">Torrent Creation Date</string>
+    <string name="summary_torrent_created_by_title">TORRENT CREATED BY</string>
+    <string name="error_get_torrent_info">Error fetching torrent info</string>
 </resources>

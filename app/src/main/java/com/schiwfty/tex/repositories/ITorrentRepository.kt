@@ -9,5 +9,7 @@ import rx.Observable
 interface ITorrentRepository {
     fun getStatus(): Observable<String>
 
+    fun downloadTorrentInfo(hash: String): Observable<TorrentInfo>
+
     fun getTorrentInfo(hash: String): Observable<TorrentInfo>
 }
