@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.schiwfty.tex.R
 import com.schiwfty.tex.views.torrentdetails.mvp.TorrentDetailsFragment
+import com.schiwfty.tex.views.torrentfiles.mvp.TorrentFilesFragment
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_add_torrent.*
 
@@ -47,15 +48,16 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
     }
 
     fun showFilesFragment() {
-//        supportFragmentManager.beginTransaction()
-//                .replace(R.id.addTorrentFrameLayout, TorrentFilesFragmet.newInstance(presenter.torrentHash))
-//                .commit()
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.addTorrentFrameLayout, TorrentFilesFragment.newInstance(presenter.torrentHash))
+                .commit()
     }
 
 
     override fun notifyTorrentAdded() {
         addTorrentProgressBar.visibility = View.GONE
         addTorrentFrameLayout.visibility = View.VISIBLE
-        showDetailsFragment()
+//        showDetailsFragment()
+        showFilesFragment()
     }
 }

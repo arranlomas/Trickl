@@ -23,15 +23,15 @@ fun File.getAsTorrent(): TorrentInfo? {
     return torrentInfo
 }
 
-fun Long.formatBytesAsSize(context: Context): String{
+fun Long.formatBytesAsSize(): String{
         if (this > 0.1 * 1024.0 * 1024.0 * 1024.0) {
             val f = this.toFloat() / 1024f / 1024f / 1024f
-            return context.getString(R.string.size_gb, f)
+            return String.format("%1$.1f GB", f)
         } else if (this > 0.1 * 1024.0 * 1024.0) {
             val f = this.toFloat() / 1024f / 1024f
-            return context.getString(R.string.size_mb, f)
+            return String.format("%1$.1f MB", f)
         } else {
             val f = this / 1024f
-            return context.getString(R.string.size_kb, f)
+            return String.format("%1$.1f kb", f)
         }
 }

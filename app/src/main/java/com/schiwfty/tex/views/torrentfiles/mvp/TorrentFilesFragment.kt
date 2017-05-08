@@ -1,4 +1,4 @@
-package com.schiwfty.tex.views.torrentdetails.mvp
+package com.schiwfty.tex.views.torrentfiles.mvp
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -9,21 +9,29 @@ import com.schiwfty.tex.R
 import com.schiwfty.tex.confluence.Confluence
 import com.schiwfty.tex.models.TorrentInfo
 import com.schiwfty.tex.utils.formatBytesAsSize
+import com.schiwfty.tex.views.torrentfiles.list.TorrentFilesAdapter
+import com.schiwfty.tex.views.torrentfiles.mvp.TorrentFilesContract
+import com.schiwfty.tex.views.torrentfiles.mvp.TorrentFilesPresenter
 import kotlinx.android.synthetic.main.frag_torrent_details.*
+import kotlinx.android.synthetic.main.frag_torrent_files.*
 import java.io.File
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+
 
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentDetailsFragment : Fragment(), TorrentDetailsContract.View {
+class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
 
-    lateinit var presenter: TorrentDetailsContract.Presenter
+    lateinit var presenter: TorrentFilesContract.Presenter
+    val filesAdapter = TorrentFilesAdapter()
 
     companion object {
         val ARG_TORRENT_HASH = "arg_torrent_hash"
 
         fun newInstance(torrentFilePath: String): Fragment {
-            val frag = TorrentDetailsFragment()
+            val frag = TorrentFilesFragment()
             val args = Bundle()
             args.putString(ARG_TORRENT_HASH, torrentFilePath)
             frag.arguments = args
@@ -33,31 +41,30 @@ class TorrentDetailsFragment : Fragment(), TorrentDetailsContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter = TorrentDetailsPresenter()
+        presenter = TorrentFilesPresenter()
         presenter.setup(activity, this, arguments)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        if(inflater == null) throw IllegalStateException("Torrent Details Fragment layout inflater is null!")
-        val view = inflater.inflate(R.layout.frag_torrent_details, container, false)
+        if(inflater == null) throw IllegalStateException("Torrent Files Fragment layout inflater is null!")
+        val view = inflater.inflate(R.layout.frag_torrent_files, container, false)
         return view
     }
 
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        torrentFilesRecyclerView.adapter = filesAdapter
+        torrentFilesRecyclerView.setHasFixedSize(true)
+        val llm = LinearLayoutManager(context)
+        torrentFilesRecyclerView.layoutManager = llm as RecyclerView.LayoutManager?
+
+
         presenter.loadTorrent(presenter.torrentHash)
     }
 
     override fun setupViewFromTorrentInfo(torrentInfo: TorrentInfo) {
-        summaryName.text = torrentInfo.name
-        summaryStoragePath.text = "${Confluence.torrentRepo.absolutePath}${File.separator}${torrentInfo.info_hash}.torrent"
-        summarySize.text = torrentInfo.totalSize.formatBytesAsSize()
-        summaryFileCount.text = torrentInfo.fileList.size.toString()
-        summaryHash.text = torrentInfo.info_hash
-        summaryComment.text = torrentInfo.comment
-        summaryTorrentCreationDate.text = torrentInfo.creationDate.toString()
-        summaryTorrentCreatedWith.text = torrentInfo.createdBy
-
+        filesAdapter.torrentFiles = torrentInfo.fileList
+        filesAdapter.notifyDataSetChanged()
     }
 }

@@ -6,6 +6,7 @@ import com.schiwfty.tex.views.addtorrent.AddTorrentPresenter
 import com.schiwfty.tex.views.main.mvp.MainPresenter
 import com.schiwfty.tex.views.splash.mvp.SplashPresenter
 import com.schiwfty.tex.views.torrentdetails.mvp.TorrentDetailsPresenter
+import com.schiwfty.tex.views.torrentfiles.mvp.TorrentFilesPresenter
 import dagger.Component
 
 /**
@@ -19,6 +20,7 @@ interface NetworkComponent {
     fun inject(addTorrentPresenter: AddTorrentPresenter)
     fun inject(mainPresenter: MainPresenter)
     fun inject(torrentDetailsPresenter: TorrentDetailsPresenter)
+    fun inject(torrentFilesPresenter: TorrentFilesPresenter)
 }
 
 

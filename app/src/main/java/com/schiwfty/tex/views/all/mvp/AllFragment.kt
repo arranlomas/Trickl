@@ -2,12 +2,10 @@ package com.schiwfty.tex.views.all.mvp
 
 import android.app.Fragment
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.tex.R
-import com.schiwfty.tex.views.all.list.AllAdapter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_all.*
 
@@ -16,7 +14,6 @@ import kotlinx.android.synthetic.main.frag_all.*
  */
 class AllFragment : Fragment(), AllContract.View {
     lateinit var presenter: AllContract.Presenter
-    lateinit var adapter: AllAdapter
 
     companion object {
         fun newInstance(): AllFragment {
@@ -31,7 +28,6 @@ class AllFragment : Fragment(), AllContract.View {
         super.onCreate(savedInstanceState)
         presenter = AllPresenter()
         presenter.setup(activity, this)
-        adapter = AllAdapter()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -40,9 +36,6 @@ class AllFragment : Fragment(), AllContract.View {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        all_recycler_view.setHasFixedSize(true)
-        all_recycler_view.layoutManager = LinearLayoutManager(activity)
-        all_recycler_view.adapter = adapter
     }
 
     override fun showError(stringId: Int) {

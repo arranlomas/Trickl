@@ -1,4 +1,4 @@
-package com.schiwfty.tex.views.torrentdetails.mvp
+package com.schiwfty.tex.views.torrentfiles.mvp
 
 import android.content.Context
 import android.os.Bundle
@@ -9,28 +9,27 @@ import javax.inject.Inject
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentDetailsPresenter: TorrentDetailsContract.Presenter {
+class TorrentFilesPresenter : TorrentFilesContract.Presenter {
 
-    lateinit var view: TorrentDetailsContract.View
+    lateinit var view: TorrentFilesContract.View
     lateinit override var torrentHash: String
 
     @Inject
     lateinit var torrentRepository: ITorrentRepository
 
-    override fun setup(context: Context, view: TorrentDetailsContract.View, arguments: Bundle?) {
+    override fun setup(context: Context, view: TorrentFilesContract.View, arguments: Bundle?) {
         TricklComponent.networkComponent.inject(this)
         this.view = view
-        if(arguments?.containsKey(TorrentDetailsFragment.ARG_TORRENT_HASH) ?: false){
-            torrentHash = arguments?.getString(TorrentDetailsFragment.ARG_TORRENT_HASH) ?: ""
+        if (arguments?.containsKey(TorrentFilesFragment.ARG_TORRENT_HASH) ?: false) {
+            torrentHash = arguments?.getString(TorrentFilesFragment.ARG_TORRENT_HASH) ?: ""
         }
-
     }
 
     override fun loadTorrent(torrentHash: String) {
         torrentRepository.getTorrentInfoFromCache(torrentHash)
-                .subscribe ({
+                .subscribe({
                     view.setupViewFromTorrentInfo(it)
-                },{
+                }, {
                     TODO("ERROR HANDLING")
                 })
 
