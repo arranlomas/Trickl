@@ -11,5 +11,5 @@ interface ITorrentRepository {
 
     fun downloadTorrentInfo(hash: String): Observable<TorrentInfo>
 
-    fun getTorrentInfo(hash: String): Observable<TorrentInfo>
+    fun getTorrentInfoFromCache(hash: String): Observable<TorrentInfo>
 }

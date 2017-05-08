@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Trickl</string>
 
+    <!--FILE SIZES-->
+    <string name="size_kb">%1$.1f kb</string>
+    <string name="size_mb">%1$.1f MB</string>
+    <string name="size_gb">%1$.1f GB</string>
 
     <!--Splash-->
     <!--confluence-->

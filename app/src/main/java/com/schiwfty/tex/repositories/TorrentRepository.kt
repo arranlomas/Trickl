@@ -33,7 +33,7 @@ class TorrentRepository(val confluenceApi: ConfluenceApi) : ITorrentRepository {
                 }
     }
 
-    override fun getTorrentInfo(hash: String): Observable<TorrentInfo> {
+    override fun getTorrentInfoFromCache(hash: String): Observable<TorrentInfo> {
         val file: File = File(torrentRepo, "$hash.torrent")
         if(file.exists()) return Observable.just(file.getAsTorrent())
 

@@ -1,6 +1,7 @@
 package com.schiwfty.tex.views.torrentdetails.mvp
 
 import android.content.Context
+import android.os.Bundle
 import com.schiwfty.tex.models.TorrentInfo
 
 /**
@@ -13,7 +14,8 @@ interface TorrentDetailsContract {
     }
 
     interface Presenter {
-        fun setup(context: Context, view: View)
-        fun showTorrent(torrentFilePath: String)
+        fun setup(context: Context, view: TorrentDetailsContract.View, arguments: Bundle?)
+        fun getTorrent(torrentHash: String)
+        var torrentHash: String
     }
 }

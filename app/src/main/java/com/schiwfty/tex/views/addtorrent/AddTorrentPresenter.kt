@@ -26,7 +26,7 @@ class AddTorrentPresenter : AddTorrentContract.Presenter {
     }
 
     override fun addTorrent(hash: String) {
-        torrentRepository.getTorrentInfo(hash)
+        torrentRepository.getTorrentInfoFromCache(hash)
                 .subscribe({
                     //SUCCESS
                     view.notifyTorrentAdded()

@@ -6,7 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.tex.R
+import com.schiwfty.tex.confluence.Confluence
 import com.schiwfty.tex.models.TorrentInfo
+import com.schiwfty.tex.utils.formatBytesAsSize
+import kotlinx.android.synthetic.main.frag_torrent_details.*
+import java.io.File
 
 /**
  * Created by arran on 7/05/2017.
@@ -16,12 +20,12 @@ class TorrentDetailsFragment : Fragment(), TorrentDetailsContract.View {
     lateinit var presenter: TorrentDetailsContract.Presenter
 
     companion object {
-        val ARG_TORRENT_FILE_PATH = "arg_torrent_hash"
+        val ARG_TORRENT_HASH = "arg_torrent_hash"
 
         fun newInstance(torrentFilePath: String): Fragment {
             val frag = TorrentDetailsFragment()
             val args = Bundle()
-            args.putString(ARG_TORRENT_FILE_PATH, torrentFilePath)
+            args.putString(ARG_TORRENT_HASH, torrentFilePath)
             frag.arguments = args
             return frag
         }
@@ -29,7 +33,8 @@ class TorrentDetailsFragment : Fragment(), TorrentDetailsContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        presenter = TorrentDetailsPresenter()
+        presenter.setup(activity, this, arguments)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -41,10 +46,19 @@ class TorrentDetailsFragment : Fragment(), TorrentDetailsContract.View {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.getTorrent(presenter.torrentHash)
     }
 
     override fun setupViewFromTorrentInfo(torrentInfo: TorrentInfo) {
-        if(!isAdded || !isVisible) return
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        if(!isAdded || !isVisible) return
+        summaryName.text = torrentInfo.name
+        summaryStoragePath.text = "${Confluence.torrentRepo.absolutePath}${File.separator}${torrentInfo.info_hash}.torrent"
+        summarySize.text = torrentInfo.totalSize.formatBytesAsSize(context)
+        summaryFileCount.text = torrentInfo.fileList.size.toString()
+        summaryHash.text = torrentInfo.info_hash
+        summaryComment.text = torrentInfo.comment
+        summaryTorrentCreationDate.text = torrentInfo.creationDate.toString()
+        summaryTorrentCreatedWith.text = torrentInfo.createdBy
+
     }
 }

@@ -5,6 +5,7 @@ import com.schiwfty.tex.dagger.context.ContextModule
 import com.schiwfty.tex.views.addtorrent.AddTorrentPresenter
 import com.schiwfty.tex.views.main.mvp.MainPresenter
 import com.schiwfty.tex.views.splash.mvp.SplashPresenter
+import com.schiwfty.tex.views.torrentdetails.mvp.TorrentDetailsPresenter
 import dagger.Component
 
 /**
@@ -17,6 +18,7 @@ interface NetworkComponent {
     fun inject(splashPresenter: SplashPresenter)
     fun inject(addTorrentPresenter: AddTorrentPresenter)
     fun inject(mainPresenter: MainPresenter)
+    fun inject(torrentDetailsPresenter: TorrentDetailsPresenter)
 }
 
 
