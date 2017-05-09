@@ -24,4 +24,7 @@
     <string name="summary_torrent_created_by_title">TORRENT CREATED BY</string>
     <string name="error_get_torrent_info">Error fetching torrent info</string>
     <string name="add_torrent_title">Add Torrent</string>
+    <string name="magnet">Magnet</string>
+    <string name="torrent">Torrent</string>
+    <string name="example_magnet"><![CDATA[magnet:?xt=urn:btih:9f9165d9a281a9b8e782cd5176bbcc8256fd1871&dn=Ubuntu+16.04.1+LTS+Desktop+64-bit&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969]]></string>
 </resources>

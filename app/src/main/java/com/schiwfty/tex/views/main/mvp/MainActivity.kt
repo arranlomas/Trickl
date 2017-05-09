@@ -6,22 +6,30 @@ import android.support.v7.app.AppCompatActivity
 import com.schiwfty.tex.R
 import com.schiwfty.tex.views.addtorrent.AddTorrentActivity
 import com.schiwfty.tex.views.all.mvp.AllFragment
+import com.schiwfty.tex.views.main.DialogManager
+import com.schiwfty.tex.views.main.IDialogManager
 import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContract.View {
 
 
     lateinit var presenter: MainContract.Presenter
+    lateinit var dialogManager: IDialogManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         presenter = MainPresenter()
         presenter.setup(this, this)
+        dialogManager = DialogManager()
 
         val hash = "49d97805ec30a3a417b06d85e916633f620e62dd"
 
-        showAddTorrentActivity(hash)
+        addMagnetFab.setOnClickListener {
+            dialogManager.showAddMagnetDialog(fragmentManager)
+        }
+
     }
 
     override fun showError(stringId: Int) {
