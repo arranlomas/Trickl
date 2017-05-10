@@ -7,8 +7,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.pawegio.kandroid.d
 import com.schiwfty.tex.R
 import com.schiwfty.tex.models.TorrentInfo
+import com.schiwfty.tex.utils.getFullPath
+import com.schiwfty.tex.utils.openTorrent
+import com.schiwfty.tex.views.addtorrent.AddTorrentActivity
 import com.schiwfty.tex.views.torrentfiles.list.TorrentFilesAdapter
 import kotlinx.android.synthetic.main.frag_torrent_files.*
 
@@ -19,7 +23,11 @@ import kotlinx.android.synthetic.main.frag_torrent_files.*
 class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
 
     lateinit var presenter: TorrentFilesContract.Presenter
-    val filesAdapter = TorrentFilesAdapter()
+    val itemOnClick: (View, Int, Int) -> Unit = { _, position, _ ->
+        val torrentFile = filesAdapter.torrentFiles[position]
+        context.openTorrent(presenter.torrentHash, torrentFile.getFullPath())
+    }
+    val filesAdapter = TorrentFilesAdapter(itemOnClick)
 
     companion object {
         val ARG_TORRENT_HASH = "arg_torrent_hash"
@@ -52,9 +60,8 @@ class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
         torrentFilesRecyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         torrentFilesRecyclerView.layoutManager = llm as RecyclerView.LayoutManager?
-
-
         presenter.loadTorrent(presenter.torrentHash)
+
     }
 
     override fun setupViewFromTorrentInfo(torrentInfo: TorrentInfo) {

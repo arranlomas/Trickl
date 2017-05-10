@@ -1,11 +1,20 @@
 package com.schiwfty.tex.utils
 
+import android.content.Context
 import com.schiwfty.tex.bencoding.TorrentParser
 import com.schiwfty.tex.models.TorrentInfo
 import java.io.File
 import java.io.FileNotFoundException
 import java.net.URLDecoder
 import java.util.regex.Pattern
+import android.support.v4.content.ContextCompat.startActivity
+import android.content.Intent
+import android.net.Uri
+import com.pawegio.kandroid.WebIntent
+import com.schiwfty.tex.confluence.Confluence
+import com.schiwfty.tex.models.TorrentFile
+import java.net.URLEncoder
+
 
 /**
  * Created by arran on 30/04/2017.
@@ -62,4 +71,20 @@ fun String.findTrackersFromMagnet(): List<String> {
         trackerList.add(URLDecoder.decode(matcher.group(1), "UTF-8"))
     }
     return trackerList.toList()
+}
+
+fun Context.openTorrent(hash: String, path: String) {
+    val url = Confluence.fullUrl + "/data?ih=" + hash + "&path=" + URLEncoder.encode(path, "UTF-8")
+    startActivity(WebIntent(url))
+}
+
+fun TorrentFile.getFullPath(): String{
+    var path = ""
+    fileDirs?.forEachIndexed { index, s ->
+        if (index == (fileDirs.size - 1))
+            path += s
+        else
+            path += "$s/"
+    }
+    return path
 }

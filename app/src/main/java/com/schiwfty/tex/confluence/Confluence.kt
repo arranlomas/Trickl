@@ -17,6 +17,8 @@ object Confluence {
     val torrentRepo: File = File(workingDir.absolutePath + File.separator + "torrents")
 
     fun startConfluence(): Boolean {
+        daemonPort = "8080"
+        fullUrl = "http://$localhostUrl$daemonPort"
         val mainThread = Thread {
             trickl.Trickl.main(workingDir.absolutePath)
         }

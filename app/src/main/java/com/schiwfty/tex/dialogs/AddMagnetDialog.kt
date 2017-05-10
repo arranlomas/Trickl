@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.app.DialogFragment
 import android.os.Bundle
 import android.widget.EditText
+import com.pawegio.kandroid.find
 import com.pawegio.kandroid.textWatcher
 import com.schiwfty.tex.R
 import com.schiwfty.tex.views.main.mvp.MainActivity
@@ -39,8 +40,8 @@ class AddMagnetDialog: DialogFragment(){
         val inflater = activity.layoutInflater
         val v = inflater?.inflate(R.layout.dialog_frag_add_magnet, null) ?: throw IllegalStateException("View should not be null!")
         b.setView(v)
-        val textView = v.findViewById(R.id.addMagnetDialogEditText) as EditText
-        textView.textWatcher {
+        val editText = v.find<EditText>(R.id.addMagnetDialogEditText)
+        editText.textWatcher {
             afterTextChanged { text -> magnetText = text.toString()}
         }
         return b.create()
