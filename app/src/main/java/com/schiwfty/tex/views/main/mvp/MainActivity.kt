@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.schiwfty.tex.R
+import com.schiwfty.tex.models.TorrentInfo
 import com.schiwfty.tex.views.addtorrent.AddTorrentActivity
 import com.schiwfty.tex.views.addtorrent.AddTorrentPagerAdapter
 import com.schiwfty.tex.views.all.mvp.AllFragment
@@ -15,7 +16,6 @@ import kotlinx.android.synthetic.main.activity_add_torrent.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContract.View {
-
 
     lateinit var presenter: MainContract.Presenter
     lateinit var dialogManager: IDialogManager

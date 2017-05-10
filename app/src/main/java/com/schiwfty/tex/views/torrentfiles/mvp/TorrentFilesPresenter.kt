@@ -26,7 +26,7 @@ class TorrentFilesPresenter : TorrentFilesContract.Presenter {
     }
 
     override fun loadTorrent(torrentHash: String) {
-        torrentRepository.getTorrentInfoFromCache(torrentHash)
+        torrentRepository.getTorrentInfoFromStorage(torrentHash)
                 .subscribe({
                     view.setupViewFromTorrentInfo(it)
                 }, {

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.tex.R
+import com.schiwfty.tex.models.TorrentInfo
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_all.*
 
@@ -13,6 +14,7 @@ import kotlinx.android.synthetic.main.frag_all.*
  * Created by arran on 17/04/2017.
  */
 class AllFragment : Fragment(), AllContract.View {
+
     lateinit var presenter: AllContract.Presenter
 
     companion object {
@@ -36,6 +38,16 @@ class AllFragment : Fragment(), AllContract.View {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.getAllTorrentsInStorage()
+    }
+
+    override fun updateStatus(string: String) {
+        if (!isAdded || !isVisible) return
+        allTextView.text = string
+    }
+
+    override fun showAllTorrents(torrentInfoList: List<TorrentInfo>) {
+        if (!isAdded || !isVisible) return
     }
 
     override fun showError(stringId: Int) {
@@ -50,8 +62,5 @@ class AllFragment : Fragment(), AllContract.View {
         Toasty.success(activity, getString(stringId))
     }
 
-    override fun updateStatus(string: String) {
-        if (isAdded && isVisible)
-            allTextView.text = string
-    }
+
 }

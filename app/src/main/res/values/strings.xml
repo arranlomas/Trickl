@@ -13,7 +13,7 @@
 
     <string name="torrent_added">Torrent Added</string>
 
-    <!--Summary page-->
+    <!--Torrent Details page-->
     <string name="details_name_title">NAME</string>
     <string name="details_storage_path_title">STORAGE PATH</string>
     <string name="summary_size_title">TOTAL SIZE</string>
@@ -28,4 +28,8 @@
     <string name="torrent_file">Torrent File</string>
     <string name="loading_torrent_info">Loading Torrent Info....</string>
     <string name="loading_torrent_info_for">Loading Torrent Info For\n%1$s</string>
+
+
+    <!--Errors-->
+    <string name="error_getting_torrent_from_storage">Error retriving torrent from storage</string>
 </resources>

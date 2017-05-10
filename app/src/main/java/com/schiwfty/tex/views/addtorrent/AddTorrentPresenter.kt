@@ -1,7 +1,6 @@
 package com.schiwfty.tex.views.addtorrent
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import com.schiwfty.tex.R
 import com.schiwfty.tex.TricklComponent
@@ -9,7 +8,6 @@ import com.schiwfty.tex.repositories.ITorrentRepository
 import com.schiwfty.tex.utils.findHashFromMagnet
 import com.schiwfty.tex.utils.findNameFromMagnet
 import com.schiwfty.tex.utils.findTrackersFromMagnet
-import java.net.URL
 import java.net.URLDecoder
 import javax.inject.Inject
 
@@ -45,7 +43,7 @@ class AddTorrentPresenter : AddTorrentContract.Presenter {
 
     override fun fetchTorrent() {
         val hash = torrentHash ?: return
-        torrentRepository.getTorrentInfoFromCache(hash)
+        torrentRepository.getTorrentInfoFromStorage(hash)
                 .subscribe({
                     //SUCCESS
                     view.notifyTorrentAdded()

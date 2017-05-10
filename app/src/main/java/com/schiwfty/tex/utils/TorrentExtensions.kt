@@ -1,28 +1,22 @@
 package com.schiwfty.tex.utils
 
 import android.content.Context
-import com.schiwfty.tex.bencoding.TorrentParser
-import com.schiwfty.tex.models.TorrentInfo
-import java.io.File
-import java.io.FileNotFoundException
-import java.net.URLDecoder
-import java.util.regex.Pattern
-import android.support.v4.content.ContextCompat.startActivity
-import android.content.Intent
-import android.net.Uri
 import com.pawegio.kandroid.WebIntent
+import com.schiwfty.tex.bencoding.TorrentParser
 import com.schiwfty.tex.confluence.Confluence
 import com.schiwfty.tex.models.TorrentFile
+import com.schiwfty.tex.models.TorrentInfo
+import java.io.File
+import java.net.URLDecoder
 import java.net.URLEncoder
+import java.util.regex.Pattern
 
 
 /**
  * Created by arran on 30/04/2017.
  */
-@Throws(FileNotFoundException::class, IllegalAccessException::class)
 fun File.getAsTorrent(): TorrentInfo? {
-    if (!exists() && !canRead()) throw FileNotFoundException("File cannot be found, or is not readable: $path")
-    if (!path.endsWith(".torrent")) throw IllegalAccessException("File must end with .torrent")
+    if (!isValidTorrentFile())return null
     val torrentInfo = TorrentParser.parseTorrent(this.absolutePath)
     if (torrentInfo?.totalSize == 0L && torrentInfo.fileList.size > 1) {
         torrentInfo.fileList.forEach {
@@ -87,4 +81,11 @@ fun TorrentFile.getFullPath(): String{
             path += "$s/"
     }
     return path
+}
+
+fun File.isValidTorrentFile():Boolean{
+    if (!exists()) return false
+    if(!canRead()) return false
+    if (!path.endsWith(".torrent")) return false
+    return true
 }
