@@ -19,6 +19,7 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
 
     companion object {
         val ARG_TORRENT_HASH = "arg_torrent_hash"
+        val ARG_TORRENT_MAGNET = "arg_torrent_magnet"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,10 +27,10 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
         setContentView(R.layout.activity_add_torrent)
         presenter = AddTorrentPresenter()
         presenter.setup(this, this, intent.extras)
-        presenter.fetchTorrent(presenter.torrentHash)
+        presenter.fetchTorrent()
 
         addTorrentFab.setOnClickListener {
-            presenter.notifyAddTorrentClicked(presenter.torrentHash)
+            presenter.notifyAddTorrentClicked()
         }
 
         setSupportActionBar(addTorrentToolbar)
@@ -38,6 +39,10 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
         supportActionBar?.title = getString(R.string.add_torrent_title)
         addTorrentToolbar.setNavigationOnClickListener{
             super.onBackPressed()
+        }
+
+        if(presenter.torrentName!=null){
+            addTorrentLoadingText.text = getString(R.string.loading_torrent_info_for, presenter.torrentName)
         }
     }
 
@@ -57,7 +62,10 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
 
     override fun notifyTorrentAdded() {
         addTorrentProgressBar.visibility = View.GONE
+        addTorrentLoadingText.visibility = View.GONE
         addTorrentViewPager.visibility = View.VISIBLE
+        addTorrentSmartTab.visibility = View.VISIBLE
+        addTorrentFab.visibility = View.VISIBLE
         val adapter = AddTorrentPagerAdapter(supportFragmentManager, presenter.torrentHash)
         addTorrentViewPager.adapter = adapter
         addTorrentSmartTab.setViewPager(addTorrentViewPager)

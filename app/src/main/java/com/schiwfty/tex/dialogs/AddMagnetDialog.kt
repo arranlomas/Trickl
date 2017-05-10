@@ -4,12 +4,10 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.app.DialogFragment
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.widget.EditText
+import com.pawegio.kandroid.textWatcher
 import com.schiwfty.tex.R
-import android.content.DialogInterface
-
+import com.schiwfty.tex.views.main.mvp.MainActivity
 
 
 /**
@@ -17,6 +15,7 @@ import android.content.DialogInterface
  */
 
 class AddMagnetDialog: DialogFragment(){
+    private var magnetText = ""
 
     companion object{
         fun newInstance(): AddMagnetDialog{
@@ -28,21 +27,23 @@ class AddMagnetDialog: DialogFragment(){
         val b = AlertDialog.Builder(activity)
                 .setTitle("Paste magnet link here")
                 .setPositiveButton("OK",
-                        { dialog, whichButton ->
-                            // do something...
+                        { _, _ ->
+                            if(activity is MainActivity)
+                                (activity as MainActivity).addMagnet(magnetText)
                         }
                 )
                 .setNegativeButton("Cancel",
-                        { dialog, whichButton -> dialog.dismiss() }
+                        { dialog, _ -> dialog.dismiss() }
                 )
 
         val inflater = activity.layoutInflater
         val v = inflater?.inflate(R.layout.dialog_frag_add_magnet, null) ?: throw IllegalStateException("View should not be null!")
         b.setView(v)
+        val textView = v.findViewById(R.id.addMagnetDialogEditText) as EditText
+        textView.textWatcher {
+            afterTextChanged { text -> magnetText = text.toString()}
+        }
         return b.create()
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
 }

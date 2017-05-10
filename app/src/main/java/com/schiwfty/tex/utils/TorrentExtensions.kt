@@ -4,6 +4,8 @@ import com.schiwfty.tex.bencoding.TorrentParser
 import com.schiwfty.tex.models.TorrentInfo
 import java.io.File
 import java.io.FileNotFoundException
+import java.net.URLDecoder
+import java.util.regex.Pattern
 
 /**
  * Created by arran on 30/04/2017.
@@ -32,4 +34,32 @@ fun Long.formatBytesAsSize(): String {
         val f = this / 1024f
         return String.format("%1$.1f kb", f)
     }
+}
+
+fun String.findHashFromMagnet(): String? {
+    val pattern = Pattern.compile("xt=urn:btih:(.*?)(&|$)")
+    val matcher = pattern.matcher(this)
+    if (matcher.find())
+        return matcher.group(1)
+    else
+        return null
+}
+
+fun String.findNameFromMagnet(): String? {
+    val pattern = Pattern.compile("dn=(.*?)(&|$)")
+    val matcher = pattern.matcher(this)
+    if (matcher.find())
+        return matcher.group(1)
+    else
+        return null
+}
+
+fun String.findTrackersFromMagnet(): List<String> {
+    val trackerList = mutableListOf<String>()
+    val pattern = Pattern.compile("tr=(.*?)(&|$)")
+    val matcher = pattern.matcher(this)
+    while (matcher.find()) {
+        trackerList.add(URLDecoder.decode(matcher.group(1), "UTF-8"))
+    }
+    return trackerList.toList()
 }

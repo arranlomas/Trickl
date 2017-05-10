@@ -9,7 +9,7 @@ import com.schiwfty.tex.views.torrentfiles.mvp.TorrentFilesFragment
 /**
  * Created by arran on 9/05/2017.
  */
-class AddTorrentPagerAdapter(fragmentManager: FragmentManager, private val torrentHash: String) : FragmentStatePagerAdapter(fragmentManager) {
+class AddTorrentPagerAdapter(fragmentManager: FragmentManager, private val torrentHash: String?) : FragmentStatePagerAdapter(fragmentManager) {
     override fun getItem(position: Int): Fragment {
         when (position) {
             0 -> return TorrentDetailsFragment.newInstance(torrentHash)

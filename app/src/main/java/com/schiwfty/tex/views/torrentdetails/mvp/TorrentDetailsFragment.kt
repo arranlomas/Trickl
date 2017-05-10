@@ -22,10 +22,10 @@ class TorrentDetailsFragment : Fragment(), TorrentDetailsContract.View {
     companion object {
         val ARG_TORRENT_HASH = "arg_torrent_hash"
 
-        fun newInstance(torrentFilePath: String): Fragment {
+        fun newInstance(torrentHash: String?): Fragment {
             val frag = TorrentDetailsFragment()
             val args = Bundle()
-            args.putString(ARG_TORRENT_HASH, torrentFilePath)
+            args.putString(ARG_TORRENT_HASH, torrentHash)
             frag.arguments = args
             return frag
         }

@@ -56,5 +56,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         startActivity(addTorrentIntent)
     }
 
+    fun addMagnet(magnet: String){
+        val addTorrentIntent = Intent(this, AddTorrentActivity::class.java)
+        addTorrentIntent.putExtra(AddTorrentActivity.ARG_TORRENT_MAGNET, magnet)
+        startActivity(addTorrentIntent)
+    }
 
 }

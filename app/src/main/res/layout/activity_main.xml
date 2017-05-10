@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     tools:context=".views.main.mvp.MainActivity">
 
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
@@ -21,30 +21,32 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
         android:layout_marginStart="16dp"
         fab:fab_addButtonColorNormal="@color/colorAccent"
         fab:fab_addButtonColorPressed="@color/colorAccentPressed"
         fab:fab_addButtonPlusIconColor="@color/white"
         fab:fab_labelStyle="@style/menu_labels_style"
-        fab:fab_labelsPosition="left"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp">
+        fab:fab_labelsPosition="left">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/addMagnetFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:fab_title="@string/magnet_link"
             fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_title="@string/magnet"
-            fab:fab_colorPressed="@color/colorAccentPressed"/>
+            fab:fab_colorPressed="@color/colorAccentPressed"
+            fab:fab_icon="@drawable/ic_magnet_white" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@id/addTorrentFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:fab_title="@string/torrent_file"
             fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_title="@string/torrent"
-            fab:fab_colorPressed="@color/colorAccentPressed"/>
+            fab:fab_colorPressed="@color/colorAccentPressed"
+            fab:fab_icon="@drawable/ic_file_white" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
@@ -52,6 +54,6 @@
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/toolbar_height"/>
+        android:layout_marginTop="@dimen/toolbar_height" />
 
 </android.support.design.widget.CoordinatorLayout>

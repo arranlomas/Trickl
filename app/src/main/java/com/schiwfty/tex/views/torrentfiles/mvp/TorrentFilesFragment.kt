@@ -24,7 +24,7 @@ class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
     companion object {
         val ARG_TORRENT_HASH = "arg_torrent_hash"
 
-        fun newInstance(torrentFilePath: String): Fragment {
+        fun newInstance(torrentFilePath: String?): Fragment {
             val frag = TorrentFilesFragment()
             val args = Bundle()
             args.putString(ARG_TORRENT_HASH, torrentFilePath)

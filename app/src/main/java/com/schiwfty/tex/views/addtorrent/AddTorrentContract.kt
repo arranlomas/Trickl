@@ -16,8 +16,11 @@ interface AddTorrentContract {
 
     interface Presenter {
         fun setup(context: Context, view: View, arguments: Bundle?)
-        var torrentHash: String
-        fun fetchTorrent(hash: String)
-        fun notifyAddTorrentClicked(hash: String)
+        var torrentHash: String?
+        var torrentMagnet: String?
+        var torrentName: String?
+        var torrentTrackers: List<String>?
+        fun fetchTorrent()
+        fun notifyAddTorrentClicked()
     }
 }

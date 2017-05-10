@@ -73,6 +73,9 @@ dependencies {
 
     //FAB
     compile 'com.getbase:floatingactionbutton:1.10.1'
+
+    //KAndroid
+    compile 'com.pawegio.kandroid:kandroid:0.8.1@aar'
 }
 repositories {
     mavenCentral()
