@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.schiwfty.tex.R
-import com.schiwfty.tex.views.addtorrent.tabs.AddTorrentPagerAdapter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_add_torrent.*
 

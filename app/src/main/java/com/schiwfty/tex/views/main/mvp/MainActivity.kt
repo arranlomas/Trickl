@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.schiwfty.tex.R
 import com.schiwfty.tex.views.addtorrent.AddTorrentActivity
+import com.schiwfty.tex.views.addtorrent.AddTorrentPagerAdapter
 import com.schiwfty.tex.views.all.mvp.AllFragment
 import com.schiwfty.tex.views.main.DialogManager
 import com.schiwfty.tex.views.main.IDialogManager
+import com.schiwfty.tex.views.main.MainPagerAdapter
 import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.activity_add_torrent.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContract.View {
@@ -24,7 +27,13 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         presenter.setup(this, this)
         dialogManager = DialogManager()
 
-        val hash = "49d97805ec30a3a417b06d85e916633f620e62dd"
+
+        setSupportActionBar(mainToolbar)
+        supportActionBar?.title = getString(R.string.app_name)
+
+        val adapter = MainPagerAdapter(supportFragmentManager)
+        mainViewPager.adapter = adapter
+        mainSmartTab.setViewPager(mainViewPager)
 
         addMagnetFab.setOnClickListener {
             dialogManager.showAddMagnetDialog(fragmentManager)
@@ -42,12 +51,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun showSuccess(stringId: Int) {
         Toasty.success(this, getString(stringId))
-    }
-
-    override fun showAllFragment() {
-        val transaction = fragmentManager.beginTransaction()
-        transaction.add(R.id.main_content, AllFragment.newInstance())
-        transaction.commit()
     }
 
     override fun showAddTorrentActivity(hash: String) {
