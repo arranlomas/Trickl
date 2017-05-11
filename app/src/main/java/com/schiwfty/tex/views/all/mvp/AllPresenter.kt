@@ -26,7 +26,7 @@ class AllPresenter : AllContract.Presenter {
     override fun getAllTorrentsInStorage() {
        torrentRepository.getAllTorrentsFromStorage()
                .subscribe({
-                   view.showAllTorrents(it)
+                   if (it!=null)view.showAllTorrents(it)
                },{
                    view.showError(R.string.error_getting_torrent_from_storage)
                })

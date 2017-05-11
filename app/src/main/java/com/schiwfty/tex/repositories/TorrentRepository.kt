@@ -22,7 +22,7 @@ class TorrentRepository(val confluenceApi: ConfluenceApi) : ITorrentRepository {
                 .map { it.string() }
     }
 
-    override fun downloadTorrentInfo(hash: String): Observable<TorrentInfo> {
+    override fun downloadTorrentInfo(hash: String): Observable<TorrentInfo?> {
         return confluenceApi.getInfo(hash)
                 .composeIo()
                 .map {
@@ -31,12 +31,13 @@ class TorrentRepository(val confluenceApi: ConfluenceApi) : ITorrentRepository {
                 }
     }
 
-    override fun getTorrentInfoFromStorage(hash: String): Observable<TorrentInfo> {
+    override fun getTorrentInfo(hash: String): Observable<TorrentInfo?> {
         val file: File = File(torrentRepo, "$hash.torrent")
-        return Observable.just(file.getAsTorrent())
+        if(file.isValidTorrentFile()) return Observable.just(file.getAsTorrent())
+        else return downloadTorrentInfo(hash)
     }
 
-    override fun getAllTorrentsFromStorage(): Observable<List<TorrentInfo>> {
+    override fun getAllTorrentsFromStorage(): Observable<List<TorrentInfo>?> {
         return Observable.just({
             val torrentInfoList = mutableListOf<TorrentInfo?>()
             val torrentInfoListNonNull = mutableListOf<TorrentInfo>()

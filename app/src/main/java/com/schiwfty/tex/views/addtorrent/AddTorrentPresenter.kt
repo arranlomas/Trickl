@@ -43,7 +43,7 @@ class AddTorrentPresenter : AddTorrentContract.Presenter {
 
     override fun fetchTorrent() {
         val hash = torrentHash ?: return
-        torrentRepository.getTorrentInfoFromStorage(hash)
+        torrentRepository.getTorrentInfo(hash)
                 .subscribe({
                     //SUCCESS
                     view.notifyTorrentAdded()

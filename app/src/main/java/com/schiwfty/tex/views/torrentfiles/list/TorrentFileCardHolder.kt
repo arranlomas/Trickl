@@ -15,8 +15,8 @@ class TorrentFileCardHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
 
     fun bind(torrentFile: TorrentFile) {
         this.torrentFile = torrentFile
-        itemView.torrentName.text = torrentFile.getFullPath()
-        itemView.torrentSize.text = torrentFile.fileLength?.formatBytesAsSize()
+        itemView.torrentFileName.text = torrentFile.getFullPath()
+        itemView.torrentFileSize.text = torrentFile.fileLength?.formatBytesAsSize()
 
     }
 }

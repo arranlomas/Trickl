@@ -27,11 +27,11 @@ class TorrentDetailsPresenter : TorrentDetailsContract.Presenter {
     }
 
     override fun loadTorrent(torrentHash: String) {
-        torrentRepository.getTorrentInfoFromStorage(torrentHash)
+        torrentRepository.getTorrentInfo(torrentHash)
                 .subscribe({
-                    view.setupViewFromTorrentInfo(it)
+                    if(it!=null) view.setupViewFromTorrentInfo(it)
                 }, {
-                    TODO("ERROR HANDLING")
+                   // TODO("ERROR HANDLING")
                 })
 
 
