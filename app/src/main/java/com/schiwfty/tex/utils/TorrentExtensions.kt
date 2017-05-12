@@ -1,7 +1,9 @@
 package com.schiwfty.tex.utils
 
 import android.content.Context
-import com.pawegio.kandroid.WebIntent
+import android.content.Intent
+import android.net.Uri
+import android.webkit.MimeTypeMap
 import com.schiwfty.tex.bencoding.TorrentParser
 import com.schiwfty.tex.confluence.Confluence
 import com.schiwfty.tex.models.TorrentFile
@@ -69,7 +71,17 @@ fun String.findTrackersFromMagnet(): List<String> {
 
 fun Context.openTorrent(hash: String, path: String) {
     val url = Confluence.fullUrl + "/data?ih=" + hash + "&path=" + URLEncoder.encode(path, "UTF-8")
-    startActivity(WebIntent(url))
+    val file = File(path)
+    val map = MimeTypeMap.getSingleton()
+    var type: String? = map.getMimeTypeFromExtension(file.extension)
+
+    if (type == null)
+        type = "*/*"
+
+    val intent = Intent(Intent.ACTION_VIEW)
+
+    intent.setDataAndType(Uri.parse(url), type)
+    startActivity(intent)
 }
 
 fun TorrentFile.getFullPath(): String{

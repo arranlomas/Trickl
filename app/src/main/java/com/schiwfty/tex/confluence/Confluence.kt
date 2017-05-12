@@ -13,7 +13,7 @@ object Confluence {
     lateinit var fullUrl: String
     val localhostUrl = "127.0.0.1:"
     lateinit var daemonPort: String
-    val workingDir: File = File(Environment.getExternalStorageDirectory().path + File.separator + "cloudburst")
+    val workingDir: File = File(Environment.getExternalStorageDirectory().path + File.separator + "Trickl")
     val torrentRepo: File = File(workingDir.absolutePath + File.separator + "torrents")
 
     fun startConfluence(): Boolean {

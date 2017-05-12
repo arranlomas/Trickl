@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blackoutBackground"
     android:orientation="vertical">
 
     <ScrollView
@@ -19,269 +22,178 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
 
-            <LinearLayout
-                android:id="@+id/layoutSummaryName"
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="vertical">
-
-
-                <TextView
-                    android:id="@+id/summaryNameTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="@string/details_name_title" />
-
-
-                <TextView
-                    android:id="@+id/summaryName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="change me" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/divider" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/layoutStoragePath"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="vertical">
-
-
-                <TextView
-                    android:id="@+id/summaryStoragePathTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="@string/details_storage_path_title" />
-
-
-                <TextView
-                    android:id="@+id/summaryStoragePath"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="change me" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/divider" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/layoutSize"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="vertical">
+                app:cardUseCompatPadding="true"
+                card_view:cardCornerRadius="2dp">
 
                 <LinearLayout
-                    android:id="@+id/totalSizeLayout"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/layoutSummaryName"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:orientation="vertical">
 
+
                     <TextView
-                        android:id="@+id/summarySizeTitle"
+                        android:id="@+id/summaryNameTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="@string/summary_size_title" />
+                        android:text="@string/details_name_title" />
 
 
                     <TextView
-                        android:id="@+id/summarySize"
+                        android:id="@+id/summaryName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:text="change me" />
-
                 </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true"
+                card_view:cardCornerRadius="2dp">
+
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:id="@+id/layoutStoragePath"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/totalSizeLayout"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_toEndOf="@+id/totalSizeLayout"
+                    android:layout_margin="5dp"
                     android:orientation="vertical">
 
+
                     <TextView
-                        android:id="@+id/summaryFileCountTitle"
+                        android:id="@+id/summaryStoragePathTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:gravity="end"
-                        android:text="@string/summary_number_of_files_title" />
+                        android:text="@string/details_storage_path_title" />
 
 
                     <TextView
-                        android:id="@+id/summaryFileCount"
+                        android:id="@+id/summaryStoragePath"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:gravity="end"
                         android:text="change me" />
+                </LinearLayout>
 
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true"
+                card_view:cardCornerRadius="2dp">
+
+
+                <RelativeLayout
+                    android:id="@+id/layoutSize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/totalSizeLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/summarySizeTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:text="@string/summary_size_title" />
+
+
+                        <TextView
+                            android:id="@+id/summarySize"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:text="change me" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignTop="@+id/totalSizeLayout"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toEndOf="@+id/totalSizeLayout"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/summaryFileCountTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:gravity="end"
+                            android:text="@string/summary_number_of_files_title" />
+
+
+                        <TextView
+                            android:id="@+id/summaryFileCount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:gravity="end"
+                            android:text="change me" />
+
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true"
+                card_view:cardCornerRadius="2dp">
+
+                <LinearLayout
+                    android:id="@+id/layoutHash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/summaryHashTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text="@string/summary_hash_title" />
+
+
+                    <TextView
+                        android:id="@+id/summaryHash"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text="change me" />
 
                 </LinearLayout>
 
 
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:layout_below="@id/totalSizeLayout"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/divider" />
-
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutHash"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="vertical">
-
-
-                <TextView
-                    android:id="@+id/summaryHashTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="@string/summary_hash_title" />
-
-
-                <TextView
-                    android:id="@+id/summaryHash"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="change me" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/divider" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutComment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-
-                <TextView
-                    android:id="@+id/summaryCommentTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="@string/summary_comment_title" />
-
-
-                <TextView
-                    android:id="@+id/summaryComment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="change me" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/divider" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutTorrentCreationDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-
-                <TextView
-                    android:id="@+id/summaryTorrentCreationDateTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="@string/summary_torrent_creation_date_title" />
-
-
-                <TextView
-                    android:id="@+id/summaryTorrentCreationDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="change me" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/divider" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/layoutTorrentCreatedWith"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-
-                <TextView
-                    android:id="@+id/summaryTorrentCreatedWithTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="@string/summary_torrent_created_by_title" />
-
-
-                <TextView
-                    android:id="@+id/summaryTorrentCreatedWith"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="change me" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/divider" />
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
 

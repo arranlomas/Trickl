@@ -6,13 +6,16 @@ import android.view.View
 import com.schiwfty.tex.R
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_add_torrent.*
+import android.app.Activity
+import android.content.Intent
+
+
 
 
 /**
  * Created by arran on 7/05/2017.
  */
 class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
-
 
     lateinit var presenter: AddTorrentContract.Presenter
 
@@ -29,7 +32,7 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
         presenter.fetchTorrent()
 
         addTorrentFab.setOnClickListener {
-            presenter.notifyAddTorrentClicked()
+            finish()
         }
 
         setSupportActionBar(addTorrentToolbar)
@@ -57,7 +60,6 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
     override fun showSuccess(stringId: Int) {
         Toasty.success(this, getString(stringId))
     }
-
 
     override fun notifyTorrentAdded() {
         addTorrentProgressBar.visibility = View.GONE

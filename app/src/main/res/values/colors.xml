@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--theme-->
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorAccentPressed">#d8832042</color>
+    <color name="colorPrimary">#4c4c4c</color>
+    <color name="colorPrimaryDark">#2e2e2e</color>
+    <color name="colorAccent">#51c8ae</color>
+    <color name="colorAccentPressed">#225954</color>
+    <color name="darkBackground">#303030</color>
 
     <!--torrent list item-->
     <color name="cardview_light_background">#FFFFFFFF</color>

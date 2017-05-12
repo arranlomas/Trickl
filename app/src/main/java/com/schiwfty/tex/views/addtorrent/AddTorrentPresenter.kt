@@ -53,9 +53,5 @@ class AddTorrentPresenter : AddTorrentContract.Presenter {
                 })
     }
 
-    override fun notifyAddTorrentClicked() {
-
-    }
-
 
 }

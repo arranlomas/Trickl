@@ -55,9 +55,5 @@ class TorrentDetailsFragment : Fragment(), TorrentDetailsContract.View {
         summarySize.text = torrentInfo.totalSize.formatBytesAsSize()
         summaryFileCount.text = torrentInfo.fileList.size.toString()
         summaryHash.text = torrentInfo.info_hash
-        summaryComment.text = torrentInfo.comment
-        summaryTorrentCreationDate.text = torrentInfo.creationDate.toString()
-        summaryTorrentCreatedWith.text = torrentInfo.createdBy
-
     }
 }

@@ -30,7 +30,7 @@ class AddMagnetDialog: DialogFragment(){
                 .setPositiveButton("OK",
                         { _, _ ->
                             if(activity is MainActivity)
-                                (activity as MainActivity).addMagnet(magnetText)
+                                (activity as MainActivity).showAddTorrentActivity(magnet = magnetText)
                         }
                 )
                 .setNegativeButton("Cancel",

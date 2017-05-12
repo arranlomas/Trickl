@@ -1,24 +1,23 @@
 package com.schiwfty.tex.views.main.mvp
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.schiwfty.tex.R
-import com.schiwfty.tex.models.TorrentInfo
 import com.schiwfty.tex.views.addtorrent.AddTorrentActivity
-import com.schiwfty.tex.views.addtorrent.AddTorrentPagerAdapter
 import com.schiwfty.tex.views.all.mvp.AllFragment
 import com.schiwfty.tex.views.main.DialogManager
 import com.schiwfty.tex.views.main.IDialogManager
 import com.schiwfty.tex.views.main.MainPagerAdapter
 import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.activity_add_torrent.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContract.View {
 
     lateinit var presenter: MainContract.Presenter
     lateinit var dialogManager: IDialogManager
+    val fragAdapter = MainPagerAdapter(supportFragmentManager)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,8 +30,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         setSupportActionBar(mainToolbar)
         supportActionBar?.title = getString(R.string.app_name)
 
-        val adapter = MainPagerAdapter(supportFragmentManager)
-        mainViewPager.adapter = adapter
+
+        mainViewPager.adapter = fragAdapter
         mainSmartTab.setViewPager(mainViewPager)
 
         addMagnetFab.setOnClickListener {
@@ -53,16 +52,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         Toasty.success(this, getString(stringId))
     }
 
-    override fun showAddTorrentActivity(hash: String) {
+    override fun showAddTorrentActivity(hash: String?, magnet: String?) {
         val addTorrentIntent = Intent(this, AddTorrentActivity::class.java)
         addTorrentIntent.putExtra(AddTorrentActivity.ARG_TORRENT_HASH, hash)
-        startActivity(addTorrentIntent)
-    }
-
-    fun addMagnet(magnet: String){
-        val addTorrentIntent = Intent(this, AddTorrentActivity::class.java)
         addTorrentIntent.putExtra(AddTorrentActivity.ARG_TORRENT_MAGNET, magnet)
         startActivity(addTorrentIntent)
     }
-
 }

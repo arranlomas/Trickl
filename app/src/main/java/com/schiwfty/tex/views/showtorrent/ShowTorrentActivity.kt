@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.schiwfty.tex.R
-import com.schiwfty.tex.views.addtorrent.AddTorrentPagerAdapter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_show_torrent.*
 
@@ -44,7 +43,6 @@ class ShowTorrentActivity : AppCompatActivity(), ShowTorrentContract.View {
         if (presenter.torrentName != null) {
             showTorrentLoadingText.text = getString(R.string.loading_torrent_info_for, presenter.torrentName)
         }
-
     }
 
     override fun showError(stringId: Int) {

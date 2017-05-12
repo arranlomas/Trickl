@@ -41,11 +41,11 @@ class AllFragment : Fragment(), AllContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter = AllPresenter()
-        presenter.setup(activity, this)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        presenter = AllPresenter()
+        presenter.setup(activity, this)
         return inflater?.inflate(R.layout.frag_all, container, false)
     }
 
@@ -55,8 +55,12 @@ class AllFragment : Fragment(), AllContract.View {
         allTorrentsRecyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         allTorrentsRecyclerView.layoutManager = llm as RecyclerView.LayoutManager?
+    }
 
+    override fun onResume() {
+        super.onResume()
         presenter.getAllTorrentsInStorage()
+
     }
 
     override fun updateStatus(string: String) {

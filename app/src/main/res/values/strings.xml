@@ -30,6 +30,10 @@
 
     <string name="add_torrent_title">Add Torrent</string>
 
+    <!--all torrents-->
+    <string name="one_file">1 File</string>
+    <string name="x_files">%1$d Files</string>
+
     <!--Errors-->
     <string name="error_getting_torrent_from_storage">Error retriving torrent from storage</string>
 </resources>
