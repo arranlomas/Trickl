@@ -23,12 +23,12 @@
     <string name="summary_torrent_creation_date_title">Torrent Creation Date</string>
     <string name="summary_torrent_created_by_title">TORRENT CREATED BY</string>
     <string name="error_get_torrent_info">Error fetching torrent info</string>
-    <string name="add_torrent_title">Add Torrent</string>
     <string name="magnet_link">Magnet Link</string>
     <string name="torrent_file">Torrent File</string>
     <string name="loading_torrent_info">Loading Torrent Info....</string>
     <string name="loading_torrent_info_for">Loading Torrent Info For\n%1$s</string>
 
+    <string name="add_torrent_title">Add Torrent</string>
 
     <!--Errors-->
     <string name="error_getting_torrent_from_storage">Error retriving torrent from storage</string>

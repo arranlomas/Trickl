@@ -17,6 +17,7 @@
 
         <activity android:name="com.schiwfty.tex.views.main.mvp.MainActivity" />
         <activity android:name="com.schiwfty.tex.views.addtorrent.AddTorrentActivity" />
+        <activity android:name="com.schiwfty.tex.views.showtorrent.ShowTorrentActivity" />
 
         <activity android:name="com.schiwfty.tex.views.splash.mvp.SplashActivity">
             <intent-filter>

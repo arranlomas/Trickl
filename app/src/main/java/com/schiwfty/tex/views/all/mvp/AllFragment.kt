@@ -1,5 +1,6 @@
 package com.schiwfty.tex.views.all.mvp
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -9,13 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.tex.R
 import com.schiwfty.tex.models.TorrentInfo
-import com.schiwfty.tex.utils.getFullPath
-import com.schiwfty.tex.utils.openTorrent
+import com.schiwfty.tex.views.addtorrent.AddTorrentActivity
 import com.schiwfty.tex.views.all.list.AllTorrentsAdapter
-import com.schiwfty.tex.views.torrentfiles.list.TorrentFilesAdapter
+import com.schiwfty.tex.views.showtorrent.ShowTorrentActivity
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_all.*
-import kotlinx.android.synthetic.main.frag_torrent_files.*
 
 /**
  * Created by arran on 17/04/2017.
@@ -25,6 +24,9 @@ class AllFragment : Fragment(), AllContract.View {
     lateinit var presenter: AllContract.Presenter
     val itemOnClick: (View, Int, Int) -> Unit = { _, position, _ ->
         val torrentFile = filesAdapter.torrentFiles[position]
+        val intent= Intent(activity, ShowTorrentActivity::class.java)
+        intent.putExtra(ShowTorrentActivity.ARG_TORRENT_HASH, torrentFile.info_hash)
+        startActivity(intent)
     }
     val filesAdapter = AllTorrentsAdapter(itemOnClick)
 
