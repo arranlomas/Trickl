@@ -2,6 +2,7 @@ package com.schiwfty.tex.repositories
 
 import com.schiwfty.tex.confluence.Confluence
 import com.schiwfty.tex.confluence.Confluence.torrentRepo
+import com.schiwfty.tex.models.ConfluenceInfo
 import com.schiwfty.tex.models.TorrentInfo
 import com.schiwfty.tex.retrofit.ConfluenceApi
 import com.schiwfty.tex.utils.composeIo
@@ -17,10 +18,10 @@ import java.io.File
  */
 class TorrentRepository(val confluenceApi: ConfluenceApi) : ITorrentRepository {
 
-    override fun getStatus(): Observable<String> {
+    override fun getStatus(): Observable<ConfluenceInfo> {
         return confluenceApi.getStatus
                 .composeIo()
-                .map { it.string() }
+                .map { it }
     }
 
     override fun downloadTorrentInfo(hash: String): Observable<TorrentInfo?> {

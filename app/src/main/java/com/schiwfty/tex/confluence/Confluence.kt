@@ -20,7 +20,7 @@ object Confluence {
         daemonPort = "8080"
         fullUrl = "http://$localhostUrl$daemonPort"
         val mainThread = Thread {
-            trickl.Trickl.main(workingDir.absolutePath)
+            trickl.Trickl.androidMain(workingDir.absolutePath)
         }
         mainThread.start()
         return true

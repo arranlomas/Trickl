@@ -1,6 +1,8 @@
 package com.schiwfty.tex.retrofit
 
 
+import com.schiwfty.tex.models.ConfluenceInfo
+import com.schiwfty.tex.models.FileState
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -23,12 +25,16 @@ class ConfluenceApi(private val clientAPI: ClientAPI) {
         return clientAPI.postTorrent(hash, requestBody)
     }
 
-    val getStatus: Observable<ResponseBody>
+    val getStatus: Observable<ConfluenceInfo>
         get() = clientAPI.getStatus()
 
 
     fun getFileDatda(hash: String, path: String): Observable<ResponseBody> {
         return clientAPI.getData(hash, path)
+    }
+
+    fun getFileState(hash: String, path: String): Observable<FileState> {
+        return clientAPI.getFileState(hash, path)
     }
 
 }
