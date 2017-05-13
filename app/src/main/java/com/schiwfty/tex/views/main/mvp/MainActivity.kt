@@ -61,6 +61,21 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         if(hash!=null) addTorrentIntent.putExtra(AddTorrentActivity.ARG_TORRENT_HASH, hash)
         if(magnet!=null) addTorrentIntent.putExtra(AddTorrentActivity.ARG_TORRENT_MAGNET, magnet)
         if(torrentFilePath!=null) addTorrentIntent.putExtra(AddTorrentActivity.ARG_TORRENT_FILE_PATH, torrentFilePath)
-        startActivity(addTorrentIntent)
+        startActivityForResult(addTorrentIntent, AddTorrentActivity.ADD_TORRENT_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode != Activity.RESULT_OK) return
+
+        when(requestCode){
+            AddTorrentActivity.ADD_TORRENT_REQUEST_CODE -> {
+                if(data!=null && data.hasExtra(AddTorrentActivity.ARG_ADD_TORRENT_RESULT)){
+                    val hash = data.getStringExtra(AddTorrentActivity.ARG_ADD_TORRENT_RESULT)
+                    presenter.getAllTorrentData(hash)
+                }
+
+            }
+        }
     }
 }

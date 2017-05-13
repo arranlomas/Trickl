@@ -21,6 +21,5 @@ interface ShowTorrentContract {
         var torrentName: String?
         var torrentTrackers: List<String>?
         fun fetchTorrent()
-        fun notifyAddTorrentClicked()
     }
 }

@@ -27,10 +27,6 @@ class ShowTorrentActivity : AppCompatActivity(), ShowTorrentContract.View {
         presenter = ShowTorrentPresenter()
         presenter.setup(this, this, intent.extras)
 
-        showTorrentFab.setOnClickListener {
-            presenter.notifyAddTorrentClicked()
-        }
-
         setSupportActionBar(showTorrentToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -63,7 +59,6 @@ class ShowTorrentActivity : AppCompatActivity(), ShowTorrentContract.View {
         showTorrentLoadingText.visibility = View.GONE
         showTorrentViewPager.visibility = View.VISIBLE
         showTorrentSmartTab.visibility = View.VISIBLE
-        showTorrentFab.visibility = View.VISIBLE
         val adapter = ShowTorrentPagerAdapter(supportFragmentManager, presenter.torrentHash)
         showTorrentViewPager.adapter = adapter
         showTorrentSmartTab.setViewPager(showTorrentViewPager)

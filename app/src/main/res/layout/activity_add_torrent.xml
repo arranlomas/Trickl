@@ -29,7 +29,8 @@
         android:text="@string/loading_torrent_info"
         android:layout_gravity="center"
         android:gravity="center"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="100dp"
+        android:textColor="@color/whiteText"/>
 
 
 

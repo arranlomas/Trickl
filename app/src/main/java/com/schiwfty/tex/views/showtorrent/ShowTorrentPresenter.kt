@@ -57,10 +57,4 @@ class ShowTorrentPresenter : ShowTorrentContract.Presenter {
                     //ERROR
                 })
     }
-
-    override fun notifyAddTorrentClicked() {
-
-    }
-
-
 }

@@ -12,6 +12,7 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by arran on 15/02/2017.
@@ -54,6 +55,8 @@ class NetworkModule {
     internal fun provideOkHttpClient(context: Context): OkHttpClient {
         val client = OkHttpClient.Builder()
                 .addInterceptor(ChuckInterceptor(context))
+                .readTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
                 .build()
 
 

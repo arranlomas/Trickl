@@ -7,10 +7,7 @@ package com.schiwfty.tex.retrofit
 
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 import rx.Observable
 
 
@@ -24,4 +21,9 @@ interface ClientAPI {
 
     @GET("/status")
     fun getStatus(): Observable<ResponseBody>
+
+    @Streaming
+    @GET("/data")
+    fun getData(@Query("ih") info_hash: String, @Query("path") file_path: String): Observable<ResponseBody>
+
 }

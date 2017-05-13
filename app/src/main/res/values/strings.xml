@@ -37,4 +37,5 @@
 
     <!--Errors-->
     <string name="error_getting_torrent_from_storage">Error retriving torrent from storage</string>
+    <string name="error_getting_torrent_file">Error getting file data</string>
 </resources>

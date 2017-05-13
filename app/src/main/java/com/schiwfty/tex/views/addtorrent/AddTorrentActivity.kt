@@ -20,6 +20,8 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
     lateinit var presenter: AddTorrentContract.Presenter
 
     companion object {
+        val ADD_TORRENT_REQUEST_CODE = 101
+        val ARG_ADD_TORRENT_RESULT = "arg_torrent_hash_result"
         val ARG_TORRENT_HASH = "arg_torrent_hash"
         val ARG_TORRENT_MAGNET = "arg_torrent_magnet"
         val ARG_TORRENT_FILE_PATH = "arg_torrent_file_path"
@@ -33,6 +35,9 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
         presenter.fetchTorrent()
 
         addTorrentFab.setOnClickListener {
+            val returnIntent = Intent()
+            if(presenter.torrentHash!=null) returnIntent.putExtra(ARG_ADD_TORRENT_RESULT, presenter.torrentHash)
+            setResult(Activity.RESULT_OK, returnIntent)
             finish()
         }
 

@@ -7,6 +7,7 @@ import com.schiwfty.tex.retrofit.ConfluenceApi
 import com.schiwfty.tex.utils.composeIo
 import com.schiwfty.tex.utils.getAsTorrent
 import com.schiwfty.tex.utils.isValidTorrentFile
+import okhttp3.ResponseBody
 import rx.Observable
 import java.io.File
 
@@ -54,5 +55,10 @@ class TorrentRepository(val confluenceApi: ConfluenceApi) : ITorrentRepository {
         }.invoke())
                 .composeIo()
 
+    }
+
+    override fun getTorrentFileData(hash: String, path: String): Observable<ResponseBody> {
+        return confluenceApi.getFileDatda(hash, path)
+                .composeIo()
     }
 }
