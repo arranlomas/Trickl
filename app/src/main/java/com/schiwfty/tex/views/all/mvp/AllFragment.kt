@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.tex.R
 import com.schiwfty.tex.models.TorrentInfo
-import com.schiwfty.tex.views.addtorrent.AddTorrentActivity
 import com.schiwfty.tex.views.all.list.AllTorrentsAdapter
 import com.schiwfty.tex.views.showtorrent.ShowTorrentActivity
 import es.dmoral.toasty.Toasty
@@ -59,7 +58,7 @@ class AllFragment : Fragment(), AllContract.View {
 
     override fun onResume() {
         super.onResume()
-        presenter.getAllTorrentsInStorage()
+        presenter.getAllTorrentsInStorageAndAddToClient()
 
     }
 

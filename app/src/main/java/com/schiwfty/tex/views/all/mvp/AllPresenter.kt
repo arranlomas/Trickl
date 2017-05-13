@@ -3,7 +3,10 @@ package com.schiwfty.tex.views.all.mvp
 import android.content.Context
 import com.schiwfty.tex.R
 import com.schiwfty.tex.TricklComponent
+import com.schiwfty.tex.models.TorrentInfo
 import com.schiwfty.tex.repositories.ITorrentRepository
+import com.schiwfty.tex.utils.composeIo
+import com.schiwfty.tex.utils.getAsTorrent
 import javax.inject.Inject
 
 /**
@@ -40,14 +43,17 @@ class AllPresenter : AllContract.Presenter {
         statusThread.start()
     }
 
-    override fun getAllTorrentsInStorage() {
-       torrentRepository.getAllTorrentsFromStorage()
-               .subscribe({
-                   if (it!=null)view.showAllTorrents(it)
-               },{
-                   view.showError(R.string.error_getting_torrent_from_storage)
-               })
+    override fun getAllTorrentsInStorageAndAddToClient() {
+        torrentRepository.setupClientFromRepo()
+                .flatMap { torrentRepository.getAllTorrentsFromStorage()}
+                .subscribe ({
+                    if(it!=null) {
+                        view.showAllTorrents(it)
+                        view.showInfo(R.string.splash_start_confluence_success)
+                    }else
+                        throw IllegalAccessException("Could not setup client")
+                },{
+                    it.printStackTrace()
+                })
     }
-
-
 }

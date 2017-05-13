@@ -18,6 +18,6 @@ interface AllContract {
 
     interface Presenter {
         fun setup(context: Context, view: View)
-        fun getAllTorrentsInStorage()
+        fun getAllTorrentsInStorageAndAddToClient()
     }
 }
