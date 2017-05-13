@@ -77,6 +77,9 @@ dependencies {
 
     //KAndroid
     compile 'com.pawegio.kandroid:kandroid:0.8.1@aar'
+
+    //Number Progress bar
+    compile 'com.daimajia.numberprogressbar:library:1.2@aar'
 }
 repositories {
     mavenCentral()

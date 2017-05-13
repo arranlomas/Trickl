@@ -18,4 +18,5 @@ data class TorrentInfo constructor(var name: String) {
     var creationDate: Date? = null
     var announceList: List<String> = emptyList()
     var info_hash: String = ""
+    var percComplete: Float = 0f
 }

@@ -67,6 +67,14 @@ class AllFragment : Fragment(), AllContract.View {
         if (!isAdded || !isVisible) return
     }
 
+    override fun updateTorrentPercentage(percMap: HashMap<String, Float>) {
+        if (!isAdded || !isVisible) return
+        filesAdapter.torrentFiles.forEach {
+            it.percComplete = percMap[it.info_hash] ?: 0f
+        }
+        filesAdapter.notifyDataSetChanged()
+    }
+
     override fun showAllTorrents(torrentInfoList: List<TorrentInfo>) {
         if (!isAdded || !isVisible) return
         filesAdapter.torrentFiles = torrentInfoList
