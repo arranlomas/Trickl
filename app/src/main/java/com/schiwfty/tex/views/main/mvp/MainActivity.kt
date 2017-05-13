@@ -38,6 +38,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             dialogManager.showAddMagnetDialog(fragmentManager)
         }
 
+        addHashFab.setOnClickListener {
+            dialogManager.showAddHashDialog(fragmentManager)
+        }
+
     }
 
     override fun showError(stringId: Int) {
@@ -52,10 +56,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         Toasty.success(this, getString(stringId))
     }
 
-    override fun showAddTorrentActivity(hash: String?, magnet: String?) {
+    override fun showAddTorrentActivity(hash: String?, magnet: String?, torrentFilePath: String?) {
         val addTorrentIntent = Intent(this, AddTorrentActivity::class.java)
-        addTorrentIntent.putExtra(AddTorrentActivity.ARG_TORRENT_HASH, hash)
-        addTorrentIntent.putExtra(AddTorrentActivity.ARG_TORRENT_MAGNET, magnet)
+        if(hash!=null) addTorrentIntent.putExtra(AddTorrentActivity.ARG_TORRENT_HASH, hash)
+        if(magnet!=null) addTorrentIntent.putExtra(AddTorrentActivity.ARG_TORRENT_MAGNET, magnet)
+        if(torrentFilePath!=null) addTorrentIntent.putExtra(AddTorrentActivity.ARG_TORRENT_FILE_PATH, torrentFilePath)
         startActivity(addTorrentIntent)
     }
 }

@@ -7,4 +7,5 @@ import android.app.FragmentManager
  */
 interface IDialogManager {
     fun showAddMagnetDialog(fragmentManager: FragmentManager)
+    fun showAddHashDialog(fragmentManager: FragmentManager)
 }

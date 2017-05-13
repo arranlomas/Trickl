@@ -10,7 +10,7 @@ interface MainContract {
         fun showError(stringId: Int)
         fun showInfo(stringId: Int)
         fun showSuccess(stringId: Int)
-        fun showAddTorrentActivity(hash: String? = null, magnet: String? = null )
+        fun showAddTorrentActivity(hash: String? = null, magnet: String? = null, torrentFilePath: String? = null)
     }
 
     interface Presenter {

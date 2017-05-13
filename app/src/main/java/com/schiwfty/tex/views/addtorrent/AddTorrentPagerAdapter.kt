@@ -13,20 +13,19 @@ class AddTorrentPagerAdapter(fragmentManager: FragmentManager, private val torre
     override fun getItem(position: Int): Fragment {
         when (position) {
             0 -> return TorrentDetailsFragment.newInstance(torrentHash)
-            1 -> return TorrentFilesFragment.newInstance(torrentHash)
             else -> throw IllegalStateException("No more that 2 fregments required")
         }
     }
 
     override fun getCount(): Int {
-        return 2
+        return 1
     }
 
     override fun getPageTitle(position: Int): CharSequence {
         when (position) {
             0 -> return "Torrent Details"
-            1 -> return "Torrent Files"
             else -> throw IllegalStateException("No more that 2 fregments required")
         }
     }
+
 }

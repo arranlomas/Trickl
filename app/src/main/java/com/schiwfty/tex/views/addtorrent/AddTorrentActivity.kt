@@ -22,6 +22,7 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
     companion object {
         val ARG_TORRENT_HASH = "arg_torrent_hash"
         val ARG_TORRENT_MAGNET = "arg_torrent_magnet"
+        val ARG_TORRENT_FILE_PATH = "arg_torrent_file_path"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -71,6 +71,16 @@
         fab:fab_labelsPosition="left">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addHashFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_title="@string/torrent_hash"
+            fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_colorPressed="@color/colorAccentPressed"
+            fab:fab_icon="@drawable/ic_hash_white" />
+
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/addMagnetFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
