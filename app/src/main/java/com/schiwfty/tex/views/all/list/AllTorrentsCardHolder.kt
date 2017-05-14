@@ -23,5 +23,6 @@ class AllTorrentsCardHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
             itemView.torrentInfoFileCount.text = itemView.context.getString(R.string.x_files, torrentInfo.fileList.size)
         itemView.downloadProgressBar.max = 100
         itemView.downloadProgressBar.progress = Math.round(torrentInfo.percComplete)
+
     }
 }
