@@ -54,7 +54,7 @@ object TorrentParser {
             ///////////////////////////////////
             //// OPTIONAL FIELDS //////////////
             ///////////////////////////////////
-            t.fileList = parseFileList(infoDictionary)
+            t.fileList = parseFileList(infoDictionary, t.info_hash)
             t.comment = parseComment(torrentDictionary)
             t.createdBy = parseCreatorName(torrentDictionary)
             t.creationDate = parseCreationDate(torrentDictionary)
@@ -211,7 +211,7 @@ object TorrentParser {
      * *
      * @return files — a list of dictionaries each corresponding to a file (only when multiple files are being shared).
      */
-    private fun parseFileList(info: BDictionary): List<TorrentFile> {
+    private fun parseFileList(info: BDictionary, hash: String): List<TorrentFile> {
         if (null != info.find(BByteString("files"))) {
             val fileList = ArrayList<TorrentFile>()
             val filesBList = info.find(BByteString("files")) as BList
@@ -229,7 +229,7 @@ object TorrentParser {
                     while (filePathsIterator.hasNext())
                         paths.add(filePathsIterator.next().toString())
 
-                    val tf = TorrentFile(fileLength.value, paths)
+                    val tf = TorrentFile(fileLength.value, paths, hash)
                     fileList.add(tf)
                 }
             }

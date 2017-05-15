@@ -87,7 +87,7 @@
             app:fab_title="@string/magnet_link"
             fab:fab_colorNormal="@color/colorAccent"
             fab:fab_colorPressed="@color/colorAccentPressed"
-            fab:fab_icon="@drawable/ic_magnet_white" />
+            fab:fab_icon="@drawable/ic_magnet" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@id/addTorrentFab"

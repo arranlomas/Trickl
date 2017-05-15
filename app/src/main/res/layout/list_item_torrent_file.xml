@@ -54,7 +54,7 @@
             <View
                 android:id="@+id/shadow"
                 android:layout_width="fill_parent"
-                android:layout_height="2.3dp"
+                android:layout_height="6dp"
                 android:background="@drawable/shadow">
             </View>
 
@@ -75,8 +75,8 @@
                 android:layout_gravity="bottom|right"
                 android:layout_marginRight="60dp"
                 android:layout_toStartOf="@+id/centre_line_download"
-                android:src="@drawable/ic_play"
-                android:layout_marginTop="8dp"/>
+                android:src="@drawable/ic_view_file"
+                android:layout_marginTop="12dp"/>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/downloadFileFab"
@@ -87,7 +87,7 @@
                 android:layout_marginLeft="60dp"
                 android:layout_toEndOf="@+id/centre_line_download"
                 android:src="@drawable/ic_download"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginBottom="8dp"/>
 
         </RelativeLayout>

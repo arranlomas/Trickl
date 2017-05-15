@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import com.pawegio.kandroid.inflateLayout
 import com.schiwfty.tex.R
 import com.schiwfty.tex.models.TorrentFile
+import com.schiwfty.tex.utils.getFullPath
 import com.schiwfty.tex.utils.onClick
 import kotlinx.android.synthetic.main.list_item_torrent_file.view.*
 
@@ -42,5 +43,14 @@ class TorrentFilesAdapter(val itemClickListener: (TorrentFile, ClickTypes) -> Un
 
     override fun getItemCount(): Int {
         return torrentFiles.size
+    }
+
+    fun updatePercentages(updatedDetails: List<Triple<String, String, Int>>){
+        torrentFiles.forEach { file ->
+            updatedDetails.forEach {
+                if(file.torrentHash == it.first && file.getFullPath() == it.second)
+                file.percComplete = it.third
+            }
+        }
     }
 }

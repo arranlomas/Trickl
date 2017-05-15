@@ -12,10 +12,12 @@ import com.schiwfty.tex.views.torrentfiles.list.TorrentFilesAdapter
 interface TorrentFilesContract {
     interface View {
         fun setupViewFromTorrentInfo(torrentInfo: TorrentInfo)
+        fun updateTorrentPercentages(updatedDetails: List<Triple<String, String, Int>>)
     }
 
     interface Presenter {
         fun setup(context: Context, view: TorrentFilesContract.View, arguments: Bundle?)
+        fun destroy()
         fun loadTorrent(torrentHash: String)
         var torrentHash: String
         fun viewClicked(torrentFile: TorrentFile, action: TorrentFilesAdapter.Companion.ClickTypes)

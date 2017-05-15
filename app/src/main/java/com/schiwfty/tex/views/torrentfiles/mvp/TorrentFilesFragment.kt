@@ -47,6 +47,11 @@ class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
         presenter.setup(activity, this, arguments)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
+    }
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         if (inflater == null) throw IllegalStateException("Torrent Files Fragment layout inflater is null!")
         val view = inflater.inflate(R.layout.frag_torrent_files, container, false)
@@ -66,6 +71,11 @@ class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
 
     override fun setupViewFromTorrentInfo(torrentInfo: TorrentInfo) {
         filesAdapter.torrentFiles = torrentInfo.fileList
+        filesAdapter.notifyDataSetChanged()
+    }
+
+    override fun updateTorrentPercentages(updatedDetails: List<Triple<String, String, Int>>) {
+        filesAdapter.updatePercentages(updatedDetails)
         filesAdapter.notifyDataSetChanged()
     }
 }

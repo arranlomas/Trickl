@@ -68,10 +68,6 @@ data class ConfluenceTorrentInfo(
         var numPieces: Int
 )
 
-data class FileState(
-        val pieces: List<FileStatePiece>
-)
-
 data class FileStatePiece(
         @SerializedName("Bytes")
         var bytes: Int,

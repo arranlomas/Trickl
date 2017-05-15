@@ -8,6 +8,7 @@ import com.schiwfty.tex.repositories.ITorrentRepository
 import com.schiwfty.tex.utils.getFullPath
 import com.schiwfty.tex.utils.openTorrent
 import com.schiwfty.tex.views.torrentfiles.list.TorrentFilesAdapter
+import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
 /**
@@ -21,6 +22,7 @@ class TorrentFilesPresenter : TorrentFilesContract.Presenter {
 
     @Inject
     lateinit var torrentRepository: ITorrentRepository
+    private val compositeSubscription = CompositeSubscription()
 
     override fun setup(context: Context, view: TorrentFilesContract.View, arguments: Bundle?) {
         TricklComponent.networkComponent.inject(this)
@@ -29,12 +31,20 @@ class TorrentFilesPresenter : TorrentFilesContract.Presenter {
         if (arguments?.containsKey(TorrentFilesFragment.ARG_TORRENT_HASH) ?: false) {
             torrentHash = arguments?.getString(TorrentFilesFragment.ARG_TORRENT_HASH) ?: ""
         }
+        compositeSubscription.add(
+                torrentRepository.torrentFileProgressSource
+                        .subscribe { view.updateTorrentPercentages(it) }
+        )
+    }
+
+    override fun destroy() {
+        compositeSubscription.unsubscribe()
     }
 
     override fun loadTorrent(torrentHash: String) {
         torrentRepository.getTorrentInfo(torrentHash)
                 .subscribe({
-                    if(it!=null)view.setupViewFromTorrentInfo(it)
+                    if (it != null) view.setupViewFromTorrentInfo(it)
                 }, {
                     TODO("ERROR HANDLING")
                 })
@@ -43,9 +53,13 @@ class TorrentFilesPresenter : TorrentFilesContract.Presenter {
     }
 
     override fun viewClicked(torrentFile: TorrentFile, action: TorrentFilesAdapter.Companion.ClickTypes) {
-        when(action){
-            TorrentFilesAdapter.Companion.ClickTypes.DOWNLOAD -> {torrentRepository.getTorrentFileData(torrentHash, torrentFile.getFullPath())}
-            TorrentFilesAdapter.Companion.ClickTypes.PLAY -> {context.openTorrent(torrentHash, torrentFile.getFullPath())}
+        when (action) {
+            TorrentFilesAdapter.Companion.ClickTypes.DOWNLOAD -> {
+                torrentRepository.getTorrentFileData(torrentHash, torrentFile.getFullPath())
+            }
+            TorrentFilesAdapter.Companion.ClickTypes.PLAY -> {
+                context.openTorrent(torrentHash, torrentFile.getFullPath())
+            }
         }
     }
 }
