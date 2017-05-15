@@ -57,8 +57,6 @@ class NetworkModule {
     internal fun provideOkHttpClient(context: Context): OkHttpClient {
         val client = OkHttpClient.Builder()
                 .addInterceptor(ChuckInterceptor(context))
-                .readTimeout(60, TimeUnit.SECONDS)
-                .connectTimeout(60, TimeUnit.SECONDS)
                 .build()
 
 

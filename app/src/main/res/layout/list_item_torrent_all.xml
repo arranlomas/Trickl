@@ -58,15 +58,6 @@
         </LinearLayout>
 
 
-        <com.daimajia.numberprogressbar.NumberProgressBar
-            android:id="@+id/downloadProgressBar"
-            style="@style/NumberProgressBar_Default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp" />
-
-
-
     </LinearLayout>
 
 

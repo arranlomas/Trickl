@@ -17,9 +17,7 @@ class TorrentFileCardHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         this.torrentFile = torrentFile
         itemView.torrentFileName.text = torrentFile.getFullPath()
         itemView.torrentFileSize.text = torrentFile.fileLength?.formatBytesAsSize()
-        if(itemView.dropDownActionButtons.visibility == View.VISIBLE)
-            itemView.dropDownActionButtons.visibility = View.GONE
-        else
-            itemView.dropDownActionButtons.visibility = View.VISIBLE
+        itemView.downloadProgressBar.max = 100
+        itemView.downloadProgressBar.progress = torrentFile.percComplete
     }
 }

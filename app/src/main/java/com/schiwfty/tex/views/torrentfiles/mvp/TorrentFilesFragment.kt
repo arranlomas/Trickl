@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.pawegio.kandroid.d
 import com.schiwfty.tex.R
+import com.schiwfty.tex.models.TorrentFile
 import com.schiwfty.tex.models.TorrentInfo
 import com.schiwfty.tex.utils.getFullPath
 import com.schiwfty.tex.utils.openTorrent
@@ -23,9 +24,8 @@ import kotlinx.android.synthetic.main.frag_torrent_files.*
 class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
 
     lateinit var presenter: TorrentFilesContract.Presenter
-    val itemOnClick: (View, Int, Int) -> Unit = { _, position, _ ->
-        val torrentFile = filesAdapter.torrentFiles[position]
-        context.openTorrent(presenter.torrentHash, torrentFile.getFullPath())
+    val itemOnClick: (torrentFile: TorrentFile, type: TorrentFilesAdapter.Companion.ClickTypes) -> Unit = { torrentFile, type ->
+        presenter.viewClicked(torrentFile, type)
     }
     val filesAdapter = TorrentFilesAdapter(itemOnClick)
 

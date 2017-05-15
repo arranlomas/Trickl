@@ -19,6 +19,23 @@ class MainPresenter : MainContract.Presenter {
     @Inject
     lateinit var torrentRepository: ITorrentRepository
 
+    private var statusUpdateRunning = true
+
+    private val statusThread = Thread({
+        while (statusUpdateRunning){
+            torrentRepository.getStatus()
+                    .map {
+                        val hashMap = HashMap<String, Float>()
+                        it.torrentList.forEach { hashMap.put(it.infoHash, it.percComplete) }
+                        hashMap
+                    }
+                    .subscribe({
+
+                    },{/*swallow the error*/})
+            Thread.sleep(1000)
+        }
+    })
+
     override fun setup(context: Context, view: MainContract.View) {
         this.view = view
         TricklComponent.networkComponent.inject(this)

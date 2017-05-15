@@ -19,28 +19,11 @@ class AllPresenter : AllContract.Presenter {
 
     lateinit var view: AllContract.View
     lateinit var context: Context
-    private var statusUpdateRunning = true
-
-    private val statusThread = Thread({
-        while (statusUpdateRunning){
-            torrentRepository.getStatus()
-                    .map {
-                        val hashMap = HashMap<String, Float>()
-                        it.torrentList.forEach { hashMap.put(it.infoHash, it.percComplete) }
-                        hashMap
-                    }
-                    .subscribe({
-                        view.updateTorrentPercentage(it)
-                    },{/*swallow the error*/})
-            Thread.sleep(1000)
-        }
-    })
 
     override fun setup(context: Context, view: AllContract.View) {
         this.view = view
         this.context = context
         TricklComponent.networkComponent.inject(this)
-        statusThread.start()
     }
 
     override fun getAllTorrentsInStorageAndAddToClient() {

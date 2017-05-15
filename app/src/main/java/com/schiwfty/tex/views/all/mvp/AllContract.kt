@@ -13,7 +13,6 @@ interface AllContract {
         fun showSuccess(stringId: Int)
         fun updateStatus(string: String)
         fun showAllTorrents(torrentInfoList: List<TorrentInfo>)
-        fun updateTorrentPercentage(percMap: HashMap<String, Float>)
     }
 
     interface Presenter {

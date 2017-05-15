@@ -12,9 +12,15 @@ import kotlinx.android.synthetic.main.list_item_torrent_file.view.*
 /**
  * Created by arran on 19/04/2017.
  */
-class TorrentFilesAdapter(val itemClickListener: (View, Int, Int) -> Unit) : RecyclerView.Adapter<TorrentFileCardHolder>() {
+class TorrentFilesAdapter(val itemClickListener: (TorrentFile, ClickTypes) -> Unit) : RecyclerView.Adapter<TorrentFileCardHolder>() {
     var torrentFiles: List<TorrentFile> = mutableListOf()
 
+    companion object{
+        enum class ClickTypes{
+            DOWNLOAD,
+            PLAY
+        }
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TorrentFileCardHolder {
         val itemView = parent.context.inflateLayout(R.layout.list_item_torrent_file, parent, false)
         val holder = TorrentFileCardHolder(itemView)
@@ -24,13 +30,14 @@ class TorrentFilesAdapter(val itemClickListener: (View, Int, Int) -> Unit) : Rec
             else
                 itemView.dropDownActionButtons.visibility = View.VISIBLE
         }
-        itemView.playFileFab.setOnClickListener { itemClickListener }
-        itemView.downloadFileFab.setOnClickListener { itemClickListener }
         return holder
     }
 
     override fun onBindViewHolder(holder: TorrentFileCardHolder, position: Int) {
         holder.bind(torrentFiles[position])
+        holder.itemView.playFileFab.setOnClickListener {itemClickListener(torrentFiles[position], ClickTypes.PLAY) }
+        holder.itemView.downloadFileFab.setOnClickListener {itemClickListener(torrentFiles[position], ClickTypes.DOWNLOAD) }
+
     }
 
     override fun getItemCount(): Int {

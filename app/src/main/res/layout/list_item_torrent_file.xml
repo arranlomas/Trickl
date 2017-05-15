@@ -13,11 +13,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
@@ -39,9 +34,14 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="size" />
-            </LinearLayout>
 
-        </RelativeLayout>
+                <com.daimajia.numberprogressbar.NumberProgressBar
+                    android:id="@+id/downloadProgressBar"
+                    style="@style/NumberProgressBar_Default"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp" />
+            </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
