@@ -57,6 +57,7 @@ class FileDownloadFragment : Fragment(), FileDownloadContract.View {
         fileDownloadsRecyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         fileDownloadsRecyclerView.layoutManager = llm as RecyclerView.LayoutManager?
+        presenter.getDownloadingTorrents()
     }
 
     override fun setupViewFromTorrentInfo(torrentFiles: List<TorrentFile>) {

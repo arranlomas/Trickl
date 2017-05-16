@@ -2,6 +2,7 @@ package com.schiwfty.tex.repositories
 
 import com.schiwfty.tex.models.ConfluenceInfo
 import com.schiwfty.tex.models.FileStatePiece
+import com.schiwfty.tex.models.TorrentFile
 import com.schiwfty.tex.models.TorrentInfo
 import okhttp3.ResponseBody
 import rx.Observable
@@ -33,4 +34,12 @@ interface ITorrentRepository {
     fun getFileState(hash: String, filePath: String): Observable<List<FileStatePiece>>
 
     fun getPercentagesFromDownloadingFiles(): Observable<List<Triple<String, String, Int>>>
+
+    fun getDownloadFiles(): List<TorrentFile>
+
+    fun getDownloadingFile(hash: String, path: String): TorrentFile
+
+    fun removeTorrentDownloadFile(downloadingFile: TorrentFile)
+
+    fun addDownloadingTorrentFile(torrentFile: TorrentFile)
 }

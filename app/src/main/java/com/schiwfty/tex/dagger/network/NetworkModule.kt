@@ -9,6 +9,7 @@ import com.schiwfty.tex.retrofit.ClientAPI
 import com.schiwfty.tex.retrofit.ConfluenceApi
 import dagger.Module
 import dagger.Provides
+import io.realm.Realm
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
@@ -24,8 +25,8 @@ class NetworkModule {
 
     @Provides
     @NetworkScope
-    internal fun provideTorrentRepository(confluenceApi: ConfluenceApi): ITorrentRepository {
-        return TorrentRepository(confluenceApi)
+    internal fun provideTorrentRepository(confluenceApi: ConfluenceApi, realm: Realm): ITorrentRepository {
+        return TorrentRepository(confluenceApi, realm)
 
     }
 
@@ -67,6 +68,12 @@ class NetworkModule {
     @NetworkScope
     internal fun provideBaseUrl(): String {
         return "http://127.0.0.1:8080"
+    }
+
+    @Provides
+    @NetworkScope
+    internal fun provideRealm(): Realm {
+        return Realm.getDefaultInstance()
     }
 
 }

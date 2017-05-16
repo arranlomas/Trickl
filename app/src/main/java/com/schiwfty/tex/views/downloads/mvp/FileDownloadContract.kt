@@ -17,6 +17,7 @@ interface FileDownloadContract {
     interface Presenter {
         fun setup(context: Context, view: FileDownloadContract.View, arguments: Bundle?)
         fun destroy()
+        fun getDownloadingTorrents()
         fun viewClicked(torrentFile: TorrentFile, action: FileDownloadAdapter.Companion.ClickTypes)
     }
 }

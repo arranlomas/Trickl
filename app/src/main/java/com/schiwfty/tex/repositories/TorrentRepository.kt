@@ -7,8 +7,11 @@ import com.schiwfty.tex.models.ConfluenceInfo
 import com.schiwfty.tex.models.FileStatePiece
 import com.schiwfty.tex.models.TorrentFile
 import com.schiwfty.tex.models.TorrentInfo
+import com.schiwfty.tex.realm.RealmTorrentFile
 import com.schiwfty.tex.retrofit.ConfluenceApi
 import com.schiwfty.tex.utils.*
+import io.realm.Realm
+import io.realm.RealmList
 import okhttp3.ResponseBody
 import org.apache.commons.io.IOUtils
 import rx.Observable
@@ -20,7 +23,7 @@ import java.io.FileInputStream
 /**
  * Created by arran on 29/04/2017.
  */
-class TorrentRepository(val confluenceApi: ConfluenceApi) : ITorrentRepository {
+class TorrentRepository(val confluenceApi: ConfluenceApi, val realm: Realm) : ITorrentRepository {
 
     override val torrentFileProgressSource: PublishSubject<List<Triple<String, String, Int>>> = PublishSubject.create<List<Triple<String, String, Int>>>()
 
@@ -179,6 +182,30 @@ class TorrentRepository(val confluenceApi: ConfluenceApi) : ITorrentRepository {
                 .map { it }
                 .toList()
                 .map { it }
+    }
+
+    override fun getDownloadFiles(): List<TorrentFile> {
+        val realmResult =  realm.where(RealmTorrentFile::class.java).findAll()
+        val torrentFileList = mutableListOf<TorrentFile>()
+        realmResult.forEach { torrentFileList.add(it.mapToModel()) }
+        return torrentFileList.toList()
+    }
+
+    override fun getDownloadingFile(hash: String, path: String): TorrentFile {
+        return realm.where(RealmTorrentFile::class.java).equalTo("primaryKey", hash+path).findFirst().mapToModel()
+    }
+
+    override fun removeTorrentDownloadFile(downloadingFile: TorrentFile) {
+        realm.executeTransaction {
+            val result = realm.where(RealmTorrentFile::class.java).equalTo("primaryKey", downloadingFile.primaryKey).findFirst()
+            result.deleteFromRealm()
+        }
+    }
+
+    override fun addDownloadingTorrentFile(torrentFile: TorrentFile) {
+        realm.executeTransaction {
+            realm.insertOrUpdate(torrentFile.mapToRealm())
+        }
     }
 
 }

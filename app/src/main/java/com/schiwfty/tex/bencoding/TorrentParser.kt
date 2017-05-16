@@ -6,6 +6,7 @@ import com.schiwfty.tex.bencoding.types.BInt
 import com.schiwfty.tex.bencoding.types.BList
 import com.schiwfty.tex.models.TorrentFile
 import com.schiwfty.tex.models.TorrentInfo
+import com.schiwfty.tex.utils.concatStrings
 import java.io.File
 import java.io.IOException
 import java.text.ParseException
@@ -229,7 +230,7 @@ object TorrentParser {
                     while (filePathsIterator.hasNext())
                         paths.add(filePathsIterator.next().toString())
 
-                    val tf = TorrentFile(fileLength.value, paths, hash)
+                    val tf = TorrentFile(fileLength.value, paths, hash, paths.concatStrings())
                     fileList.add(tf)
                 }
             }

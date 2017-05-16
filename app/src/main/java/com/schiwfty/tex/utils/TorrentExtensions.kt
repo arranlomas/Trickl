@@ -11,6 +11,7 @@ import com.schiwfty.tex.models.TorrentInfo
 import java.io.File
 import java.net.URLDecoder
 import java.net.URLEncoder
+import java.util.*
 import java.util.regex.Pattern
 
 
@@ -88,6 +89,17 @@ fun TorrentFile.getFullPath(): String{
     var path = ""
     fileDirs?.forEachIndexed { index, s ->
         if (index == (fileDirs.size - 1))
+            path += s
+        else
+            path += "$s/"
+    }
+    return path
+}
+
+fun LinkedList<String>.concatStrings(): String{
+    var path = ""
+    forEachIndexed { index, s ->
+        if (index == (size - 1))
             path += s
         else
             path += "$s/"

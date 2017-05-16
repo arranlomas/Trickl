@@ -45,4 +45,8 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
     override fun viewClicked(torrentFile: TorrentFile, action: FileDownloadAdapter.Companion.ClickTypes) {
 
     }
+
+    override fun getDownloadingTorrents() {
+       view.setupViewFromTorrentInfo(torrentRepository.getDownloadFiles())
+    }
 }
