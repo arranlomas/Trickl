@@ -17,7 +17,5 @@ class TorrentFileCardHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         this.torrentFile = torrentFile
         itemView.torrentFileName.text = torrentFile.getFullPath()
         itemView.torrentFileSize.text = torrentFile.fileLength?.formatBytesAsSize()
-        itemView.downloadProgressBar.max = 100
-        itemView.downloadProgressBar.progress = torrentFile.percComplete
     }
 }
