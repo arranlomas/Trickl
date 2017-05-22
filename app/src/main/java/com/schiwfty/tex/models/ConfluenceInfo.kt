@@ -82,5 +82,9 @@ data class FileStatePiece(
         var checking: Boolean,
 
         @SerializedName("Partial")
-        var partial: Boolean
+        var partial: Boolean,
+
+        var torrentHash: String,
+
+        var filePath: String
 )

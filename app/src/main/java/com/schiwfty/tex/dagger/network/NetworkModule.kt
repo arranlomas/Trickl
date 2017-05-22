@@ -3,6 +3,8 @@ package com.schiwfty.tex.dagger.network
 
 import android.content.Context
 import com.readystatesoftware.chuck.ChuckInterceptor
+import com.schiwfty.tex.persistence.ITorrentPersistence
+import com.schiwfty.tex.persistence.TorrentPersistence
 import com.schiwfty.tex.repositories.ITorrentRepository
 import com.schiwfty.tex.repositories.TorrentRepository
 import com.schiwfty.tex.retrofit.ClientAPI
@@ -25,8 +27,15 @@ class NetworkModule {
 
     @Provides
     @NetworkScope
-    internal fun provideTorrentRepository(confluenceApi: ConfluenceApi, realm: Realm): ITorrentRepository {
-        return TorrentRepository(confluenceApi, realm)
+    internal fun provideTorrentRepository(confluenceApi: ConfluenceApi, torrentPersistence: ITorrentPersistence): ITorrentRepository {
+        return TorrentRepository(confluenceApi, torrentPersistence)
+
+    }
+
+    @Provides
+    @NetworkScope
+    internal fun provideTorrentPersistence(): ITorrentPersistence {
+        return TorrentPersistence()
 
     }
 
@@ -73,7 +82,7 @@ class NetworkModule {
     @Provides
     @NetworkScope
     internal fun provideRealm(): Realm {
-        return Realm.getDefaultInstance()
+        return  Realm.getDefaultInstance()
     }
 
 }

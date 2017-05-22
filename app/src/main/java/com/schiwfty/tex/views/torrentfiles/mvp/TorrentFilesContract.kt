@@ -12,7 +12,7 @@ import com.schiwfty.tex.views.torrentfiles.list.TorrentFilesAdapter
 interface TorrentFilesContract {
     interface View {
         fun setupViewFromTorrentInfo(torrentInfo: TorrentInfo)
-        fun updateTorrentPercentages(updatedDetails: List<Triple<String, String, Int>>)
+        fun updateTorrentPercentages(updatedDetails: List<TorrentFile>)
     }
 
     interface Presenter {

@@ -71,8 +71,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         when(requestCode){
             AddTorrentActivity.ADD_TORRENT_REQUEST_CODE -> {
                 if(data!=null && data.hasExtra(AddTorrentActivity.ARG_ADD_TORRENT_RESULT)){
-                    val hash = data.getStringExtra(AddTorrentActivity.ARG_ADD_TORRENT_RESULT)
-                    presenter.getAllTorrentData(hash)
+//                    val hash = data.getStringExtra(AddTorrentActivity.ARG_ADD_TORRENT_RESULT)
+//                    presenter.getAllTorrentData(hash)
                 }
 
             }

@@ -2,15 +2,12 @@ package com.schiwfty.tex.views.downloads.mvp
 
 import android.content.Context
 import android.os.Bundle
+import com.pawegio.kandroid.v
 import com.schiwfty.tex.TricklComponent
 import com.schiwfty.tex.models.TorrentFile
 import com.schiwfty.tex.repositories.ITorrentRepository
 import com.schiwfty.tex.utils.getFullPath
-import com.schiwfty.tex.utils.openTorrent
 import com.schiwfty.tex.views.downloads.list.FileDownloadAdapter
-import com.schiwfty.tex.views.torrentfiles.list.TorrentFilesAdapter
-import com.schiwfty.tex.views.torrentfiles.mvp.TorrentFilesContract
-import com.schiwfty.tex.views.torrentfiles.mvp.TorrentFilesFragment
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
@@ -33,8 +30,17 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
 
         compositeSubscription.add(
                 torrentRepository.torrentFileProgressSource
-                        .subscribe { //TODO update view with new percentages
-                             }
+                        .subscribe({
+                            it.forEach {
+                                v { "HASH: ${it.torrentHash}" }
+                                v { "PATH: ${it.getFullPath()}" }
+                                v { "PERC: ${it.percComplete}" }
+                            }
+                            //TODO update view with new percentages
+                        }, {
+                            //swallow error
+                            it.printStackTrace()
+                        })
         )
     }
 
@@ -47,6 +53,7 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
     }
 
     override fun getDownloadingTorrents() {
-       view.setupViewFromTorrentInfo(torrentRepository.getDownloadFiles())
+        torrentRepository.getDownloadingFilesFromPersistence()
+                .subscribe { view.setupViewFromTorrentInfo(it) }
     }
 }

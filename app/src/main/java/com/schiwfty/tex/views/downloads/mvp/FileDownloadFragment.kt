@@ -9,9 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.tex.R
 import com.schiwfty.tex.models.TorrentFile
-import com.schiwfty.tex.models.TorrentInfo
 import com.schiwfty.tex.views.downloads.list.FileDownloadAdapter
-import com.schiwfty.tex.views.torrentfiles.mvp.TorrentFilesPresenter
 import kotlinx.android.synthetic.main.frag_file_downloads.*
 
 

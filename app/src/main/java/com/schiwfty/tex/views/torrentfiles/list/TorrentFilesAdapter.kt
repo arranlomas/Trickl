@@ -45,12 +45,7 @@ class TorrentFilesAdapter(val itemClickListener: (TorrentFile, ClickTypes) -> Un
         return torrentFiles.size
     }
 
-    fun updatePercentages(updatedDetails: List<Triple<String, String, Int>>){
-        torrentFiles.forEach { file ->
-            updatedDetails.forEach {
-                if(file.torrentHash == it.first && file.getFullPath() == it.second)
-                file.percComplete = it.third
-            }
-        }
+    fun updateTorrentFiles(torrentFiles: List<TorrentFile>){
+        this.torrentFiles = torrentFiles
     }
 }

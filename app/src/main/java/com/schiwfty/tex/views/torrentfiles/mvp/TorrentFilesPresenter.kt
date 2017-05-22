@@ -55,7 +55,7 @@ class TorrentFilesPresenter : TorrentFilesContract.Presenter {
     override fun viewClicked(torrentFile: TorrentFile, action: TorrentFilesAdapter.Companion.ClickTypes) {
         when (action) {
             TorrentFilesAdapter.Companion.ClickTypes.DOWNLOAD -> {
-                torrentRepository.addDownloadingTorrentFile(torrentFile)
+                torrentRepository.addTorrentForDownload(torrentFile)
             }
             TorrentFilesAdapter.Companion.ClickTypes.PLAY -> {
                 context.openTorrent(torrentHash, torrentFile.getFullPath())

@@ -15,7 +15,7 @@ import rx.subjects.PublishSubject
  * Created by arran on 29/04/2017.
  */
 interface ITorrentRepository {
-    val torrentFileProgressSource: PublishSubject<List<Triple<String, String, Int>>>
+    val torrentFileProgressSource: PublishSubject<List<TorrentFile>>
 
     fun setupClientFromRepo(): Observable<ResponseBody>
 
@@ -33,13 +33,7 @@ interface ITorrentRepository {
 
     fun getFileState(hash: String, filePath: String): Observable<List<FileStatePiece>>
 
-    fun getPercentagesFromDownloadingFiles(): Observable<List<Triple<String, String, Int>>>
+    fun getDownloadingFilesFromPersistence(): Observable<List<TorrentFile>>
 
-    fun getDownloadFiles(): List<TorrentFile>
-
-    fun getDownloadingFile(hash: String, path: String): TorrentFile
-
-    fun removeTorrentDownloadFile(downloadingFile: TorrentFile)
-
-    fun addDownloadingTorrentFile(torrentFile: TorrentFile)
+    fun addTorrentForDownload(torrentFile: TorrentFile)
 }

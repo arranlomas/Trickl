@@ -1,17 +1,15 @@
 package com.schiwfty.tex.repositories
 
-import com.pawegio.kandroid.v
+import android.util.Log
 import com.schiwfty.tex.confluence.Confluence
 import com.schiwfty.tex.confluence.Confluence.torrentRepo
 import com.schiwfty.tex.models.ConfluenceInfo
 import com.schiwfty.tex.models.FileStatePiece
 import com.schiwfty.tex.models.TorrentFile
 import com.schiwfty.tex.models.TorrentInfo
-import com.schiwfty.tex.realm.RealmTorrentFile
+import com.schiwfty.tex.persistence.ITorrentPersistence
 import com.schiwfty.tex.retrofit.ConfluenceApi
 import com.schiwfty.tex.utils.*
-import io.realm.Realm
-import io.realm.RealmList
 import okhttp3.ResponseBody
 import org.apache.commons.io.IOUtils
 import rx.Observable
@@ -23,24 +21,40 @@ import java.io.FileInputStream
 /**
  * Created by arran on 29/04/2017.
  */
-class TorrentRepository(val confluenceApi: ConfluenceApi, val realm: Realm) : ITorrentRepository {
+class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence: ITorrentPersistence): ITorrentRepository {
 
-    override val torrentFileProgressSource: PublishSubject<List<Triple<String, String, Int>>> = PublishSubject.create<List<Triple<String, String, Int>>>()
+    override val torrentFileProgressSource: PublishSubject<List<TorrentFile>> = PublishSubject.create<List<TorrentFile>>()
 
     private var statusUpdateRunning = true
 
     private val statusThread = Thread({
         while (statusUpdateRunning) {
-            getPercentagesFromDownloadingFiles()
-                    .subscribe({
-                        torrentFileProgressSource.onNext(it)
-                    }, {
-                        /*swallow the error*/
-                        it.printStackTrace()
-                    },{
-                        v { "yay" }
-                    })
-            Thread.sleep(5000)
+                        val files = torrentPersistence.getDownloadFiles()
+                        files.forEach {
+                            val file = it
+                            getFileState(it.torrentHash, it.getFullPath())
+                                    .subscribe({
+                                        Log.v ("SIZE", "${it.size}")
+                                        var totalFileSize: Long = 0
+                                        var totalCompletedSize: Long = 0
+                                        it.forEach {
+                                            totalFileSize += it.bytes
+                                            if (it.complete) {
+                                                totalCompletedSize += it.bytes
+                                            }
+                                        }
+                                        val percCompleted = (totalCompletedSize.toDouble() / totalFileSize.toDouble()) * 100.0
+                                        file.percComplete = percCompleted.toInt()
+                                        torrentPersistence.saveTorrentFile(file)
+                                        Log.v  ( "HASH", file.torrentHash)
+                                        Log.v  ( "PATH", file.getFullPath())
+                                        Log.v  ( "PERC", percCompleted.toString() )
+                                        Log.v  ( "-----------","-----------------------" )
+                                    }, {
+                                        it.printStackTrace()
+                                    })
+                    }
+            Thread.sleep(2000)
         }
     })
 
@@ -107,7 +121,6 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val realm: Realm) : IT
 
     override fun getTorrentFileData(hash: String, path: String): Observable<ResponseBody> {
         return confluenceApi.getFileData(hash, path)
-                .composeIo()
     }
 
     override fun postTorrentFile(hash: String, file: File): Observable<ResponseBody> {
@@ -129,83 +142,11 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val realm: Realm) : IT
                 .composeIo()
     }
 
-    override fun getPercentagesFromDownloadingFiles(): Observable<List<Triple<String, String, Int>>> {
-        return getAllTorrentInfos()
-                .flatMap { getAllTorrentFiles() }
-                .flatMapIterable { it }
-                .flatMap {
-                    val hash = it.first
-                    val path = it.second.getFullPath()
-                    getFileState(hash, path).map { Triple(hash, path, it) }
-                }
-                .map {
-                    val hash = it.first
-                    val path = it.second
-
-                    var totalFileSize: Long = 0
-                    var totalCompletedSize: Long = 0
-                    it.third.forEach {
-                        totalFileSize += it.bytes
-                        if(it.complete){
-                            totalCompletedSize+=it.bytes
-                        }
-                    }
-                    v("FILE NAME:               $path   ||  $hash")
-                    v("TOTAL FILE SIZE:         $totalFileSize")
-                    v("TOTAL COMPLETED SIZE:    $totalCompletedSize")
-                    val percCompleted = (totalCompletedSize.toDouble()/totalFileSize.toDouble()) *100.0
-                    v("PERC COMPLETED:          $percCompleted%")
-                    v("--------------------------------------------")
-                    Triple(hash, path, Math.round(percCompleted).toInt())
-                }
-                .toList()
+    override fun getDownloadingFilesFromPersistence(): Observable<List<TorrentFile>> {
+        return Observable.just(torrentPersistence.getDownloadFiles())
     }
 
-    private fun getAllTorrentFiles(): Observable<List<Pair<String, TorrentFile>>> {
-        return getAllTorrentInfos()
-                .flatMapIterable { it.map { Pair(it.info_hash, it) } }
-                .flatMapIterable {
-                    val hash = it.first
-                    it.second.fileList.map { Pair(hash, it) }
-                }
-                .toList()
-                .map { it }
-
+    override fun addTorrentForDownload(torrentFile: TorrentFile) {
+        torrentPersistence.saveTorrentFile(torrentFile)
     }
-
-    private fun getAllTorrentInfos(): Observable<List<TorrentInfo>> {
-        return getStatus()
-                .flatMapIterable { it.torrentList }
-                .flatMap { getTorrentInfo(it.infoHash) }
-                .filter { it != null }
-                .map { if (it == null) throw NullPointerException() else it }
-                .map { it }
-                .toList()
-                .map { it }
-    }
-
-    override fun getDownloadFiles(): List<TorrentFile> {
-        val realmResult =  realm.where(RealmTorrentFile::class.java).findAll()
-        val torrentFileList = mutableListOf<TorrentFile>()
-        realmResult.forEach { torrentFileList.add(it.mapToModel()) }
-        return torrentFileList.toList()
-    }
-
-    override fun getDownloadingFile(hash: String, path: String): TorrentFile {
-        return realm.where(RealmTorrentFile::class.java).equalTo("primaryKey", hash+path).findFirst().mapToModel()
-    }
-
-    override fun removeTorrentDownloadFile(downloadingFile: TorrentFile) {
-        realm.executeTransaction {
-            val result = realm.where(RealmTorrentFile::class.java).equalTo("primaryKey", downloadingFile.primaryKey).findFirst()
-            result.deleteFromRealm()
-        }
-    }
-
-    override fun addDownloadingTorrentFile(torrentFile: TorrentFile) {
-        realm.executeTransaction {
-            realm.insertOrUpdate(torrentFile.mapToRealm())
-        }
-    }
-
 }

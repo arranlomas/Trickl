@@ -7,13 +7,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.pawegio.kandroid.d
 import com.schiwfty.tex.R
 import com.schiwfty.tex.models.TorrentFile
 import com.schiwfty.tex.models.TorrentInfo
-import com.schiwfty.tex.utils.getFullPath
-import com.schiwfty.tex.utils.openTorrent
-import com.schiwfty.tex.views.addtorrent.AddTorrentActivity
 import com.schiwfty.tex.views.torrentfiles.list.TorrentFilesAdapter
 import kotlinx.android.synthetic.main.frag_torrent_files.*
 
@@ -74,8 +70,8 @@ class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
         filesAdapter.notifyDataSetChanged()
     }
 
-    override fun updateTorrentPercentages(updatedDetails: List<Triple<String, String, Int>>) {
-        filesAdapter.updatePercentages(updatedDetails)
+    override fun updateTorrentPercentages(updatedDetails: List<TorrentFile>) {
+        filesAdapter.updateTorrentFiles(updatedDetails)
         filesAdapter.notifyDataSetChanged()
     }
 }
