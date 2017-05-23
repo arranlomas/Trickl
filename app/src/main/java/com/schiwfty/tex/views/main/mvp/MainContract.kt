@@ -15,7 +15,5 @@ interface MainContract {
 
     interface Presenter {
         fun setup(context: Context, view: MainContract.View)
-        fun getTorrentFileData(hash: String, path: String)
-        fun getAllTorrentData(hash: String)
     }
 }

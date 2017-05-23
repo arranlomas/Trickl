@@ -17,6 +17,7 @@ import rx.Subscription
 import rx.subjects.PublishSubject
 import java.io.File
 import java.io.FileInputStream
+import kotlin.concurrent.thread
 
 
 /**
@@ -50,7 +51,7 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
                             torrentFile.percComplete = Math.round(percCompleted).toInt()
                             torrentPersistence.saveTorrentFile(torrentFile)
                             percentagesCompleted++
-                            if(percentagesCompleted == files.size) torrentFileProgressSource.onNext(true)
+                            if (percentagesCompleted == files.size) torrentFileProgressSource.onNext(true)
                             Log.v("HASH", torrentFile.torrentHash)
                             Log.v("PATH", torrentFile.getFullPath())
                             Log.v("PERC", percCompleted.toString())
@@ -124,9 +125,9 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
                 .composeIo()
     }
 
-    override fun getTorrentFileData(hash: String, path: String): Observable<ResponseBody> {
-        return confluenceApi.getFileData(hash, path)
-    }
+//    override fun getTorrentFileData(hash: String, path: String, byteRangeStart: Long, byteRangeEnd: Long): Observable<ResponseBody> {
+//        return confluenceApi.getFileData(hash, path, byteRangeStart, byteRangeEnd)
+//    }
 
     override fun postTorrentFile(hash: String, file: File): Observable<ResponseBody> {
         if (!file.isValidTorrentFile()) throw IllegalStateException("File is not a valid torrent file")
@@ -160,7 +161,7 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
     }
 
     override fun startFileDownloading(torrentFile: TorrentFile) {
-        val subscription = confluenceApi.getFileData(torrentFile.torrentHash, torrentFile.getFullPath())
+        val subscription = confluenceApi.getFileData(torrentFile.torrentHash, torrentFile.getFullPath(), 0, (torrentFile.fileLength ?: 0)*10)
                 .composeIo()
                 .map {
                     torrentPersistence.getDownloadingFile(torrentFile.torrentHash, torrentFile.getFullPath())
@@ -170,6 +171,15 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
             it.printStackTrace()
         })
 
+        thread {
+            confluenceApi.getFileData(torrentFile.torrentHash, torrentFile.getFullPath(), 0, (torrentFile.fileLength ?: 0)*10)
+        }
+
         downloadMap.put(torrentFile, subscription)
+    }
+
+    override fun stopFileDownloading(torrentFile: TorrentFile) {
+        val subscription = downloadMap[torrentFile]
+        subscription?.unsubscribe()
     }
 }

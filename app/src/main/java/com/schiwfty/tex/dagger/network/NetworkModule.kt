@@ -66,6 +66,7 @@ class NetworkModule {
     @NetworkScope
     internal fun provideOkHttpClient(): OkHttpClient {
         val logging = HttpLoggingInterceptor()
+        logging.level = HttpLoggingInterceptor.Level.HEADERS
         val client = OkHttpClient.Builder()
                 .connectTimeout(45, TimeUnit.SECONDS)
                 .readTimeout(45, TimeUnit.SECONDS)

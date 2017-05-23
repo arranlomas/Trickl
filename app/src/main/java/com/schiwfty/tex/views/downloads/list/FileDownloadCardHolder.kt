@@ -13,12 +13,16 @@ import kotlinx.android.synthetic.main.list_item_file_download.view.*
 class FileDownloadCardHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     lateinit var torrentFile: TorrentFile
 
-    fun bind(torrentFile: TorrentFile) {
+    fun bind(torrentFile: TorrentFile, itemClickListener: (TorrentFile) -> Unit) {
         this.torrentFile = torrentFile
         itemView.downloadFileName.text = torrentFile.getFullPath()
         itemView.parentTorrentFileName.text = torrentFile.parentTorrentName
         itemView.downloadFileSize.text = torrentFile.fileLength?.formatBytesAsSize()
         itemView.downloadProgressBar.max = 100
         itemView.downloadProgressBar.progress = torrentFile.percComplete
+
+        itemView.downloadChangeStateFab.setOnClickListener {
+            itemClickListener(torrentFile)
+        }
     }
 }

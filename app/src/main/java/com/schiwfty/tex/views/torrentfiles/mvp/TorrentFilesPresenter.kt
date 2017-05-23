@@ -53,6 +53,7 @@ class TorrentFilesPresenter : TorrentFilesContract.Presenter {
             TorrentFilesAdapter.Companion.ClickTypes.DOWNLOAD -> {
                 torrentRepository.addFileForDownload(torrentFile)
                 torrentRepository.startFileDownloading(torrentFile)
+                view.dismiss()
             }
             TorrentFilesAdapter.Companion.ClickTypes.PLAY -> {
                 context.openTorrent(torrentHash, torrentFile.getFullPath())

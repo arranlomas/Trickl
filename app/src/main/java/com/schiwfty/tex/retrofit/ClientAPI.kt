@@ -26,7 +26,7 @@ interface ClientAPI {
 
     @Streaming
     @GET("/data")
-    fun getData(@Query("ih") info_hash: String, @Query("path") file_path: String): Observable<ResponseBody>
+    fun getData(@Query("ih") info_hash: String, @Query("path") file_path: String, @Header("Range") byteRange: String): Observable<ResponseBody>
 
     @GET("/fileState")
     fun getFileState(@Query("ih") info_hash: String, @Query("path") file_path: String): Observable<List<FileStatePiece>>

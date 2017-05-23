@@ -13,6 +13,7 @@ interface TorrentFilesContract {
     interface View {
         fun setupViewFromTorrentInfo(torrentInfo: TorrentInfo)
         fun updateTorrentPercentages(updatedDetails: List<TorrentFile>)
+        fun dismiss()
     }
 
     interface Presenter {

@@ -74,4 +74,8 @@ class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
         filesAdapter.updateTorrentFiles(updatedDetails)
         filesAdapter.notifyDataSetChanged()
     }
+
+    override fun dismiss() {
+        activity.finish()
+    }
 }

@@ -18,5 +18,6 @@ interface FileDownloadContract {
         fun destroy()
         fun getDownloadingTorrents()
         fun viewClicked(torrentFile: TorrentFile, action: FileDownloadAdapter.Companion.ClickTypes)
+        fun changeFileDownloadState()
     }
 }

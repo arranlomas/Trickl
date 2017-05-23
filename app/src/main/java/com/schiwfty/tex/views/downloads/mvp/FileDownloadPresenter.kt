@@ -14,6 +14,7 @@ import javax.inject.Inject
  */
 class FileDownloadPresenter : FileDownloadContract.Presenter {
 
+
     lateinit var view: FileDownloadContract.View
     lateinit var context: Context
 
@@ -41,11 +42,19 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
     }
 
     override fun viewClicked(torrentFile: TorrentFile, action: FileDownloadAdapter.Companion.ClickTypes) {
+        when(action){
+            FileDownloadAdapter.Companion.ClickTypes.CHANGE_DOWNLOAD_STATE ->{torrentRepository.startFileDownloading(torrentFile)}
+            FileDownloadAdapter.Companion.ClickTypes.OPEN ->{}
+        }
 
     }
 
     override fun getDownloadingTorrents() {
         torrentRepository.getDownloadingFilesFromPersistence()
                 .subscribe { view.setupViewFromTorrentInfo(it) }
+    }
+
+    override fun changeFileDownloadState() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

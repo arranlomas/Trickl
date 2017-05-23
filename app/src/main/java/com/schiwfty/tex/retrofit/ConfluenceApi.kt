@@ -29,8 +29,8 @@ class ConfluenceApi(private val clientAPI: ClientAPI) {
         get() = clientAPI.getStatus()
 
 
-    fun getFileData(hash: String, path: String): Observable<ResponseBody> {
-        return clientAPI.getData(hash, path)
+    fun getFileData(hash: String, path: String, byteRangeStart: Long, byteRangeEnd: Long): Observable<ResponseBody> {
+        return clientAPI.getData(hash, path, "bytes=$byteRangeStart-$byteRangeEnd")
     }
 
     fun getFileState(hash: String, path: String): Observable<List<FileStatePiece>> {

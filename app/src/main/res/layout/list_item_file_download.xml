@@ -13,6 +13,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/downloadChangeStateFab"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_play"/>
+
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
@@ -43,13 +54,17 @@
                     android:layout_margin="10dp"
                     android:text="file size" />
 
-                <com.daimajia.numberprogressbar.NumberProgressBar
-                    android:id="@+id/downloadProgressBar"
-                    style="@style/NumberProgressBar_Default"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp" />
             </LinearLayout>
+
+        </LinearLayout>
+
+        <com.daimajia.numberprogressbar.NumberProgressBar
+            android:id="@+id/downloadProgressBar"
+            style="@style/NumberProgressBar_Default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp" />
+
     </LinearLayout>
 
 

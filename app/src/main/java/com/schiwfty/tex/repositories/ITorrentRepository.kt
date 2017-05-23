@@ -27,8 +27,6 @@ interface ITorrentRepository {
 
     fun getAllTorrentsFromStorage(): Observable<List<TorrentInfo>>
 
-    fun getTorrentFileData(hash: String, path: String): Observable<ResponseBody>
-
     fun postTorrentFile(hash: String, file: File): Observable<ResponseBody>
 
     fun getFileState(torrentFile: TorrentFile): Observable<Pair<TorrentFile,List<FileStatePiece>>>
@@ -38,4 +36,6 @@ interface ITorrentRepository {
     fun addFileForDownload(torrentFile: TorrentFile)
 
     fun startFileDownloading(torrentFile: TorrentFile)
+
+    fun stopFileDownloading(torrentFile: TorrentFile)
 }
