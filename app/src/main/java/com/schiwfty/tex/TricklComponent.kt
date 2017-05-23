@@ -1,7 +1,5 @@
 package com.schiwfty.tex
 
-import android.content.Context
-import com.schiwfty.tex.dagger.context.ContextModule
 import com.schiwfty.tex.dagger.network.DaggerNetworkComponent
 import com.schiwfty.tex.dagger.network.NetworkComponent
 import com.schiwfty.tex.dagger.network.NetworkModule
@@ -12,10 +10,9 @@ import com.schiwfty.tex.dagger.network.NetworkModule
 object TricklComponent {
     lateinit var networkComponent: NetworkComponent
 
-    fun install(context: Context) {
+    fun install() {
         networkComponent = DaggerNetworkComponent.builder()
                 .networkModule(NetworkModule())
-                .contextModule(ContextModule(context))
                 .build()
         //TODO set client address here!
     }

@@ -1,8 +1,6 @@
 package com.schiwfty.tex.dagger.network
 
 
-import android.content.Context
-import com.readystatesoftware.chuck.ChuckInterceptor
 import com.schiwfty.tex.persistence.ITorrentPersistence
 import com.schiwfty.tex.persistence.TorrentPersistence
 import com.schiwfty.tex.repositories.ITorrentRepository
@@ -13,10 +11,12 @@ import dagger.Module
 import dagger.Provides
 import io.realm.Realm
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+
 
 /**
  * Created by arran on 15/02/2017.
@@ -64,11 +64,13 @@ class NetworkModule {
 
     @Provides
     @NetworkScope
-    internal fun provideOkHttpClient(context: Context): OkHttpClient {
+    internal fun provideOkHttpClient(): OkHttpClient {
+        val logging = HttpLoggingInterceptor()
         val client = OkHttpClient.Builder()
-                .addInterceptor(ChuckInterceptor(context))
+                .connectTimeout(45, TimeUnit.SECONDS)
+                .readTimeout(45, TimeUnit.SECONDS)
+                .addInterceptor(logging)
                 .build()
-
 
         return client
     }
@@ -82,7 +84,7 @@ class NetworkModule {
     @Provides
     @NetworkScope
     internal fun provideRealm(): Realm {
-        return  Realm.getDefaultInstance()
+        return Realm.getDefaultInstance()
     }
 
 }

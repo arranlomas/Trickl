@@ -81,6 +81,10 @@ dependencies {
 
     //Number Progress bar
     compile 'com.daimajia.numberprogressbar:library:1.2@aar'
+
+    //STETHO
+    compile 'com.facebook.stetho:stetho:1.4.2'
+    compile 'com.uphyca:stetho_realm:2.0.1'
 }
 repositories {
     mavenCentral()

@@ -51,20 +51,19 @@ class FileDownloadFragment : Fragment(), FileDownloadContract.View {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        fileDownloadsSwipeRefresh.isRefreshing = true
         fileDownloadsRecyclerView.adapter = filesAdapter
         fileDownloadsRecyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         fileDownloadsRecyclerView.layoutManager = llm as RecyclerView.LayoutManager?
         presenter.getDownloadingTorrents()
+        fileDownloadsSwipeRefresh.setOnRefreshListener { presenter.getDownloadingTorrents() }
     }
 
     override fun setupViewFromTorrentInfo(torrentFiles: List<TorrentFile>) {
+        fileDownloadsSwipeRefresh.isRefreshing = false
         filesAdapter.torrentFiles = torrentFiles
         filesAdapter.notifyDataSetChanged()
     }
 
-    override fun updateTorrentPercentages(updatedDetails: List<Triple<String, String, Int>>) {
-        filesAdapter.updatePercentages(updatedDetails)
-        filesAdapter.notifyDataSetChanged()
-    }
 }

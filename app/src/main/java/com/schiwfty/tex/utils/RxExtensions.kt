@@ -11,14 +11,14 @@ import java.util.concurrent.TimeUnit
  * Created by arran on 30/04/2017.
  */
 fun <T> Observable<T>.composeIoWithRetry(): Observable<T> = compose<T>({
-    it.observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
+    it.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .retryWhen(RetryAfterTimeoutWithDelay(3, 2))
 })
 
 fun <T> Observable<T>.composeIo(): Observable<T> = compose<T>({
-    it.observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
+    it.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
 })
 
 private class RetryAfterTimeoutWithDelay(val maxRetries: Int, var delay: Long)

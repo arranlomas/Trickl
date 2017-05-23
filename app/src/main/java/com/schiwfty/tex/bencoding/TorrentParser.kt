@@ -37,9 +37,7 @@ object TorrentParser {
     private fun parseTorrent(o: Any): TorrentInfo {
         if (o is BDictionary) {
             val torrentDictionary = o
-            val infoDictionary = parseInfoDictionary(torrentDictionary)
-
-            if (infoDictionary == null) throw IllegalStateException("info dictionary is null")
+            val infoDictionary = parseInfoDictionary(torrentDictionary) ?: throw IllegalStateException("info dictionary is null")
 
             val t = TorrentInfo(parseTorrentName(infoDictionary))
 
@@ -55,7 +53,7 @@ object TorrentParser {
             ///////////////////////////////////
             //// OPTIONAL FIELDS //////////////
             ///////////////////////////////////
-            t.fileList = parseFileList(infoDictionary, t.info_hash)
+            t.fileList = parseFileList(infoDictionary, t.info_hash, t.name)
             t.comment = parseComment(torrentDictionary)
             t.createdBy = parseCreatorName(torrentDictionary)
             t.creationDate = parseCreationDate(torrentDictionary)
@@ -212,7 +210,7 @@ object TorrentParser {
      * *
      * @return files — a list of dictionaries each corresponding to a file (only when multiple files are being shared).
      */
-    private fun parseFileList(info: BDictionary, hash: String): List<TorrentFile> {
+    private fun parseFileList(info: BDictionary, hash: String, torrentName: String): List<TorrentFile> {
         if (null != info.find(BByteString("files"))) {
             val fileList = ArrayList<TorrentFile>()
             val filesBList = info.find(BByteString("files")) as BList
@@ -230,7 +228,8 @@ object TorrentParser {
                     while (filePathsIterator.hasNext())
                         paths.add(filePathsIterator.next().toString())
 
-                    val tf = TorrentFile(fileLength.value, paths, hash, paths.concatStrings())
+                    val tf = TorrentFile(fileLength.value, paths, hash, "$hash${paths.concatStrings()}")
+                    tf.parentTorrentName = torrentName
                     fileList.add(tf)
                 }
             }

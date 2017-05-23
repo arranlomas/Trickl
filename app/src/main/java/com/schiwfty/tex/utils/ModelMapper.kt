@@ -15,6 +15,7 @@ fun RealmTorrentFile.mapToModel(): TorrentFile{
             torrentHash,
             primaryKey
     )
+    tf.parentTorrentName = parentTorrentName
     tf.percComplete = percComplete
     return tf
 }

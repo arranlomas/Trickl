@@ -31,10 +31,6 @@ class TorrentFilesPresenter : TorrentFilesContract.Presenter {
         if (arguments?.containsKey(TorrentFilesFragment.ARG_TORRENT_HASH) ?: false) {
             torrentHash = arguments?.getString(TorrentFilesFragment.ARG_TORRENT_HASH) ?: ""
         }
-        compositeSubscription.add(
-                torrentRepository.torrentFileProgressSource
-                        .subscribe { view.updateTorrentPercentages(it) }
-        )
     }
 
     override fun destroy() {
@@ -46,7 +42,7 @@ class TorrentFilesPresenter : TorrentFilesContract.Presenter {
                 .subscribe({
                     if (it != null) view.setupViewFromTorrentInfo(it)
                 }, {
-                    TODO("ERROR HANDLING")
+                    it.printStackTrace()
                 })
 
 
@@ -55,7 +51,8 @@ class TorrentFilesPresenter : TorrentFilesContract.Presenter {
     override fun viewClicked(torrentFile: TorrentFile, action: TorrentFilesAdapter.Companion.ClickTypes) {
         when (action) {
             TorrentFilesAdapter.Companion.ClickTypes.DOWNLOAD -> {
-                torrentRepository.addTorrentForDownload(torrentFile)
+                torrentRepository.addFileForDownload(torrentFile)
+                torrentRepository.startFileDownloading(torrentFile)
             }
             TorrentFilesAdapter.Companion.ClickTypes.PLAY -> {
                 context.openTorrent(torrentHash, torrentFile.getFullPath())

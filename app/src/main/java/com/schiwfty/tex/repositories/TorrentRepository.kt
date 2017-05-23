@@ -13,6 +13,7 @@ import com.schiwfty.tex.utils.*
 import okhttp3.ResponseBody
 import org.apache.commons.io.IOUtils
 import rx.Observable
+import rx.Subscription
 import rx.subjects.PublishSubject
 import java.io.File
 import java.io.FileInputStream
@@ -21,39 +22,43 @@ import java.io.FileInputStream
 /**
  * Created by arran on 29/04/2017.
  */
-class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence: ITorrentPersistence): ITorrentRepository {
+class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence: ITorrentPersistence) : ITorrentRepository {
 
-    override val torrentFileProgressSource: PublishSubject<List<TorrentFile>> = PublishSubject.create<List<TorrentFile>>()
+    override val torrentFileProgressSource: PublishSubject<Boolean> = PublishSubject.create<Boolean>()
+
+    private val downloadMap = HashMap<TorrentFile, Subscription>()
 
     private var statusUpdateRunning = true
 
     private val statusThread = Thread({
         while (statusUpdateRunning) {
-                        val files = torrentPersistence.getDownloadFiles()
-                        files.forEach {
-                            val file = it
-                            getFileState(it.torrentHash, it.getFullPath())
-                                    .subscribe({
-                                        Log.v ("SIZE", "${it.size}")
-                                        var totalFileSize: Long = 0
-                                        var totalCompletedSize: Long = 0
-                                        it.forEach {
-                                            totalFileSize += it.bytes
-                                            if (it.complete) {
-                                                totalCompletedSize += it.bytes
-                                            }
-                                        }
-                                        val percCompleted = (totalCompletedSize.toDouble() / totalFileSize.toDouble()) * 100.0
-                                        file.percComplete = percCompleted.toInt()
-                                        torrentPersistence.saveTorrentFile(file)
-                                        Log.v  ( "HASH", file.torrentHash)
-                                        Log.v  ( "PATH", file.getFullPath())
-                                        Log.v  ( "PERC", percCompleted.toString() )
-                                        Log.v  ( "-----------","-----------------------" )
-                                    }, {
-                                        it.printStackTrace()
-                                    })
-                    }
+            val files = torrentPersistence.getDownloadFiles()
+            var percentagesCompleted = 0
+            files.forEach {
+                getFileState(it)
+                        .subscribe({
+                            val (torrentFile, pieces) = it
+                            var totalFileSize: Long = 0
+                            var totalCompletedSize: Long = 0
+                            pieces.forEach {
+                                totalFileSize += it.bytes
+                                if (it.complete) {
+                                    totalCompletedSize += it.bytes
+                                }
+                            }
+                            val percCompleted = (totalCompletedSize.toDouble() / totalFileSize.toDouble()) * 100.0
+                            torrentFile.percComplete = Math.round(percCompleted).toInt()
+                            torrentPersistence.saveTorrentFile(torrentFile)
+                            percentagesCompleted++
+                            if(percentagesCompleted == files.size) torrentFileProgressSource.onNext(true)
+                            Log.v("HASH", torrentFile.torrentHash)
+                            Log.v("PATH", torrentFile.getFullPath())
+                            Log.v("PERC", percCompleted.toString())
+                            Log.v("-----------", "-----------------------")
+                        }, {
+                            it.printStackTrace()
+                        })
+            }
             Thread.sleep(2000)
         }
     })
@@ -137,8 +142,12 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
                 .composeIo()
     }
 
-    override fun getFileState(hash: String, filePath: String): Observable<List<FileStatePiece>> {
-        return confluenceApi.getFileState(hash, filePath)
+    override fun getFileState(torrentFile: TorrentFile): Observable<Pair<TorrentFile, List<FileStatePiece>>> {
+        val torrentFileObs = Observable.just(torrentFile)
+        return Observable.zip(confluenceApi.getFileState(torrentFile.torrentHash, torrentFile.getFullPath()), torrentFileObs, {
+            list, torrentFile ->
+            Pair(torrentFile, list)
+        })
                 .composeIo()
     }
 
@@ -146,7 +155,21 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
         return Observable.just(torrentPersistence.getDownloadFiles())
     }
 
-    override fun addTorrentForDownload(torrentFile: TorrentFile) {
+    override fun addFileForDownload(torrentFile: TorrentFile) {
         torrentPersistence.saveTorrentFile(torrentFile)
+    }
+
+    override fun startFileDownloading(torrentFile: TorrentFile) {
+        val subscription = confluenceApi.getFileData(torrentFile.torrentHash, torrentFile.getFullPath())
+                .composeIo()
+                .map {
+                    torrentPersistence.getDownloadingFile(torrentFile.torrentHash, torrentFile.getFullPath())
+                }.subscribe({
+            Log.v("Got bytes for file", torrentFile.getFullPath())
+        }, {
+            it.printStackTrace()
+        })
+
+        downloadMap.put(torrentFile, subscription)
     }
 }

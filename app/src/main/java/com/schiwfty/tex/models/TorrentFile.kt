@@ -12,4 +12,5 @@ data class TorrentFile(val fileLength: Long? = null,
                        val primaryKey: String
 ) {
     var percComplete: Int = 0
+    var parentTorrentName: String = ""
 }

@@ -15,20 +15,16 @@ object Confluence {
     lateinit var daemonPort: String
     val workingDir: File = File(Environment.getExternalStorageDirectory().path + File.separator + "Trickl")
     val torrentRepo: File = File(workingDir.absolutePath + File.separator + "torrents")
-    lateinit var announceList: Array<String>
-
-    init {
-        announceList = arrayOf(
-                "http://182.176.139.129:6969/announce",
-                "http://atrack.pow7.com/announce",
-                "http://p4p.arenabg.com:1337/announce",
-                "http://tracker.kicks-ass.net/announce",
-                "http://tracker.thepiratebay.org/announce",
-                "http://bttracker.crunchbanglinux.org:6969/announce",
-                "http://tracker.aletorrenty.pl:2710/announce",
-                "http://tracker.tfile.me/announce",
-                "http://tracker.trackerfix.com/announce")
-    }
+    var announceList: Array<String> = arrayOf(
+            "http://182.176.139.129:6969/announce",
+            "http://atrack.pow7.com/announce",
+            "http://p4p.arenabg.com:1337/announce",
+            "http://tracker.kicks-ass.net/announce",
+            "http://tracker.thepiratebay.org/announce",
+            "http://bttracker.crunchbanglinux.org:6969/announce",
+            "http://tracker.aletorrenty.pl:2710/announce",
+            "http://tracker.tfile.me/announce",
+            "http://tracker.trackerfix.com/announce")
 
 
     fun startConfluence(): Boolean {

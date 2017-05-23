@@ -11,7 +11,6 @@ import com.schiwfty.tex.views.downloads.list.FileDownloadAdapter
 interface FileDownloadContract {
     interface View {
         fun setupViewFromTorrentInfo(torrentFiles: List<TorrentFile>)
-        fun updateTorrentPercentages(updatedDetails: List<Triple<String, String, Int>>)
     }
 
     interface Presenter {

@@ -21,7 +21,8 @@ fun TorrentFile.mapToRealm(): RealmTorrentFile{
             fileDirs?.mapToRealm(),
             torrentHash,
             primaryKey,
-            percComplete
+            percComplete,
+            parentTorrentName
     )
     return realmTorrentFile
 }

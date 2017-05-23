@@ -26,14 +26,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:text="name" />
+                    android:text="file name" />
+
+                <TextView
+                    android:id="@+id/parentTorrentFileName"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="wrap_content"
+                    android:text="parent torrent" />
+
 
                 <TextView
                     android:id="@+id/downloadFileSize"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:text="size" />
+                    android:text="file size" />
 
                 <com.daimajia.numberprogressbar.NumberProgressBar
                     android:id="@+id/downloadProgressBar"

@@ -13,36 +13,29 @@ import com.schiwfty.tex.views.torrentfiles.list.TorrentFileCardHolder
 /**
  * Created by arran on 19/04/2017.
  */
-class FileDownloadAdapter(val itemClickListener: (TorrentFile, ClickTypes) -> Unit) : RecyclerView.Adapter<TorrentFileCardHolder>() {
+class FileDownloadAdapter(val itemClickListener: (TorrentFile, ClickTypes) -> Unit) : RecyclerView.Adapter<FileDownloadCardHolder>() {
+
     var torrentFiles: List<TorrentFile> = mutableListOf()
 
     companion object{
         enum class ClickTypes{
+            OPEN
         }
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TorrentFileCardHolder {
-        val itemView = parent.context.inflateLayout(R.layout.list_item_torrent_file, parent, false)
-        val holder = TorrentFileCardHolder(itemView)
-        holder.onClick { view, position, type ->
-           //TODO show popup with options or info?
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileDownloadCardHolder {
+        val itemView = parent.context.inflateLayout(R.layout.list_item_file_download, parent, false)
+        val holder = FileDownloadCardHolder(itemView)
+        holder.onClick { _, position, type ->
+           itemClickListener(torrentFiles[position], ClickTypes.OPEN)
         }
         return holder
     }
 
-    override fun onBindViewHolder(holder: TorrentFileCardHolder, position: Int) {
+    override fun onBindViewHolder(holder: FileDownloadCardHolder, position: Int) {
         holder.bind(torrentFiles[position])
     }
 
     override fun getItemCount(): Int {
         return torrentFiles.size
-    }
-
-    fun updatePercentages(updatedDetails: List<Triple<String, String, Int>>){
-        torrentFiles.forEach { file ->
-            updatedDetails.forEach {
-                if(file.torrentHash == it.first && file.getFullPath() == it.second)
-                file.percComplete = it.third
-            }
-        }
     }
 }

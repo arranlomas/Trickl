@@ -16,6 +16,7 @@ class FileDownloadCardHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     fun bind(torrentFile: TorrentFile) {
         this.torrentFile = torrentFile
         itemView.downloadFileName.text = torrentFile.getFullPath()
+        itemView.parentTorrentFileName.text = torrentFile.parentTorrentName
         itemView.downloadFileSize.text = torrentFile.fileLength?.formatBytesAsSize()
         itemView.downloadProgressBar.max = 100
         itemView.downloadProgressBar.progress = torrentFile.percComplete

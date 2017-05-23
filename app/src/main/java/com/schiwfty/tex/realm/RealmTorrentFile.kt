@@ -22,7 +22,9 @@ open class RealmTorrentFile(
         @PrimaryKey
         var primaryKey: String = "",
 
-        var percComplete: Int = 0
+        var percComplete: Int = 0,
+
+        var parentTorrentName: String = ""
 ) : RealmObject() {
 
 }

@@ -1,7 +1,6 @@
 package com.schiwfty.tex.dagger.network
 
 
-import com.schiwfty.tex.dagger.context.ContextModule
 import com.schiwfty.tex.views.addtorrent.AddTorrentPresenter
 import com.schiwfty.tex.views.all.mvp.AllPresenter
 import com.schiwfty.tex.views.downloads.mvp.FileDownloadPresenter
@@ -17,7 +16,7 @@ import dagger.Component
  */
 
 @NetworkScope
-@Component(modules = arrayOf(NetworkModule::class, ContextModule::class))
+@Component(modules = arrayOf(NetworkModule::class))
 interface NetworkComponent {
     fun inject(splashPresenter: SplashPresenter)
     fun inject(addTorrentPresenter: AddTorrentPresenter)
