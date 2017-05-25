@@ -157,10 +157,6 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
         torrentPersistence.saveTorrentFile(torrentFile)
     }
 
-    override fun deleteFileFromDownloads(torrentFile: TorrentFile) {
-        torrentPersistence.removeTorrentDownloadFile(torrentFile)
-    }
-
     override fun deleteTorrentInfoFromStorage(hash: String): Boolean {
         val file = File(Confluence.torrentRepo.absolutePath, "$hash.torrent")
        return file.delete()
@@ -176,8 +172,14 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
         dm.enqueue(request)
     }
 
-    override fun deleteTorrentFileData(torrentName: String): Boolean {
+    override fun deleteTorrentData(torrentName: String): Boolean {
         val file = File(Confluence.workingDir.absolutePath, torrentName)
         return file.deleteRecursively()
+    }
+
+    override fun deleteTorrentFileData(torrentName: String, torrentFile: TorrentFile): Boolean {
+        torrentPersistence.removeTorrentDownloadFile(torrentFile)
+        val file = File(Confluence.workingDir.absolutePath, "$torrentName${File.separator}${torrentFile.getFullPath()}")
+        return file.delete()
     }
 }

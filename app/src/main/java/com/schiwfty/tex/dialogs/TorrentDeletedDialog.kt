@@ -43,7 +43,7 @@ class TorrentDeletedDialog : DialogFragment() {
                 .setPositiveButton("Delete",
                         { dialog, _ ->
                             val deleted = torrentRepository.deleteTorrentInfoFromStorage(torretHash)
-                            if (deleted) torrentRepository.deleteTorrentFileData(torrentName)
+                            if (deleted) torrentRepository.deleteTorrentData(torrentName)
                             dialog.dismiss()
                         }
                 )

@@ -52,7 +52,7 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
             FileDownloadAdapter.Companion.ClickTypes.DOWNLOAD ->{torrentRepository.startFileDownloading(torrentFile, context)}
             FileDownloadAdapter.Companion.ClickTypes.OPEN ->{ torrentFile.openFile(context, torrentRepository) }
             FileDownloadAdapter.Companion.ClickTypes.DELETE ->{
-                torrentRepository.deleteFileFromDownloads(torrentFile)
+                torrentRepository.deleteTorrentFileData(torrentFile.parentTorrentName, torrentFile)
                 getDownloadingTorrents()
             }
         }

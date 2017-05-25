@@ -38,9 +38,9 @@ interface ITorrentRepository {
 
     fun deleteTorrentInfoFromStorage(hash: String): Boolean
 
-    fun deleteFileFromDownloads(torrentFile: TorrentFile)
-
     fun startFileDownloading(torrentFile: TorrentFile, context: Context)
 
-    fun deleteTorrentFileData(torrentName: String): Boolean
+    fun deleteTorrentData(torrentName: String): Boolean
+
+    fun deleteTorrentFileData(torrentName: String, torrentFile: TorrentFile): Boolean
 }
