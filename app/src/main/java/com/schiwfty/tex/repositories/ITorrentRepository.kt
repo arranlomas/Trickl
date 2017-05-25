@@ -1,5 +1,6 @@
 package com.schiwfty.tex.repositories
 
+import android.content.Context
 import com.schiwfty.tex.models.ConfluenceInfo
 import com.schiwfty.tex.models.FileStatePiece
 import com.schiwfty.tex.models.TorrentFile
@@ -33,9 +34,13 @@ interface ITorrentRepository {
 
     fun getDownloadingFilesFromPersistence(): Observable<List<TorrentFile>>
 
-    fun addFileForDownload(torrentFile: TorrentFile)
+    fun addTorrentFileToPersistence(torrentFile: TorrentFile)
 
-    fun startFileDownloading(torrentFile: TorrentFile)
+    fun deleteTorrentInfoFromStorage(hash: String): Boolean
 
-    fun stopFileDownloading(torrentFile: TorrentFile)
+    fun deleteFileFromDownloads(torrentFile: TorrentFile)
+
+    fun startFileDownloading(torrentFile: TorrentFile, context: Context)
+
+    fun deleteTorrentFileData(torrentName: String): Boolean
 }

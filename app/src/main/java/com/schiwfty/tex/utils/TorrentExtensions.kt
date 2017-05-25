@@ -8,6 +8,8 @@ import com.schiwfty.tex.bencoding.TorrentParser
 import com.schiwfty.tex.confluence.Confluence
 import com.schiwfty.tex.models.TorrentFile
 import com.schiwfty.tex.models.TorrentInfo
+import com.schiwfty.tex.repositories.ITorrentRepository
+import com.schiwfty.tex.repositories.TorrentRepository
 import java.io.File
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -70,9 +72,10 @@ fun String.findTrackersFromMagnet(): List<String> {
     return trackerList.toList()
 }
 
-fun Context.openTorrent(hash: String, path: String) {
-    val url = Confluence.fullUrl + "/data?ih=" + hash + "&path=" + URLEncoder.encode(path, "UTF-8")
-    val file = File(path)
+fun TorrentFile.openFile(context: Context, torrentRepository: ITorrentRepository){
+    torrentRepository.addTorrentFileToPersistence(this)
+    val url = Confluence.fullUrl + "/data?ih=" + torrentHash + "&path=" + URLEncoder.encode(getFullPath(), "UTF-8")
+    val file = File(getFullPath())
     val map = MimeTypeMap.getSingleton()
     var type: String? = map.getMimeTypeFromExtension(file.extension)
 
@@ -82,7 +85,7 @@ fun Context.openTorrent(hash: String, path: String) {
     val intent = Intent(Intent.ACTION_VIEW)
 
     intent.setDataAndType(Uri.parse(url), type)
-    startActivity(intent)
+    context.startActivity(intent)
 }
 
 fun TorrentFile.getFullPath(): String{

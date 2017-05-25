@@ -1,6 +1,11 @@
 package com.schiwfty.tex.repositories
 
+import android.app.DownloadManager
+import android.content.Context
+import android.content.Context.DOWNLOAD_SERVICE
+import android.net.Uri
 import android.util.Log
+import com.schiwfty.tex.R
 import com.schiwfty.tex.confluence.Confluence
 import com.schiwfty.tex.confluence.Confluence.torrentRepo
 import com.schiwfty.tex.models.ConfluenceInfo
@@ -13,11 +18,9 @@ import com.schiwfty.tex.utils.*
 import okhttp3.ResponseBody
 import org.apache.commons.io.IOUtils
 import rx.Observable
-import rx.Subscription
 import rx.subjects.PublishSubject
 import java.io.File
 import java.io.FileInputStream
-import kotlin.concurrent.thread
 
 
 /**
@@ -26,8 +29,6 @@ import kotlin.concurrent.thread
 class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence: ITorrentPersistence) : ITorrentRepository {
 
     override val torrentFileProgressSource: PublishSubject<Boolean> = PublishSubject.create<Boolean>()
-
-    private val downloadMap = HashMap<TorrentFile, Subscription>()
 
     private var statusUpdateRunning = true
 
@@ -125,10 +126,6 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
                 .composeIo()
     }
 
-//    override fun getTorrentFileData(hash: String, path: String, byteRangeStart: Long, byteRangeEnd: Long): Observable<ResponseBody> {
-//        return confluenceApi.getFileData(hash, path, byteRangeStart, byteRangeEnd)
-//    }
-
     override fun postTorrentFile(hash: String, file: File): Observable<ResponseBody> {
         if (!file.isValidTorrentFile()) throw IllegalStateException("File is not a valid torrent file")
         return Observable.just({
@@ -156,30 +153,31 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
         return Observable.just(torrentPersistence.getDownloadFiles())
     }
 
-    override fun addFileForDownload(torrentFile: TorrentFile) {
+    override fun addTorrentFileToPersistence(torrentFile: TorrentFile) {
         torrentPersistence.saveTorrentFile(torrentFile)
     }
 
-    override fun startFileDownloading(torrentFile: TorrentFile) {
-        val subscription = confluenceApi.getFileData(torrentFile.torrentHash, torrentFile.getFullPath(), 0, (torrentFile.fileLength ?: 0)*10)
-                .composeIo()
-                .map {
-                    torrentPersistence.getDownloadingFile(torrentFile.torrentHash, torrentFile.getFullPath())
-                }.subscribe({
-            Log.v("Got bytes for file", torrentFile.getFullPath())
-        }, {
-            it.printStackTrace()
-        })
-
-        thread {
-            confluenceApi.getFileData(torrentFile.torrentHash, torrentFile.getFullPath(), 0, (torrentFile.fileLength ?: 0)*10)
-        }
-
-        downloadMap.put(torrentFile, subscription)
+    override fun deleteFileFromDownloads(torrentFile: TorrentFile) {
+        torrentPersistence.removeTorrentDownloadFile(torrentFile)
     }
 
-    override fun stopFileDownloading(torrentFile: TorrentFile) {
-        val subscription = downloadMap[torrentFile]
-        subscription?.unsubscribe()
+    override fun deleteTorrentInfoFromStorage(hash: String): Boolean {
+        val file = File(Confluence.torrentRepo.absolutePath, "$hash.torrent")
+       return file.delete()
+    }
+
+    override fun startFileDownloading(torrentFile: TorrentFile, context: Context) {
+        torrentPersistence.saveTorrentFile(torrentFile)
+        val dm = context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+        val request = DownloadManager.Request(
+                Uri.parse("${Confluence.fullUrl}/data?ih=${torrentFile.torrentHash}&path=${torrentFile.getFullPath()}"))
+        request.setTitle(torrentFile.getFullPath())
+                .setDescription("part of torrent: ${torrentFile.parentTorrentName} with hash ${torrentFile.torrentHash}")
+        dm.enqueue(request)
+    }
+
+    override fun deleteTorrentFileData(torrentName: String): Boolean {
+        val file = File(Confluence.workingDir.absolutePath, torrentName)
+        return file.deleteRecursively()
     }
 }

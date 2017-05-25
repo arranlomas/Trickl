@@ -35,7 +35,7 @@ class TorrentPersistence : ITorrentPersistence {
         var torrentFile: TorrentFile? = null
         try {
             realm.beginTransaction()
-            val result: RealmResults<RealmTorrentFile> = realm.where(RealmTorrentFile::class.java).equalTo("primaryKey", hash+path).findAll()
+            val result: RealmResults<RealmTorrentFile> = realm.where(RealmTorrentFile::class.java).equalTo("primaryKey", hash + path).findAll()
             torrentFile = realm.copyFromRealm(result).first().mapToModel()
             realm.commitTransaction()
         } catch (e: Exception) {

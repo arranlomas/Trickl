@@ -16,6 +16,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 
 /**
@@ -26,33 +27,28 @@ import java.util.concurrent.TimeUnit
 class NetworkModule {
 
     @Provides
-    @NetworkScope
     internal fun provideTorrentRepository(confluenceApi: ConfluenceApi, torrentPersistence: ITorrentPersistence): ITorrentRepository {
         return TorrentRepository(confluenceApi, torrentPersistence)
 
     }
 
     @Provides
-    @NetworkScope
     internal fun provideTorrentPersistence(): ITorrentPersistence {
         return TorrentPersistence()
 
     }
 
     @Provides
-    @NetworkScope
     internal fun providesHttpController(clientAPI: ClientAPI): ConfluenceApi {
         return ConfluenceApi(clientAPI)
     }
 
     @Provides
-    @NetworkScope
     internal fun provideClientApi(retrofit: Retrofit): ClientAPI {
         return retrofit.create(ClientAPI::class.java)
     }
 
     @Provides
-    @NetworkScope
     internal fun provideRetrofit(client: OkHttpClient, baseUrl: String): Retrofit {
         return Retrofit.Builder()
                 .baseUrl(baseUrl)
@@ -63,7 +59,6 @@ class NetworkModule {
     }
 
     @Provides
-    @NetworkScope
     internal fun provideOkHttpClient(): OkHttpClient {
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.HEADERS
@@ -77,13 +72,11 @@ class NetworkModule {
     }
 
     @Provides
-    @NetworkScope
     internal fun provideBaseUrl(): String {
         return "http://127.0.0.1:8080"
     }
 
     @Provides
-    @NetworkScope
     internal fun provideRealm(): Realm {
         return Realm.getDefaultInstance()
     }

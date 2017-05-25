@@ -2,6 +2,7 @@ package com.schiwfty.tex.views.addtorrent
 
 import android.content.Context
 import android.os.Bundle
+import android.view.MenuItem
 import com.schiwfty.tex.R
 import com.schiwfty.tex.TricklComponent
 import com.schiwfty.tex.repositories.ITorrentRepository
@@ -16,6 +17,7 @@ import javax.inject.Inject
  */
 class AddTorrentPresenter : AddTorrentContract.Presenter {
 
+
     @Inject
     lateinit var torrentRepository: ITorrentRepository
     lateinit var view: AddTorrentContract.View
@@ -26,7 +28,7 @@ class AddTorrentPresenter : AddTorrentContract.Presenter {
 
     override fun setup(context: Context, view: AddTorrentContract.View, arguments: Bundle?) {
         this.view = view
-        TricklComponent.networkComponent.inject(this)
+        TricklComponent.mainComponent.inject(this)
         if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_HASH) ?: false) {
             torrentHash = arguments?.getString(AddTorrentActivity.ARG_TORRENT_HASH) ?: ""
         }
@@ -37,8 +39,6 @@ class AddTorrentPresenter : AddTorrentContract.Presenter {
             torrentName = URLDecoder.decode(torrentMagnet?.findNameFromMagnet(), "UTF-8")
             torrentTrackers = torrentMagnet?.findTrackersFromMagnet()
         }
-
-
     }
 
     override fun fetchTorrent() {
@@ -52,6 +52,5 @@ class AddTorrentPresenter : AddTorrentContract.Presenter {
                     //ERROR
                 })
     }
-
 
 }

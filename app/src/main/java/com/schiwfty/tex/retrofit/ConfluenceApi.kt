@@ -6,6 +6,7 @@ import com.schiwfty.tex.models.FileStatePiece
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import retrofit2.Response
 import rx.Observable
 
 
@@ -28,9 +29,8 @@ class ConfluenceApi(private val clientAPI: ClientAPI) {
     val getStatus: Observable<ConfluenceInfo>
         get() = clientAPI.getStatus()
 
-
-    fun getFileData(hash: String, path: String, byteRangeStart: Long, byteRangeEnd: Long): Observable<ResponseBody> {
-        return clientAPI.getData(hash, path, "bytes=$byteRangeStart-$byteRangeEnd")
+    fun getFileData(hash: String, path: String): Observable<ResponseBody>{
+        return clientAPI.getTorrentDataInfo(hash, path)
     }
 
     fun getFileState(hash: String, path: String): Observable<List<FileStatePiece>> {

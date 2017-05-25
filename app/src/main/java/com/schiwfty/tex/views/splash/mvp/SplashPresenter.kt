@@ -1,10 +1,9 @@
 package com.schiwfty.tex.views.splash.mvp
 
 import android.content.Context
-import android.content.Intent
 import com.schiwfty.tex.R
 import com.schiwfty.tex.TricklComponent
-import com.schiwfty.tex.confluence.ConfluenceDaemonService
+import com.schiwfty.tex.confluence.Confluence
 import com.schiwfty.tex.repositories.ITorrentRepository
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
@@ -22,13 +21,11 @@ class SplashPresenter : SplashContract.Presenter {
 
     override fun setup(context: Context, view: SplashContract.View) {
         this.view = view
-        TricklComponent.networkComponent.inject(this)
+        TricklComponent.mainComponent.inject(this)
     }
 
     override fun startConfluenceDaemon(context: Context) {
-        val daemonIntent = Intent(context, ConfluenceDaemonService::class.java)
-        daemonIntent.addCategory(ConfluenceDaemonService.TAG)
-        context.startService(daemonIntent)
+        Confluence.startConfluence()
         listenForDaemon()
     }
 

@@ -2,6 +2,7 @@ package com.schiwfty.tex.views.showtorrent
 
 import android.content.Context
 import android.os.Bundle
+import android.view.MenuItem
 import com.schiwfty.tex.R
 import com.schiwfty.tex.TricklComponent
 import com.schiwfty.tex.repositories.ITorrentRepository
@@ -9,33 +10,40 @@ import com.schiwfty.tex.utils.findHashFromMagnet
 import com.schiwfty.tex.utils.findNameFromMagnet
 import com.schiwfty.tex.utils.findTrackersFromMagnet
 import com.schiwfty.tex.views.addtorrent.AddTorrentActivity
-import com.schiwfty.tex.views.addtorrent.AddTorrentContract
+import com.schiwfty.tex.views.main.DialogManager
+import com.schiwfty.tex.views.main.IDialogManager
+import com.schiwfty.tex.views.main.mvp.MainContract
 import java.net.URLDecoder
 import javax.inject.Inject
 
 /**
  * Created by arran on 7/05/2017.
  */
-class ShowTorrentPresenter : ShowTorrentContract.Presenter {
+class TorrentInfoPresenter : TorrentInfo.Presenter {
 
     @Inject
     lateinit var torrentRepository: ITorrentRepository
-    lateinit var view: ShowTorrentContract.View
-    override var torrentHash: String? = null
+
+    @Inject
+    lateinit var mainPresenter: MainContract.Presenter
+
+    lateinit var view: TorrentInfo.View
+    override lateinit var torrentHash: String
     override var torrentMagnet: String? = null
     override var torrentName: String? = null
     override var torrentTrackers: List<String>? = null
 
-    override fun setup(context: Context, view: ShowTorrentContract.View, arguments: Bundle?) {
+    override fun setup(context: Context, view: TorrentInfo.View, arguments: Bundle?) {
         this.view = view
-        TricklComponent.networkComponent.inject(this)
+        TricklComponent.mainComponent.inject(this)
+
         if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_HASH) ?: false) {
             torrentHash = arguments?.getString(AddTorrentActivity.ARG_TORRENT_HASH) ?: ""
         }
 
         if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_MAGNET) ?: false) {
             torrentMagnet = arguments?.getString(AddTorrentActivity.ARG_TORRENT_MAGNET) ?: ""
-            torrentHash = torrentMagnet?.findHashFromMagnet()
+            torrentMagnet?.findHashFromMagnet()?.let { torrentHash = it  }
             torrentName = URLDecoder.decode(torrentMagnet?.findNameFromMagnet(), "UTF-8")
             torrentTrackers = torrentMagnet?.findTrackersFromMagnet()
         }
@@ -44,11 +52,11 @@ class ShowTorrentPresenter : ShowTorrentContract.Presenter {
     }
 
     override fun fetchTorrent() {
-        val hash = torrentHash ?: return
+        val hash = torrentHash
         torrentRepository.getTorrentInfo(hash)
                 .subscribe({
                     torrentName = it?.name
-                    torrentHash = it?.info_hash
+                    it?.info_hash?.let { torrentHash = it }
                     torrentTrackers = it?.announceList
                     //SUCCESS
                     view.notifyTorrentAdded()
@@ -56,5 +64,13 @@ class ShowTorrentPresenter : ShowTorrentContract.Presenter {
                     view.showError(R.string.error_get_torrent_info)
                     //ERROR
                 })
+    }
+
+    override fun optionsItemSelected(item: MenuItem) {
+        when(item.itemId){
+            R.id.action_delete -> {
+               view.notifyTorrentDeleted()
+            }
+        }
     }
 }

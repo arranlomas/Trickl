@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.schiwfty.tex.TricklComponent
 import com.schiwfty.tex.models.TorrentFile
 import com.schiwfty.tex.repositories.ITorrentRepository
+import com.schiwfty.tex.utils.openFile
 import com.schiwfty.tex.views.downloads.list.FileDownloadAdapter
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
     private val compositeSubscription = CompositeSubscription()
 
     override fun setup(context: Context, view: FileDownloadContract.View, arguments: Bundle?) {
-        TricklComponent.networkComponent.inject(this)
+        TricklComponent.mainComponent.inject(this)
         this.view = view
         this.context = context
 
@@ -37,24 +38,24 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
         )
     }
 
+    override fun getDownloadingTorrents() {
+        torrentRepository.getDownloadingFilesFromPersistence()
+                .subscribe { view.setupViewFromTorrentInfo(it) }
+    }
+
     override fun destroy() {
         compositeSubscription.unsubscribe()
     }
 
     override fun viewClicked(torrentFile: TorrentFile, action: FileDownloadAdapter.Companion.ClickTypes) {
         when(action){
-            FileDownloadAdapter.Companion.ClickTypes.CHANGE_DOWNLOAD_STATE ->{torrentRepository.startFileDownloading(torrentFile)}
-            FileDownloadAdapter.Companion.ClickTypes.OPEN ->{}
+            FileDownloadAdapter.Companion.ClickTypes.DOWNLOAD ->{torrentRepository.startFileDownloading(torrentFile, context)}
+            FileDownloadAdapter.Companion.ClickTypes.OPEN ->{ torrentFile.openFile(context, torrentRepository) }
+            FileDownloadAdapter.Companion.ClickTypes.DELETE ->{
+                torrentRepository.deleteFileFromDownloads(torrentFile)
+                getDownloadingTorrents()
+            }
         }
 
-    }
-
-    override fun getDownloadingTorrents() {
-        torrentRepository.getDownloadingFilesFromPersistence()
-                .subscribe { view.setupViewFromTorrentInfo(it) }
-    }
-
-    override fun changeFileDownloadState() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

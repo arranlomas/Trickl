@@ -5,8 +5,7 @@ import android.os.Bundle
 import com.schiwfty.tex.TricklComponent
 import com.schiwfty.tex.models.TorrentFile
 import com.schiwfty.tex.repositories.ITorrentRepository
-import com.schiwfty.tex.utils.getFullPath
-import com.schiwfty.tex.utils.openTorrent
+import com.schiwfty.tex.utils.openFile
 import com.schiwfty.tex.views.torrentfiles.list.TorrentFilesAdapter
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
@@ -25,7 +24,7 @@ class TorrentFilesPresenter : TorrentFilesContract.Presenter {
     private val compositeSubscription = CompositeSubscription()
 
     override fun setup(context: Context, view: TorrentFilesContract.View, arguments: Bundle?) {
-        TricklComponent.networkComponent.inject(this)
+        TricklComponent.mainComponent.inject(this)
         this.view = view
         this.context = context
         if (arguments?.containsKey(TorrentFilesFragment.ARG_TORRENT_HASH) ?: false) {
@@ -51,12 +50,11 @@ class TorrentFilesPresenter : TorrentFilesContract.Presenter {
     override fun viewClicked(torrentFile: TorrentFile, action: TorrentFilesAdapter.Companion.ClickTypes) {
         when (action) {
             TorrentFilesAdapter.Companion.ClickTypes.DOWNLOAD -> {
-                torrentRepository.addFileForDownload(torrentFile)
-                torrentRepository.startFileDownloading(torrentFile)
+                torrentRepository.startFileDownloading(torrentFile, context)
                 view.dismiss()
             }
-            TorrentFilesAdapter.Companion.ClickTypes.PLAY -> {
-                context.openTorrent(torrentHash, torrentFile.getFullPath())
+            TorrentFilesAdapter.Companion.ClickTypes.OPEN -> {
+                torrentFile.openFile(context, torrentRepository)
             }
         }
     }

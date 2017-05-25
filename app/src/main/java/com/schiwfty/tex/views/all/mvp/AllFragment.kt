@@ -1,31 +1,36 @@
 package com.schiwfty.tex.views.all.mvp
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.tex.R
+import com.schiwfty.tex.TricklComponent
 import com.schiwfty.tex.models.TorrentInfo
 import com.schiwfty.tex.views.all.list.AllTorrentsAdapter
-import com.schiwfty.tex.views.showtorrent.ShowTorrentActivity
+import com.schiwfty.tex.views.main.mvp.MainContract
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_all.*
+import javax.inject.Inject
 
 /**
  * Created by arran on 17/04/2017.
  */
 class AllFragment : Fragment(), AllContract.View {
 
+    @Inject
+    lateinit var mainPresenter: MainContract.Presenter
+
     lateinit var presenter: AllContract.Presenter
+
+
     val itemOnClick: (View, Int, Int) -> Unit = { _, position, _ ->
         val torrentFile = filesAdapter.torrentFiles[position]
-        val intent= Intent(activity, ShowTorrentActivity::class.java)
-        intent.putExtra(ShowTorrentActivity.ARG_TORRENT_HASH, torrentFile.info_hash)
-        startActivity(intent)
+        mainPresenter.showTorrentInfoActivity(torrentFile.info_hash)
     }
     val filesAdapter = AllTorrentsAdapter(itemOnClick)
 
@@ -40,6 +45,8 @@ class AllFragment : Fragment(), AllContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        TricklComponent.mainComponent.inject(this)
+        Log.v("Arran", mainPresenter.toString())
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -54,11 +61,13 @@ class AllFragment : Fragment(), AllContract.View {
         allTorrentsRecyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         allTorrentsRecyclerView.layoutManager = llm as RecyclerView.LayoutManager?
+        allTorrentsSwipeRefresh.isRefreshing = true
+        allTorrentsSwipeRefresh.setOnRefreshListener{presenter.refresh()}
     }
 
     override fun onResume() {
         super.onResume()
-        presenter.getAllTorrentsInStorageAndAddToClient()
+        presenter.refresh()
 
     }
 
@@ -68,6 +77,7 @@ class AllFragment : Fragment(), AllContract.View {
 
     override fun showAllTorrents(torrentInfoList: List<TorrentInfo>) {
         if (!isAdded || !isVisible) return
+        allTorrentsSwipeRefresh.isRefreshing = false
         filesAdapter.torrentFiles = torrentInfoList
         filesAdapter.notifyDataSetChanged()
     }
@@ -83,6 +93,4 @@ class AllFragment : Fragment(), AllContract.View {
     override fun showSuccess(stringId: Int) {
         Toasty.success(activity, getString(stringId))
     }
-
-
 }

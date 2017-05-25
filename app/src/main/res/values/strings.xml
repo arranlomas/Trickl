@@ -38,4 +38,21 @@
     <!--Errors-->
     <string name="error_getting_torrent_from_storage">Error retriving torrent from storage</string>
     <string name="error_getting_torrent_file">Error getting file data</string>
+
+    <!--list item download-->
+    <string name="file_name">File Name</string>
+    <string name="torrent_name">Torrent Name</string>
+    <string name="size">Size</string>
+
+    <!--list item download popup-->
+    <string name="open">Open</string>
+    <string name="download">Download</string>
+    <string name="delete">Delete</string>
+
+    <!--delete file-->
+    <string name="torrent_deleted">Torrent Deleted</string>
+    <string name="file_deleted">File Deleted</string>
+    <string name="error_deleting_file">Error deleting file</string>
+    <string name="torrent_deleted_dialog_text">Would you also like to delete any files downloaded using this torrent?</string>
+
 </resources>

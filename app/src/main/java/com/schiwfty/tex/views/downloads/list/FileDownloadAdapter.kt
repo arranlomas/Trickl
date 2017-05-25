@@ -1,5 +1,6 @@
 package com.schiwfty.tex.views.downloads.list
 
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.pawegio.kandroid.inflateLayout
@@ -17,20 +18,32 @@ class FileDownloadAdapter(val itemClickListener: (TorrentFile, ClickTypes) -> Un
     companion object{
         enum class ClickTypes{
             OPEN,
-            CHANGE_DOWNLOAD_STATE
+            DOWNLOAD,
+            DELETE
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileDownloadCardHolder {
         val itemView = parent.context.inflateLayout(R.layout.list_item_file_download, parent, false)
         val holder = FileDownloadCardHolder(itemView)
-        holder.onClick { _, position, type ->
-           itemClickListener(torrentFiles[position], ClickTypes.OPEN)
+        holder.onClick { _, position, _ ->
+            val popup = PopupMenu(itemView.context, itemView)
+            popup.menuInflater.inflate(R.menu.popup_download_file, popup.menu)
+            popup.setOnMenuItemClickListener {
+                when(it.itemId){
+                    R.id.menu_item_open -> itemClickListener(torrentFiles[position], FileDownloadAdapter.Companion.ClickTypes.OPEN)
+                    R.id.menu_item_download -> itemClickListener(torrentFiles[position], FileDownloadAdapter.Companion.ClickTypes.DOWNLOAD)
+                    R.id.menu_item_delete -> itemClickListener(torrentFiles[position], FileDownloadAdapter.Companion.ClickTypes.DELETE)
+                }
+                true
+            }
+            popup.show()
         }
         return holder
     }
 
     override fun onBindViewHolder(holder: FileDownloadCardHolder, position: Int) {
-        holder.bind(torrentFiles[position], {file -> itemClickListener(file, ClickTypes.CHANGE_DOWNLOAD_STATE)})
+        holder.bind(torrentFiles[position])
+
     }
 
     override fun getItemCount(): Int {

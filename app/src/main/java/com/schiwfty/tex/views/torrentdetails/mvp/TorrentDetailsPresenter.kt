@@ -18,7 +18,7 @@ class TorrentDetailsPresenter : TorrentDetailsContract.Presenter {
     lateinit var torrentRepository: ITorrentRepository
 
     override fun setup(context: Context, view: TorrentDetailsContract.View, arguments: Bundle?) {
-        TricklComponent.networkComponent.inject(this)
+        TricklComponent.mainComponent.inject(this)
         this.view = view
         if (arguments?.containsKey(TorrentDetailsFragment.ARG_TORRENT_HASH) ?: false) {
             torrentHash = arguments?.getString(TorrentDetailsFragment.ARG_TORRENT_HASH) ?: ""

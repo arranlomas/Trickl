@@ -1,15 +1,15 @@
 package com.schiwfty.tex.views.addtorrent
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import com.schiwfty.tex.R
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_add_torrent.*
-import android.app.Activity
-import android.content.Intent
-
-
 
 
 /**
@@ -53,7 +53,6 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
             addTorrentLoadingText.text = getString(R.string.loading_torrent_info_for, presenter.torrentName)
         }
     }
-
 
     override fun showError(stringId: Int) {
         Toasty.error(this, getString(stringId))

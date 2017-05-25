@@ -6,6 +6,7 @@
     <color name="colorAccent">#51c8ae</color>
     <color name="colorAccentPressed">#225954</color>
     <color name="darkBackground">#303030</color>
+    <color name="transparent">#00000000</color>
 
     <!--torrent list item-->
     <color name="cardview_light_background">#FFFFFFFF</color>

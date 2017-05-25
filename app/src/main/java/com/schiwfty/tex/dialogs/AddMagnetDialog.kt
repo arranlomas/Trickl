@@ -8,7 +8,10 @@ import android.widget.EditText
 import com.pawegio.kandroid.find
 import com.pawegio.kandroid.textWatcher
 import com.schiwfty.tex.R
+import com.schiwfty.tex.TricklComponent
 import com.schiwfty.tex.views.main.mvp.MainActivity
+import com.schiwfty.tex.views.main.mvp.MainContract
+import javax.inject.Inject
 
 
 /**
@@ -18,6 +21,9 @@ import com.schiwfty.tex.views.main.mvp.MainActivity
 class AddMagnetDialog: DialogFragment(){
     private var magnetText = ""
 
+    @Inject
+    lateinit var mainPresenter: MainContract.Presenter
+
     companion object{
         fun newInstance(): AddMagnetDialog{
             return AddMagnetDialog()
@@ -25,12 +31,13 @@ class AddMagnetDialog: DialogFragment(){
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        TricklComponent.mainComponent.inject(this)
+
         val b = AlertDialog.Builder(activity)
                 .setTitle("Paste magnet link here")
                 .setPositiveButton("OK",
                         { _, _ ->
-                            if(activity is MainActivity)
-                                (activity as MainActivity).showAddTorrentActivity(magnet = magnetText)
+                           mainPresenter.showAddTorrentActivity(magnet = magnetText)
                         }
                 )
                 .setNegativeButton("Cancel",

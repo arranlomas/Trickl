@@ -9,6 +9,7 @@ import com.schiwfty.tex.models.ConfluenceInfo
 import com.schiwfty.tex.models.FileStatePiece
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.*
 import rx.Observable
 
@@ -24,9 +25,9 @@ interface ClientAPI {
     @GET("/status")
     fun getStatus(): Observable<ConfluenceInfo>
 
-    @Streaming
     @GET("/data")
-    fun getData(@Query("ih") info_hash: String, @Query("path") file_path: String, @Header("Range") byteRange: String): Observable<ResponseBody>
+    @Streaming
+    fun getTorrentDataInfo(@Query("ih") info_hash: String, @Query("path") file_path: String): Observable<ResponseBody>
 
     @GET("/fileState")
     fun getFileState(@Query("ih") info_hash: String, @Query("path") file_path: String): Observable<List<FileStatePiece>>

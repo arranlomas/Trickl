@@ -8,7 +8,10 @@ import android.widget.EditText
 import com.pawegio.kandroid.find
 import com.pawegio.kandroid.textWatcher
 import com.schiwfty.tex.R
+import com.schiwfty.tex.TricklComponent
 import com.schiwfty.tex.views.main.mvp.MainActivity
+import com.schiwfty.tex.views.main.mvp.MainContract
+import javax.inject.Inject
 
 
 /**
@@ -18,6 +21,9 @@ import com.schiwfty.tex.views.main.mvp.MainActivity
 class AddHashDialog: DialogFragment(){
     private var hashText = ""
 
+    @Inject
+    lateinit var mainPresenter: MainContract.Presenter
+
     companion object{
         fun newInstance(): AddHashDialog{
             return AddHashDialog()
@@ -25,6 +31,7 @@ class AddHashDialog: DialogFragment(){
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        TricklComponent.mainComponent.inject(this)
         val b = AlertDialog.Builder(activity)
                 .setTitle("Paste torrent hash here")
                 .setPositiveButton("OK",
