@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Context.DOWNLOAD_SERVICE
 import android.net.Uri
 import android.util.Log
-import com.schiwfty.tex.R
 import com.schiwfty.tex.confluence.Confluence
 import com.schiwfty.tex.confluence.Confluence.torrentRepo
 import com.schiwfty.tex.models.ConfluenceInfo
@@ -15,6 +14,7 @@ import com.schiwfty.tex.models.TorrentInfo
 import com.schiwfty.tex.persistence.ITorrentPersistence
 import com.schiwfty.tex.retrofit.ConfluenceApi
 import com.schiwfty.tex.utils.*
+import com.schiwfty.tex.views.torrentfiles.list.TorrentFilesAdapter
 import okhttp3.ResponseBody
 import org.apache.commons.io.IOUtils
 import rx.Observable
@@ -28,6 +28,8 @@ import java.io.FileInputStream
  */
 class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence: ITorrentPersistence) : ITorrentRepository {
 
+    override val torrentInfoListener: PublishSubject<TorrentInfo> = PublishSubject.create<TorrentInfo>()
+    override val torrentFileListener: PublishSubject<TorrentFile> = PublishSubject.create<TorrentFile>()
     override val torrentFileProgressSource: PublishSubject<Boolean> = PublishSubject.create<Boolean>()
 
     private var statusUpdateRunning = true
@@ -67,6 +69,7 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
 
     init {
         statusThread.start()
+        torrentPersistence.torrentFileAdded =  { torrentFile -> torrentFileListener.onNext(torrentFile) }
     }
 
     override fun getStatus(): Observable<ConfluenceInfo> {
@@ -80,14 +83,19 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
                 .composeIo()
                 .map {
                     val file: File = File(torrentRepo, "$hash.torrent")
-                    file.getAsTorrent()
+                    val torrentInfo = file.getAsTorrent()
+                    torrentInfoListener.onNext(torrentInfo)
+                    torrentInfo
                 }
     }
 
     override fun getTorrentInfo(hash: String): Observable<TorrentInfo?> {
         val file: File = File(torrentRepo, "$hash.torrent")
-        if (file.isValidTorrentFile()) return Observable.just(file.getAsTorrent())
-        else return downloadTorrentInfo(hash)
+        if (file.isValidTorrentFile()) {
+            val torrentInfo = file.getAsTorrent()
+            torrentInfoListener.onNext(torrentInfo)
+            return Observable.just(torrentInfo)
+        } else return downloadTorrentInfo(hash)
     }
 
     override fun getAllTorrentsFromStorage(): Observable<List<TorrentInfo>> {
@@ -131,13 +139,11 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
         return Observable.just(torrentPersistence.getDownloadFiles())
     }
 
-    override fun addTorrentFileToPersistence(torrentFile: TorrentFile) {
-        torrentPersistence.saveTorrentFile(torrentFile)
-    }
-
-    override fun deleteTorrentInfoFromStorage(hash: String): Boolean {
-        val file = File(Confluence.torrentRepo.absolutePath, "$hash.torrent")
-       return file.delete()
+    override fun deleteTorrentInfoFromStorage(torrentInfo: TorrentInfo): Boolean {
+        val file = File(Confluence.torrentRepo.absolutePath, "${torrentInfo.info_hash}.torrent")
+        val deleted = file.delete()
+        if (deleted) torrentInfoListener.onNext(torrentInfo)
+        return deleted
     }
 
     override fun startFileDownloading(torrentFile: TorrentFile, context: Context) {
@@ -155,9 +161,20 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
         return file.deleteRecursively()
     }
 
-    override fun deleteTorrentFileData(torrentName: String, torrentFile: TorrentFile): Boolean {
+    override fun addTorrentFileToPersistence(torrentFile: TorrentFile) {
+        torrentPersistence.saveTorrentFile(torrentFile)
+    }
+
+    override fun deleteTorrentFileFromPersistence(torrentFile: TorrentFile) {
         torrentPersistence.removeTorrentDownloadFile(torrentFile)
-        val file = File(Confluence.workingDir.absolutePath, "$torrentName${File.separator}${torrentFile.getFullPath()}")
+    }
+
+    override fun deleteTorrentFileData(torrentFile: TorrentFile): Boolean {
+        val file = File(Confluence.workingDir.absolutePath, "${torrentFile.parentTorrentName}${File.separator}${torrentFile.getFullPath()}")
         return file.delete()
+    }
+
+    override fun getTorrentFileFromPersistence(hash: String, path: String): TorrentFile {
+       return torrentPersistence.getDownloadingFile(hash, path)
     }
 }

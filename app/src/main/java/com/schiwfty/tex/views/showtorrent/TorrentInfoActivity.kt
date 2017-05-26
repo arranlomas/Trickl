@@ -1,7 +1,5 @@
 package com.schiwfty.tex.views.showtorrent
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -86,6 +84,6 @@ class TorrentInfoActivity : AppCompatActivity(), TorrentInfo.View {
     override fun notifyTorrentDeleted() {
         val dialogManager: IDialogManager = DialogManager()
         val hash = presenter.torrentHash
-        presenter.torrentName?.let { dialogManager.showTorrentDeletedDialog(fragmentManager, it, hash) }
+        presenter.torrentName?.let { dialogManager.showDeleteTorrentDialog(fragmentManager, it, hash) }
     }
 }

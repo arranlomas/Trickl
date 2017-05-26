@@ -8,5 +8,6 @@ import android.app.FragmentManager
 interface IDialogManager {
     fun showAddMagnetDialog(fragmentManager: FragmentManager)
     fun showAddHashDialog(fragmentManager: FragmentManager)
-    fun showTorrentDeletedDialog(fragmentManager: FragmentManager, torrentName: String, torrentHash: String)
+    fun showDeleteTorrentDialog(fragmentManager: FragmentManager, torrentName: String, torrentHash: String)
+    fun showDeleteFileDialog(fragmentManager: FragmentManager, torrentHash: String, torrentName: String, fileName: String)
 }

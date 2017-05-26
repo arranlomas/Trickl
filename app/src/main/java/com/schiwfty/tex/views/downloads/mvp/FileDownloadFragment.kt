@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.schiwfty.tex.R
 import com.schiwfty.tex.models.TorrentFile
 import com.schiwfty.tex.views.downloads.list.FileDownloadAdapter
+import com.schiwfty.tex.views.main.DialogManager
 import kotlinx.android.synthetic.main.frag_file_downloads.*
 
 
@@ -17,6 +18,9 @@ import kotlinx.android.synthetic.main.frag_file_downloads.*
  * Created by arran on 7/05/2017.
  */
 class FileDownloadFragment : Fragment(), FileDownloadContract.View {
+
+    val dialogManager = DialogManager()
+
 
     lateinit var presenter: FileDownloadContract.Presenter
     val itemOnClick: (torrentFile: TorrentFile, type: FileDownloadAdapter.Companion.ClickTypes) -> Unit = { torrentFile, type ->
@@ -37,9 +41,9 @@ class FileDownloadFragment : Fragment(), FileDownloadContract.View {
         presenter.setup(activity, this, arguments)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.destroy()
+    override fun onResume() {
+        super.onResume()
+        presenter.refresh()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -48,7 +52,6 @@ class FileDownloadFragment : Fragment(), FileDownloadContract.View {
         return view
     }
 
-
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fileDownloadsSwipeRefresh.isRefreshing = true
@@ -56,8 +59,13 @@ class FileDownloadFragment : Fragment(), FileDownloadContract.View {
         fileDownloadsRecyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         fileDownloadsRecyclerView.layoutManager = llm as RecyclerView.LayoutManager?
-        presenter.getDownloadingTorrents()
-        fileDownloadsSwipeRefresh.setOnRefreshListener { presenter.getDownloadingTorrents() }
+        presenter.refresh()
+        fileDownloadsSwipeRefresh.setOnRefreshListener { presenter.refresh() }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
     }
 
     override fun setupViewFromTorrentInfo(torrentFiles: List<TorrentFile>) {
@@ -66,4 +74,7 @@ class FileDownloadFragment : Fragment(), FileDownloadContract.View {
         filesAdapter.notifyDataSetChanged()
     }
 
+    override fun showDeleteFileDialog(torrentHash: String, torrentName: String, fileName: String) {
+        dialogManager.showDeleteFileDialog(activity.fragmentManager, torrentHash, torrentName, fileName)
+    }
 }

@@ -4,7 +4,8 @@ package com.schiwfty.tex.dagger.main
 import com.schiwfty.tex.dagger.network.NetworkModule
 import com.schiwfty.tex.dialogs.AddHashDialog
 import com.schiwfty.tex.dialogs.AddMagnetDialog
-import com.schiwfty.tex.dialogs.TorrentDeletedDialog
+import com.schiwfty.tex.dialogs.DeleteFileDialog
+import com.schiwfty.tex.dialogs.DeleteTorrentDialog
 import com.schiwfty.tex.views.addtorrent.AddTorrentPresenter
 import com.schiwfty.tex.views.all.mvp.AllFragment
 import com.schiwfty.tex.views.all.mvp.AllPresenter
@@ -33,9 +34,10 @@ interface MainComponent {
     fun inject(torrentDetailsPresenter: TorrentDetailsPresenter)
     fun inject(torrentFilesPresenter: TorrentFilesPresenter)
     fun inject(addMagnetDialog: AddMagnetDialog)
+    fun inject(deleteFileDialog: DeleteFileDialog)
     fun inject(allPresenter: AllPresenter)
     fun inject(fileDownloadPresenter: FileDownloadPresenter)
-    fun inject(torrentDeletedDialog: TorrentDeletedDialog)
+    fun inject(deleteTorrentDialog: DeleteTorrentDialog)
     fun inject(addHashDialog: AddHashDialog)
 }
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.schiwfty.tex.TricklComponent
 import com.schiwfty.tex.models.TorrentFile
 import com.schiwfty.tex.repositories.ITorrentRepository
+import com.schiwfty.tex.utils.getFullPath
 import com.schiwfty.tex.utils.openFile
 import com.schiwfty.tex.views.downloads.list.FileDownloadAdapter
 import rx.subscriptions.CompositeSubscription
@@ -21,6 +22,7 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
 
     @Inject
     lateinit var torrentRepository: ITorrentRepository
+
     private val compositeSubscription = CompositeSubscription()
 
     override fun setup(context: Context, view: FileDownloadContract.View, arguments: Bundle?) {
@@ -31,14 +33,14 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
         compositeSubscription.add(
                 torrentRepository.torrentFileProgressSource
                         .subscribe({
-                            getDownloadingTorrents()
+                            refresh()
                         }, {
                             it.printStackTrace()
                         })
         )
     }
 
-    override fun getDownloadingTorrents() {
+    override fun refresh() {
         torrentRepository.getDownloadingFilesFromPersistence()
                 .subscribe { view.setupViewFromTorrentInfo(it) }
     }
@@ -52,8 +54,7 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
             FileDownloadAdapter.Companion.ClickTypes.DOWNLOAD ->{torrentRepository.startFileDownloading(torrentFile, context)}
             FileDownloadAdapter.Companion.ClickTypes.OPEN ->{ torrentFile.openFile(context, torrentRepository) }
             FileDownloadAdapter.Companion.ClickTypes.DELETE ->{
-                torrentRepository.deleteTorrentFileData(torrentFile.parentTorrentName, torrentFile)
-                getDownloadingTorrents()
+                view.showDeleteFileDialog(torrentFile.torrentHash, torrentFile.parentTorrentName, torrentFile.getFullPath())
             }
         }
 

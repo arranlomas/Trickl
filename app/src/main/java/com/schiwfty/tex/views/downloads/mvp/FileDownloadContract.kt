@@ -11,12 +11,13 @@ import com.schiwfty.tex.views.downloads.list.FileDownloadAdapter
 interface FileDownloadContract {
     interface View {
         fun setupViewFromTorrentInfo(torrentFiles: List<TorrentFile>)
+        fun showDeleteFileDialog(torrentHash: String, torrentName: String, fileName: String)
     }
 
     interface Presenter {
         fun setup(context: Context, view: FileDownloadContract.View, arguments: Bundle?)
         fun destroy()
-        fun getDownloadingTorrents()
+        fun refresh()
         fun viewClicked(torrentFile: TorrentFile, action: FileDownloadAdapter.Companion.ClickTypes)
     }
 }

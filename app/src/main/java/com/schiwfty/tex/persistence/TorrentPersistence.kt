@@ -1,16 +1,20 @@
 package com.schiwfty.tex.persistence
 
 import com.schiwfty.tex.models.TorrentFile
+import com.schiwfty.tex.models.TorrentInfo
 import com.schiwfty.tex.realm.RealmTorrentFile
 import com.schiwfty.tex.utils.mapToModel
 import com.schiwfty.tex.utils.mapToRealm
 import io.realm.Realm
 import io.realm.RealmResults
+import rx.subjects.PublishSubject
 
 /**
  * Created by arran on 19/05/2017.
  */
 class TorrentPersistence : ITorrentPersistence {
+    lateinit override var torrentFileAdded: (TorrentFile) -> Unit
+
 
     override fun getDownloadFiles(): List<TorrentFile> {
         val realm = Realm.getDefaultInstance()
@@ -46,11 +50,11 @@ class TorrentPersistence : ITorrentPersistence {
         return torrentFile ?: throw NullPointerException("torrent file should not be empty")
     }
 
-    override fun removeTorrentDownloadFile(downloadingFile: TorrentFile) {
+    override fun removeTorrentDownloadFile(torrentFile: TorrentFile) {
         val realm = Realm.getDefaultInstance()
         realm.executeTransaction {
-            val result = realm.where(RealmTorrentFile::class.java).equalTo("primaryKey", downloadingFile.primaryKey).findFirst()
-            result.deleteFromRealm()
+            realm.where(RealmTorrentFile::class.java).equalTo("primaryKey", torrentFile.primaryKey).findFirst()?.deleteFromRealm()
+            torrentFileAdded(torrentFile)
         }
         realm.close()
     }
@@ -59,6 +63,7 @@ class TorrentPersistence : ITorrentPersistence {
         val realm = Realm.getDefaultInstance()
         realm.executeTransaction {
             realm.insertOrUpdate(torrentFile.mapToRealm())
+            torrentFileAdded(torrentFile)
         }
         realm.close()
     }

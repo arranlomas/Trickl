@@ -17,28 +17,38 @@ import rx.subjects.PublishSubject
  */
 interface ITorrentRepository {
     val torrentFileProgressSource: PublishSubject<Boolean>
+    val torrentFileListener: PublishSubject<TorrentFile>
+    val torrentInfoListener: PublishSubject<TorrentInfo>
+
+    //API
 
     fun getStatus(): Observable<ConfluenceInfo>
-
-    fun downloadTorrentInfo(hash: String): Observable<TorrentInfo?>
-
-    fun getTorrentInfo(hash: String): Observable<TorrentInfo?>
-
-    fun getAllTorrentsFromStorage(): Observable<List<TorrentInfo>>
 
     fun postTorrentFile(hash: String, file: File): Observable<ResponseBody>
 
     fun getFileState(torrentFile: TorrentFile): Observable<Pair<TorrentFile,List<FileStatePiece>>>
 
-    fun getDownloadingFilesFromPersistence(): Observable<List<TorrentFile>>
+    fun downloadTorrentInfo(hash: String): Observable<TorrentInfo?>
 
-    fun addTorrentFileToPersistence(torrentFile: TorrentFile)
-
-    fun deleteTorrentInfoFromStorage(hash: String): Boolean
+    fun getTorrentInfo(hash: String): Observable<TorrentInfo?>
 
     fun startFileDownloading(torrentFile: TorrentFile, context: Context)
 
+    //PERSISTENCE
+
+    fun addTorrentFileToPersistence(torrentFile: TorrentFile)
+
+    fun getAllTorrentsFromStorage(): Observable<List<TorrentInfo>>
+
+    fun getDownloadingFilesFromPersistence(): Observable<List<TorrentFile>>
+
     fun deleteTorrentData(torrentName: String): Boolean
 
-    fun deleteTorrentFileData(torrentName: String, torrentFile: TorrentFile): Boolean
+    fun deleteTorrentFileFromPersistence(torrentFile: TorrentFile)
+
+    fun deleteTorrentFileData(torrentFile: TorrentFile): Boolean
+
+    fun deleteTorrentInfoFromStorage(torrentInfo: TorrentInfo): Boolean
+
+    fun getTorrentFileFromPersistence(hash: String, path: String): TorrentFile
 }

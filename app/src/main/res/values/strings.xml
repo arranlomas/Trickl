@@ -53,6 +53,7 @@
     <string name="torrent_deleted">Torrent Deleted</string>
     <string name="file_deleted">File Deleted</string>
     <string name="error_deleting_file">Error deleting file</string>
-    <string name="torrent_deleted_dialog_text">Would you also like to delete any files downloaded using this torrent?</string>
+    <string name="delete_torrent_dialog_text">Would you also like to delete any files downloaded using this torrent?</string>
+    <string name="delete__file_dialog_text">Would you also like to delete the data associated with this file?</string>
 
 </resources>

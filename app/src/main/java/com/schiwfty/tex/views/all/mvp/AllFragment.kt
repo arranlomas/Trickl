@@ -68,7 +68,6 @@ class AllFragment : Fragment(), AllContract.View {
     override fun onResume() {
         super.onResume()
         presenter.refresh()
-
     }
 
     override fun updateStatus(string: String) {
