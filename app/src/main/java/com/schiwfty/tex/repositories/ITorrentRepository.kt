@@ -18,8 +18,6 @@ import rx.subjects.PublishSubject
 interface ITorrentRepository {
     val torrentFileProgressSource: PublishSubject<Boolean>
 
-    fun setupClientFromRepo(): Observable<ResponseBody>
-
     fun getStatus(): Observable<ConfluenceInfo>
 
     fun downloadTorrentInfo(hash: String): Observable<TorrentInfo?>

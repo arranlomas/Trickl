@@ -69,28 +69,6 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
         statusThread.start()
     }
 
-    override fun setupClientFromRepo(): Observable<ResponseBody> {
-        return Observable.just({
-            val torrentList = mutableListOf<File>()
-            Confluence.torrentRepo.walkTopDown().iterator().forEach {
-                if (it.isValidTorrentFile()) {
-                    torrentList.add(it)
-                }
-            }
-            torrentList.toList()
-        }.invoke())
-                .composeIo()
-                .flatMapIterable { it }
-                .filter { it != null }
-                .map { Pair(it.getAsTorrent()?.info_hash, it) }
-                .flatMap {
-                    val hash = it.first
-                    val file = it.second
-                    if (hash == null) throw IllegalStateException("Hash cannot be null")
-                    postTorrentFile(hash, file)
-                }
-    }
-
     override fun getStatus(): Observable<ConfluenceInfo> {
         return confluenceApi.getStatus
                 .composeIo()

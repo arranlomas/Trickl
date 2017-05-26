@@ -27,6 +27,11 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".confluence.ConfluenceDaemonService"
+            android:enabled="true"
+            android:exported="false" />
+
     </application>
 
 </manifest>
