@@ -38,6 +38,15 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
                             it.printStackTrace()
                         })
         )
+
+        compositeSubscription.add(
+                torrentRepository.torrentFileDeleteListener
+                        .subscribe({
+                            refresh()
+                        },{
+                            it.printStackTrace()
+                        })
+        )
     }
 
     override fun refresh() {
@@ -57,6 +66,5 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
                 view.showDeleteFileDialog(torrentFile.torrentHash, torrentFile.parentTorrentName, torrentFile.getFullPath())
             }
         }
-
     }
 }

@@ -42,14 +42,26 @@ class DeleteTorrentDialog : DialogFragment() {
                 .setMessage(R.string.delete_torrent_dialog_text)
                 .setPositiveButton("Delete",
                         { dialog, _ ->
-                            val deleted = torrentRepository.deleteTorrentInfoFromStorage(torretHash)
-                            if (deleted) torrentRepository.deleteTorrentData(torrentName)
+                            torrentRepository.getTorrentInfo(torretHash)
+                                    .subscribe({
+                                        it?.let {
+                                            val deleted = torrentRepository.deleteTorrentInfoFromStorage(it)
+                                            if (deleted) torrentRepository.deleteTorrentData(it)
+                                        }
+                                    }, {
+                                        it.printStackTrace()
+                                    })
                             dialog.dismiss()
                         }
                 )
                 .setNegativeButton("Keep",
                         { dialog, _ ->
-                            torrentRepository.deleteTorrentInfoFromStorage(torretHash)
+                            torrentRepository.getTorrentInfo(torretHash)
+                                    .subscribe({
+                                        it?.let { torrentRepository.deleteTorrentInfoFromStorage(it) }
+                                    }, {
+                                        it.printStackTrace()
+                                    })
                             dialog.dismiss()
                         }
                 ).setNeutralButton("Cancel",

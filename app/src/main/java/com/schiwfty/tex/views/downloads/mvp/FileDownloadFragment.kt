@@ -69,12 +69,14 @@ class FileDownloadFragment : Fragment(), FileDownloadContract.View {
     }
 
     override fun setupViewFromTorrentInfo(torrentFiles: List<TorrentFile>) {
+        if(!isVisible || !isAdded) return
         fileDownloadsSwipeRefresh.isRefreshing = false
         filesAdapter.torrentFiles = torrentFiles
         filesAdapter.notifyDataSetChanged()
     }
 
     override fun showDeleteFileDialog(torrentHash: String, torrentName: String, fileName: String) {
+        if(!isVisible || !isAdded) return
         dialogManager.showDeleteFileDialog(activity.fragmentManager, torrentHash, torrentName, fileName)
     }
 }

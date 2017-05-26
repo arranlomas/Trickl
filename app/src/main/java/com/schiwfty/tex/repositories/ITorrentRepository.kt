@@ -17,7 +17,7 @@ import rx.subjects.PublishSubject
  */
 interface ITorrentRepository {
     val torrentFileProgressSource: PublishSubject<Boolean>
-    val torrentFileListener: PublishSubject<TorrentFile>
+    val torrentFileDeleteListener: PublishSubject<TorrentFile>
     val torrentInfoListener: PublishSubject<TorrentInfo>
 
     //API
@@ -42,7 +42,7 @@ interface ITorrentRepository {
 
     fun getDownloadingFilesFromPersistence(): Observable<List<TorrentFile>>
 
-    fun deleteTorrentData(torrentName: String): Boolean
+    fun deleteTorrentData(torrentInfo: TorrentInfo): Boolean
 
     fun deleteTorrentFileFromPersistence(torrentFile: TorrentFile)
 

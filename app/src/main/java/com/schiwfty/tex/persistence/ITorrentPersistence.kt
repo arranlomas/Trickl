@@ -8,7 +8,7 @@ import rx.Observable
  * Created by arran on 19/05/2017.
  */
 interface ITorrentPersistence {
-    var torrentFileAdded: (TorrentFile) -> Unit
+    var torrentFileDeleted: (TorrentFile) -> Unit
 
     fun getDownloadFiles(): List<TorrentFile>
 

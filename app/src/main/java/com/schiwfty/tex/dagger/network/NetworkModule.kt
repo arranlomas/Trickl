@@ -27,6 +27,7 @@ import javax.inject.Singleton
 class NetworkModule {
 
     @Provides
+    @Singleton
     internal fun provideTorrentRepository(confluenceApi: ConfluenceApi, torrentPersistence: ITorrentPersistence): ITorrentRepository {
         return TorrentRepository(confluenceApi, torrentPersistence)
 

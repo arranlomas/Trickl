@@ -14,7 +14,6 @@ import com.schiwfty.tex.models.TorrentInfo
 import com.schiwfty.tex.persistence.ITorrentPersistence
 import com.schiwfty.tex.retrofit.ConfluenceApi
 import com.schiwfty.tex.utils.*
-import com.schiwfty.tex.views.torrentfiles.list.TorrentFilesAdapter
 import okhttp3.ResponseBody
 import org.apache.commons.io.IOUtils
 import rx.Observable
@@ -29,7 +28,7 @@ import java.io.FileInputStream
 class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence: ITorrentPersistence) : ITorrentRepository {
 
     override val torrentInfoListener: PublishSubject<TorrentInfo> = PublishSubject.create<TorrentInfo>()
-    override val torrentFileListener: PublishSubject<TorrentFile> = PublishSubject.create<TorrentFile>()
+    override val torrentFileDeleteListener: PublishSubject<TorrentFile> = PublishSubject.create<TorrentFile>()
     override val torrentFileProgressSource: PublishSubject<Boolean> = PublishSubject.create<Boolean>()
 
     private var statusUpdateRunning = true
@@ -69,7 +68,7 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
 
     init {
         statusThread.start()
-        torrentPersistence.torrentFileAdded =  { torrentFile -> torrentFileListener.onNext(torrentFile) }
+        torrentPersistence.torrentFileDeleted =  { torrentFile -> torrentFileDeleteListener.onNext(torrentFile) }
     }
 
     override fun getStatus(): Observable<ConfluenceInfo> {
@@ -156,8 +155,8 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
         dm.enqueue(request)
     }
 
-    override fun deleteTorrentData(torrentName: String): Boolean {
-        val file = File(Confluence.workingDir.absolutePath, torrentName)
+    override fun deleteTorrentData(torrentInfo: TorrentInfo): Boolean {
+        val file = File(Confluence.workingDir.absolutePath, torrentInfo.name)
         return file.deleteRecursively()
     }
 
