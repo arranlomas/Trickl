@@ -18,7 +18,7 @@ import rx.subjects.PublishSubject
 interface ITorrentRepository {
     val torrentFileProgressSource: PublishSubject<Boolean>
     val torrentFileDeleteListener: PublishSubject<TorrentFile>
-    val torrentInfoListener: PublishSubject<TorrentInfo>
+    val torrentInfoDeleteListener: PublishSubject<TorrentInfo>
 
     //API
 

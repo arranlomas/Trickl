@@ -27,7 +27,7 @@ import java.io.FileInputStream
  */
 class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence: ITorrentPersistence) : ITorrentRepository {
 
-    override val torrentInfoListener: PublishSubject<TorrentInfo> = PublishSubject.create<TorrentInfo>()
+    override val torrentInfoDeleteListener: PublishSubject<TorrentInfo> = PublishSubject.create<TorrentInfo>()
     override val torrentFileDeleteListener: PublishSubject<TorrentFile> = PublishSubject.create<TorrentFile>()
     override val torrentFileProgressSource: PublishSubject<Boolean> = PublishSubject.create<Boolean>()
 
@@ -83,7 +83,6 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
                 .map {
                     val file: File = File(torrentRepo, "$hash.torrent")
                     val torrentInfo = file.getAsTorrent()
-                    torrentInfoListener.onNext(torrentInfo)
                     torrentInfo
                 }
     }
@@ -92,7 +91,6 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
         val file: File = File(torrentRepo, "$hash.torrent")
         if (file.isValidTorrentFile()) {
             val torrentInfo = file.getAsTorrent()
-            torrentInfoListener.onNext(torrentInfo)
             return Observable.just(torrentInfo)
         } else return downloadTorrentInfo(hash)
     }
@@ -141,7 +139,7 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
     override fun deleteTorrentInfoFromStorage(torrentInfo: TorrentInfo): Boolean {
         val file = File(Confluence.torrentRepo.absolutePath, "${torrentInfo.info_hash}.torrent")
         val deleted = file.delete()
-        if (deleted) torrentInfoListener.onNext(torrentInfo)
+        if (deleted) torrentInfoDeleteListener.onNext(torrentInfo)
         return deleted
     }
 

@@ -7,17 +7,19 @@ import android.view.MenuItem
 /**
  * Created by arran on 16/04/2017.
  */
-interface TorrentInfo {
+interface TorrentInfoContract {
     interface View {
         fun notifyTorrentDeleted()
         fun showError(stringId: Int)
         fun showInfo(stringId: Int)
         fun showSuccess(stringId: Int)
         fun notifyTorrentAdded()
+        fun dismiss()
     }
 
     interface Presenter {
         fun setup(context: Context, view: View, arguments: Bundle?)
+        fun destroy()
         var torrentHash: String
         var torrentMagnet: String?
         var torrentName: String?

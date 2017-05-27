@@ -89,15 +89,6 @@
             fab:fab_colorPressed="@color/colorAccentPressed"
             fab:fab_icon="@drawable/ic_magnet_white" />
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@id/addTorrentFab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_title="@string/torrent_file"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_colorPressed="@color/colorAccentPressed"
-            fab:fab_icon="@drawable/ic_file_white" />
-
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </android.support.design.widget.CoordinatorLayout>

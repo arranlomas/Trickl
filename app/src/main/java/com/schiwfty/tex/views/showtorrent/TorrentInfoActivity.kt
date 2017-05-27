@@ -15,10 +15,9 @@ import kotlinx.android.synthetic.main.activity_show_torrent.*
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentInfoActivity : AppCompatActivity(), TorrentInfo.View {
+class TorrentInfoActivity : AppCompatActivity(), TorrentInfoContract.View {
 
-    lateinit var presenter: TorrentInfo.Presenter
-
+    lateinit var presenter: TorrentInfoContract.Presenter
 
     companion object {
         val ARG_TORRENT_HASH = "arg_torrent_hash"
@@ -44,6 +43,15 @@ class TorrentInfoActivity : AppCompatActivity(), TorrentInfo.View {
         if (presenter.torrentName != null) {
             showTorrentLoadingText.text = getString(R.string.loading_torrent_info_for, presenter.torrentName)
         }
+    }
+
+    override fun dismiss() {
+        finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

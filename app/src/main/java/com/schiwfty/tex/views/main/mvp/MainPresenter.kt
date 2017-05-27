@@ -3,12 +3,9 @@ package com.schiwfty.tex.views.main.mvp
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.schiwfty.tex.R
 import com.schiwfty.tex.TricklComponent
-import com.schiwfty.tex.confluence.Confluence
 import com.schiwfty.tex.repositories.ITorrentRepository
 import com.schiwfty.tex.views.splash.mvp.SplashActivity
-import java.io.File
 import javax.inject.Inject
 
 /**
@@ -24,6 +21,9 @@ class MainPresenter : MainContract.Presenter {
     override fun setup(context: Context, view: MainContract.View) {
         this.view = view
         TricklComponent.mainComponent.inject(this)
+
+        torrentRepository.torrentInfoDeleteListener
+                .subscribe { Log.v("test", it.name) }
     }
 
     override fun showAddTorrentActivity(hash: String?, magnet: String?, torrentFilePath: String?) {

@@ -10,16 +10,15 @@ import com.schiwfty.tex.utils.findHashFromMagnet
 import com.schiwfty.tex.utils.findNameFromMagnet
 import com.schiwfty.tex.utils.findTrackersFromMagnet
 import com.schiwfty.tex.views.addtorrent.AddTorrentActivity
-import com.schiwfty.tex.views.main.DialogManager
-import com.schiwfty.tex.views.main.IDialogManager
 import com.schiwfty.tex.views.main.mvp.MainContract
+import rx.subscriptions.CompositeSubscription
 import java.net.URLDecoder
 import javax.inject.Inject
 
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentInfoPresenter : TorrentInfo.Presenter {
+class TorrentInfoPresenter : TorrentInfoContract.Presenter {
 
     @Inject
     lateinit var torrentRepository: ITorrentRepository
@@ -27,13 +26,15 @@ class TorrentInfoPresenter : TorrentInfo.Presenter {
     @Inject
     lateinit var mainPresenter: MainContract.Presenter
 
-    lateinit var view: TorrentInfo.View
+    lateinit var view: TorrentInfoContract.View
     override lateinit var torrentHash: String
     override var torrentMagnet: String? = null
     override var torrentName: String? = null
     override var torrentTrackers: List<String>? = null
 
-    override fun setup(context: Context, view: TorrentInfo.View, arguments: Bundle?) {
+    private val compositeSubscription = CompositeSubscription()
+
+    override fun setup(context: Context, view: TorrentInfoContract.View, arguments: Bundle?) {
         this.view = view
         TricklComponent.mainComponent.inject(this)
 
@@ -43,12 +44,20 @@ class TorrentInfoPresenter : TorrentInfo.Presenter {
 
         if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_MAGNET) ?: false) {
             torrentMagnet = arguments?.getString(AddTorrentActivity.ARG_TORRENT_MAGNET) ?: ""
-            torrentMagnet?.findHashFromMagnet()?.let { torrentHash = it  }
+            torrentMagnet?.findHashFromMagnet()?.let { torrentHash = it }
             torrentName = URLDecoder.decode(torrentMagnet?.findNameFromMagnet(), "UTF-8")
             torrentTrackers = torrentMagnet?.findTrackersFromMagnet()
         }
 
+        compositeSubscription.add(
+                torrentRepository.torrentInfoDeleteListener
+                        .subscribe({view.dismiss()}, {})
+        )
 
+    }
+
+    override fun destroy(){
+        compositeSubscription.unsubscribe()
     }
 
     override fun fetchTorrent() {
@@ -67,9 +76,9 @@ class TorrentInfoPresenter : TorrentInfo.Presenter {
     }
 
     override fun optionsItemSelected(item: MenuItem) {
-        when(item.itemId){
+        when (item.itemId) {
             R.id.action_delete -> {
-               view.notifyTorrentDeleted()
+                view.notifyTorrentDeleted()
             }
         }
     }

@@ -26,7 +26,7 @@ class AllPresenter : AllContract.Presenter {
         TricklComponent.mainComponent.inject(this)
 
         compositeSubscription.add(
-                torrentRepository.torrentInfoListener
+                torrentRepository.torrentInfoDeleteListener
                         .subscribe({refresh()}, {it.printStackTrace()})
         )
     }
