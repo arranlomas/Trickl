@@ -17,6 +17,7 @@ interface AllContract {
 
     interface Presenter {
         fun setup(context: Context, view: View)
+        fun destroy()
         fun refresh()
     }
 }

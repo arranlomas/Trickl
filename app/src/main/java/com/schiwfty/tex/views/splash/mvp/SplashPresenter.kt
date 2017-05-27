@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import com.schiwfty.tex.R
 import com.schiwfty.tex.TricklComponent
-import com.schiwfty.tex.confluence.Confluence
-import com.schiwfty.tex.confluence.ConfluenceDaemonService
 import com.schiwfty.tex.repositories.ITorrentRepository
 import com.schiwfty.tex.utils.startConfluenceDaemon
 import rx.subscriptions.CompositeSubscription
@@ -15,6 +13,15 @@ import javax.inject.Inject
  * Created by arran on 16/04/2017.
  */
 class SplashPresenter : SplashContract.Presenter {
+    override var magnet: String? = null
+
+    override fun handleIntent(intent: Intent) {
+        val magnetCandidate = intent.dataString ?: return
+        if(magnetCandidate.startsWith("magnet")){
+            magnet = magnetCandidate
+        }
+    }
+
     lateinit var view: SplashContract.View
 
     @Inject

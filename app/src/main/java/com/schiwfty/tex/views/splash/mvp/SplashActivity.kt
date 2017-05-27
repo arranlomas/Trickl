@@ -15,11 +15,16 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
     val presenter = SplashPresenter()
     lateinit var rxPermissions: RxPermissions
 
+    companion object{
+        val TAG_MAGNET_FROM_INTENT = "arg_magnet_from_intent"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         rxPermissions = RxPermissions(this)
         presenter.setup(this, this)
+        presenter.handleIntent(intent)
     }
 
     override fun onStart() {
@@ -40,6 +45,7 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
     override fun progressToMain() {
         finish()
         intent = Intent(this, MainActivity::class.java)
+        if(presenter.magnet!=null) intent.putExtra(TAG_MAGNET_FROM_INTENT, presenter.magnet)
         startActivity(intent)
     }
 

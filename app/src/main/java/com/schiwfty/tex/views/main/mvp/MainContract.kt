@@ -1,6 +1,7 @@
 package com.schiwfty.tex.views.main.mvp
 
 import android.content.Context
+import android.content.Intent
 
 /**
  * Created by arran on 16/04/2017.
@@ -18,5 +19,6 @@ interface MainContract {
         fun setup(context: Context, view: MainContract.View)
         fun showAddTorrentActivity(hash: String? = null, magnet: String? = null, torrentFilePath: String? = null)
         fun showTorrentInfoActivity(infoHash: String)
+        fun handleIntent(intent: Intent)
     }
 }

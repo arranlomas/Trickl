@@ -49,6 +49,12 @@ class AllFragment : Fragment(), AllContract.View {
         Log.v("Arran", mainPresenter.toString())
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
+    }
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         presenter = AllPresenter()
         presenter.setup(activity, this)

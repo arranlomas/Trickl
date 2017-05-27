@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         setContentView(R.layout.activity_main)
         Log.v("Arran", presenter.toString())
         presenter.setup(this, this)
+        presenter.handleIntent(intent)
 
         setSupportActionBar(mainToolbar)
         supportActionBar?.title = getString(R.string.app_name)
