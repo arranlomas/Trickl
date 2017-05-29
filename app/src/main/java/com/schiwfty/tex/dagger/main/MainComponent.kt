@@ -6,6 +6,7 @@ import com.schiwfty.tex.dialogs.AddHashDialog
 import com.schiwfty.tex.dialogs.AddMagnetDialog
 import com.schiwfty.tex.dialogs.DeleteFileDialog
 import com.schiwfty.tex.dialogs.DeleteTorrentDialog
+import com.schiwfty.tex.utils.ChromecastServer
 import com.schiwfty.tex.views.addtorrent.AddTorrentPresenter
 import com.schiwfty.tex.views.all.mvp.AllFragment
 import com.schiwfty.tex.views.all.mvp.AllPresenter
@@ -39,6 +40,7 @@ interface MainComponent {
     fun inject(fileDownloadPresenter: FileDownloadPresenter)
     fun inject(deleteTorrentDialog: DeleteTorrentDialog)
     fun inject(addHashDialog: AddHashDialog)
+    fun inject(chromecastServer: ChromecastServer)
 }
 
 

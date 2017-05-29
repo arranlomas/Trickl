@@ -19,6 +19,7 @@ allprojects {
         jcenter()
         maven { url "https://jitpack.io" }
         maven { url 'https://github.com/linchaolong/stetho-realm/raw/master/maven-repo' }
+        maven { url 'https://maven.google.com' }
     }
 }
 

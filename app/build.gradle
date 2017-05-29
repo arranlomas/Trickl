@@ -86,6 +86,14 @@ dependencies {
     //STETHO
     compile 'com.facebook.stetho:stetho:1.4.2'
     compile 'com.uphyca:stetho_realm:2.0.1'
+
+    //NanotHttpd
+    compile 'com.nanohttpd:nanohttpd-webserver:2.2.0'
+
+    //Architecture Components
+    compile "android.arch.lifecycle:runtime:1.0.0-alpha1"
+    compile "android.arch.lifecycle:extensions:1.0.0-alpha1"
+    annotationProcessor "android.arch.lifecycle:compiler:1.0.0-alpha1"
 }
 repositories {
     mavenCentral()
