@@ -1,12 +1,14 @@
 package com.schiwfty.tex.dagger.network
 
 
+import android.util.Log
 import com.schiwfty.tex.persistence.ITorrentPersistence
 import com.schiwfty.tex.persistence.TorrentPersistence
 import com.schiwfty.tex.repositories.ITorrentRepository
 import com.schiwfty.tex.repositories.TorrentRepository
 import com.schiwfty.tex.retrofit.ClientAPI
 import com.schiwfty.tex.retrofit.ConfluenceApi
+import com.schiwfty.tex.utils.getIPAddress
 import dagger.Module
 import dagger.Provides
 import io.realm.Realm
@@ -74,7 +76,9 @@ class NetworkModule {
 
     @Provides
     internal fun provideBaseUrl(): String {
-        return "http://127.0.0.1:8080"
+        val ip = getIPAddress()
+        Log.v("IP", ip)
+        return "http://$ip:8080"
     }
 
     @Provides

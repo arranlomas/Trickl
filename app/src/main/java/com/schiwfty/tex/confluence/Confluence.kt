@@ -11,7 +11,7 @@ import java.net.ServerSocket
  */
 object Confluence {
     lateinit var fullUrl: String
-    val localhostUrl = "127.0.0.1:"
+    val localhostUrl = "localhost:"
     lateinit var daemonPort: String
     val workingDir: File = File(Environment.getExternalStorageDirectory().path + File.separator + "Trickl")
     val torrentRepo: File = File(workingDir.absolutePath + File.separator + "torrents")
@@ -29,7 +29,7 @@ object Confluence {
 
     fun startConfluence(): Boolean {
         daemonPort = "8080"
-        fullUrl = "http://$localhostUrl$daemonPort"
+        fullUrl = "$localhostUrl$daemonPort"
         val mainThread = Thread {
             trickl.Trickl.androidMain(workingDir.absolutePath)
         }

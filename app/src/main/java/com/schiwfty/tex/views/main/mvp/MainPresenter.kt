@@ -21,9 +21,6 @@ class MainPresenter : MainContract.Presenter {
     override fun setup(context: Context, view: MainContract.View) {
         this.view = view
         TricklComponent.mainComponent.inject(this)
-
-        torrentRepository.torrentInfoDeleteListener
-                .subscribe { Log.v("test", it.name) }
     }
 
     override fun showAddTorrentActivity(hash: String?, magnet: String?, torrentFilePath: String?) {

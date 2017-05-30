@@ -24,7 +24,7 @@ class TorrentFilesAdapter(val itemClickListener: (TorrentFile, ClickTypes) -> Un
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TorrentFileCardHolder {
         val itemView = parent.context.inflateLayout(R.layout.list_item_torrent_file, parent, false)
         val holder = TorrentFileCardHolder(itemView)
-        holder.onClick { view, position, type ->
+        holder.onClick { _, position, _ ->
             val popup = PopupMenu(itemView.context, itemView)
             popup.menuInflater.inflate(R.menu.popup_view_file, popup.menu)
             popup.setOnMenuItemClickListener {

@@ -43,7 +43,7 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
                 torrentRepository.torrentFileDeleteListener
                         .subscribe({
                             refresh()
-                        },{
+                        }, {
                             it.printStackTrace()
                         })
         )
@@ -59,10 +59,14 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
     }
 
     override fun viewClicked(torrentFile: TorrentFile, action: FileDownloadAdapter.Companion.ClickTypes) {
-        when(action){
-            FileDownloadAdapter.Companion.ClickTypes.DOWNLOAD ->{torrentRepository.startFileDownloading(torrentFile, context)}
-            FileDownloadAdapter.Companion.ClickTypes.OPEN ->{ torrentFile.openFile(context, torrentRepository) }
-            FileDownloadAdapter.Companion.ClickTypes.DELETE ->{
+        when (action) {
+            FileDownloadAdapter.Companion.ClickTypes.DOWNLOAD -> {
+                torrentRepository.startFileDownloading(torrentFile, context)
+            }
+            FileDownloadAdapter.Companion.ClickTypes.OPEN -> {
+                torrentFile.openFile(context, torrentRepository)
+            }
+            FileDownloadAdapter.Companion.ClickTypes.DELETE -> {
                 view.showDeleteFileDialog(torrentFile.torrentHash, torrentFile.parentTorrentName, torrentFile.getFullPath())
             }
         }

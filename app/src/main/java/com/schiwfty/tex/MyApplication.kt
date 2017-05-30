@@ -2,7 +2,6 @@ package com.schiwfty.tex
 
 import android.app.Application
 import com.facebook.stetho.Stetho
-import com.schiwfty.tex.utils.ChromecastServer
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
 import io.realm.Realm
 
@@ -13,9 +12,6 @@ class MyApplication : Application() {
     override fun onCreate() {
         TricklComponent.install()
         Realm.init(this)
-
-        ChromecastServer()
-
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))

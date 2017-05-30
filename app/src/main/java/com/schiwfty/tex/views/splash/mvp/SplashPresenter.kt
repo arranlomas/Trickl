@@ -13,6 +13,7 @@ import javax.inject.Inject
  * Created by arran on 16/04/2017.
  */
 class SplashPresenter : SplashContract.Presenter {
+
     override var magnet: String? = null
 
     override fun handleIntent(intent: Intent) {
@@ -33,6 +34,10 @@ class SplashPresenter : SplashContract.Presenter {
         this.view = view
         TricklComponent.mainComponent.inject(this)
         startConfluenceDaemon(context)
+    }
+
+    override fun destroy() {
+        subscriptions.unsubscribe()
     }
 
     override fun startConfluenceDaemon(context: Context) {

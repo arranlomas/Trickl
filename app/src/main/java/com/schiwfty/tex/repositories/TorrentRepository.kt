@@ -38,6 +38,7 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
             val files = torrentPersistence.getDownloadFiles()
             var percentagesCompleted = 0
             files.forEach {
+                //TODO - improve to just add a list of files that were updated to the publish subject
                 getFileState(it)
                         .subscribe({
                             val (torrentFile, pieces) = it
@@ -144,6 +145,10 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
     }
 
     override fun startFileDownloading(torrentFile: TorrentFile, context: Context) {
+        val status = context.getConnectivityStatus()
+        when(status){
+            //TODO when not on wifi show download anyway dialog
+        }
         torrentPersistence.saveTorrentFile(torrentFile)
         val dm = context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         val request = DownloadManager.Request(

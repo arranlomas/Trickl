@@ -18,6 +18,7 @@ interface SplashContract {
         var magnet: String?
         fun startConfluenceDaemon(context: Context)
         fun setup(context: Context, view: View)
+        fun destroy()
         fun handleIntent(intent: Intent)
     }
 }
