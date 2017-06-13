@@ -1,4 +1,4 @@
-package com.schiwfty.tex.bencoding;
+package com.shwifty.tex.bencoding;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.util.Formatter;
  */
 public class Utils {
 
-    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
 
     /**
      * Takes an array of bytes and converts them to a string of

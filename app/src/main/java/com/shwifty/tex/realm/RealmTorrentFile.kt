@@ -1,4 +1,4 @@
-package com.schiwfty.tex.realm
+package com.shwifty.tex.realm
 
 import android.support.annotation.NonNull
 import io.realm.RealmList

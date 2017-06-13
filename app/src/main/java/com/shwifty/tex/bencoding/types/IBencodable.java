@@ -1,4 +1,4 @@
-package com.schiwfty.tex.bencoding.types;
+package com.shwifty.tex.bencoding.types;
 
 /**
  * Created by arran on 30/04/2017.

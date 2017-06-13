@@ -1,4 +1,4 @@
-package com.schiwfty.tex.models
+package com.shwifty.tex.models
 
 import io.realm.annotations.PrimaryKey
 

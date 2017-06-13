@@ -1,4 +1,4 @@
-package com.schiwfty.tex.models
+package com.shwifty.tex.models
 
 import com.google.gson.annotations.SerializedName
 

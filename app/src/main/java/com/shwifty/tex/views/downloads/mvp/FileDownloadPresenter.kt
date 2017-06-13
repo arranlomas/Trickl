@@ -5,6 +5,8 @@ import android.os.Bundle
 import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.models.TorrentFile
 import com.shwifty.tex.repositories.ITorrentRepository
+import com.shwifty.tex.utils.getFullPath
+import com.shwifty.tex.utils.openFile
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
 import com.shwifty.tex.views.main.mvp.MainContract
 import rx.subscriptions.CompositeSubscription

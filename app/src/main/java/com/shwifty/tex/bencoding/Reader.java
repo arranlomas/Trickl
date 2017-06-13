@@ -1,14 +1,9 @@
-package com.schiwfty.tex.bencoding;
+package com.shwifty.tex.bencoding;
 
 /**
  * Created by arran on 30/04/2017.
  */
-
-import com.schiwfty.tex.bencoding.types.BByteString;
-import com.schiwfty.tex.bencoding.types.BDictionary;
-import com.schiwfty.tex.bencoding.types.BInt;
-import com.schiwfty.tex.bencoding.types.BList;
-import com.schiwfty.tex.bencoding.types.IBencodable;
+import com.shwifty.tex.bencoding.types.*;
 
 import org.apache.commons.io.IOUtils;
 

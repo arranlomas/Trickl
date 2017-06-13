@@ -1,4 +1,4 @@
-package com.schiwfty.tex.utils
+package com.shwifty.tex.utils
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

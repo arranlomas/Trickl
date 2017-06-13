@@ -1,4 +1,4 @@
-package com.schiwfty.tex;
+package com.shwifty.tex;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.schiwfty.trickl", appContext.getPackageName());
+        assertEquals("com.shwifty.trickl", appContext.getPackageName());
     }
 }

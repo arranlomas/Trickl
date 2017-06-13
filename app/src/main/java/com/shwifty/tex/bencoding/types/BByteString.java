@@ -1,6 +1,6 @@
-package com.schiwfty.tex.bencoding.types;
+package com.shwifty.tex.bencoding.types;
 
-import com.schiwfty.tex.bencoding.Utils;
+import com.shwifty.tex.bencoding.Utils;
 
 import java.util.Arrays;
 

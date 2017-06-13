@@ -8,7 +8,9 @@ import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.models.TorrentFile
 import com.shwifty.tex.repositories.ITorrentRepository
 import com.shwifty.tex.utils.CONNECTIVITY_STATUS
+import com.shwifty.tex.utils.canCast
 import com.shwifty.tex.utils.getConnectivityStatus
+import com.shwifty.tex.utils.getFullPath
 import com.shwifty.tex.views.splash.mvp.SplashActivity
 import javax.inject.Inject
 

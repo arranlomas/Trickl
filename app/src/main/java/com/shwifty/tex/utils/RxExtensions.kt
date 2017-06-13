@@ -1,4 +1,4 @@
-package com.schiwfty.tex.utils
+package com.shwifty.tex.utils
 
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers

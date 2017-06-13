@@ -1,4 +1,4 @@
-package com.schiwfty.tex;
+package com.shwifty.tex;
 
 import org.junit.Test;
 

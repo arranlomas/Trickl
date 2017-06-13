@@ -1,10 +1,10 @@
-package com.schiwfty.tex.views.torrentfiles.list
+package com.shwifty.tex.views.torrentfiles.list
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import com.schiwfty.tex.models.TorrentFile
-import com.schiwfty.tex.utils.formatBytesAsSize
-import com.schiwfty.tex.utils.getFullPath
+import com.shwifty.tex.models.TorrentFile
+import com.shwifty.tex.utils.formatBytesAsSize
+import com.shwifty.tex.utils.getFullPath
 import kotlinx.android.synthetic.main.list_item_torrent_file.view.*
 
 /**

@@ -1,7 +1,11 @@
 package com.shwifty.tex.utils
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.webkit.MimeTypeMap
 import com.google.android.gms.cast.MediaInfo
+import com.google.android.gms.cast.MediaMetadata
 import com.shwifty.tex.bencoding.TorrentParser
 import com.shwifty.tex.confluence.Confluence
 import com.shwifty.tex.models.TorrentFile
@@ -9,6 +13,7 @@ import com.shwifty.tex.models.TorrentInfo
 import com.shwifty.tex.repositories.ITorrentRepository
 import java.io.File
 import java.net.URLDecoder
+import java.net.URLEncoder
 import java.util.*
 import java.util.regex.Pattern
 

@@ -1,12 +1,12 @@
-package com.schiwfty.tex.views.all.list
+package com.shwifty.tex.views.all.list
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.pawegio.kandroid.inflateLayout
-import com.schiwfty.tex.R
-import com.schiwfty.tex.models.TorrentInfo
-import com.schiwfty.tex.utils.onClick
+import com.shwifty.tex.R
+import com.shwifty.tex.models.TorrentInfo
+import com.shwifty.tex.utils.onClick
 
 /**
  * Created by arran on 19/04/2017.

@@ -1,4 +1,4 @@
-package com.schiwfty.tex.bencoding.types;
+package com.shwifty.tex.bencoding.types;
 
 import java.util.ArrayList;
 import java.util.Iterator;

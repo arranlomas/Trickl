@@ -1,21 +1,21 @@
-package com.schiwfty.tex.utils
+package com.shwifty.tex.utils
 
-import com.schiwfty.tex.models.TorrentFile
-import com.schiwfty.tex.realm.RealmString
-import com.schiwfty.tex.realm.RealmTorrentFile
+import com.shwifty.tex.models.TorrentFile
+import com.shwifty.tex.realm.RealmString
+import com.shwifty.tex.realm.RealmTorrentFile
 import io.realm.RealmList
 
 /**
  * Created by arran on 16/05/2017.
  */
 @JvmName("mapTorrentFileListToRealm")
-fun List<TorrentFile>.mapToRealm(): RealmList<RealmTorrentFile>{
+fun List<TorrentFile>.mapToRealm(): RealmList<RealmTorrentFile> {
     val realmList = RealmList<RealmTorrentFile>()
     forEach { realmList.add(it.mapToRealm()) }
     return realmList
 }
 
-fun TorrentFile.mapToRealm(): RealmTorrentFile{
+fun TorrentFile.mapToRealm(): RealmTorrentFile {
     val realmTorrentFile = RealmTorrentFile(
             fileLength ?: 0,
             fileDirs?.mapToRealm(),
@@ -28,7 +28,7 @@ fun TorrentFile.mapToRealm(): RealmTorrentFile{
 }
 
 @JvmName("mapStringListToRealm")
-fun List<String>.mapToRealm(): RealmList<RealmString>{
+fun List<String>.mapToRealm(): RealmList<RealmString> {
     val realmList = RealmList<RealmString>()
     this.forEach { realmList.add(it.mapToRealm()) }
     return realmList

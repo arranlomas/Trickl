@@ -6,6 +6,8 @@ import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
 import com.google.android.gms.cast.framework.SessionManagerListener
 import com.shwifty.tex.models.TorrentFile
+import com.shwifty.tex.utils.buildMediaInfo
+import com.shwifty.tex.utils.getMimeType
 
 /**
  * Created by arran on 4/06/2017.

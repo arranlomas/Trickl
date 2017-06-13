@@ -1,10 +1,10 @@
-package com.schiwfty.tex.views.main
+package com.shwifty.tex.views.main
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import com.schiwfty.tex.views.all.mvp.AllFragment
-import com.schiwfty.tex.views.downloads.mvp.FileDownloadFragment
+import com.shwifty.tex.views.all.mvp.AllFragment
+import com.shwifty.tex.views.downloads.mvp.FileDownloadFragment
 
 /**
  * Created by arran on 9/05/2017.

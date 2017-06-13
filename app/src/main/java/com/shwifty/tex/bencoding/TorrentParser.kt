@@ -1,11 +1,11 @@
 package com.shwifty.tex.bencoding
 
+import com.shwifty.tex.models.TorrentInfo
 import com.shwifty.tex.bencoding.types.BByteString
 import com.shwifty.tex.bencoding.types.BDictionary
 import com.shwifty.tex.bencoding.types.BInt
 import com.shwifty.tex.bencoding.types.BList
 import com.shwifty.tex.models.TorrentFile
-import com.shwifty.tex.models.TorrentInfo
 import com.shwifty.tex.utils.concatStrings
 import java.io.File
 import java.io.IOException
