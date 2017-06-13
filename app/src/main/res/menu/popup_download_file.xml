@@ -8,6 +8,11 @@
         android:title="@string/download"/>
 
     <item
+        android:id="@+id/menu_item_chromecast"
+        android:title="@string/chromecast"/>
+
+    <item
         android:id="@+id/menu_item_delete"
         android:title="@string/delete"/>
+
 </menu>

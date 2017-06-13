@@ -7,7 +7,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.schiwfty.tex"
+        applicationId "com.shwifty.tex"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
@@ -94,6 +94,10 @@ dependencies {
     compile "android.arch.lifecycle:runtime:1.0.0-alpha1"
     compile "android.arch.lifecycle:extensions:1.0.0-alpha1"
     annotationProcessor "android.arch.lifecycle:compiler:1.0.0-alpha1"
+
+    //chromecast
+    compile 'com.android.support:mediarouter-v7:25.3.1'
+    compile 'com.google.android.gms:play-services-cast-framework:10.2.6'
 }
 repositories {
     mavenCentral()
