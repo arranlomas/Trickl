@@ -11,7 +11,6 @@ import javax.inject.Inject
  */
 class AllPresenter : AllContract.Presenter {
 
-
     @Inject
     lateinit var torrentRepository: ITorrentRepository
 

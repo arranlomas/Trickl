@@ -3,7 +3,10 @@ package com.shwifty.tex.confluence
 import android.os.Environment
 import java.io.File
 import java.io.IOException
+import java.net.InetAddress
+import java.net.NetworkInterface
 import java.net.ServerSocket
+import java.util.*
 
 
 /**
@@ -11,10 +14,12 @@ import java.net.ServerSocket
  */
 object Confluence {
     lateinit var fullUrl: String
-    val localhostUrl = "localhost:"
+    lateinit var localhostIP: String
     lateinit var daemonPort: String
+
     val workingDir: File = File(Environment.getExternalStorageDirectory().path + File.separator + "Trickl")
     val torrentRepo: File = File(workingDir.absolutePath + File.separator + "torrents")
+
     var announceList: Array<String> = arrayOf(
             "http://182.176.139.129:6969/announce",
             "http://atrack.pow7.com/announce",
@@ -28,8 +33,6 @@ object Confluence {
 
 
     fun startConfluence(): Boolean {
-        daemonPort = "8080"
-        fullUrl = "$localhostUrl$daemonPort"
         val mainThread = Thread {
             trickl.Trickl.androidMain(workingDir.absolutePath)
         }
@@ -57,6 +60,4 @@ object Confluence {
         }
         return streamPort
     }
-
-
 }

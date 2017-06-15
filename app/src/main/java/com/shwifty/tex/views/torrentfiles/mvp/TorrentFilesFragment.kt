@@ -11,6 +11,7 @@ import com.shwifty.tex.R
 import com.shwifty.tex.models.TorrentFile
 import com.shwifty.tex.models.TorrentInfo
 import com.shwifty.tex.views.torrentfiles.list.TorrentFilesAdapter
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_torrent_files.*
 
 
@@ -77,5 +78,9 @@ class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
 
     override fun dismiss() {
         activity.finish()
+    }
+
+    override fun showError(stringId: Int) {
+        Toasty.error(context, context.getString(stringId)).show()
     }
 }

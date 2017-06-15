@@ -98,6 +98,9 @@ dependencies {
     //chromecast
     compile 'com.android.support:mediarouter-v7:25.3.1'
     compile 'com.google.android.gms:play-services-cast-framework:10.2.6'
+
+    //material dialog
+    compile 'com.afollestad.material-dialogs:core:0.9.4.5'
 }
 repositories {
     mavenCentral()

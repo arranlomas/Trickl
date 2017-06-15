@@ -16,8 +16,9 @@ class MyApplication : Application() {
     }
 
     override fun onCreate() {
-        TricklComponent.install()
+        //be aware of the order of initialisation
         Realm.init(this)
+        TricklComponent.install()
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))

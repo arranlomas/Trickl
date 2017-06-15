@@ -12,6 +12,7 @@ interface FileDownloadContract {
     interface View {
         fun setupViewFromTorrentInfo(torrentFiles: List<TorrentFile>)
         fun showDeleteFileDialog(torrentHash: String, torrentName: String, fileName: String)
+        fun showError(stringId: Int)
     }
 
     interface Presenter {

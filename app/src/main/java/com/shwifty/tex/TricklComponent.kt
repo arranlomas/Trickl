@@ -18,6 +18,7 @@ object TricklComponent {
         mainComponent = DaggerMainComponent.builder()
                 .networkModule(NetworkModule())
                 .build()
-        //TODO set client address here!
+        dialogManager.torrentRepository = mainComponent.getTorrentRepository()
+        dialogManager.mainPresenter = mainComponent.getMainPresenter()
     }
 }

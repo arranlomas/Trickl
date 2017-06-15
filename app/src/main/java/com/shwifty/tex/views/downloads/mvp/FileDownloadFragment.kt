@@ -11,6 +11,7 @@ import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.models.TorrentFile
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_file_downloads.*
 
 
@@ -75,5 +76,9 @@ class FileDownloadFragment : Fragment(), FileDownloadContract.View {
     override fun showDeleteFileDialog(torrentHash: String, torrentName: String, fileName: String) {
         if (!isVisible || !isAdded) return
         TricklComponent.dialogManager.showDeleteFileDialog(activity.fragmentManager, torrentHash, torrentName, fileName)
+    }
+
+    override fun showError(stringId: Int) {
+        Toasty.error(context, context.getString(stringId)).show()
     }
 }

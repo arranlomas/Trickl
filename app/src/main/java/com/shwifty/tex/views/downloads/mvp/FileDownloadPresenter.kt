@@ -2,6 +2,7 @@ package com.shwifty.tex.views.downloads.mvp
 
 import android.content.Context
 import android.os.Bundle
+import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.models.TorrentFile
 import com.shwifty.tex.repositories.ITorrentRepository
@@ -68,7 +69,9 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
                 mainPresenter.checkStatusForDownload(torrentFile)
             }
             FileDownloadAdapter.Companion.ClickTypes.OPEN -> {
-                torrentFile.openFile(context, torrentRepository)
+                torrentFile.openFile(context, torrentRepository,{
+                    view.showError(R.string.error_no_activity)
+                })
             }
             FileDownloadAdapter.Companion.ClickTypes.DELETE -> {
                 view.showDeleteFileDialog(torrentFile.torrentHash, torrentFile.parentTorrentName, torrentFile.getFullPath())

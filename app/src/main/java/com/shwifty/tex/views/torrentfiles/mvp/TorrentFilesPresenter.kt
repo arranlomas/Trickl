@@ -2,6 +2,7 @@ package com.shwifty.tex.views.torrentfiles.mvp
 
 import android.content.Context
 import android.os.Bundle
+import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.models.TorrentFile
 import com.shwifty.tex.repositories.ITorrentRepository
@@ -48,8 +49,6 @@ class TorrentFilesPresenter : TorrentFilesContract.Presenter {
                 }, {
                     it.printStackTrace()
                 })
-
-
     }
 
     override fun viewClicked(torrentFile: TorrentFile, action: TorrentFilesAdapter.Companion.ClickTypes) {
@@ -59,7 +58,9 @@ class TorrentFilesPresenter : TorrentFilesContract.Presenter {
                 view.dismiss()
             }
             TorrentFilesAdapter.Companion.ClickTypes.OPEN -> {
-                torrentFile.openFile(context, torrentRepository)
+                torrentFile.openFile(context, torrentRepository,{
+                    view.showError(R.string.error_no_activity)
+                })
             }
             TorrentFilesAdapter.Companion.ClickTypes.CHROMECAST -> {
                 mainPresenter.startChromecast(torrentFile)

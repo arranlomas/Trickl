@@ -2,13 +2,13 @@ package com.shwifty.tex.dagger.network
 
 
 import android.util.Log
+import com.shwifty.tex.confluence.Confluence
 import com.shwifty.tex.persistence.ITorrentPersistence
 import com.shwifty.tex.persistence.TorrentPersistence
 import com.shwifty.tex.repositories.ITorrentRepository
 import com.shwifty.tex.repositories.TorrentRepository
 import com.shwifty.tex.retrofit.ClientAPI
 import com.shwifty.tex.retrofit.ConfluenceApi
-import com.shwifty.tex.utils.getIPAddress
 import dagger.Module
 import dagger.Provides
 import io.realm.Realm
@@ -17,6 +17,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.NetworkInterface
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -76,9 +78,13 @@ class NetworkModule {
 
     @Provides
     internal fun provideBaseUrl(): String {
-        val ip = getIPAddress()
-        Log.v("IP", ip)
-        return "http://$ip:8080"
+        Confluence.localhostIP = getIPAddress(true)
+        Confluence.daemonPort = "8080"
+        Confluence.fullUrl = "http://${Confluence.localhostIP}${Confluence.daemonPort}"
+        Log.v("IP", Confluence.localhostIP)
+        Log.v("PORT", Confluence.daemonPort)
+        Log.v("URL", Confluence.fullUrl)
+        return Confluence.fullUrl
     }
 
     @Provides
@@ -86,4 +92,32 @@ class NetworkModule {
         return Realm.getDefaultInstance()
     }
 
+
+    fun getIPAddress(useIPv4: Boolean): String {
+        try {
+            val interfaces = Collections.list(NetworkInterface.getNetworkInterfaces())
+            for (intf in interfaces) {
+                val addrs = Collections.list(intf.inetAddresses)
+                for (addr in addrs) {
+                    if (!addr.isLoopbackAddress) {
+                        val sAddr = addr.hostAddress
+                        val isIPv4 = sAddr.indexOf(':') < 0
+
+                        if (useIPv4) {
+                            if (isIPv4)
+                            return "$sAddr:"
+                        } else {
+                            if (!isIPv4) {
+                                val delim = sAddr.indexOf('%') // drop ip6 zone suffix
+                                return if (delim < 0) "${sAddr.toUpperCase()}:" else "${sAddr.substring(0, delim).toUpperCase()}:"
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return ""
+    }
 }

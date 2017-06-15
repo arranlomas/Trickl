@@ -60,4 +60,11 @@
     <string name="chromecast_not_connect">Chromecast not connected</string>
     <string name="error_file_not_supported_by_chromecast">Error: file format not supported by chromecast</string>
 
+    <!--open file-->
+    <string name="error_no_activity">No app found to open this type of file</string>
+    <string name="dialog_title_no_wifi">Not connected to wifi</string>
+    <string name="dialog_content_no_wifi">You are not currency connected to wifi, would you like to download the file anyway?</string>
+    <string name="dialog_positive_no_wifi">Download</string>
+    <string name="dialog_negative_no_wifi">Cancel</string>
+
 </resources>

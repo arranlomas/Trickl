@@ -1,5 +1,6 @@
 package com.shwifty.tex.utils
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -73,7 +74,7 @@ fun String.findTrackersFromMagnet(): List<String> {
     return trackerList.toList()
 }
 
-fun TorrentFile.openFile(context: Context, torrentRepository: ITorrentRepository){
+fun TorrentFile.openFile(context: Context, torrentRepository: ITorrentRepository, notActivityMethod: () -> Unit){
     torrentRepository.addTorrentFileToPersistence(this)
     val url = Confluence.fullUrl + "/data?ih=" + torrentHash + "&path=" + URLEncoder.encode(getFullPath(), "UTF-8")
     val file = File(getFullPath())
@@ -86,7 +87,12 @@ fun TorrentFile.openFile(context: Context, torrentRepository: ITorrentRepository
     val intent = Intent(Intent.ACTION_VIEW)
 
     intent.setDataAndType(Uri.parse(url), type)
-    context.startActivity(intent)
+    try{
+        context.startActivity(intent)
+    }catch (exception: Exception){
+        notActivityMethod.invoke()
+    }
+
 }
 
 fun TorrentFile.getFullPath(): String{
@@ -112,6 +118,7 @@ fun LinkedList<String>.concatStrings(): String{
 }
 
 fun File.isValidTorrentFile():Boolean{
+    if(isDirectory) return false
     if (!exists()) return false
     if(!canRead()) return false
     if (!path.endsWith(".torrent")) return false
@@ -130,14 +137,14 @@ fun File.copyToTorrentDirectory():Boolean{
 fun TorrentFile.buildMediaInfo(mime: String): MediaInfo {
     val movieMetadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE)
     movieMetadata.putString(MediaMetadata.KEY_TITLE, getFullPath())
-    return MediaInfo.Builder(getShareableUrl())
+    return MediaInfo.Builder(getShareableDataUrl())
             .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
             .setContentType(mime)
             .setMetadata(movieMetadata)
             .build()
 }
 
-fun TorrentFile.getShareableUrl(): String{
+fun TorrentFile.getShareableDataUrl(): String{
    return "${Confluence.fullUrl}/data?ih=$torrentHash&path=${getFullPath()}"
 }
 

@@ -3,11 +3,14 @@ package com.shwifty.tex.dagger.main
 
 import com.shwifty.tex.dagger.network.NetworkModule
 import com.shwifty.tex.dialogs.*
+import com.shwifty.tex.repositories.ITorrentRepository
 import com.shwifty.tex.views.addtorrent.AddTorrentPresenter
 import com.shwifty.tex.views.all.mvp.AllFragment
 import com.shwifty.tex.views.all.mvp.AllPresenter
 import com.shwifty.tex.views.downloads.mvp.FileDownloadPresenter
+import com.shwifty.tex.views.main.DialogManager
 import com.shwifty.tex.views.main.mvp.MainActivity
+import com.shwifty.tex.views.main.mvp.MainContract
 import com.shwifty.tex.views.main.mvp.MainPresenter
 import com.shwifty.tex.views.showtorrent.TorrentInfoPresenter
 import com.shwifty.tex.views.splash.mvp.SplashPresenter
@@ -28,7 +31,6 @@ interface MainComponent {
     fun inject(addTorrentPresenter: AddTorrentPresenter)
     fun inject(torrentInfoPresenter: TorrentInfoPresenter)
     fun inject(mainPresenter: MainPresenter)
-    fun inject(notOnWifiDialog: NotOnWifiDialog)
     fun inject(torrentDetailsPresenter: TorrentDetailsPresenter)
     fun inject(torrentFilesPresenter: TorrentFilesPresenter)
     fun inject(addMagnetDialog: AddMagnetDialog)
@@ -37,6 +39,8 @@ interface MainComponent {
     fun inject(fileDownloadPresenter: FileDownloadPresenter)
     fun inject(deleteTorrentDialog: DeleteTorrentDialog)
     fun inject(addHashDialog: AddHashDialog)
+    fun getTorrentRepository(): ITorrentRepository
+    fun getMainPresenter(): MainContract.Presenter
 }
 
 

@@ -82,6 +82,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun showNoWifiDialog(torrentHash: String, torrentName: String, fileName: String) {
-        TricklComponent.dialogManager.showNoWifiDialog(fragmentManager, torrentHash, torrentName, fileName)
+        TricklComponent.dialogManager.showNoWifiDialog(this, torrentHash, torrentName, fileName)
     }
 }

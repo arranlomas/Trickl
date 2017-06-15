@@ -148,7 +148,8 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
         torrentPersistence.saveTorrentFile(torrentFile)
         val dm = context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         val request = DownloadManager.Request(
-                Uri.parse("${Confluence.fullUrl}/data?ih=${torrentFile.torrentHash}&path=${torrentFile.getFullPath()}"))
+//                Uri.parse("${Confluence.fullUrl}/data?ih=${torrentFile.torrentHash}&path=${torrentFile.getFullPath()}"))
+                Uri.parse(torrentFile.getShareableDataUrl()))
         request.setTitle(torrentFile.getFullPath())
                 .setDescription("part of torrent: ${torrentFile.parentTorrentName} with hash ${torrentFile.torrentHash}")
         dm.enqueue(request)
