@@ -7,7 +7,6 @@ import com.shwifty.tex.R
 import com.shwifty.tex.dialogs.AddHashDialog
 import com.shwifty.tex.dialogs.AddMagnetDialog
 import com.shwifty.tex.dialogs.DeleteFileDialog
-import com.shwifty.tex.dialogs.DeleteTorrentDialog
 import com.shwifty.tex.models.TorrentFile
 import com.shwifty.tex.models.TorrentInfo
 import com.shwifty.tex.repositories.ITorrentRepository
@@ -62,19 +61,6 @@ class DialogManager: IDialogManager {
         newFragment.show(ft, TAG_DIALOG)
     }
 
-    override fun showDeleteTorrentDialog(fragmentManager: FragmentManager, torrentInfo: TorrentInfo) {
-        val ft = fragmentManager.beginTransaction()
-        val prev = fragmentManager.findFragmentByTag(TAG_DIALOG)
-        if (prev != null) {
-            ft.remove(prev)
-        }
-        ft.addToBackStack(null)
-
-        // Create and show the dialog.
-        val newFragment = DeleteTorrentDialog.newInstance(torrentInfo.name, torrentInfo.info_hash)
-        newFragment.show(ft, TAG_DIALOG)
-    }
-
     override fun showDeleteFileDialog(fragmentManager: FragmentManager, torrentFile: TorrentFile) {
         val ft = fragmentManager.beginTransaction()
         val prev = fragmentManager.findFragmentByTag(TAG_DIALOG)
@@ -87,4 +73,44 @@ class DialogManager: IDialogManager {
         val newFragment = DeleteFileDialog.newInstance(torrentFile.torrentHash, torrentFile.parentTorrentName, torrentFile.getFullPath())
         newFragment.show(ft, TAG_DIALOG)
     }
+
+    override fun showDeleteTorrentDialog(context: Context, torrentInfo: TorrentInfo, onError: () -> Unit) {
+        MaterialDialog.Builder(context)
+                .title("${torrentInfo.name} ${context.getString(R.string.deleted)}")
+                .content(R.string.delete_torrent_dialog_text)
+                .positiveText(R.string.delete)
+                .onPositive{ dialog, _ ->
+                    torrentRepository.getTorrentInfo(torrentInfo.info_hash)
+                            .subscribe({
+                                it?.let {
+                                    val deleted = torrentRepository.deleteTorrentInfoFromStorage(it)
+                                    if (deleted) {
+                                        it.fileList.forEach {
+                                            torrentRepository.deleteTorrentFileFromPersistence(it)
+                                        }
+                                        torrentRepository.deleteTorrentData(it)
+                                    }else{
+                                        onError.invoke()
+                                    }
+                                }
+                            }, {
+                                it.printStackTrace()
+                            })
+                    dialog.dismiss()
+                }
+                .negativeText(R.string.keep)
+                .onNegative{ dialog, _ ->
+                    torrentRepository.getTorrentInfo(torrentInfo.info_hash)
+                            .subscribe({
+                                it?.let { torrentRepository.deleteTorrentInfoFromStorage(it) }
+                            }, {
+                                it.printStackTrace()
+                            })
+                    dialog.dismiss()
+                }
+                .neutralText(R.string.cancel)
+                .onNeutral{ dialog, _ -> dialog.dismiss() }
+    }
+
+
 }

@@ -89,6 +89,10 @@ class TorrentInfoActivity : AppCompatActivity(), TorrentInfoContract.View {
     }
 
     override fun notifyTorrentDeleted() {
-        presenter.torrentInfo?.let { TricklComponent.dialogManager.showDeleteTorrentDialog(fragmentManager, it)  }
+        presenter.torrentInfo?.let {
+            TricklComponent.dialogManager.showDeleteTorrentDialog(this, it, {
+                showError(R.string.error_deleting_torrent)
+            })
+        }
     }
 }

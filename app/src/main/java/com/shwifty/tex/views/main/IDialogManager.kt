@@ -16,7 +16,7 @@ interface IDialogManager {
     var torrentRepository: ITorrentRepository
     fun showAddMagnetDialog(fragmentManager: FragmentManager)
     fun showAddHashDialog(fragmentManager: FragmentManager)
-    fun showDeleteTorrentDialog(fragmentManager: FragmentManager,  torrentInfo: TorrentInfo)
+    fun showDeleteTorrentDialog(context: Context,  torrentInfo: TorrentInfo, onError: () -> Unit)
     fun showDeleteFileDialog(fragmentManager: FragmentManager,  torrentFile: TorrentFile)
     fun showNoWifiDialog(context: Context, torrentFile: TorrentFile)
 }

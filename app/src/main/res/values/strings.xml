@@ -44,10 +44,13 @@
     <string name="torrent_name">Torrent Name</string>
     <string name="size">Size</string>
 
-    <!--list item download popup-->
     <string name="open">Open</string>
     <string name="download">Download</string>
     <string name="delete">Delete</string>
+    <string name="deleted">Deleted</string>
+    <string name="keep">Keep</string>
+    <string name="cancel">cancel</string>
+
 
     <!--delete file-->
     <string name="torrent_deleted">Torrent Deleted</string>
@@ -66,5 +69,9 @@
     <string name="dialog_content_no_wifi">You are not currency connected to wifi, would you like to download the file anyway?</string>
     <string name="dialog_positive_no_wifi">Download</string>
     <string name="dialog_negative_no_wifi">Cancel</string>
+
+
+    <!--delete torrent dialog-->
+    <string name="error_deleting_torrent">Error deleting torrent</string>
 
 </resources>
