@@ -17,16 +17,16 @@ import com.shwifty.tex.views.main.mvp.MainContract
 /**
  * Created by arran on 10/05/2017.
  */
-class DialogManager: IDialogManager {
+class DialogManager : IDialogManager {
     override lateinit var mainPresenter: MainContract.Presenter
     override lateinit var torrentRepository: ITorrentRepository
 
-    override fun showNoWifiDialog(context: Context,torrentFile: TorrentFile) {
+    override fun showNoWifiDialog(context: Context, torrentFile: TorrentFile) {
         MaterialDialog.Builder(context)
                 .title(R.string.dialog_title_no_wifi)
                 .content(R.string.dialog_content_no_wifi)
                 .positiveText(R.string.dialog_positive_no_wifi)
-                .onPositive  ({ _, _ ->
+                .onPositive({ _, _ ->
                     torrentRepository.startFileDownloading(torrentFile, context, false)
                 })
                 .negativeText(R.string.dialog_negative_no_wifi)
@@ -79,7 +79,7 @@ class DialogManager: IDialogManager {
                 .title("${torrentInfo.name} ${context.getString(R.string.deleted)}")
                 .content(R.string.delete_torrent_dialog_text)
                 .positiveText(R.string.delete)
-                .onPositive{ dialog, _ ->
+                .onPositive { dialog, _ ->
                     torrentRepository.getTorrentInfo(torrentInfo.info_hash)
                             .subscribe({
                                 it?.let {
@@ -89,7 +89,7 @@ class DialogManager: IDialogManager {
                                             torrentRepository.deleteTorrentFileFromPersistence(it)
                                         }
                                         torrentRepository.deleteTorrentData(it)
-                                    }else{
+                                    } else {
                                         onError.invoke()
                                     }
                                 }
@@ -99,7 +99,7 @@ class DialogManager: IDialogManager {
                     dialog.dismiss()
                 }
                 .negativeText(R.string.keep)
-                .onNegative{ dialog, _ ->
+                .onNegative { dialog, _ ->
                     torrentRepository.getTorrentInfo(torrentInfo.info_hash)
                             .subscribe({
                                 it?.let { torrentRepository.deleteTorrentInfoFromStorage(it) }
@@ -109,7 +109,8 @@ class DialogManager: IDialogManager {
                     dialog.dismiss()
                 }
                 .neutralText(R.string.cancel)
-                .onNeutral{ dialog, _ -> dialog.dismiss() }
+                .onNeutral { dialog, _ -> dialog.dismiss() }
+                .show()
     }
 
 
