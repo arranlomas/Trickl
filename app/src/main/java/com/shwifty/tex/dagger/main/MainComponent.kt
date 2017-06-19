@@ -37,7 +37,6 @@ interface MainComponent {
     fun inject(deleteFileDialog: DeleteFileDialog)
     fun inject(allPresenter: AllPresenter)
     fun inject(fileDownloadPresenter: FileDownloadPresenter)
-    fun inject(deleteTorrentDialog: DeleteTorrentDialog)
     fun inject(addHashDialog: AddHashDialog)
     fun getTorrentRepository(): ITorrentRepository
     fun getMainPresenter(): MainContract.Presenter
