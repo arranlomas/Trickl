@@ -10,7 +10,7 @@ interface ITorrentPersistence {
 
     fun getDownloadFiles(): List<TorrentFile>
 
-    fun getDownloadingFile(hash: String, path: String): TorrentFile
+    fun getDownloadingFile(hash: String, path: String): TorrentFile?
 
     fun removeTorrentDownloadFile(torrentFile: TorrentFile)
 

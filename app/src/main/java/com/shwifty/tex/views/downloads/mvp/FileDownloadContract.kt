@@ -11,7 +11,7 @@ import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
 interface FileDownloadContract {
     interface View {
         fun setupViewFromTorrentInfo(torrentFiles: List<TorrentFile>)
-        fun showDeleteFileDialog(torrentHash: String, torrentName: String, fileName: String)
+        fun showDeleteFileDialog(torrentHash: String,torrentFile: TorrentFile)
         fun showError(stringId: Int)
     }
 

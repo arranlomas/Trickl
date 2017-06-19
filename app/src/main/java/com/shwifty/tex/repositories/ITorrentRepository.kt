@@ -50,5 +50,5 @@ interface ITorrentRepository {
 
     fun deleteTorrentInfoFromStorage(torrentInfo: TorrentInfo): Boolean
 
-    fun getTorrentFileFromPersistence(hash: String, path: String): TorrentFile
+    fun getTorrentFileFromPersistence(hash: String, path: String): TorrentFile?
 }

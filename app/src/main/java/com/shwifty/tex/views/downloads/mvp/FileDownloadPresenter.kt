@@ -74,7 +74,7 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
                 })
             }
             FileDownloadAdapter.Companion.ClickTypes.DELETE -> {
-                view.showDeleteFileDialog(torrentFile.torrentHash, torrentFile.parentTorrentName, torrentFile.getFullPath())
+                view.showDeleteFileDialog(torrentFile.torrentHash, torrentFile)
             }
             FileDownloadAdapter.Companion.ClickTypes.CHROMECAST -> {
                 mainPresenter.startChromecast(torrentFile)

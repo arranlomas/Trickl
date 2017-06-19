@@ -8,7 +8,10 @@ import com.shwifty.tex.dialogs.AddHashDialog
 import com.shwifty.tex.dialogs.AddMagnetDialog
 import com.shwifty.tex.dialogs.DeleteFileDialog
 import com.shwifty.tex.dialogs.DeleteTorrentDialog
+import com.shwifty.tex.models.TorrentFile
+import com.shwifty.tex.models.TorrentInfo
 import com.shwifty.tex.repositories.ITorrentRepository
+import com.shwifty.tex.utils.getFullPath
 import com.shwifty.tex.views.main.mvp.MainContract
 
 
@@ -19,8 +22,7 @@ class DialogManager: IDialogManager {
     override lateinit var mainPresenter: MainContract.Presenter
     override lateinit var torrentRepository: ITorrentRepository
 
-    override fun showNoWifiDialog(context: Context, torrentHash: String, torrentName: String, fileName: String) {
-        val torrentFile = torrentRepository.getTorrentFileFromPersistence(torrentHash, fileName)
+    override fun showNoWifiDialog(context: Context,torrentFile: TorrentFile) {
         MaterialDialog.Builder(context)
                 .title(R.string.dialog_title_no_wifi)
                 .content(R.string.dialog_content_no_wifi)
@@ -60,7 +62,7 @@ class DialogManager: IDialogManager {
         newFragment.show(ft, TAG_DIALOG)
     }
 
-    override fun showDeleteTorrentDialog(fragmentManager: FragmentManager, torrentName: String, torrentHash: String) {
+    override fun showDeleteTorrentDialog(fragmentManager: FragmentManager, torrentInfo: TorrentInfo) {
         val ft = fragmentManager.beginTransaction()
         val prev = fragmentManager.findFragmentByTag(TAG_DIALOG)
         if (prev != null) {
@@ -69,11 +71,11 @@ class DialogManager: IDialogManager {
         ft.addToBackStack(null)
 
         // Create and show the dialog.
-        val newFragment = DeleteTorrentDialog.newInstance(torrentName, torrentHash)
+        val newFragment = DeleteTorrentDialog.newInstance(torrentInfo.name, torrentInfo.info_hash)
         newFragment.show(ft, TAG_DIALOG)
     }
 
-    override fun showDeleteFileDialog(fragmentManager: FragmentManager, torrentHash: String, torrentName: String, fileName: String) {
+    override fun showDeleteFileDialog(fragmentManager: FragmentManager, torrentFile: TorrentFile) {
         val ft = fragmentManager.beginTransaction()
         val prev = fragmentManager.findFragmentByTag(TAG_DIALOG)
         if (prev != null) {
@@ -82,7 +84,7 @@ class DialogManager: IDialogManager {
         ft.addToBackStack(null)
 
         // Create and show the dialog.
-        val newFragment = DeleteFileDialog.newInstance(torrentHash, torrentName, fileName)
+        val newFragment = DeleteFileDialog.newInstance(torrentFile.torrentHash, torrentFile.parentTorrentName, torrentFile.getFullPath())
         newFragment.show(ft, TAG_DIALOG)
     }
 }

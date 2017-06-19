@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
+import com.shwifty.tex.models.TorrentInfo
 import com.shwifty.tex.repositories.ITorrentRepository
 import com.shwifty.tex.utils.findHashFromMagnet
 import com.shwifty.tex.utils.findNameFromMagnet
@@ -20,6 +21,7 @@ import javax.inject.Inject
  */
 class TorrentInfoPresenter : TorrentInfoContract.Presenter {
 
+
     @Inject
     lateinit var torrentRepository: ITorrentRepository
 
@@ -31,6 +33,7 @@ class TorrentInfoPresenter : TorrentInfoContract.Presenter {
     override var torrentMagnet: String? = null
     override var torrentName: String? = null
     override var torrentTrackers: List<String>? = null
+    override var torrentInfo: TorrentInfo? = null
 
     private val compositeSubscription = CompositeSubscription()
 
@@ -51,7 +54,9 @@ class TorrentInfoPresenter : TorrentInfoContract.Presenter {
 
         compositeSubscription.add(
                 torrentRepository.torrentInfoDeleteListener
-                        .subscribe({view.dismiss()}, {})
+                        .subscribe({
+                            view.dismiss()
+                        }, {})
         )
 
     }
@@ -64,6 +69,7 @@ class TorrentInfoPresenter : TorrentInfoContract.Presenter {
         val hash = torrentHash
         torrentRepository.getTorrentInfo(hash)
                 .subscribe({
+                    torrentInfo = it
                     torrentName = it?.name
                     it?.info_hash?.let { torrentHash = it }
                     torrentTrackers = it?.announceList

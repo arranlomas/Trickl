@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.webkit.MimeTypeMap
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaMetadata
@@ -28,6 +29,19 @@ fun File.getAsTorrent(): TorrentInfo? {
     if (torrentInfo?.totalSize == 0L && torrentInfo.fileList.size > 1) {
         torrentInfo.fileList.forEach {
             torrentInfo.totalSize += it.fileLength ?: 0
+        }
+    }
+    if(torrentInfo?.singleFileTorrent ?: false){
+        if(torrentInfo?.totalSize != null) {
+            val paths: LinkedList<String> = LinkedList(listOf(torrentInfo.name))
+            val torrentFile = TorrentFile(
+                    torrentInfo.totalSize,
+                    paths,
+                    torrentInfo.info_hash,
+                    "${torrentInfo.info_hash}${paths.concatStrings()}"
+            )
+            Log.v("generated primaryKey:", "Torrent: ${torrentInfo.name}   File: ${paths.last}     primaryKey: ${torrentInfo.info_hash}${paths.concatStrings()}")
+            torrentInfo.fileList = listOf(torrentFile)
         }
     }
     return torrentInfo
@@ -146,6 +160,10 @@ fun TorrentFile.buildMediaInfo(mime: String): MediaInfo {
 
 fun TorrentFile.getShareableDataUrl(): String{
    return "${Confluence.fullUrl}/data?ih=$torrentHash&path=${getFullPath()}"
+}
+
+fun TorrentFile.getDownloadableUrl(): String{
+    return "http://127.0.0.1:${Confluence.daemonPort}/data?ih=$torrentHash&path=${getFullPath()}"
 }
 
 fun TorrentFile.getMimeType(): String{

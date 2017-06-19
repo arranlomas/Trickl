@@ -73,9 +73,9 @@ class FileDownloadFragment : Fragment(), FileDownloadContract.View {
         filesAdapter.notifyDataSetChanged()
     }
 
-    override fun showDeleteFileDialog(torrentHash: String, torrentName: String, fileName: String) {
+    override fun showDeleteFileDialog(torrentHash: String, torrentFile: TorrentFile) {
         if (!isVisible || !isAdded) return
-        TricklComponent.dialogManager.showDeleteFileDialog(activity.fragmentManager, torrentHash, torrentName, fileName)
+        TricklComponent.dialogManager.showDeleteFileDialog(activity.fragmentManager, torrentFile)
     }
 
     override fun showError(stringId: Int) {

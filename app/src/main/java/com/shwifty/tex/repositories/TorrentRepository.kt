@@ -3,6 +3,7 @@ package com.shwifty.tex.repositories
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Context.DOWNLOAD_SERVICE
+import android.net.ConnectivityManager.TYPE_WIFI
 import android.net.Uri
 import android.util.Log
 import com.shwifty.tex.confluence.Confluence
@@ -55,9 +56,7 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
                             torrentPersistence.saveTorrentFile(torrentFile)
                             percentagesCompleted++
                             if (percentagesCompleted == files.size) torrentFileProgressSource.onNext(true)
-                            Log.v("HASH", torrentFile.torrentHash)
-                            Log.v("PATH", torrentFile.getFullPath())
-                            Log.v("PERC", percCompleted.toString())
+                            Log.v("HASH", "${torrentFile.torrentHash} PATH: ${torrentFile.getFullPath()} PERC: $percCompleted")
                             Log.v("-----------", "-----------------------")
                         }, {
                             it.printStackTrace()
@@ -147,9 +146,9 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
     override fun startFileDownloading(torrentFile: TorrentFile, context: Context, wifiOnly: Boolean) {
         torrentPersistence.saveTorrentFile(torrentFile)
         val dm = context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-        val request = DownloadManager.Request(
-//                Uri.parse("${Confluence.fullUrl}/data?ih=${torrentFile.torrentHash}&path=${torrentFile.getFullPath()}"))
-                Uri.parse(torrentFile.getShareableDataUrl()))
+        val uri = Uri.parse(torrentFile.getDownloadableUrl())
+        Log.v("requesting download", uri.toString())
+        val request = DownloadManager.Request(uri)
         request.setTitle(torrentFile.getFullPath())
                 .setDescription("part of torrent: ${torrentFile.parentTorrentName} with hash ${torrentFile.torrentHash}")
         dm.enqueue(request)
@@ -173,7 +172,7 @@ class TorrentRepository(val confluenceApi: ConfluenceApi, val torrentPersistence
         return file.delete()
     }
 
-    override fun getTorrentFileFromPersistence(hash: String, path: String): TorrentFile {
+    override fun getTorrentFileFromPersistence(hash: String, path: String): TorrentFile? {
        return torrentPersistence.getDownloadingFile(hash, path)
     }
 }

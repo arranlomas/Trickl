@@ -1,5 +1,6 @@
 package com.shwifty.tex.bencoding
 
+import android.util.Log
 import com.shwifty.tex.models.TorrentInfo
 import com.shwifty.tex.bencoding.types.BByteString
 import com.shwifty.tex.bencoding.types.BDictionary
@@ -229,6 +230,7 @@ object TorrentParser {
                         paths.add(filePathsIterator.next().toString())
 
                     val tf = TorrentFile(fileLength.value, paths, hash, "$hash${paths.concatStrings()}")
+                    Log.v("generated primaryKey:", "Torrent: $torrentName   File: ${paths.last}     primaryKey: $hash${paths.concatStrings()}")
                     tf.parentTorrentName = torrentName
                     fileList.add(tf)
                 }

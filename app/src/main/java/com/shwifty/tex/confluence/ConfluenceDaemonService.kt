@@ -1,5 +1,6 @@
 package com.shwifty.tex.confluence
 
+import android.Manifest
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
@@ -7,6 +8,10 @@ import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 import com.shwifty.tex.R
 import com.shwifty.tex.views.main.mvp.MainActivity
+import android.Manifest.permission
+import android.content.pm.PackageManager
+import android.support.v4.content.ContextCompat
+
 
 /**
  * Created by arran on 17/04/2017.
@@ -29,6 +34,10 @@ class ConfluenceDaemonService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val permissionCheck = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if(permissionCheck!= PackageManager.PERMISSION_GRANTED) throw IllegalStateException("Cannot start confluence without have write external storage permissions")
+
         var action: String? = null
         if (intent != null) {
             action = intent.action

@@ -50,7 +50,7 @@ class MainPresenter : MainContract.Presenter {
         val status = context.getConnectivityStatus()
         when(status){
             CONNECTIVITY_STATUS.WIFI -> torrentRepository.startFileDownloading(torrentFile, context, true)
-            CONNECTIVITY_STATUS.MOBILE -> view.showNoWifiDialog(torrentFile.torrentHash, torrentFile.parentTorrentName, torrentFile.getFullPath())
+            CONNECTIVITY_STATUS.MOBILE -> view.showNoWifiDialog(torrentFile)
             CONNECTIVITY_STATUS.NOT_CONNECTED -> view.showError(R.string.error_not_connected_to_wifi)
         }
     }

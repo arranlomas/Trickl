@@ -35,5 +35,4 @@ class ConfluenceApi(private val clientAPI: ClientAPI) {
     fun getFileState(hash: String, path: String): Observable<List<FileStatePiece>> {
         return clientAPI.getFileState(hash, path)
     }
-
 }

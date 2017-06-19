@@ -15,7 +15,7 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
     val presenter = SplashPresenter()
     lateinit var rxPermissions: RxPermissions
 
-    companion object{
+    companion object {
         val TAG_MAGNET_FROM_INTENT = "arg_magnet_from_intent"
     }
 
@@ -31,22 +31,22 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
         super.onStart()
         rxPermissions
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe ({
-                    if (it!=null) {
+                .subscribe({
+                    if (it != null && it) {
                         presenter.startConfluenceDaemon(this)
                     } else {
                         showError(R.string.write_permissions_error)
                     }
-                },{
+                }, {
                     it.printStackTrace()
                 })
     }
 
     override fun progressToMain() {
-        finish()
-        intent = Intent(this, MainActivity::class.java)
-        if(presenter.magnet!=null) intent.putExtra(TAG_MAGNET_FROM_INTENT, presenter.magnet)
-        startActivity(intent)
+            finish()
+            intent = Intent(this, MainActivity::class.java)
+            if (presenter.magnet != null) intent.putExtra(TAG_MAGNET_FROM_INTENT, presenter.magnet)
+            startActivity(intent)
     }
 
     override fun showError(stringId: Int) {

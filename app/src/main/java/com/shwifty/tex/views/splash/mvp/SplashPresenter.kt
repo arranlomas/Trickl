@@ -33,7 +33,6 @@ class SplashPresenter : SplashContract.Presenter {
     override fun setup(context: Context, view: SplashContract.View) {
         this.view = view
         TricklComponent.mainComponent.inject(this)
-        startConfluenceDaemon(context)
     }
 
     override fun destroy() {

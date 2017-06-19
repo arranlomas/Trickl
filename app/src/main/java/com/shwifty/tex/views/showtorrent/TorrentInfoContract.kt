@@ -3,6 +3,7 @@ package com.shwifty.tex.views.showtorrent
 import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
+import com.shwifty.tex.models.TorrentInfo
 
 /**
  * Created by arran on 16/04/2017.
@@ -20,6 +21,7 @@ interface TorrentInfoContract {
     interface Presenter {
         fun setup(context: Context, view: View, arguments: Bundle?)
         fun destroy()
+        var torrentInfo: TorrentInfo?
         var torrentHash: String
         var torrentMagnet: String?
         var torrentName: String?

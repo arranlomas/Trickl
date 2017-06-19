@@ -1,6 +1,7 @@
 package com.shwifty.tex
 
 import android.app.Application
+import android.util.Log
 import com.facebook.stetho.Stetho
 import com.shwifty.tex.chromecast.CastHandler
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
@@ -25,7 +26,8 @@ class MyApplication : Application() {
                         .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                         .build())
 
-
+        val arch = System.getProperty("os.arch")
+        Log.v("architecture", arch)
     }
 
 

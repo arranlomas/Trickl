@@ -14,7 +14,7 @@ interface MainContract {
         fun showSuccess(stringId: Int)
         fun showTorrentInfoActivity(infoHash: String)
         fun showAddTorrentActivity(hash: String? = null, magnet: String? = null, torrentFilePath: String? = null)
-        fun showNoWifiDialog(torrentHash: String, torrentName: String, fileName: String)
+        fun showNoWifiDialog(torrentFile: TorrentFile)
     }
 
     interface Presenter {

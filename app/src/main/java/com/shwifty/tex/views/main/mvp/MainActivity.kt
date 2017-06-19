@@ -8,6 +8,7 @@ import com.google.android.gms.cast.framework.CastButtonFactory
 import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
+import com.shwifty.tex.models.TorrentFile
 import com.shwifty.tex.views.addtorrent.AddTorrentActivity
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.showtorrent.TorrentInfoActivity
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         startActivity(addTorrentIntent)
     }
 
-    override fun showNoWifiDialog(torrentHash: String, torrentName: String, fileName: String) {
-        TricklComponent.dialogManager.showNoWifiDialog(this, torrentHash, torrentName, fileName)
+    override fun showNoWifiDialog(torrentFile: TorrentFile) {
+        TricklComponent.dialogManager.showNoWifiDialog(this, torrentFile)
     }
 }

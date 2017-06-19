@@ -1,5 +1,6 @@
 package com.shwifty.tex.persistence
 
+import android.util.Log
 import com.shwifty.tex.models.TorrentFile
 import com.shwifty.tex.realm.RealmTorrentFile
 import com.shwifty.tex.utils.mapToModel
@@ -22,7 +23,7 @@ class TorrentPersistence : ITorrentPersistence {
             val realmResult = realm.where(RealmTorrentFile::class.java).findAll()
             val copy = realm.copyFromRealm(realmResult)
             realm.commitTransaction()
-            copy?.forEach { torrentFileList.add(it.mapToModel()) }
+            copy.forEach { torrentFileList.add(it.mapToModel()) }
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -32,11 +33,12 @@ class TorrentPersistence : ITorrentPersistence {
         return torrentFileList.toList()
     }
 
-    override fun getDownloadingFile(hash: String, path: String): TorrentFile {
+    override fun getDownloadingFile(hash: String, path: String): TorrentFile? {
         val realm = Realm.getDefaultInstance()
         var torrentFile: TorrentFile? = null
         try {
             realm.beginTransaction()
+            Log.v("trying to find torrent", "primaryKey: ${hash + path}")
             val result: RealmResults<RealmTorrentFile> = realm.where(RealmTorrentFile::class.java).equalTo("primaryKey", hash + path).findAll()
             torrentFile = realm.copyFromRealm(result).first().mapToModel()
             realm.commitTransaction()
@@ -45,7 +47,7 @@ class TorrentPersistence : ITorrentPersistence {
         } finally {
             realm.close()
         }
-        return torrentFile ?: throw NullPointerException("torrent file should not be empty")
+        return torrentFile
     }
 
     override fun removeTorrentDownloadFile(torrentFile: TorrentFile) {

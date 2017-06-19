@@ -46,7 +46,7 @@ class DeleteFileDialog : DialogFragment() {
                 .setMessage(R.string.delete__file_dialog_text)
                 .setPositiveButton("Delete",
                         { dialog, _ ->
-                            val torrentFile = torrentRepository.getTorrentFileFromPersistence(torrentHash, filePath)
+                            val torrentFile = torrentRepository.getTorrentFileFromPersistence(torrentHash, filePath) ?: throw NullPointerException("Cannot delete a null torrent file")
                             torrentRepository.deleteTorrentFileFromPersistence(torrentFile)
                             torrentRepository.deleteTorrentFileData(torrentFile)
                             dialog.dismiss()
@@ -54,7 +54,7 @@ class DeleteFileDialog : DialogFragment() {
                 )
                 .setNegativeButton("Keep",
                         { dialog, _ ->
-                            val torrentFile = torrentRepository.getTorrentFileFromPersistence(torrentHash, filePath)
+                            val torrentFile = torrentRepository.getTorrentFileFromPersistence(torrentHash, filePath) ?: throw NullPointerException("Cannot delete a null torrent file")
                             torrentRepository.deleteTorrentFileFromPersistence(torrentFile)
                             dialog.dismiss()
                         }
