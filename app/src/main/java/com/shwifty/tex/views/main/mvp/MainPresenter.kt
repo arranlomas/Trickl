@@ -10,7 +10,6 @@ import com.shwifty.tex.repositories.ITorrentRepository
 import com.shwifty.tex.utils.CONNECTIVITY_STATUS
 import com.shwifty.tex.utils.canCast
 import com.shwifty.tex.utils.getConnectivityStatus
-import com.shwifty.tex.utils.getFullPath
 import com.shwifty.tex.views.splash.mvp.SplashActivity
 import javax.inject.Inject
 
@@ -41,14 +40,14 @@ class MainPresenter : MainContract.Presenter {
     }
 
     override fun handleIntent(intent: Intent) {
-        if(intent.hasExtra(SplashActivity.TAG_MAGNET_FROM_INTENT)){
+        if (intent.hasExtra(SplashActivity.TAG_MAGNET_FROM_INTENT)) {
             view.showAddTorrentActivity(magnet = intent.getStringExtra(SplashActivity.TAG_MAGNET_FROM_INTENT))
         }
     }
 
     override fun checkStatusForDownload(torrentFile: TorrentFile) {
         val status = context.getConnectivityStatus()
-        when(status){
+        when (status) {
             CONNECTIVITY_STATUS.WIFI -> torrentRepository.startFileDownloading(torrentFile, context, true)
             CONNECTIVITY_STATUS.MOBILE -> view.showNoWifiDialog(torrentFile)
             CONNECTIVITY_STATUS.NOT_CONNECTED -> view.showError(R.string.error_not_connected_to_wifi)
@@ -56,15 +55,11 @@ class MainPresenter : MainContract.Presenter {
     }
 
     override fun startChromecast(torrentFile: TorrentFile) {
-        if( MyApplication.castHandler.isConnected){
-            if(torrentFile.canCast()) {
-                MyApplication.castHandler.loadRemoteMedia(torrentFile)
-            }else{
-                view.showError(R.string.error_file_not_supported_by_chromecast)
-            }
-        }else{
-            view.showError(R.string.chromecast_not_connect)
+        if (torrentFile.canCast()) {
+            val casted = MyApplication.castHandler.loadRemoteMedia(torrentFile)
+            if (!casted) view.showError(R.string.chromecast_not_connect)
+        } else {
+            view.showError(R.string.error_file_not_supported_by_chromecast)
         }
-
     }
 }

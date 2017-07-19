@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
-import com.google.android.gms.cast.framework.CastButtonFactory
+import com.google.android.gms.cast.framework.*
 import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
@@ -15,6 +15,7 @@ import com.shwifty.tex.views.showtorrent.TorrentInfoActivity
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity(), MainContract.View {
 
@@ -47,6 +48,15 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         }
     }
 
+    override fun onResume() {
+        MyApplication.castHandler.addSessionListener()
+        super.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        MyApplication.castHandler.removeSessionListener()
+    }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.toolbar_main, menu)

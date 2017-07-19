@@ -54,23 +54,23 @@ class CastHandler {
             override fun onSessionSuspended(session: CastSession, reason: Int) {}
 
             private fun onApplicationConnected(castSession: CastSession) {
-                connected = true
                 mCastSession = castSession
                 Log.v("arranzlz", "session STARTED!!!")
             }
 
             private fun onApplicationDisconnected() {
-                connected = false
+                mCastSession = null
             }
         }
     }
 
-    fun loadRemoteMedia(torrentFile: TorrentFile) {
+    fun loadRemoteMedia(torrentFile: TorrentFile): Boolean {
         if (mCastSession == null) {
-            return
+            return false
         }
-        val remoteMediaClient = mCastSession?.remoteMediaClient ?: return
+        val remoteMediaClient = mCastSession?.remoteMediaClient ?: return false
         remoteMediaClient.load(torrentFile.buildMediaInfo(torrentFile.getMimeType()), true)
+        return true
     }
 
     fun addSessionListener() {
@@ -81,10 +81,8 @@ class CastHandler {
     fun removeSessionListener() {
         mCastContext!!.sessionManager.removeSessionManagerListener(
                 mSessionManagerListener, CastSession::class.java)
+        mCastSession = null
     }
-
-    val isConnected: Boolean
-        get() = connected
 
     fun getmCastContext(): CastContext? {
         return mCastContext
@@ -92,6 +90,5 @@ class CastHandler {
 
     companion object {
         private var mSessionManagerListener: SessionManagerListener<CastSession>? = null
-        private var connected: Boolean = false
     }
 }
