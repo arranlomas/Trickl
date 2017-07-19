@@ -8,21 +8,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
-import com.shwifty.tex.models.TorrentInfo
 import com.shwifty.tex.views.all.list.AllTorrentsAdapter
 import com.shwifty.tex.views.main.mvp.MainContract
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_all.*
-import javax.inject.Inject
 
 /**
  * Created by arran on 17/04/2017.
  */
 class AllFragment : Fragment(), AllContract.View {
 
-    @Inject
     lateinit var mainPresenter: MainContract.Presenter
 
     lateinit var presenter: AllContract.Presenter
@@ -45,7 +43,7 @@ class AllFragment : Fragment(), AllContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        TricklComponent.mainComponent.inject(this)
+        mainPresenter = TricklComponent.mainComponent.getMainPresenter()
         Log.v("Arran", mainPresenter.toString())
     }
 

@@ -1,16 +1,19 @@
 package com.shwifty.tex
 
 import android.app.Application
+import android.os.Environment
 import android.util.Log
 import com.facebook.stetho.Stetho
+import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.shwifty.tex.chromecast.CastHandler
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
-import io.realm.Realm
+import java.io.File
 
 /**
  * Created by arran on 29/04/2017.
  */
 class MyApplication : Application() {
+    val directoryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path + File.separator + "cloudburst"
 
     companion object{
         var castHandler: CastHandler = CastHandler()
@@ -18,7 +21,7 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         //be aware of the order of initialisation
-        Realm.init(this)
+        Confluence.install(this, directoryPath)
         TricklComponent.install()
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)

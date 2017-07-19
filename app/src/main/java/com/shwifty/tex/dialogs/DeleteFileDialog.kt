@@ -4,10 +4,9 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.app.DialogFragment
 import android.os.Bundle
+import com.schiwfty.torrentwrapper.confluence.Confluence
+import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.R
-import com.shwifty.tex.TricklComponent
-import com.shwifty.tex.repositories.ITorrentRepository
-import javax.inject.Inject
 
 /**
  * Created by arran on 25/05/2017.
@@ -17,7 +16,6 @@ class DeleteFileDialog : DialogFragment() {
     private lateinit var filePath: String
     private lateinit var torrentHash: String
 
-    @Inject
     lateinit var torrentRepository: ITorrentRepository
 
     companion object {
@@ -36,7 +34,7 @@ class DeleteFileDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        TricklComponent.mainComponent.inject(this)
+        torrentRepository = Confluence.torrentRepository
         torrentName = arguments.getString(ARG_TORRENT_NAME)
         filePath = arguments.getString(ARG_FILE_PATH)
         torrentHash = arguments.getString(ARG_TORRENT_HASH)

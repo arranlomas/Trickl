@@ -2,11 +2,10 @@ package com.shwifty.tex.views.main
 
 import android.app.FragmentManager
 import android.content.Context
-import com.shwifty.tex.models.TorrentFile
-import com.shwifty.tex.models.TorrentInfo
-import com.shwifty.tex.repositories.ITorrentRepository
+import com.schiwfty.torrentwrapper.models.TorrentFile
+import com.schiwfty.torrentwrapper.models.TorrentInfo
+import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.views.main.mvp.MainContract
-import javax.inject.Inject
 
 /**
  * Created by arran on 10/05/2017.
@@ -16,7 +15,7 @@ interface IDialogManager {
     var torrentRepository: ITorrentRepository
     fun showAddMagnetDialog(fragmentManager: FragmentManager)
     fun showAddHashDialog(fragmentManager: FragmentManager)
-    fun showDeleteTorrentDialog(context: Context,  torrentInfo: TorrentInfo, onError: () -> Unit)
+    fun showDeleteTorrentDialog(context: Context, torrentInfo: TorrentInfo, onError: () -> Unit)
     fun showDeleteFileDialog(fragmentManager: FragmentManager,  torrentFile: TorrentFile)
     fun showNoWifiDialog(context: Context, torrentFile: TorrentFile)
 }

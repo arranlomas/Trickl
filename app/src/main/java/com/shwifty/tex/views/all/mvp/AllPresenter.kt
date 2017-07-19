@@ -1,17 +1,15 @@
 package com.shwifty.tex.views.all.mvp
 
 import android.content.Context
-import com.shwifty.tex.TricklComponent
-import com.shwifty.tex.repositories.ITorrentRepository
+import com.schiwfty.torrentwrapper.confluence.Confluence
+import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import rx.subscriptions.CompositeSubscription
-import javax.inject.Inject
 
 /**
  * Created by arran on 16/04/2017.
  */
 class AllPresenter : AllContract.Presenter {
 
-    @Inject
     lateinit var torrentRepository: ITorrentRepository
 
     private val compositeSubscription = CompositeSubscription()
@@ -22,7 +20,7 @@ class AllPresenter : AllContract.Presenter {
     override fun setup(context: Context, view: AllContract.View) {
         this.view = view
         this.context = context
-        TricklComponent.mainComponent.inject(this)
+        torrentRepository = Confluence.torrentRepository
 
         compositeSubscription.add(
                 torrentRepository.torrentInfoDeleteListener

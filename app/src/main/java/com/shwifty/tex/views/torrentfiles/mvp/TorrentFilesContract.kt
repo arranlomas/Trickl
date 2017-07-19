@@ -2,8 +2,8 @@ package com.shwifty.tex.views.torrentfiles.mvp
 
 import android.content.Context
 import android.os.Bundle
-import com.shwifty.tex.models.TorrentFile
-import com.shwifty.tex.models.TorrentInfo
+import com.schiwfty.torrentwrapper.models.TorrentFile
+import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.shwifty.tex.views.torrentfiles.list.TorrentFilesAdapter
 
 /**

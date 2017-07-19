@@ -2,22 +2,19 @@ package com.shwifty.tex.views.addtorrent
 
 import android.content.Context
 import android.os.Bundle
+import com.schiwfty.torrentwrapper.confluence.Confluence
+import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.schiwfty.torrentwrapper.utils.findHashFromMagnet
+import com.schiwfty.torrentwrapper.utils.findNameFromMagnet
+import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
 import com.shwifty.tex.R
-import com.shwifty.tex.TricklComponent
-import com.shwifty.tex.repositories.ITorrentRepository
-import com.shwifty.tex.utils.findHashFromMagnet
-import com.shwifty.tex.utils.findNameFromMagnet
-import com.shwifty.tex.utils.findTrackersFromMagnet
 import java.net.URLDecoder
-import javax.inject.Inject
 
 /**
  * Created by arran on 7/05/2017.
  */
 class AddTorrentPresenter : AddTorrentContract.Presenter {
 
-
-    @Inject
     lateinit var torrentRepository: ITorrentRepository
     lateinit var view: AddTorrentContract.View
     override var torrentHash: String? = null
@@ -27,7 +24,7 @@ class AddTorrentPresenter : AddTorrentContract.Presenter {
 
     override fun setup(context: Context, view: AddTorrentContract.View, arguments: Bundle?) {
         this.view = view
-        TricklComponent.mainComponent.inject(this)
+        torrentRepository = Confluence.torrentRepository
         if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_HASH) ?: false) {
             torrentHash = arguments?.getString(AddTorrentActivity.ARG_TORRENT_HASH) ?: ""
         }

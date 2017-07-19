@@ -3,18 +3,18 @@ package com.shwifty.tex.views.showtorrent
 import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
+import com.schiwfty.torrentwrapper.confluence.Confluence
+import com.schiwfty.torrentwrapper.models.TorrentInfo
+import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.schiwfty.torrentwrapper.utils.findHashFromMagnet
+import com.schiwfty.torrentwrapper.utils.findNameFromMagnet
+import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
-import com.shwifty.tex.models.TorrentInfo
-import com.shwifty.tex.repositories.ITorrentRepository
-import com.shwifty.tex.utils.findHashFromMagnet
-import com.shwifty.tex.utils.findNameFromMagnet
-import com.shwifty.tex.utils.findTrackersFromMagnet
 import com.shwifty.tex.views.addtorrent.AddTorrentActivity
 import com.shwifty.tex.views.main.mvp.MainContract
 import rx.subscriptions.CompositeSubscription
 import java.net.URLDecoder
-import javax.inject.Inject
 
 /**
  * Created by arran on 7/05/2017.
@@ -22,10 +22,8 @@ import javax.inject.Inject
 class TorrentInfoPresenter : TorrentInfoContract.Presenter {
 
 
-    @Inject
     lateinit var torrentRepository: ITorrentRepository
 
-    @Inject
     lateinit var mainPresenter: MainContract.Presenter
 
     lateinit var view: TorrentInfoContract.View
@@ -39,7 +37,8 @@ class TorrentInfoPresenter : TorrentInfoContract.Presenter {
 
     override fun setup(context: Context, view: TorrentInfoContract.View, arguments: Bundle?) {
         this.view = view
-        TricklComponent.mainComponent.inject(this)
+        torrentRepository = Confluence.torrentRepository
+        mainPresenter = TricklComponent.mainComponent.getMainPresenter()
 
         if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_HASH) ?: false) {
             torrentHash = arguments?.getString(AddTorrentActivity.ARG_TORRENT_HASH) ?: ""

@@ -2,12 +2,11 @@ package com.shwifty.tex.views.splash.mvp
 
 import android.content.Context
 import android.content.Intent
+import com.schiwfty.torrentwrapper.confluence.Confluence
+import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.schiwfty.torrentwrapper.utils.startConfluenceDaemon
 import com.shwifty.tex.R
-import com.shwifty.tex.TricklComponent
-import com.shwifty.tex.repositories.ITorrentRepository
-import com.shwifty.tex.utils.startConfluenceDaemon
 import rx.subscriptions.CompositeSubscription
-import javax.inject.Inject
 
 /**
  * Created by arran on 16/04/2017.
@@ -25,14 +24,13 @@ class SplashPresenter : SplashContract.Presenter {
 
     lateinit var view: SplashContract.View
 
-    @Inject
     lateinit var torrentRepository: ITorrentRepository
 
     var subscriptions = CompositeSubscription()
 
     override fun setup(context: Context, view: SplashContract.View) {
         this.view = view
-        TricklComponent.mainComponent.inject(this)
+        torrentRepository = Confluence.torrentRepository
     }
 
     override fun destroy() {

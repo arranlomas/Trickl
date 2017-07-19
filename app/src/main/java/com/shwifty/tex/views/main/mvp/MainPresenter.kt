@@ -2,16 +2,15 @@ package com.shwifty.tex.views.main.mvp
 
 import android.content.Context
 import android.content.Intent
+import com.schiwfty.torrentwrapper.confluence.Confluence
+import com.schiwfty.torrentwrapper.models.TorrentFile
+import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.schiwfty.torrentwrapper.utils.canCast
 import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
-import com.shwifty.tex.TricklComponent
-import com.shwifty.tex.models.TorrentFile
-import com.shwifty.tex.repositories.ITorrentRepository
 import com.shwifty.tex.utils.CONNECTIVITY_STATUS
-import com.shwifty.tex.utils.canCast
 import com.shwifty.tex.utils.getConnectivityStatus
 import com.shwifty.tex.views.splash.mvp.SplashActivity
-import javax.inject.Inject
 
 /**
  * Created by arran on 16/04/2017.
@@ -22,13 +21,12 @@ class MainPresenter : MainContract.Presenter {
 
     lateinit var context: Context
 
-    @Inject
     lateinit var torrentRepository: ITorrentRepository
 
     override fun setup(context: Context, view: MainContract.View) {
         this.view = view
         this.context = context
-        TricklComponent.mainComponent.inject(this)
+        torrentRepository = Confluence.torrentRepository
     }
 
     override fun showAddTorrentActivity(hash: String?, magnet: String?, torrentFilePath: String?) {

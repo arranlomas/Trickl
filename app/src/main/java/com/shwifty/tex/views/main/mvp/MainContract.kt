@@ -2,7 +2,7 @@ package com.shwifty.tex.views.main.mvp
 
 import android.content.Context
 import android.content.Intent
-import com.shwifty.tex.models.TorrentFile
+import com.schiwfty.torrentwrapper.models.TorrentFile
 
 /**
  * Created by arran on 16/04/2017.

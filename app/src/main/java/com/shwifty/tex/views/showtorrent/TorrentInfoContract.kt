@@ -3,7 +3,7 @@ package com.shwifty.tex.views.showtorrent
 import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
-import com.shwifty.tex.models.TorrentInfo
+import com.schiwfty.torrentwrapper.models.TorrentInfo
 
 /**
  * Created by arran on 16/04/2017.

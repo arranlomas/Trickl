@@ -69,8 +69,6 @@ dependencies {
     // IO UTILS
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
 
-    compile project(':trickl')
-
     //Start Tab - https://github.com/ogaclejapan/SmartTabLayout
     compile 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
 
@@ -101,6 +99,12 @@ dependencies {
 
     //material dialog
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
+
+    //Confluence Wrapper
+    compile project(':torrentwrapper')
+
+    //Confluence
+    compile project(':go-confluence')
 }
 repositories {
     mavenCentral()

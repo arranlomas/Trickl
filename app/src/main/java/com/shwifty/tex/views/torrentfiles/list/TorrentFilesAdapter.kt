@@ -4,8 +4,8 @@ import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.pawegio.kandroid.inflateLayout
+import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.shwifty.tex.R
-import com.shwifty.tex.models.TorrentFile
 import com.shwifty.tex.utils.onClick
 
 /**

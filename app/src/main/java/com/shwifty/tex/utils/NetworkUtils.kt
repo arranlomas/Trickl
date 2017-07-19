@@ -2,8 +2,6 @@ package com.shwifty.tex.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
-import java.net.NetworkInterface
-import java.util.*
 
 /**
  * Created by arran on 27/05/2017.

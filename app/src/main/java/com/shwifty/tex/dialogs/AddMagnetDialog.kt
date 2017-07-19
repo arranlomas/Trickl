@@ -10,7 +10,6 @@ import com.pawegio.kandroid.textWatcher
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.views.main.mvp.MainContract
-import javax.inject.Inject
 
 
 /**
@@ -20,7 +19,6 @@ import javax.inject.Inject
 class AddMagnetDialog: DialogFragment(){
     private var magnetText = ""
 
-    @Inject
     lateinit var mainPresenter: MainContract.Presenter
 
     companion object{
@@ -30,7 +28,7 @@ class AddMagnetDialog: DialogFragment(){
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        TricklComponent.mainComponent.inject(this)
+        mainPresenter = TricklComponent.mainComponent.getMainPresenter()
 
         val b = AlertDialog.Builder(activity)
                 .setTitle("Paste magnet link here")

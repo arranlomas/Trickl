@@ -3,14 +3,14 @@ package com.shwifty.tex.views.main
 import android.app.FragmentManager
 import android.content.Context
 import com.afollestad.materialdialogs.MaterialDialog
+import com.schiwfty.torrentwrapper.models.TorrentFile
+import com.schiwfty.torrentwrapper.models.TorrentInfo
+import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.schiwfty.torrentwrapper.utils.getFullPath
 import com.shwifty.tex.R
 import com.shwifty.tex.dialogs.AddHashDialog
 import com.shwifty.tex.dialogs.AddMagnetDialog
 import com.shwifty.tex.dialogs.DeleteFileDialog
-import com.shwifty.tex.models.TorrentFile
-import com.shwifty.tex.models.TorrentInfo
-import com.shwifty.tex.repositories.ITorrentRepository
-import com.shwifty.tex.utils.getFullPath
 import com.shwifty.tex.views.main.mvp.MainContract
 
 

@@ -5,10 +5,10 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.shwifty.tex.models.TorrentInfo
+import com.schiwfty.torrentwrapper.confluence.Confluence
+import com.schiwfty.torrentwrapper.models.TorrentInfo
+import com.schiwfty.torrentwrapper.utils.formatBytesAsSize
 import com.shwifty.tex.R
-import com.shwifty.tex.confluence.Confluence
-import com.shwifty.tex.utils.formatBytesAsSize
 import kotlinx.android.synthetic.main.frag_torrent_details.*
 import java.io.File
 
@@ -50,7 +50,7 @@ class TorrentDetailsFragment : Fragment(), TorrentDetailsContract.View {
     }
 
     override fun setupViewFromTorrentInfo(torrentInfo: TorrentInfo) { summaryName.text = torrentInfo.name
-        summaryStoragePath.text = "${Confluence.torrentRepo.absolutePath}${File.separator}${torrentInfo.info_hash}.torrent"
+        summaryStoragePath.text = "${Confluence.torrentInfoStorage.absolutePath}${File.separator}${torrentInfo.info_hash}.torrent"
         summarySize.text = torrentInfo.totalSize.formatBytesAsSize()
         summaryFileCount.text = torrentInfo.fileList.size.toString()
         summaryHash.text = torrentInfo.info_hash

@@ -1,1 +1,1 @@
-include ':app', ':trickl'
+include ':app', ':torrentwrapper', 'go-confluence'

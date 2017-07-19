@@ -7,9 +7,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
-import com.shwifty.tex.models.TorrentFile
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_file_downloads.*

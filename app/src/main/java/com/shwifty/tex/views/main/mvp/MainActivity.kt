@@ -4,29 +4,27 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
-import com.google.android.gms.cast.framework.*
+import com.google.android.gms.cast.framework.CastButtonFactory
+import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
-import com.shwifty.tex.models.TorrentFile
 import com.shwifty.tex.views.addtorrent.AddTorrentActivity
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.showtorrent.TorrentInfoActivity
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), MainContract.View {
 
-    @Inject
     lateinit var presenter: MainContract.Presenter
 
     private val fragAdapter = MainPagerAdapter(supportFragmentManager)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        TricklComponent.mainComponent.inject(this)
+        presenter = TricklComponent.mainComponent.getMainPresenter()
         MyApplication.castHandler.initializeCastContext(this)
         setContentView(R.layout.activity_main)
         presenter.setup(this, this)

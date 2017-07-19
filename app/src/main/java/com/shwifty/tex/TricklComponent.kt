@@ -1,9 +1,9 @@
 package com.shwifty.tex
 
 
+import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.shwifty.tex.dagger.main.DaggerMainComponent
 import com.shwifty.tex.dagger.main.MainComponent
-import com.shwifty.tex.dagger.network.NetworkModule
 import com.shwifty.tex.views.main.DialogManager
 
 /**
@@ -16,9 +16,8 @@ object TricklComponent {
 
     fun install() {
         mainComponent = DaggerMainComponent.builder()
-                .networkModule(NetworkModule())
                 .build()
-        dialogManager.torrentRepository = mainComponent.getTorrentRepository()
+        dialogManager.torrentRepository = Confluence.torrentRepository
         dialogManager.mainPresenter = mainComponent.getMainPresenter()
     }
 }
