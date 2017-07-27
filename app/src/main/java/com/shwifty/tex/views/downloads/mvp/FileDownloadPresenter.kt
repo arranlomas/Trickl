@@ -54,7 +54,9 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
 
     override fun refresh() {
         torrentRepository.getDownloadingFilesFromPersistence()
-                .subscribe { view.setupViewFromTorrentInfo(it) }
+                .subscribe ({ view.setupViewFromTorrentInfo(it) },{
+                    it.printStackTrace()
+                })
     }
 
     override fun destroy() {

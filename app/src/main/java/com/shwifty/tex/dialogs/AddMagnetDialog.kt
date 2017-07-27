@@ -45,6 +45,7 @@ class AddMagnetDialog: DialogFragment(){
         val v = inflater?.inflate(R.layout.dialog_frag_add_magnet, null) ?: throw IllegalStateException("View should not be null!")
         b.setView(v)
         val editText = v.find<EditText>(R.id.addMagnetDialogEditText)
+        magnetText = editText.text.toString()
         editText.textWatcher {
             afterTextChanged { text -> magnetText = text.toString()}
         }

@@ -32,7 +32,9 @@ class AddTorrentPresenter : AddTorrentContract.Presenter {
         if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_MAGNET) ?: false) {
             torrentMagnet = arguments?.getString(AddTorrentActivity.ARG_TORRENT_MAGNET) ?: ""
             torrentHash = torrentMagnet?.findHashFromMagnet()
-            torrentName = URLDecoder.decode(torrentMagnet?.findNameFromMagnet(), "UTF-8")
+            torrentMagnet?.findNameFromMagnet()?.let {
+                torrentName = URLDecoder.decode(it, "UTF-8")
+            }
             torrentTrackers = torrentMagnet?.findTrackersFromMagnet()
         }
     }
