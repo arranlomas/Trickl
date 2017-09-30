@@ -3,7 +3,6 @@ package com.shwifty.tex.views.splash.mvp
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.R
@@ -32,12 +31,13 @@ class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Pre
 
     override fun startConfluenceDaemon(context: Context) {
         Confluence.torrentRepository.isConnected()
-                .subscribe({ started ->
-                    if (!started) Confluence.start(context as Activity, R.drawable.trickl_notification, false, {
-                        Log.v("Error", "Storage permissions is required to start the client")
-                    })
-                }, {
-                    Log.v("client already running", it.localizedMessage)
+                .subscribe(object : BaseSubscriber<Boolean>() {
+                    override fun onNext(started: Boolean) {
+                        mvpView.setLoading(false)
+                        if (!started) Confluence.start(context as Activity, R.drawable.trickl_notification, false, {
+                            mvpView.showError("Storage permissions is required to start the client")
+                        })
+                    }
                 })
                 .addSubscription()
         listenForDaemon()
@@ -46,12 +46,15 @@ class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Pre
     private fun listenForDaemon() {
         torrentRepository.getStatus()
                 .retry()
-                .subscribe({
-                    subscriptions.unsubscribe()
-                    mvpView.showSuccess(R.string.splash_start_confluence_success)
-                    mvpView.progressToMain()
-                }, {
-                    mvpView.showError(R.string.splash_start_confluence_error)
+                .subscribe(object : BaseSubscriber<String>() {
+                    override fun onNext(t: String?) {
+                        mvpView.setLoading(false)
+                        t?.let {
+                            subscriptions.unsubscribe()
+                            mvpView.showSuccess(R.string.splash_start_confluence_success)
+                            mvpView.progressToMain()
+                        }
+                    }
                 })
                 .addSubscription()
     }

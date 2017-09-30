@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentFile
+import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.openFile
 import com.shwifty.tex.R
@@ -34,10 +35,11 @@ class TorrentFilesPresenter : BasePresenter<TorrentFilesContract.View>(), Torren
 
     override fun loadTorrent(torrentHash: String) {
         torrentRepository.getTorrentInfo(torrentHash)
-                .subscribe({
-                    if (it != null) mvpView.setupViewFromTorrentInfo(it)
-                }, {
-                    it.printStackTrace()
+                .subscribe(object : BaseSubscriber<TorrentInfo>(){
+                    override fun onNext(t: TorrentInfo?) {
+                        mvpView.setLoading(false)
+                        t?.let { mvpView.setupViewFromTorrentInfo(it) }
+                    }
                 })
                 .addSubscription()
     }

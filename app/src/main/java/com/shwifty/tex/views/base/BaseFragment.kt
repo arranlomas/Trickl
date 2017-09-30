@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
+import android.view.View
+import android.widget.Spinner
 import android.widget.Toast
 import es.dmoral.toasty.Toasty
 
@@ -12,7 +14,7 @@ import es.dmoral.toasty.Toasty
  */
 open class BaseFragment : Fragment(), BaseContract.MvpView {
 
-    fun getActivityContext(): Context = activity as Context
+    fun getActivityContext(): Context = activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,4 +40,9 @@ open class BaseFragment : Fragment(), BaseContract.MvpView {
         Toasty.success(getActivityContext(), getString(stringId), Toast.LENGTH_SHORT, true).show()
         Log.v("Success at ${this.javaClass.name}", getString(stringId))
     }
+
+    override fun setLoading(loading: Boolean) {
+ //do nothing, override in other activities if you want to use
+    }
+
 }

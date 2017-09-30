@@ -23,20 +23,22 @@ class FileDownloadPresenter : BasePresenter<FileDownloadContract.View>(), FileDo
         torrentRepository = Confluence.torrentRepository
 
         torrentRepository.torrentFileProgressSource
-                .subscribe({
-                    refresh()
-                }, {
-                    it.printStackTrace()
+                .subscribe(object : BaseSubscriber<List<TorrentFile>>() {
+                    override fun onNext(t: List<TorrentFile>?) {
+                        mvpView.setLoading(false)
+                        refresh()
+                    }
                 })
                 .addSubscription()
 
 
 
         torrentRepository.torrentFileDeleteListener
-                .subscribe({
-                    refresh()
-                }, {
-                    it.printStackTrace()
+                .subscribe(object : BaseSubscriber<TorrentFile>() {
+                    override fun onNext(t: TorrentFile?) {
+                        mvpView.setLoading(false)
+                        refresh()
+                    }
                 })
                 .addSubscription()
     }

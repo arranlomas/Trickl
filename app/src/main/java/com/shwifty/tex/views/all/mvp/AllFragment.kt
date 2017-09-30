@@ -44,7 +44,6 @@ class AllFragment : BaseFragment(), AllContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainPresenter = TricklComponent.mainComponent.getMainPresenter()
-        Log.v("Arran", mainPresenter.toString())
     }
 
 
@@ -55,18 +54,18 @@ class AllFragment : BaseFragment(), AllContract.View {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         presenter = AllPresenter()
-        presenter.attachView(this)
-        presenter.refresh()
+
         return inflater?.inflate(R.layout.frag_all, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.attachView(this)
+        presenter.refresh()
         allTorrentsRecyclerView.adapter = filesAdapter
         allTorrentsRecyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         allTorrentsRecyclerView.layoutManager = llm as RecyclerView.LayoutManager?
-        allTorrentsSwipeRefresh.isRefreshing = true
         allTorrentsSwipeRefresh.setOnRefreshListener{presenter.refresh()}
     }
 
@@ -75,26 +74,13 @@ class AllFragment : BaseFragment(), AllContract.View {
         presenter.refresh()
     }
 
-    override fun updateStatus(string: String) {
-        if (!isAdded || !isVisible) return
-    }
-
     override fun showAllTorrents(torrentInfoList: List<TorrentInfo>) {
         if (!isAdded || !isVisible) return
-        allTorrentsSwipeRefresh.isRefreshing = false
         filesAdapter.torrentFiles = torrentInfoList
         filesAdapter.notifyDataSetChanged()
     }
 
-    override fun showError(stringId: Int) {
-        Toasty.error(activity, getString(stringId)).show()
-    }
-
-    override fun showInfo(stringId: Int) {
-        Toasty.info(activity, getString(stringId)).show()
-    }
-
-    override fun showSuccess(stringId: Int) {
-        Toasty.success(activity, getString(stringId)).show()
+    override fun setLoading(loading: Boolean) {
+        allTorrentsSwipeRefresh.isRefreshing = loading
     }
 }

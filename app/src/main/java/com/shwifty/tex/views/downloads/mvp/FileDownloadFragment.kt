@@ -39,8 +39,8 @@ class FileDownloadFragment : BaseFragment(), FileDownloadContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter = FileDownloadPresenter()
-        presenter.setup(arguments)
         presenter.attachView(this)
+        presenter.setup(arguments)
     }
 
     override fun onResume() {

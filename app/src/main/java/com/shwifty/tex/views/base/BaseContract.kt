@@ -9,6 +9,7 @@ interface BaseContract {
         fun showError(stringId: Int)
         fun showInfo(stringId: Int)
         fun showSuccess(stringId: Int)
+        fun setLoading(loading: Boolean)
     }
 
     interface Presenter<in V : MvpView> {

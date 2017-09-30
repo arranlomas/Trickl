@@ -2,6 +2,7 @@ package com.shwifty.tex.views.all.mvp
 
 import android.content.Context
 import com.schiwfty.torrentwrapper.confluence.Confluence
+import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.views.base.BasePresenter
 
@@ -19,13 +20,19 @@ class AllPresenter : BasePresenter<AllContract.View>(), AllContract.Presenter {
         torrentRepository = Confluence.torrentRepository
 
         torrentRepository.torrentInfoDeleteListener
-                .subscribe({ refresh() }, { it.printStackTrace() })
+                .subscribe(object : BaseSubscriber<TorrentInfo>() {
+                    override fun onNext(t: TorrentInfo?) {
+                        mvpView.setLoading(false)
+                        refresh()
+                    }
+                })
                 .addSubscription()
     }
 
     override fun refresh() {
         torrentRepository.getAllTorrentsFromStorage()
                 .subscribe({
+                    mvpView.setLoading(false)
                     mvpView.showAllTorrents(it)
                 }, {
                     it.printStackTrace()

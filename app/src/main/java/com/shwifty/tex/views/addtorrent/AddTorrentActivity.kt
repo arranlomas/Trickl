@@ -58,26 +58,25 @@ class AddTorrentActivity : BaseActivity(), AddTorrentContract.View {
         presenter.detachView()
     }
 
-    override fun showError(stringId: Int) {
-        Toasty.error(this, getString(stringId)).show()
-    }
-
-    override fun showInfo(stringId: Int) {
-        Toasty.info(this, getString(stringId)).show()
-    }
-
-    override fun showSuccess(stringId: Int) {
-        Toasty.success(this, getString(stringId)).show()
-    }
-
     override fun notifyTorrentAdded() {
-        addTorrentProgressBar.visibility = View.GONE
-        addTorrentLoadingText.visibility = View.GONE
-        addTorrentViewPager.visibility = View.VISIBLE
-        addTorrentSmartTab.visibility = View.VISIBLE
-        addTorrentFab.visibility = View.VISIBLE
         val adapter = AddTorrentPagerAdapter(supportFragmentManager, presenter.torrentHash)
         addTorrentViewPager.adapter = adapter
         addTorrentSmartTab.setViewPager(addTorrentViewPager)
+    }
+
+    override fun setLoading(loading: Boolean) {
+        if(loading){
+            addTorrentProgressBar.visibility = View.VISIBLE
+            addTorrentLoadingText.visibility = View.VISIBLE
+            addTorrentViewPager.visibility = View.GONE
+            addTorrentSmartTab.visibility = View.GONE
+            addTorrentFab.visibility = View.GONE
+        }else{
+            addTorrentProgressBar.visibility = View.GONE
+            addTorrentLoadingText.visibility = View.GONE
+            addTorrentViewPager.visibility = View.VISIBLE
+            addTorrentSmartTab.visibility = View.VISIBLE
+            addTorrentFab.visibility = View.VISIBLE
+        }
     }
 }

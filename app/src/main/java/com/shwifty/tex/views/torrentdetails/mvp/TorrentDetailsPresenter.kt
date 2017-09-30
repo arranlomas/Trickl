@@ -2,6 +2,7 @@ package com.shwifty.tex.views.torrentdetails.mvp
 
 import android.os.Bundle
 import com.schiwfty.torrentwrapper.confluence.Confluence
+import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.views.base.BasePresenter
 
@@ -24,10 +25,11 @@ class TorrentDetailsPresenter : BasePresenter<TorrentDetailsContract.View>(), To
 
     override fun loadTorrent(torrentHash: String) {
         torrentRepository.getTorrentInfo(torrentHash)
-                .subscribe({
-                    if (it != null) mvpView.setupViewFromTorrentInfo(it)
-                }, {
-                    mvpView.showError(it.localizedMessage)
+                .subscribe(object : BaseSubscriber<TorrentInfo>() {
+                    override fun onNext(t: TorrentInfo?) {
+                        mvpView.setLoading(false)
+                        t?.let { mvpView.setupViewFromTorrentInfo(it) }
+                    }
                 })
                 .addSubscription()
     }

@@ -1,13 +1,12 @@
 package com.shwifty.tex.views.addtorrent
 
-import android.content.Context
 import android.os.Bundle
 import com.schiwfty.torrentwrapper.confluence.Confluence
+import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.findHashFromMagnet
 import com.schiwfty.torrentwrapper.utils.findNameFromMagnet
 import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
-import com.shwifty.tex.R
 import com.shwifty.tex.views.base.BasePresenter
 import java.net.URLDecoder
 
@@ -41,10 +40,11 @@ class AddTorrentPresenter : BasePresenter<AddTorrentContract.View>(), AddTorrent
     override fun fetchTorrent() {
         val hash = torrentHash ?: return
         torrentRepository.getTorrentInfo(hash)
-                .subscribe({
-                    mvpView.notifyTorrentAdded()
-                }, {
-                    mvpView.showError(R.string.error_get_torrent_info)
+                .subscribe(object : BaseSubscriber<TorrentInfo>() {
+                    override fun onNext(t: TorrentInfo?) {
+                        mvpView.setLoading(false)
+                        mvpView.notifyTorrentAdded()
+                    }
                 })
                 .addSubscription()
     }

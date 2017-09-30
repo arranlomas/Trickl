@@ -9,7 +9,6 @@ import com.shwifty.tex.views.base.BaseContract
  */
 interface AllContract {
     interface View: BaseContract.MvpView {
-        fun updateStatus(string: String)
         fun showAllTorrents(torrentInfoList: List<TorrentInfo>)
     }
 

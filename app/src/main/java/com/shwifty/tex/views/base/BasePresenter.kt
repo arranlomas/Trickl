@@ -28,13 +28,17 @@ open class BasePresenter<T : BaseContract.MvpView> : BaseContract.Presenter<T> {
 
     abstract inner class BaseSubscriber<T> : Subscriber<T>() {
         override fun onError(e: Throwable?) {
+            mvpView.setLoading(false)
             e?.localizedMessage?.let { mvpView.showError(e.localizedMessage) }
+            e?.printStackTrace()
         }
 
         override fun onCompleted() {
+            mvpView.setLoading(false)
         }
 
         override fun onStart() {
+            mvpView.setLoading(true)
             super.onStart()
         }
     }
