@@ -2,21 +2,24 @@ package com.shwifty.tex.views.main.mvp
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import com.google.android.gms.cast.framework.CastButtonFactory
 import com.schiwfty.torrentwrapper.models.TorrentFile
+import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
+import com.shwifty.tex.utils.CONNECTIVITY_STATUS
+import com.shwifty.tex.utils.getConnectivityStatus
 import com.shwifty.tex.views.addtorrent.AddTorrentActivity
+import com.shwifty.tex.views.base.BaseActivity
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.showtorrent.TorrentInfoActivity
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), MainContract.View {
+class MainActivity : BaseActivity(), MainContract.View {
 
     lateinit var presenter: MainContract.Presenter
 
@@ -27,7 +30,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         presenter = TricklComponent.mainComponent.getMainPresenter()
         MyApplication.castHandler.initializeCastContext(this)
         setContentView(R.layout.activity_main)
-        presenter.setup(this, this)
+        presenter.attachView(this)
         presenter.handleIntent(intent)
 
         setSupportActionBar(mainToolbar)
@@ -76,6 +79,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         Toasty.success(this, getString(stringId)).show()
     }
 
+    override fun getConnectivityStatus(): CONNECTIVITY_STATUS {
+        return baseContext.getConnectivityStatus()
+    }
+
     override fun showTorrentInfoActivity(infoHash: String){
         val intent = Intent(this, TorrentInfoActivity::class.java)
         intent.putExtra(TorrentInfoActivity.ARG_TORRENT_HASH, infoHash)
@@ -92,5 +99,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun showNoWifiDialog(torrentFile: TorrentFile) {
         TricklComponent.dialogManager.showNoWifiDialog(this, torrentFile)
+    }
+
+    override fun startFileDownloading(torrentFile: TorrentFile, torrentRepository: ITorrentRepository) {
+        torrentRepository.startFileDownloading(torrentFile, this, true)
     }
 }

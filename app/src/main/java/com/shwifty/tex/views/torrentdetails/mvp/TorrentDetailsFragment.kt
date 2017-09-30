@@ -9,13 +9,14 @@ import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.utils.formatBytesAsSize
 import com.shwifty.tex.R
+import com.shwifty.tex.views.base.BaseFragment
 import kotlinx.android.synthetic.main.frag_torrent_details.*
 import java.io.File
 
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentDetailsFragment : Fragment(), TorrentDetailsContract.View {
+class TorrentDetailsFragment : BaseFragment(), TorrentDetailsContract.View {
 
     lateinit var presenter: TorrentDetailsContract.Presenter
 
@@ -34,7 +35,8 @@ class TorrentDetailsFragment : Fragment(), TorrentDetailsContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter = TorrentDetailsPresenter()
-        presenter.setup(activity, this, arguments)
+        presenter.attachView(this)
+        presenter.setup(arguments)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {

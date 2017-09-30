@@ -3,21 +3,22 @@ package com.shwifty.tex.views.downloads.mvp
 import android.content.Context
 import android.os.Bundle
 import com.schiwfty.torrentwrapper.models.TorrentFile
+import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.shwifty.tex.views.base.BaseContract
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
 
 /**
  * Created by arran on 7/05/2017.
  */
 interface FileDownloadContract {
-    interface View {
+    interface View: BaseContract.MvpView {
         fun setupViewFromTorrentInfo(torrentFiles: List<TorrentFile>)
         fun showDeleteFileDialog(torrentHash: String,torrentFile: TorrentFile)
-        fun showError(stringId: Int)
+        fun openTorrentFile(torrentFile: TorrentFile, torrentRepository: ITorrentRepository)
     }
 
-    interface Presenter {
-        fun setup(context: Context, view: FileDownloadContract.View, arguments: Bundle?)
-        fun destroy()
+    interface Presenter: BaseContract.Presenter<View> {
+        fun setup(arguments: Bundle?)
         fun refresh()
         fun viewClicked(torrentFile: TorrentFile, action: FileDownloadAdapter.Companion.ClickTypes)
     }

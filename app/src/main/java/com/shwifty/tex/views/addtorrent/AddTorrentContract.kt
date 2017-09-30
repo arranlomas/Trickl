@@ -1,21 +1,18 @@
 package com.shwifty.tex.views.addtorrent
 
-import android.content.Context
 import android.os.Bundle
+import com.shwifty.tex.views.base.BaseContract
 
 /**
  * Created by arran on 16/04/2017.
  */
 interface AddTorrentContract {
-    interface View {
-        fun showError(stringId: Int)
-        fun showInfo(stringId: Int)
-        fun showSuccess(stringId: Int)
+    interface View : BaseContract.MvpView {
         fun notifyTorrentAdded()
     }
 
-    interface Presenter {
-        fun setup(context: Context, view: View, arguments: Bundle?)
+    interface Presenter : BaseContract.Presenter<View> {
+        fun setup(arguments: Bundle?)
         var torrentHash: String?
         var torrentMagnet: String?
         var torrentName: String?

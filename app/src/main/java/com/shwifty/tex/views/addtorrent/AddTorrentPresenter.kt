@@ -8,22 +8,21 @@ import com.schiwfty.torrentwrapper.utils.findHashFromMagnet
 import com.schiwfty.torrentwrapper.utils.findNameFromMagnet
 import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
 import com.shwifty.tex.R
+import com.shwifty.tex.views.base.BasePresenter
 import java.net.URLDecoder
 
 /**
  * Created by arran on 7/05/2017.
  */
-class AddTorrentPresenter : AddTorrentContract.Presenter {
+class AddTorrentPresenter : BasePresenter<AddTorrentContract.View>(), AddTorrentContract.Presenter {
 
     lateinit var torrentRepository: ITorrentRepository
-    lateinit var view: AddTorrentContract.View
     override var torrentHash: String? = null
     override var torrentMagnet: String? = null
     override var torrentName: String? = null
     override var torrentTrackers: List<String>? = null
 
-    override fun setup(context: Context, view: AddTorrentContract.View, arguments: Bundle?) {
-        this.view = view
+    override fun setup(arguments: Bundle?) {
         torrentRepository = Confluence.torrentRepository
         if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_HASH) ?: false) {
             torrentHash = arguments?.getString(AddTorrentActivity.ARG_TORRENT_HASH) ?: ""
@@ -43,10 +42,11 @@ class AddTorrentPresenter : AddTorrentContract.Presenter {
         val hash = torrentHash ?: return
         torrentRepository.getTorrentInfo(hash)
                 .subscribe({
-                    view.notifyTorrentAdded()
+                    mvpView.notifyTorrentAdded()
                 }, {
-                    view.showError(R.string.error_get_torrent_info)
+                    mvpView.showError(R.string.error_get_torrent_info)
                 })
+                .addSubscription()
     }
 
 }

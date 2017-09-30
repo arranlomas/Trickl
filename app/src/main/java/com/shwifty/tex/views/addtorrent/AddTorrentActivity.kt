@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.shwifty.tex.R
+import com.shwifty.tex.views.base.BaseActivity
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_add_torrent.*
 
@@ -13,12 +14,11 @@ import kotlinx.android.synthetic.main.activity_add_torrent.*
 /**
  * Created by arran on 7/05/2017.
  */
-class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
+class AddTorrentActivity : BaseActivity(), AddTorrentContract.View {
 
     lateinit var presenter: AddTorrentContract.Presenter
 
     companion object {
-        val ADD_TORRENT_REQUEST_CODE = 101
         val ARG_ADD_TORRENT_RESULT = "arg_torrent_hash_result"
         val ARG_TORRENT_HASH = "arg_torrent_hash"
         val ARG_TORRENT_MAGNET = "arg_torrent_magnet"
@@ -29,7 +29,8 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_torrent)
         presenter = AddTorrentPresenter()
-        presenter.setup(this, this, intent.extras)
+        presenter.attachView(this)
+        presenter.setup(intent.extras)
         presenter.fetchTorrent()
 
         addTorrentFab.setOnClickListener {
@@ -50,6 +51,11 @@ class AddTorrentActivity : AppCompatActivity(), AddTorrentContract.View {
         if(presenter.torrentName!=null){
             addTorrentLoadingText.text = getString(R.string.loading_torrent_info_for, presenter.torrentName)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detachView()
     }
 
     override fun showError(stringId: Int) {

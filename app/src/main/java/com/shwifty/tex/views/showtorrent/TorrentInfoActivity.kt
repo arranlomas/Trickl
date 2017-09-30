@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
+import com.shwifty.tex.views.base.BaseActivity
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_show_torrent.*
 
@@ -14,24 +15,23 @@ import kotlinx.android.synthetic.main.activity_show_torrent.*
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentInfoActivity : AppCompatActivity(), TorrentInfoContract.View {
+class TorrentInfoActivity : BaseActivity(), TorrentInfoContract.View {
 
     lateinit var presenter: TorrentInfoContract.Presenter
 
     companion object {
         val ARG_TORRENT_HASH = "arg_torrent_hash"
-        val ARG_TORRENT_NAME = "arg_torrent_name"
-        val ARG_TORRENT_MAGNET = "arg_torrent_magnet"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_torrent)
         presenter = TorrentInfoPresenter()
-        presenter.setup(this, this, intent.extras)
+        presenter.attachView(this)
+        presenter.setup(intent.extras)
 
         setSupportActionBar(showTorrentToolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         showTorrentToolbar.setNavigationOnClickListener {
             super.onBackPressed()
@@ -50,7 +50,7 @@ class TorrentInfoActivity : AppCompatActivity(), TorrentInfoContract.View {
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter.destroy()
+        presenter.detachView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

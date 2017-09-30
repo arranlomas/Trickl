@@ -5,12 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.shwifty.tex.R
+import com.shwifty.tex.views.base.BaseActivity
 import com.shwifty.tex.views.main.mvp.MainActivity
 import com.tbruyelle.rxpermissions.RxPermissions
 import es.dmoral.toasty.Toasty
 
 
-class SplashActivity : AppCompatActivity(), SplashContract.View {
+class SplashActivity : BaseActivity(), SplashContract.View {
 
     val presenter = SplashPresenter()
     lateinit var rxPermissions: RxPermissions
@@ -23,8 +24,13 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         rxPermissions = RxPermissions(this)
-        presenter.setup(this, this)
+        presenter.attachView(this)
         presenter.handleIntent(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detachView()
     }
 
     override fun onStart() {

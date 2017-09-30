@@ -8,8 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentFile
+import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.schiwfty.torrentwrapper.utils.openFile
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
+import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_file_downloads.*
@@ -18,7 +21,7 @@ import kotlinx.android.synthetic.main.frag_file_downloads.*
 /**
  * Created by arran on 7/05/2017.
  */
-class FileDownloadFragment : Fragment(), FileDownloadContract.View {
+class FileDownloadFragment : BaseFragment(), FileDownloadContract.View {
 
     lateinit var presenter: FileDownloadContract.Presenter
     val itemOnClick: (torrentFile: TorrentFile, type: FileDownloadAdapter.Companion.ClickTypes) -> Unit = { torrentFile, type ->
@@ -36,7 +39,8 @@ class FileDownloadFragment : Fragment(), FileDownloadContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter = FileDownloadPresenter()
-        presenter.setup(activity, this, arguments)
+        presenter.setup(arguments)
+        presenter.attachView(this)
     }
 
     override fun onResume() {
@@ -63,7 +67,7 @@ class FileDownloadFragment : Fragment(), FileDownloadContract.View {
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter.destroy()
+        presenter.detachView()
     }
 
     override fun setupViewFromTorrentInfo(torrentFiles: List<TorrentFile>) {
@@ -80,5 +84,11 @@ class FileDownloadFragment : Fragment(), FileDownloadContract.View {
 
     override fun showError(stringId: Int) {
         Toasty.error(context, context.getString(stringId)).show()
+    }
+
+    override fun openTorrentFile(torrentFile: TorrentFile, torrentRepository: ITorrentRepository) {
+        torrentFile.openFile(context, torrentRepository,{
+            showError(R.string.error_no_activity)
+        })
     }
 }

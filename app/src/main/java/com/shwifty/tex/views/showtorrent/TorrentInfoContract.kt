@@ -4,23 +4,20 @@ import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
 import com.schiwfty.torrentwrapper.models.TorrentInfo
+import com.shwifty.tex.views.base.BaseContract
 
 /**
  * Created by arran on 16/04/2017.
  */
 interface TorrentInfoContract {
-    interface View {
+    interface View: BaseContract.MvpView {
         fun notifyTorrentDeleted()
-        fun showError(stringId: Int)
-        fun showInfo(stringId: Int)
-        fun showSuccess(stringId: Int)
         fun notifyTorrentAdded()
         fun dismiss()
     }
 
-    interface Presenter {
-        fun setup(context: Context, view: View, arguments: Bundle?)
-        fun destroy()
+    interface Presenter: BaseContract.Presenter<View> {
+        fun setup(arguments: Bundle?)
         var torrentInfo: TorrentInfo?
         var torrentHash: String
         var torrentMagnet: String?

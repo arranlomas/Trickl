@@ -9,7 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
+import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.schiwfty.torrentwrapper.utils.openFile
 import com.shwifty.tex.R
+import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.torrentfiles.list.TorrentFilesAdapter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_torrent_files.*
@@ -18,9 +21,10 @@ import kotlinx.android.synthetic.main.frag_torrent_files.*
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
+class TorrentFilesFragment : BaseFragment(), TorrentFilesContract.View {
 
     lateinit var presenter: TorrentFilesContract.Presenter
+
     val itemOnClick: (torrentFile: TorrentFile, type: TorrentFilesAdapter.Companion.ClickTypes) -> Unit = { torrentFile, type ->
         presenter.viewClicked(torrentFile, type)
     }
@@ -41,12 +45,13 @@ class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter = TorrentFilesPresenter()
-        presenter.setup(activity, this, arguments)
+        presenter.setup(arguments)
+        presenter.attachView(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter.destroy()
+        presenter.detachView()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -62,7 +67,6 @@ class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
         torrentFilesRecyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         torrentFilesRecyclerView.layoutManager = llm as RecyclerView.LayoutManager?
-
         presenter.loadTorrent(presenter.torrentHash)
     }
 
@@ -80,7 +84,9 @@ class TorrentFilesFragment : Fragment(), TorrentFilesContract.View {
         activity.finish()
     }
 
-    override fun showError(stringId: Int) {
-        Toasty.error(context, context.getString(stringId)).show()
+    override fun openTorrentFile(torrentFile: TorrentFile, torrentRepository: ITorrentRepository) {
+        torrentFile.openFile(context, torrentRepository,{
+            showError(R.string.error_no_activity)
+        })
     }
 }

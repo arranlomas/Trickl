@@ -1,66 +1,51 @@
 package com.shwifty.tex.views.downloads.mvp
 
-import android.content.Context
 import android.os.Bundle
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
-import com.schiwfty.torrentwrapper.utils.openFile
-import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
+import com.shwifty.tex.views.base.BasePresenter
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
 import com.shwifty.tex.views.main.mvp.MainContract
-import rx.subscriptions.CompositeSubscription
 
 /**
  * Created by arran on 7/05/2017.
  */
-class FileDownloadPresenter : FileDownloadContract.Presenter {
-
-
-    lateinit var view: FileDownloadContract.View
-    lateinit var context: Context
+class FileDownloadPresenter : BasePresenter<FileDownloadContract.View>(), FileDownloadContract.Presenter {
 
     lateinit var torrentRepository: ITorrentRepository
 
     lateinit var mainPresenter: MainContract.Presenter
 
-    private val compositeSubscription = CompositeSubscription()
-
-    override fun setup(context: Context, view: FileDownloadContract.View, arguments: Bundle?) {
+    override fun setup(arguments: Bundle?) {
         mainPresenter = TricklComponent.mainComponent.getMainPresenter()
         torrentRepository = Confluence.torrentRepository
-        this.view = view
-        this.context = context
 
-        compositeSubscription.add(
-                torrentRepository.torrentFileProgressSource
-                        .subscribe({
-                            refresh()
-                        }, {
-                            it.printStackTrace()
-                        })
-        )
+        torrentRepository.torrentFileProgressSource
+                .subscribe({
+                    refresh()
+                }, {
+                    it.printStackTrace()
+                })
+                .addSubscription()
 
-        compositeSubscription.add(
-                torrentRepository.torrentFileDeleteListener
-                        .subscribe({
-                            refresh()
-                        }, {
-                            it.printStackTrace()
-                        })
-        )
+
+
+        torrentRepository.torrentFileDeleteListener
+                .subscribe({
+                    refresh()
+                }, {
+                    it.printStackTrace()
+                })
+                .addSubscription()
     }
 
     override fun refresh() {
         torrentRepository.getDownloadingFilesFromPersistence()
-                .subscribe ({ view.setupViewFromTorrentInfo(it) },{
+                .subscribe({ mvpView.setupViewFromTorrentInfo(it) }, {
                     it.printStackTrace()
                 })
-    }
-
-    override fun destroy() {
-        compositeSubscription.unsubscribe()
     }
 
     override fun viewClicked(torrentFile: TorrentFile, action: FileDownloadAdapter.Companion.ClickTypes) {
@@ -69,12 +54,10 @@ class FileDownloadPresenter : FileDownloadContract.Presenter {
                 mainPresenter.checkStatusForDownload(torrentFile)
             }
             FileDownloadAdapter.Companion.ClickTypes.OPEN -> {
-                torrentFile.openFile(context, torrentRepository,{
-                    view.showError(R.string.error_no_activity)
-                })
+                mvpView.openTorrentFile(torrentFile, torrentRepository)
             }
             FileDownloadAdapter.Companion.ClickTypes.DELETE -> {
-                view.showDeleteFileDialog(torrentFile.torrentHash, torrentFile)
+                mvpView.showDeleteFileDialog(torrentFile.torrentHash, torrentFile)
             }
             FileDownloadAdapter.Companion.ClickTypes.CHROMECAST -> {
                 mainPresenter.startChromecast(torrentFile)

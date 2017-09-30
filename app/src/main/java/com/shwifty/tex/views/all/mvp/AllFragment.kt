@@ -12,6 +12,7 @@ import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.views.all.list.AllTorrentsAdapter
+import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.main.mvp.MainContract
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_all.*
@@ -19,12 +20,11 @@ import kotlinx.android.synthetic.main.frag_all.*
 /**
  * Created by arran on 17/04/2017.
  */
-class AllFragment : Fragment(), AllContract.View {
+class AllFragment : BaseFragment(), AllContract.View {
 
     lateinit var mainPresenter: MainContract.Presenter
 
     lateinit var presenter: AllContract.Presenter
-
 
     val itemOnClick: (View, Int, Int) -> Unit = { _, position, _ ->
         val torrentFile = filesAdapter.torrentFiles[position]
@@ -50,12 +50,13 @@ class AllFragment : Fragment(), AllContract.View {
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter.destroy()
+        presenter.detachView()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         presenter = AllPresenter()
-        presenter.setup(activity, this)
+        presenter.attachView(this)
+        presenter.refresh()
         return inflater?.inflate(R.layout.frag_all, container, false)
     }
 
