@@ -13,7 +13,7 @@ import java.io.File
  * Created by arran on 29/04/2017.
  */
 class MyApplication : Application() {
-    val directoryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path + File.separator + "cloudburst"
+    val directoryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path + File.separator + "Trickl"
 
     companion object{
         var castHandler: CastHandler = CastHandler()

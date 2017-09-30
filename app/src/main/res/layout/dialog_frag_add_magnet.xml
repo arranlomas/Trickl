@@ -8,6 +8,5 @@
         android:id="@+id/addMagnetDialogEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:text="magnet:?xt=urn:btih:1be839b8032095048f5f7945081a3349232126a1&amp;dn=Beauty+and+the+Beast+%282017%29+English+%5B1080p%5D&amp;tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&amp;tr=udp%3A%2F%2Fzer0day.ch%3A1337&amp;tr=udp%3A%2F%2Fopen.demonii.com%3A1337&amp;tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969"/>
+        android:ems="10"/>
 </LinearLayout>

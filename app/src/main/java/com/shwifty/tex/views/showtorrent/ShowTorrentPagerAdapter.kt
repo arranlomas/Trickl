@@ -12,8 +12,8 @@ import com.shwifty.tex.views.torrentfiles.mvp.TorrentFilesFragment
 class ShowTorrentPagerAdapter(fragmentManager: FragmentManager, private val torrentHash: String?) : FragmentStatePagerAdapter(fragmentManager) {
     override fun getItem(position: Int): Fragment {
         when (position) {
-            0 -> return TorrentFilesFragment.newInstance(torrentHash)
-            1 -> return TorrentDetailsFragment.Companion.newInstance(torrentHash)
+            0 -> return TorrentDetailsFragment.newInstance(torrentHash)
+            1 -> return TorrentFilesFragment.newInstance(torrentHash)
             else -> throw IllegalStateException("No more that 2 fregments required")
         }
     }
@@ -24,8 +24,8 @@ class ShowTorrentPagerAdapter(fragmentManager: FragmentManager, private val torr
 
     override fun getPageTitle(position: Int): CharSequence {
         when (position) {
-            0 -> return "Torrent Files"
-            1 -> return "Torrent Details"
+            0 -> return "Torrent Details"
+            1 -> return "Torrent Files"
             else -> throw IllegalStateException("No more that 2 fregments required")
         }
     }

@@ -43,11 +43,9 @@ class AddTorrentPresenter : AddTorrentContract.Presenter {
         val hash = torrentHash ?: return
         torrentRepository.getTorrentInfo(hash)
                 .subscribe({
-                    //SUCCESS
                     view.notifyTorrentAdded()
                 }, {
                     view.showError(R.string.error_get_torrent_info)
-                    //ERROR
                 })
     }
 

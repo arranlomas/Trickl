@@ -104,7 +104,7 @@ dependencies {
     compile project(':torrentwrapper')
 
     //Confluence
-    compile project(':go-confluence')
+    compile project(':confluencewrapper')
 }
 repositories {
     mavenCentral()

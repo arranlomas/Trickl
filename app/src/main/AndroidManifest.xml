@@ -10,9 +10,8 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/trikl_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name="com.shwifty.tex.MyApplication">
@@ -24,22 +23,17 @@
         <activity android:name="com.shwifty.tex.views.splash.mvp.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:scheme="magnet"
-                    />
+                <data android:scheme="magnet" />
             </intent-filter>
 
         </activity>
-
-        <service
-            android:name="com.shwifty.tex.confluence.ConfluenceDaemonService"
-            android:enabled="true"
-            android:exported="false" />
 
         <meta-data
             android:name=

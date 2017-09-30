@@ -1,7 +1,9 @@
 package com.shwifty.tex.views.splash.mvp
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.startConfluenceDaemon
@@ -38,7 +40,14 @@ class SplashPresenter : SplashContract.Presenter {
     }
 
     override fun startConfluenceDaemon(context: Context) {
-        context.startConfluenceDaemon()
+        Confluence.torrentRepository.isConnected()
+                .subscribe({ started ->
+                    if (!started) Confluence.start(context as Activity, R.drawable.trickl_notification, false, {
+                        Log.v("Error", "Storage permissions is required to start the client")
+                    })
+                }, {
+                    Log.v("client already running", it.localizedMessage)
+                })
         listenForDaemon()
     }
 
