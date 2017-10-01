@@ -25,6 +25,7 @@ class TorrentFilesFragment : BaseFragment(), TorrentFilesContract.View {
 
     lateinit var presenter: TorrentFilesContract.Presenter
 
+
     val itemOnClick: (torrentFile: TorrentFile, type: TorrentFilesAdapter.Companion.ClickTypes) -> Unit = { torrentFile, type ->
         presenter.viewClicked(torrentFile, type)
     }
@@ -82,11 +83,5 @@ class TorrentFilesFragment : BaseFragment(), TorrentFilesContract.View {
 
     override fun dismiss() {
         activity.finish()
-    }
-
-    override fun openTorrentFile(torrentFile: TorrentFile, torrentRepository: ITorrentRepository) {
-        torrentFile.openFile(context, torrentRepository,{
-            showError(R.string.error_no_activity)
-        })
     }
 }

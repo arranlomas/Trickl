@@ -11,7 +11,6 @@ import com.shwifty.tex.views.main.mvp.MainContract
  * Created by arran on 10/05/2017.
  */
 interface IDialogManager {
-    var mainPresenter: MainContract.Presenter
     var torrentRepository: ITorrentRepository
     fun showAddMagnetDialog(fragmentManager: FragmentManager)
     fun showAddHashDialog(fragmentManager: FragmentManager)

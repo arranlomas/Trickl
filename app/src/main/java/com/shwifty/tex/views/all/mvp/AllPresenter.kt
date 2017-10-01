@@ -21,7 +21,7 @@ class AllPresenter : BasePresenter<AllContract.View>(), AllContract.Presenter {
 
         torrentRepository.torrentInfoDeleteListener
                 .subscribe(object : BaseSubscriber<TorrentInfo>() {
-                    override fun onNext(t: TorrentInfo?) {
+                    override fun onNext(pair: TorrentInfo?) {
                         mvpView.setLoading(false)
                         refresh()
                     }

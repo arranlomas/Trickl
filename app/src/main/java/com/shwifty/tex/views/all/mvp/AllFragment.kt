@@ -4,31 +4,28 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.shwifty.tex.R
-import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.views.all.list.AllTorrentsAdapter
 import com.shwifty.tex.views.base.BaseFragment
-import com.shwifty.tex.views.main.mvp.MainContract
-import es.dmoral.toasty.Toasty
+import com.shwifty.tex.views.main.MainEventHandler
 import kotlinx.android.synthetic.main.frag_all.*
+
 
 /**
  * Created by arran on 17/04/2017.
  */
 class AllFragment : BaseFragment(), AllContract.View {
 
-    lateinit var mainPresenter: MainContract.Presenter
-
     lateinit var presenter: AllContract.Presenter
+
 
     val itemOnClick: (View, Int, Int) -> Unit = { _, position, _ ->
         val torrentFile = filesAdapter.torrentFiles[position]
-        mainPresenter.showTorrentInfoActivity(torrentFile.info_hash)
+        MainEventHandler.showTorrentInfo(torrentFile)
     }
     val filesAdapter = AllTorrentsAdapter(itemOnClick)
 
@@ -40,12 +37,6 @@ class AllFragment : BaseFragment(), AllContract.View {
             return allFragment
         }
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mainPresenter = TricklComponent.mainComponent.getMainPresenter()
-    }
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -66,7 +57,7 @@ class AllFragment : BaseFragment(), AllContract.View {
         allTorrentsRecyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         allTorrentsRecyclerView.layoutManager = llm as RecyclerView.LayoutManager?
-        allTorrentsSwipeRefresh.setOnRefreshListener{presenter.refresh()}
+        allTorrentsSwipeRefresh.setOnRefreshListener { presenter.refresh() }
     }
 
     override fun onResume() {

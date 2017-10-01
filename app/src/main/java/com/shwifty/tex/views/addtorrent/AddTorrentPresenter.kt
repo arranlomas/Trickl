@@ -41,7 +41,7 @@ class AddTorrentPresenter : BasePresenter<AddTorrentContract.View>(), AddTorrent
         val hash = torrentHash ?: return
         torrentRepository.getTorrentInfo(hash)
                 .subscribe(object : BaseSubscriber<TorrentInfo>() {
-                    override fun onNext(t: TorrentInfo?) {
+                    override fun onNext(pair: TorrentInfo?) {
                         mvpView.setLoading(false)
                         mvpView.notifyTorrentAdded()
                     }

@@ -9,10 +9,8 @@ import com.schiwfty.torrentwrapper.utils.findHashFromMagnet
 import com.schiwfty.torrentwrapper.utils.findNameFromMagnet
 import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
 import com.shwifty.tex.R
-import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.views.addtorrent.AddTorrentActivity
 import com.shwifty.tex.views.base.BasePresenter
-import com.shwifty.tex.views.main.mvp.MainContract
 import java.net.URLDecoder
 
 /**
@@ -22,8 +20,6 @@ class TorrentInfoPresenter : BasePresenter<TorrentInfoContract.View>(), TorrentI
 
     lateinit var torrentRepository: ITorrentRepository
 
-    lateinit var mainPresenter: MainContract.Presenter
-
     override lateinit var torrentHash: String
     override var torrentMagnet: String? = null
     override var torrentName: String? = null
@@ -32,7 +28,6 @@ class TorrentInfoPresenter : BasePresenter<TorrentInfoContract.View>(), TorrentI
 
     override fun setup(arguments: Bundle?) {
         torrentRepository = Confluence.torrentRepository
-        mainPresenter = TricklComponent.mainComponent.getMainPresenter()
 
         if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_HASH) ?: false) {
             torrentHash = arguments?.getString(AddTorrentActivity.ARG_TORRENT_HASH) ?: ""
@@ -47,7 +42,7 @@ class TorrentInfoPresenter : BasePresenter<TorrentInfoContract.View>(), TorrentI
 
         torrentRepository.torrentInfoDeleteListener
                 .subscribe(object : BaseSubscriber<TorrentInfo>() {
-                    override fun onNext(t: TorrentInfo?) {
+                    override fun onNext(pair: TorrentInfo?) {
                         mvpView.setLoading(false)
                         mvpView.dismiss()
                     }
@@ -60,12 +55,12 @@ class TorrentInfoPresenter : BasePresenter<TorrentInfoContract.View>(), TorrentI
         val hash = torrentHash
         torrentRepository.getTorrentInfo(hash)
                 .subscribe(object : BaseSubscriber<TorrentInfo>(){
-                    override fun onNext(t: TorrentInfo?) {
+                    override fun onNext(pair: TorrentInfo?) {
                         mvpView.setLoading(false)
-                        torrentInfo = t
-                        torrentName = t?.name
-                        t?.info_hash?.let { torrentHash = it }
-                        torrentTrackers = t?.announceList
+                        torrentInfo = pair
+                        torrentName = pair?.name
+                        pair?.info_hash?.let { torrentHash = it }
+                        torrentTrackers = pair?.announceList
                         mvpView.notifyTorrentAdded()
                     }
                 })

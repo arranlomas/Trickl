@@ -16,6 +16,8 @@ interface MainContract {
         fun showNoWifiDialog(torrentFile: TorrentFile)
         fun getConnectivityStatus(): CONNECTIVITY_STATUS
         fun startFileDownloading(torrentFile: TorrentFile, torrentRepository: ITorrentRepository)
+        fun openTorrentFile(torrentFile: TorrentFile, torrentRepository: ITorrentRepository)
+        fun openDeleteTorrentDialog(torrentFile: TorrentFile)
     }
 
     interface Presenter : BaseContract.Presenter<View> {

@@ -18,7 +18,6 @@ import com.shwifty.tex.views.main.mvp.MainContract
  * Created by arran on 10/05/2017.
  */
 class DialogManager : IDialogManager {
-    override lateinit var mainPresenter: MainContract.Presenter
     override lateinit var torrentRepository: ITorrentRepository
 
     override fun showNoWifiDialog(context: Context, torrentFile: TorrentFile) {

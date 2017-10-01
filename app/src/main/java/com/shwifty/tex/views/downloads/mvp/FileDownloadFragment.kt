@@ -14,8 +14,11 @@ import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
+import com.shwifty.tex.views.main.MainEventHandler
 import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.frag_all.*
 import kotlinx.android.synthetic.main.frag_file_downloads.*
+import rx.subjects.PublishSubject
 
 
 /**
@@ -77,18 +80,16 @@ class FileDownloadFragment : BaseFragment(), FileDownloadContract.View {
         filesAdapter.notifyDataSetChanged()
     }
 
-    override fun showDeleteFileDialog(torrentHash: String, torrentFile: TorrentFile) {
-        if (!isVisible || !isAdded) return
-        TricklComponent.dialogManager.showDeleteFileDialog(activity.fragmentManager, torrentFile)
+    override fun setLoading(loading: Boolean) {
+        fileDownloadsSwipeRefresh.isRefreshing = loading
     }
 
-    override fun showError(stringId: Int) {
-        Toasty.error(context, context.getString(stringId)).show()
-    }
-
-    override fun openTorrentFile(torrentFile: TorrentFile, torrentRepository: ITorrentRepository) {
-        torrentFile.openFile(context, torrentRepository,{
-            showError(R.string.error_no_activity)
-        })
+    override fun torrentFileClicked(action: FileDownloadAdapter.Companion.ClickTypes, torrentFile: TorrentFile, torrentRepository: ITorrentRepository) {
+        when (action) {
+            FileDownloadAdapter.Companion.ClickTypes.DOWNLOAD -> MainEventHandler.downloadTorrent(torrentFile)
+            FileDownloadAdapter.Companion.ClickTypes.OPEN -> MainEventHandler.openTorrent(torrentFile)
+            FileDownloadAdapter.Companion.ClickTypes.DELETE -> MainEventHandler.deleteTorrent(torrentFile)
+            FileDownloadAdapter.Companion.ClickTypes.CHROMECAST -> MainEventHandler.chromecastTorrent(torrentFile)
+        }
     }
 }

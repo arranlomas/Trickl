@@ -26,9 +26,9 @@ class TorrentDetailsPresenter : BasePresenter<TorrentDetailsContract.View>(), To
     override fun loadTorrent(torrentHash: String) {
         torrentRepository.getTorrentInfo(torrentHash)
                 .subscribe(object : BaseSubscriber<TorrentInfo>() {
-                    override fun onNext(t: TorrentInfo?) {
+                    override fun onNext(pair: TorrentInfo?) {
                         mvpView.setLoading(false)
-                        t?.let { mvpView.setupViewFromTorrentInfo(it) }
+                        pair?.let { mvpView.setupViewFromTorrentInfo(it) }
                     }
                 })
                 .addSubscription()

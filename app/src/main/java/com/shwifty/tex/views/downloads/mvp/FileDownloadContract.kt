@@ -13,8 +13,7 @@ import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
 interface FileDownloadContract {
     interface View: BaseContract.MvpView {
         fun setupViewFromTorrentInfo(torrentFiles: List<TorrentFile>)
-        fun showDeleteFileDialog(torrentHash: String,torrentFile: TorrentFile)
-        fun openTorrentFile(torrentFile: TorrentFile, torrentRepository: ITorrentRepository)
+        fun torrentFileClicked(action: FileDownloadAdapter.Companion.ClickTypes, torrentFile: TorrentFile, torrentRepository: ITorrentRepository)
     }
 
     interface Presenter: BaseContract.Presenter<View> {

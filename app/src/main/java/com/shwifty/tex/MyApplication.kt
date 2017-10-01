@@ -22,7 +22,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         //be aware of the order of initialisation
         Confluence.install(this, directoryPath)
-        TricklComponent.install()
+        TricklComponent.install(Confluence.torrentRepositoryComponent)
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))

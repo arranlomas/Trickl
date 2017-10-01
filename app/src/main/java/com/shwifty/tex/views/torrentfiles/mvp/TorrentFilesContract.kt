@@ -16,7 +16,6 @@ interface TorrentFilesContract {
         fun setupViewFromTorrentInfo(torrentInfo: TorrentInfo)
         fun updateTorrentPercentages(updatedDetails: List<TorrentFile>)
         fun dismiss()
-        fun openTorrentFile(torrentFile: TorrentFile, torrentRepository: ITorrentRepository)
     }
 
     interface Presenter: BaseContract.Presenter<View> {
