@@ -31,11 +31,11 @@ class AllPresenter : BasePresenter<AllContract.View>(), AllContract.Presenter {
 
     override fun refresh() {
         torrentRepository.getAllTorrentsFromStorage()
-                .subscribe({
-                    mvpView.setLoading(false)
-                    mvpView.showAllTorrents(it)
-                }, {
-                    it.printStackTrace()
+                .subscribe(object : BaseSubscriber<List<TorrentInfo>>(){
+                    override fun onNext(torrentInfos: List<TorrentInfo>) {
+                        mvpView.setLoading(false)
+                        mvpView.showAllTorrents(torrentInfos)
+                    }
                 })
     }
 }

@@ -6,6 +6,7 @@ import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.views.base.BasePresenter
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
+import rx.Subscriber
 
 /**
  * Created by arran on 7/05/2017.
@@ -18,15 +19,20 @@ class FileDownloadPresenter : BasePresenter<FileDownloadContract.View>(), FileDo
         torrentRepository = Confluence.torrentRepository
 
         torrentRepository.torrentFileProgressSource
-                .subscribe(object : BaseSubscriber<List<TorrentFile>>() {
-                    override fun onNext(t: List<TorrentFile>?) {
-                        mvpView.setLoading(false)
-                        refresh()
+                .flatMap { torrentRepository.getDownloadingFilesFromPersistence() }
+                .subscribe(object : Subscriber<List<TorrentFile>>() {
+                    override fun onError(e: Throwable?) {
+                        e?.localizedMessage?.let { mvpView.showError(e.localizedMessage) }
+                        e?.printStackTrace()
+                    }
+
+                    override fun onCompleted() {}
+
+                    override fun onNext(torrentFiles: List<TorrentFile>) {
+                        mvpView.setupViewFromTorrentInfo(torrentFiles)
                     }
                 })
                 .addSubscription()
-
-
 
         torrentRepository.torrentFileDeleteListener
                 .subscribe(object : BaseSubscriber<TorrentFile>() {

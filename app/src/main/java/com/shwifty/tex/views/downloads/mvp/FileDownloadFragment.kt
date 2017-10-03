@@ -34,8 +34,7 @@ class FileDownloadFragment : BaseFragment(), FileDownloadContract.View {
 
     companion object {
         fun newInstance(): Fragment {
-            val frag = FileDownloadFragment()
-            return frag
+            return FileDownloadFragment()
         }
     }
 
@@ -43,7 +42,7 @@ class FileDownloadFragment : BaseFragment(), FileDownloadContract.View {
         super.onCreate(savedInstanceState)
         presenter = FileDownloadPresenter()
         presenter.attachView(this)
-        presenter.setup(arguments)
+
     }
 
     override fun onResume() {
@@ -58,6 +57,7 @@ class FileDownloadFragment : BaseFragment(), FileDownloadContract.View {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        presenter.setup(arguments)
         super.onViewCreated(view, savedInstanceState)
         fileDownloadsSwipeRefresh.isRefreshing = true
         fileDownloadsRecyclerView.adapter = filesAdapter

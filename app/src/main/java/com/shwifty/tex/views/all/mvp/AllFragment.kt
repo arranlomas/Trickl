@@ -14,7 +14,6 @@ import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.main.MainEventHandler
 import kotlinx.android.synthetic.main.frag_all.*
 
-
 /**
  * Created by arran on 17/04/2017.
  */

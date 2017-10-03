@@ -1,40 +1,48 @@
 package com.shwifty.tex.views.showtorrent.mvp
 
+import android.os.Bundle
+import android.view.MenuItem
+import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentInfo
+import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.findHashFromMagnet
 import com.schiwfty.torrentwrapper.utils.findNameFromMagnet
 import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
+import com.shwifty.tex.R
+import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
+import com.shwifty.tex.views.base.BasePresenter
+import java.net.URLDecoder
 
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentInfoPresenter : com.shwifty.tex.views.base.BasePresenter<TorrentInfoContract.View>(), com.shwifty.tex.views.showtorrent.TorrentInfoContract.Presenter {
+class TorrentInfoPresenter : BasePresenter<TorrentInfoContract.View>(), TorrentInfoContract.Presenter {
 
-    lateinit var torrentRepository: com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+    lateinit var torrentRepository: ITorrentRepository
 
     override lateinit var torrentHash: String
     override var torrentMagnet: String? = null
     override var torrentName: String? = null
     override var torrentTrackers: List<String>? = null
-    override var torrentInfo: com.schiwfty.torrentwrapper.models.TorrentInfo? = null
+    override var torrentInfo: TorrentInfo? = null
 
-    override fun setup(arguments: android.os.Bundle?) {
-        torrentRepository = com.schiwfty.torrentwrapper.confluence.Confluence.torrentRepository
+    override fun setup(arguments: Bundle?) {
+        torrentRepository = Confluence.torrentRepository
 
-        if (arguments?.containsKey(com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity.Companion.ARG_TORRENT_HASH) ?: false) {
-            torrentHash = arguments?.getString(com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity.Companion.ARG_TORRENT_HASH) ?: ""
+        if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_HASH) ?: false) {
+            torrentHash = arguments?.getString(AddTorrentActivity.ARG_TORRENT_HASH) ?: ""
         }
 
-        if (arguments?.containsKey(com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity.Companion.ARG_TORRENT_MAGNET) ?: false) {
-            torrentMagnet = arguments?.getString(com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity.Companion.ARG_TORRENT_MAGNET) ?: ""
+        if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_MAGNET) ?: false) {
+            torrentMagnet = arguments?.getString(AddTorrentActivity.ARG_TORRENT_MAGNET) ?: ""
             torrentMagnet?.findHashFromMagnet()?.let { torrentHash = it }
-            torrentName = java.net.URLDecoder.decode(torrentMagnet?.findNameFromMagnet(), "UTF-8")
+            torrentName = URLDecoder.decode(torrentMagnet?.findNameFromMagnet(), "UTF-8")
             torrentTrackers = torrentMagnet?.findTrackersFromMagnet()
         }
 
         torrentRepository.torrentInfoDeleteListener
-                .subscribe(object : com.shwifty.tex.views.base.BasePresenter.BaseSubscriber<TorrentInfo>() {
-                    override fun onNext(pair: com.schiwfty.torrentwrapper.models.TorrentInfo?) {
+                .subscribe(object : BaseSubscriber<TorrentInfo>() {
+                    override fun onNext(pair: TorrentInfo?) {
                         mvpView.setLoading(false)
                         mvpView.dismiss()
                     }
@@ -46,8 +54,8 @@ class TorrentInfoPresenter : com.shwifty.tex.views.base.BasePresenter<TorrentInf
     override fun fetchTorrent() {
         val hash = torrentHash
         torrentRepository.getTorrentInfo(hash)
-                .subscribe(object : com.shwifty.tex.views.base.BasePresenter.BaseSubscriber<TorrentInfo>(){
-                    override fun onNext(pair: com.schiwfty.torrentwrapper.models.TorrentInfo?) {
+                .subscribe(object : BaseSubscriber<TorrentInfo>(){
+                    override fun onNext(pair: TorrentInfo?) {
                         mvpView.setLoading(false)
                         torrentInfo = pair
                         torrentName = pair?.name
@@ -59,9 +67,9 @@ class TorrentInfoPresenter : com.shwifty.tex.views.base.BasePresenter<TorrentInf
                 .addSubscription()
     }
 
-    override fun optionsItemSelected(item: android.view.MenuItem) {
+    override fun optionsItemSelected(item: MenuItem) {
         when (item.itemId) {
-            com.shwifty.tex.R.id.action_delete -> {
+            R.id.action_delete -> {
                 mvpView.notifyTorrentDeleted()
             }
         }
