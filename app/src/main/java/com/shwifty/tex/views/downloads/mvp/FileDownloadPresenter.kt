@@ -11,13 +11,9 @@ import rx.Subscriber
 /**
  * Created by arran on 7/05/2017.
  */
-class FileDownloadPresenter : BasePresenter<FileDownloadContract.View>(), FileDownloadContract.Presenter {
-
-    lateinit var torrentRepository: ITorrentRepository
+class FileDownloadPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<FileDownloadContract.View>(), FileDownloadContract.Presenter {
 
     override fun setup(arguments: Bundle?) {
-        torrentRepository = Confluence.torrentRepository
-
         torrentRepository.torrentFileProgressSource
                 .flatMap { torrentRepository.getDownloadingFilesFromPersistence() }
                 .subscribe(object : Subscriber<List<TorrentFile>>() {

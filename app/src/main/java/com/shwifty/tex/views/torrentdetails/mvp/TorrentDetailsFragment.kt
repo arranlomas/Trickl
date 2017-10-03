@@ -9,15 +9,19 @@ import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.utils.formatBytesAsSize
 import com.shwifty.tex.R
+import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.views.base.BaseFragment
+import com.shwifty.tex.views.torrentdetails.di.DaggerTorrentDetailsComponent
 import kotlinx.android.synthetic.main.frag_torrent_details.*
 import java.io.File
+import javax.inject.Inject
 
 /**
  * Created by arran on 7/05/2017.
  */
 class TorrentDetailsFragment : BaseFragment(), TorrentDetailsContract.View {
 
+    @Inject
     lateinit var presenter: TorrentDetailsContract.Presenter
 
     companion object {
@@ -34,7 +38,7 @@ class TorrentDetailsFragment : BaseFragment(), TorrentDetailsContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter = TorrentDetailsPresenter()
+        DaggerTorrentDetailsComponent.builder().torrentRepositoryComponent(TricklComponent.torrentRepositoryComponent).build().inject(this)
         presenter.attachView(this)
         presenter.setup(arguments)
     }
@@ -51,7 +55,8 @@ class TorrentDetailsFragment : BaseFragment(), TorrentDetailsContract.View {
         presenter.loadTorrent(presenter.torrentHash)
     }
 
-    override fun setupViewFromTorrentInfo(torrentInfo: TorrentInfo) { summaryName.text = torrentInfo.name
+    override fun setupViewFromTorrentInfo(torrentInfo: TorrentInfo) {
+        summaryName.text = torrentInfo.name
         summaryStoragePath.text = "${Confluence.torrentInfoStorage.absolutePath}${File.separator}${torrentInfo.info_hash}.torrent"
         summarySize.text = torrentInfo.totalSize.formatBytesAsSize()
         summaryFileCount.text = torrentInfo.fileList.size.toString()

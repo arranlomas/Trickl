@@ -16,9 +16,7 @@ import java.net.URLDecoder
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentInfoPresenter : BasePresenter<TorrentInfoContract.View>(), TorrentInfoContract.Presenter {
-
-    lateinit var torrentRepository: ITorrentRepository
+class TorrentInfoPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<TorrentInfoContract.View>(), TorrentInfoContract.Presenter {
 
     override lateinit var torrentHash: String
     override var torrentMagnet: String? = null
@@ -27,8 +25,6 @@ class TorrentInfoPresenter : BasePresenter<TorrentInfoContract.View>(), TorrentI
     override var torrentInfo: TorrentInfo? = null
 
     override fun setup(arguments: Bundle?) {
-        torrentRepository = Confluence.torrentRepository
-
         if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_HASH) ?: false) {
             torrentHash = arguments?.getString(AddTorrentActivity.ARG_TORRENT_HASH) ?: ""
         }

@@ -1,16 +1,11 @@
 package com.shwifty.tex.views.addtorrent.di
 
-
 import com.schiwfty.torrentwrapper.dagger.network.TorrentRepositoryComponent
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
 import com.shwifty.tex.views.addtorrent.mvp.AddTorrentContract
 import com.shwifty.tex.views.addtorrent.mvp.AddTorrentPresenter
 import com.shwifty.tex.views.base.PresenterScope
-import com.shwifty.tex.views.main.di.MainModule
-import com.shwifty.tex.views.main.mvp.MainActivity
-import com.shwifty.tex.views.main.mvp.MainContract
-import com.shwifty.tex.views.main.mvp.MainPresenter
 import dagger.Component
 import dagger.Module
 import dagger.Provides

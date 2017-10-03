@@ -9,13 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
-import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
-import com.schiwfty.torrentwrapper.utils.openFile
 import com.shwifty.tex.R
+import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.views.base.BaseFragment
+import com.shwifty.tex.views.torrentfiles.di.DaggerTorrentFilesComponent
 import com.shwifty.tex.views.torrentfiles.list.TorrentFilesAdapter
-import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_torrent_files.*
+import javax.inject.Inject
 
 
 /**
@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.frag_torrent_files.*
  */
 class TorrentFilesFragment : BaseFragment(), TorrentFilesContract.View {
 
+    @Inject
     lateinit var presenter: TorrentFilesContract.Presenter
 
 
@@ -45,7 +46,7 @@ class TorrentFilesFragment : BaseFragment(), TorrentFilesContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter = TorrentFilesPresenter()
+        DaggerTorrentFilesComponent.builder().torrentRepositoryComponent(TricklComponent.torrentRepositoryComponent).build().inject(this)
         presenter.setup(arguments)
         presenter.attachView(this)
     }

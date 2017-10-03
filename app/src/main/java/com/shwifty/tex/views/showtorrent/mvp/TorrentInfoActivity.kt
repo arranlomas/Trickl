@@ -7,9 +7,10 @@ import android.view.View
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.views.base.BaseActivity
+import com.shwifty.tex.views.showtorrent.di.DaggerTorrentInfoComponent
 import com.shwifty.tex.views.showtorrent.list.ShowTorrentPagerAdapter
-import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_show_torrent.*
+import javax.inject.Inject
 
 
 /**
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_show_torrent.*
  */
 class TorrentInfoActivity : BaseActivity(), TorrentInfoContract.View {
 
+    @Inject
     lateinit var presenter: TorrentInfoContract.Presenter
 
     companion object {
@@ -26,7 +28,7 @@ class TorrentInfoActivity : BaseActivity(), TorrentInfoContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_torrent)
-        presenter = TorrentInfoPresenter()
+        DaggerTorrentInfoComponent.builder().torrentRepositoryComponent(TricklComponent.torrentRepositoryComponent).build().inject(this)
         presenter.attachView(this)
         presenter.setup(intent.extras)
 

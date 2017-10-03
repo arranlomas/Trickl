@@ -12,14 +12,11 @@ import com.shwifty.tex.views.torrentfiles.list.TorrentFilesAdapter
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentFilesPresenter : BasePresenter<TorrentFilesContract.View>(), TorrentFilesContract.Presenter {
+class TorrentFilesPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<TorrentFilesContract.View>(), TorrentFilesContract.Presenter {
 
     lateinit override var torrentHash: String
 
-    lateinit var torrentRepository: ITorrentRepository
-
     override fun setup(arguments: Bundle?) {
-        torrentRepository = Confluence.torrentRepository
         if (arguments?.containsKey(TorrentFilesFragment.ARG_TORRENT_HASH) ?: false) {
             torrentHash = arguments?.getString(TorrentFilesFragment.ARG_TORRENT_HASH) ?: ""
         }

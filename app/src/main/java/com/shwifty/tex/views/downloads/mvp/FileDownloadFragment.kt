@@ -9,16 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
-import com.schiwfty.torrentwrapper.utils.openFile
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.views.base.BaseFragment
+import com.shwifty.tex.views.downloads.di.DaggerFileDownloadComponent
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
 import com.shwifty.tex.views.main.MainEventHandler
-import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.frag_all.*
 import kotlinx.android.synthetic.main.frag_file_downloads.*
-import rx.subjects.PublishSubject
+import javax.inject.Inject
 
 
 /**
@@ -26,7 +24,9 @@ import rx.subjects.PublishSubject
  */
 class FileDownloadFragment : BaseFragment(), FileDownloadContract.View {
 
+    @Inject
     lateinit var presenter: FileDownloadContract.Presenter
+
     val itemOnClick: (torrentFile: TorrentFile, type: FileDownloadAdapter.Companion.ClickTypes) -> Unit = { torrentFile, type ->
         presenter.viewClicked(torrentFile, type)
     }
@@ -40,7 +40,7 @@ class FileDownloadFragment : BaseFragment(), FileDownloadContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter = FileDownloadPresenter()
+        DaggerFileDownloadComponent.builder().torrentRepositoryComponent(TricklComponent.torrentRepositoryComponent).build().inject(this)
         presenter.attachView(this)
 
     }

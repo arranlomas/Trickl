@@ -67,7 +67,6 @@ class MainPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<M
                 .addSubscription()
 
         MainEventHandler.showTorrentInfoPublishSubject
-                .first()
                 .subscribe(object : BaseSubscriber<TorrentInfo>(){
                     override fun onNext(torrentInfo: TorrentInfo) {
                         mvpView.showTorrentInfoActivity(torrentInfo.info_hash)
