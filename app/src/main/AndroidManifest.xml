@@ -17,8 +17,8 @@
         android:name="com.shwifty.tex.MyApplication">
 
         <activity android:name="com.shwifty.tex.views.main.mvp.MainActivity" />
-        <activity android:name="com.shwifty.tex.views.addtorrent.AddTorrentActivity" />
-        <activity android:name="com.shwifty.tex.views.showtorrent.TorrentInfoActivity" />
+        <activity android:name="com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity" />
+        <activity android:name="com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity" />
 
         <activity android:name="com.shwifty.tex.views.splash.mvp.SplashActivity">
             <intent-filter>

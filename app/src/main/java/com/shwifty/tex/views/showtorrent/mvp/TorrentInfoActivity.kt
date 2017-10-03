@@ -1,23 +1,22 @@
-package com.shwifty.tex.views.showtorrent
+package com.shwifty.tex.views.showtorrent.mvp
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.views.base.BaseActivity
+import com.shwifty.tex.views.showtorrent.list.ShowTorrentPagerAdapter
 import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.activity_show_torrent.*
 
 
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentInfoActivity : BaseActivity(), TorrentInfoContract.View {
+class TorrentInfoActivity : BaseActivity(), com.shwifty.tex.views.showtorrent.TorrentInfoContract.View {
 
-    lateinit var presenter: TorrentInfoContract.Presenter
+    lateinit var presenter: com.shwifty.tex.views.showtorrent.TorrentInfoContract.Presenter
 
     companion object {
         val ARG_TORRENT_HASH = "arg_torrent_hash"
@@ -26,21 +25,21 @@ class TorrentInfoActivity : BaseActivity(), TorrentInfoContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_torrent)
-        presenter = TorrentInfoPresenter()
+        presenter = com.shwifty.tex.views.showtorrent.TorrentInfoPresenter()
         presenter.attachView(this)
         presenter.setup(intent.extras)
 
-        setSupportActionBar(showTorrentToolbar)
+        setSupportActionBar(kotlinx.android.synthetic.main.activity_show_torrent.showTorrentToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        showTorrentToolbar.setNavigationOnClickListener {
+        kotlinx.android.synthetic.main.activity_show_torrent.showTorrentToolbar.setNavigationOnClickListener {
             super.onBackPressed()
         }
 
         presenter.fetchTorrent()
 
         if (presenter.torrentName != null) {
-            showTorrentLoadingText.text = getString(R.string.loading_torrent_info_for, presenter.torrentName)
+            kotlinx.android.synthetic.main.activity_show_torrent.showTorrentLoadingText.text = getString(R.string.loading_torrent_info_for, presenter.torrentName)
         }
     }
 
@@ -79,13 +78,13 @@ class TorrentInfoActivity : BaseActivity(), TorrentInfoContract.View {
 
     override fun notifyTorrentAdded() {
         supportActionBar?.title = presenter.torrentName
-        showTorrentProgressBar.visibility = View.GONE
-        showTorrentLoadingText.visibility = View.GONE
-        showTorrentViewPager.visibility = View.VISIBLE
-        showTorrentSmartTab.visibility = View.VISIBLE
+        kotlinx.android.synthetic.main.activity_show_torrent.showTorrentProgressBar.visibility = View.GONE
+        kotlinx.android.synthetic.main.activity_show_torrent.showTorrentLoadingText.visibility = View.GONE
+        kotlinx.android.synthetic.main.activity_show_torrent.showTorrentViewPager.visibility = View.VISIBLE
+        kotlinx.android.synthetic.main.activity_show_torrent.showTorrentSmartTab.visibility = View.VISIBLE
         val adapter = ShowTorrentPagerAdapter(supportFragmentManager, presenter.torrentHash)
-        showTorrentViewPager.adapter = adapter
-        showTorrentSmartTab.setViewPager(showTorrentViewPager)
+        kotlinx.android.synthetic.main.activity_show_torrent.showTorrentViewPager.adapter = adapter
+        kotlinx.android.synthetic.main.activity_show_torrent.showTorrentSmartTab.setViewPager(kotlinx.android.synthetic.main.activity_show_torrent.showTorrentViewPager)
     }
 
     override fun notifyTorrentDeleted() {

@@ -1,4 +1,4 @@
-package com.shwifty.tex.views.main
+package com.shwifty.tex.dialogs
 
 import android.app.FragmentManager
 import android.content.Context
@@ -15,6 +15,6 @@ interface IDialogManager {
     fun showAddMagnetDialog(fragmentManager: FragmentManager)
     fun showAddHashDialog(fragmentManager: FragmentManager)
     fun showDeleteTorrentDialog(context: Context, torrentInfo: TorrentInfo, onError: () -> Unit)
-    fun showDeleteFileDialog(fragmentManager: FragmentManager,  torrentFile: TorrentFile)
+    fun showDeleteFileDialog(fragmentManager: FragmentManager, torrentFile: TorrentFile)
     fun showNoWifiDialog(context: Context, torrentFile: TorrentFile)
 }

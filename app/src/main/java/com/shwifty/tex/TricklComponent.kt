@@ -3,7 +3,7 @@ package com.shwifty.tex
 
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.dagger.network.TorrentRepositoryComponent
-import com.shwifty.tex.views.main.DialogManager
+import com.shwifty.tex.dialogs.DialogManager
 
 /**
  * Created by arran on 29/04/2017.

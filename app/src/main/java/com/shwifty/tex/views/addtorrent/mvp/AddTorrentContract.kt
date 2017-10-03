@@ -1,4 +1,4 @@
-package com.shwifty.tex.views.addtorrent
+package com.shwifty.tex.views.addtorrent.mvp
 
 import android.os.Bundle
 import com.shwifty.tex.views.base.BaseContract
@@ -7,12 +7,12 @@ import com.shwifty.tex.views.base.BaseContract
  * Created by arran on 16/04/2017.
  */
 interface AddTorrentContract {
-    interface View : BaseContract.MvpView {
+    interface View : com.shwifty.tex.views.base.BaseContract.MvpView {
         fun notifyTorrentAdded()
     }
 
-    interface Presenter : BaseContract.Presenter<View> {
-        fun setup(arguments: Bundle?)
+    interface Presenter : com.shwifty.tex.views.base.BaseContract.Presenter<View> {
+        fun setup(arguments: android.os.Bundle?)
         var torrentHash: String?
         var torrentMagnet: String?
         var torrentName: String?

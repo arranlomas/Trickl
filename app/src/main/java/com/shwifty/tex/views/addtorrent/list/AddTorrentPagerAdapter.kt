@@ -1,4 +1,4 @@
-package com.shwifty.tex.views.showtorrent
+package com.shwifty.tex.views.addtorrent.list
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -9,7 +9,7 @@ import com.shwifty.tex.views.torrentfiles.mvp.TorrentFilesFragment
 /**
  * Created by arran on 9/05/2017.
  */
-class ShowTorrentPagerAdapter(fragmentManager: FragmentManager, private val torrentHash: String?) : FragmentStatePagerAdapter(fragmentManager) {
+class AddTorrentPagerAdapter(fragmentManager: FragmentManager, private val torrentHash: String?) : FragmentStatePagerAdapter(fragmentManager) {
     override fun getItem(position: Int): Fragment {
         when (position) {
             0 -> return TorrentDetailsFragment.newInstance(torrentHash)

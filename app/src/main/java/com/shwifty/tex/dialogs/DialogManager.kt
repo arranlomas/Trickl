@@ -1,4 +1,4 @@
-package com.shwifty.tex.views.main
+package com.shwifty.tex.dialogs
 
 import android.app.FragmentManager
 import android.content.Context
@@ -8,10 +8,6 @@ import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.getFullPath
 import com.shwifty.tex.R
-import com.shwifty.tex.dialogs.AddHashDialog
-import com.shwifty.tex.dialogs.AddMagnetDialog
-import com.shwifty.tex.dialogs.DeleteFileDialog
-import com.shwifty.tex.views.main.mvp.MainContract
 
 
 /**

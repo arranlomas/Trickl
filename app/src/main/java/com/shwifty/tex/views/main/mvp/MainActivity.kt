@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import com.google.android.gms.cast.framework.CastButtonFactory
-import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.openFile
@@ -13,11 +12,11 @@ import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.utils.CONNECTIVITY_STATUS
 import com.shwifty.tex.utils.getConnectivityStatus
-import com.shwifty.tex.views.addtorrent.AddTorrentActivity
+import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
 import com.shwifty.tex.views.base.BaseActivity
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.main.di.DaggerMainComponent
-import com.shwifty.tex.views.showtorrent.TorrentInfoActivity
+import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
