@@ -4,15 +4,16 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.shwifty.tex"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -105,6 +106,14 @@ dependencies {
 
     //Confluence
     compile project(':confluencewrapper')
+
+    //Material navigation drawer
+    compile('com.mikepenz:materialdrawer:5.9.5@aar') {
+        transitive = true
+    }
+
+    //multidex
+    compile 'com.android.support:multidex:1.0.1'
 }
 repositories {
     mavenCentral()

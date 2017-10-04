@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.addtorrent.mvp
 
+import android.os.Bundle
 import com.shwifty.tex.views.base.BaseContract
 
 /**
@@ -11,7 +12,7 @@ interface AddTorrentContract {
     }
 
     interface Presenter : BaseContract.Presenter<View> {
-        fun setup(arguments: android.os.Bundle?)
+        fun setup(arguments: Bundle?)
         var torrentHash: String?
         var torrentMagnet: String?
         var torrentName: String?

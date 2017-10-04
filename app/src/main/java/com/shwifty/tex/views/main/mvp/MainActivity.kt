@@ -1,9 +1,14 @@
 package com.shwifty.tex.views.main.mvp
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import com.google.android.gms.cast.framework.CastButtonFactory
+import com.mikepenz.materialdrawer.DrawerBuilder
+import com.mikepenz.materialdrawer.holder.ColorHolder
+import com.mikepenz.materialdrawer.model.DividerDrawerItem
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.openFile
@@ -14,13 +19,13 @@ import com.shwifty.tex.utils.CONNECTIVITY_STATUS
 import com.shwifty.tex.utils.getConnectivityStatus
 import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
 import com.shwifty.tex.views.base.BaseActivity
+import com.shwifty.tex.views.chromecast.mvp.ChromecastActivity
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.main.di.DaggerMainComponent
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
-
 
 class MainActivity : BaseActivity(), MainContract.View {
 
@@ -51,6 +56,31 @@ class MainActivity : BaseActivity(), MainContract.View {
         addHashFab.setOnClickListener {
             TricklComponent.dialogManager.showAddHashDialog(fragmentManager)
         }
+
+        setupDrawer()
+    }
+
+    private fun setupDrawer() {
+        //if you want to update the items at a later time it is recommended to keep it in a variable
+        val item1 = PrimaryDrawerItem().withIdentifier(1)
+                .withName(R.string.drawer_item_chromecast)
+                .withSelectedTextColorRes(R.color.whiteText).withSelectedColorRes(R.color.colorPrimary)
+                .withTextColorRes(R.color.whiteText)
+
+        //create the drawer and remember the `Drawer` result object
+        val result = DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(mainToolbar)
+                .withSliderBackgroundColorRes(R.color.colorPrimary)
+                .addDrawerItems(
+                        item1,
+                        DividerDrawerItem()
+                )
+                .withOnDrawerItemClickListener { view, position, drawerItem ->
+                    ChromecastActivity.startActivity(this)
+                    true
+                }
+                .build()
     }
 
     override fun onResume() {

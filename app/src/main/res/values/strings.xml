@@ -74,4 +74,10 @@
     <!--delete torrent dialog-->
     <string name="error_deleting_torrent">Error deleting torrent</string>
 
+
+    <!--Chromecast Activity-->
+    <string name="chromecast_toolbar_title">Chromecast</string>
+
+    <!--Main Drawer-->
+    <string name="drawer_item_chromecast">Chromecast</string>
 </resources>
