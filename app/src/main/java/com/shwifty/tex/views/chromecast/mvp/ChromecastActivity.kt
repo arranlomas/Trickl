@@ -3,6 +3,7 @@ package com.shwifty.tex.views.chromecast.mvp
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.views.base.BaseActivity
@@ -38,6 +39,21 @@ class ChromecastActivity : BaseActivity(), ChromecastContract.View {
         chromecastToolbar.setNavigationOnClickListener {
             super.onBackPressed()
         }
+
+        MyApplication.castHandler.initializeCastContext(this)
+        MyApplication.castHandler.addSessionListener()
+        MyApplication.castHandler.getApproximatePosition()
+    }
+
+
+    override fun onResume() {
+        MyApplication.castHandler.addSessionListener()
+        super.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        MyApplication.castHandler.removeSessionListener()
     }
 
     override fun onDestroy() {

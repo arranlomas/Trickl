@@ -55,11 +55,12 @@ class CastHandler {
 
             private fun onApplicationConnected(castSession: CastSession) {
                 mCastSession = castSession
-                Log.v("arranzlz", "session STARTED!!!")
+                Log.v("CHROMECAST", "session STARTED")
             }
 
             private fun onApplicationDisconnected() {
                 mCastSession = null
+                Log.v("CHROMECAST", "session ENDED")
             }
         }
     }
@@ -74,18 +75,25 @@ class CastHandler {
     }
 
     fun addSessionListener() {
-        mCastContext!!.sessionManager.addSessionManagerListener(
-                mSessionManagerListener!!, CastSession::class.java)
+        mCastContext?.sessionManager?.addSessionManagerListener(
+                mSessionManagerListener, CastSession::class.java)
     }
 
     fun removeSessionListener() {
-        mCastContext!!.sessionManager.removeSessionManagerListener(
+        mCastContext?.sessionManager?.removeSessionManagerListener(
                 mSessionManagerListener, CastSession::class.java)
-        mCastSession = null
     }
 
     fun getmCastContext(): CastContext? {
         return mCastContext
+    }
+
+    fun getApproximatePosition(): Int{
+        val position = mCastSession?.remoteMediaClient?.approximateStreamPosition
+        val duration = mCastSession?.remoteMediaClient?.streamDuration
+        Log.v("CHROMECAST", "position: $position")
+        Log.v("CHROMECAST", "duration: $duration")
+        return 0
     }
 
     companion object {

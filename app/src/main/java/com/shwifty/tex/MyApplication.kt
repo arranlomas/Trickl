@@ -16,7 +16,7 @@ class MyApplication : MultiDexApplication() {
     val directoryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path + File.separator + "Trickl"
 
     companion object {
-        var castHandler: CastHandler = CastHandler()
+        var castHandler = CastHandler()
     }
 
     override fun onCreate() {
