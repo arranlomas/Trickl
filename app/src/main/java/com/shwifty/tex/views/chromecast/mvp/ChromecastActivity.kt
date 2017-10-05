@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.view.View
+import android.widget.SeekBar
 import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
@@ -48,28 +48,36 @@ class ChromecastActivity : BaseActivity(), ChromecastContract.View {
         MyApplication.castHandler.initializeCastContext(this)
         MyApplication.castHandler.addSessionListener()
 
-        playbackButton.setOnClickListener {
+        chromecastPlaybackButton.setOnClickListener {
             presenter.togglePlayback()
         }
+
+        chromecastSeekbar.setOnSeekBarChangeListener(seeckBarChangedListener)
     }
 
     override fun updatePlayPauseButton(state: CastHandler.PlayerState) {
-        when(state){
+        when (state) {
             CastHandler.PlayerState.PLAYING -> setPlaybackButtonDrawable(R.drawable.ic_pause_circle_outline_accent_24dp)
             CastHandler.PlayerState.PAUSED -> setPlaybackButtonDrawable(R.drawable.ic_play_circle_outline_accent_24dp)
-            else-> {
-                playbackButton.visibility = View.GONE
-                playbackSpinner.visibility = View.VISIBLE
+            else -> {
+                chromecastPlaybackButton.visibility = View.GONE
+                chromecastPlaybackSpinner.visibility = View.VISIBLE
             }
         }
     }
 
-    private fun setPlaybackButtonDrawable(drawableResId: Int){
-        playbackButton.visibility = View.VISIBLE
-        playbackSpinner.visibility = View.GONE
-        playbackButton.setImageDrawable(ResourcesCompat.getDrawable(resources, drawableResId, null) )
+    private fun setPlaybackButtonDrawable(drawableResId: Int) {
+        chromecastPlaybackButton.visibility = View.VISIBLE
+        chromecastPlaybackSpinner.visibility = View.GONE
+        chromecastPlaybackButton.setImageDrawable(ResourcesCompat.getDrawable(resources, drawableResId, null))
     }
 
+    override fun updateProgress(position: Long, duration: Long) {
+        chromecastSeekbar.setOnSeekBarChangeListener(null)
+        chromecastSeekbar.max = duration.toInt()
+        chromecastSeekbar.progress = position.toInt()
+        chromecastSeekbar.setOnSeekBarChangeListener(seeckBarChangedListener)
+    }
 
     override fun onResume() {
         MyApplication.castHandler.addSessionListener()
@@ -84,5 +92,15 @@ class ChromecastActivity : BaseActivity(), ChromecastContract.View {
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
+    }
+
+    val seeckBarChangedListener = object : SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar?, positions: Int, changed: Boolean) {
+            presenter.seek(positions.toLong())
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {}
     }
 }

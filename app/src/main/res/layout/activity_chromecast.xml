@@ -17,7 +17,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="24dp">
+        android:padding="24dp"
+        android:orientation="vertical">
+
+        <SeekBar
+            android:id="@+id/chromecastSeekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="24dp"
+            android:max="100"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -25,7 +34,7 @@
             android:layout_gravity="center|bottom">
 
             <ImageView
-                android:id="@+id/playbackButton"
+                android:id="@+id/chromecastPlaybackButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -33,7 +42,7 @@
                 android:visibility="gone"/>
 
             <ProgressBar
-                android:id="@+id/playbackSpinner"
+                android:id="@+id/chromecastPlaybackSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center">

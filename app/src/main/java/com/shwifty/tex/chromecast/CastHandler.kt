@@ -5,14 +5,12 @@ import android.util.Log
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
 import com.google.android.gms.cast.framework.SessionManagerListener
-import com.pawegio.kandroid.runOnUiThread
+import com.google.android.gms.cast.framework.media.RemoteMediaClient
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.utils.getMimeType
 import com.shwifty.tex.utils.buildMediaInfo
-import com.shwifty.tex.utils.composeIo
 import rx.Emitter
 import rx.Observable
-import rx.schedulers.Schedulers
 import rx.subjects.BehaviorSubject
 
 /**
@@ -20,9 +18,14 @@ import rx.subjects.BehaviorSubject
  */
 class CastHandler {
     private var mCastSession: CastSession? = null
+        private set(value) {
+            field = value
+            addListener()
+        }
     private var mCastContext: CastContext? = null
 
-    val stateListenener: BehaviorSubject<PlayerState> = BehaviorSubject.create()
+    val stateListener: BehaviorSubject<PlayerState> = BehaviorSubject.create()
+    val progressUpdateListener: BehaviorSubject<Pair<Long, Long>> = BehaviorSubject.create()
 
     enum class PlayerState {
         PLAYING,
@@ -34,9 +37,39 @@ class CastHandler {
         OTHER
     }
 
+    fun addListener() {
+        mCastSession?.remoteMediaClient?.addProgressListener({ progressMs, durationMs ->
+            progressUpdateListener.onNext(Pair(progressMs, durationMs))
+        }, 1000)
+        mCastSession?.remoteMediaClient?.addListener(object : RemoteMediaClient.Listener {
+            override fun onPreloadStatusUpdated() {
+                stateListener.onNext(getStatusNonObservable())
+            }
+
+            override fun onSendingRemoteMediaRequest() {
+                stateListener.onNext(getStatusNonObservable())
+            }
+
+            override fun onMetadataUpdated() {
+                stateListener.onNext(getStatusNonObservable())
+            }
+
+            override fun onAdBreakStatusUpdated() {
+                stateListener.onNext(getStatusNonObservable())
+            }
+
+            override fun onStatusUpdated() {
+                stateListener.onNext(getStatusNonObservable())
+            }
+
+            override fun onQueueStatusUpdated() {
+                stateListener.onNext(getStatusNonObservable())
+            }
+        })
+    }
+
     fun initializeCastContext(context: Context) {
         mCastContext = CastContext.getSharedInstance(context)
-
         setupCastListener()
     }
 
@@ -102,10 +135,23 @@ class CastHandler {
                 mSessionManagerListener, CastSession::class.java)
     }
 
+    fun seek(seekPosition: Long): Observable<Pair<Long, Long>> {
+        return Observable.create<Pair<Long, Long>>({ subscriber ->
+            val result = mCastSession?.remoteMediaClient?.seek(seekPosition)
+            result?.setResultCallback {
+                if (it.status.isSuccess) {
+                    val position = getPositionNonObservable()
+                    if (position == null) subscriber.onError(throw IllegalStateException("Position or duration was null"))
+                    else subscriber.onNext(position)
+                }
+            } ?: subscriber.onError(IllegalStateException("Result from seek should not be null"))
+        }, Emitter.BackpressureMode.BUFFER)
+    }
+
     fun togglePlayback(): Observable<PlayerState> {
         return getStatus()
                 .flatMap {
-                    when(it){
+                    when (it) {
                         CastHandler.PlayerState.PLAYING -> pause()
                         CastHandler.PlayerState.PAUSED -> play()
                         else -> Observable.just(false)
@@ -133,11 +179,11 @@ class CastHandler {
             result?.setResultCallback {
                 if (it.status.isSuccess) subscriber.onNext(true)
                 else subscriber.onError(IllegalStateException("Error playing Chromecast"))
-            } ?: subscriber.onError(IllegalStateException("Result from pause should not be null"))
+            } ?: subscriber.onError(IllegalStateException("Result from play should not be null"))
         }, Emitter.BackpressureMode.BUFFER)
     }
 
-    fun getStatus(): Observable<PlayerState> {
+    private fun getStatusNonObservable(): PlayerState {
         var state: PlayerState = PlayerState.OTHER
         mCastSession?.remoteMediaClient?.let {
             with(it, {
@@ -150,15 +196,24 @@ class CastHandler {
                 else state = PlayerState.OTHER
             })
         }
-        return Observable.just(state)
+        return state
     }
 
-    fun getApproximatePosition(): Observable<Int> {
+    fun getStatus(): Observable<PlayerState> {
+        return Observable.just(getStatusNonObservable())
+    }
+
+    private fun getPositionNonObservable(): Pair<Long, Long>? {
         val position = mCastSession?.remoteMediaClient?.approximateStreamPosition
         val duration = mCastSession?.remoteMediaClient?.streamDuration
-        Log.v("CHROMECAST", "position: $position")
-        Log.v("CHROMECAST", "duration: $duration")
-        return Observable.just(0)
+        if (position != null && duration != null) return Pair(position, duration)
+        else return null
+    }
+
+    fun getPosition(): Observable<Pair<Long, Long>> {
+        getPositionNonObservable()?.let {
+            return Observable.just(it)
+        } ?: return Observable.just(Pair(0L, 0L)).map { throw IllegalStateException("Position or duration was null") }
     }
 
     companion object {

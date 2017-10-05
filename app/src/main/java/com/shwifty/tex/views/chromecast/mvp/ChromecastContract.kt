@@ -9,10 +9,12 @@ import com.shwifty.tex.views.base.BaseContract
 interface ChromecastContract {
     interface View : BaseContract.MvpView {
         fun updatePlayPauseButton(state: CastHandler.PlayerState)
+        fun updateProgress(position: Long,  duration: Long)
     }
 
     interface Presenter : BaseContract.Presenter<View> {
         fun setup()
         fun togglePlayback()
+        fun seek(perc: Long)
     }
 }
