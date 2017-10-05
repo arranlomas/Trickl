@@ -3,9 +3,13 @@ package com.shwifty.tex.views.chromecast.mvp
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.res.ResourcesCompat
+import android.support.v4.graphics.drawable.DrawableCompat
+import android.view.View
 import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.TricklComponent
+import com.shwifty.tex.chromecast.CastHandler
 import com.shwifty.tex.views.base.BaseActivity
 import com.shwifty.tex.views.chromecast.di.DaggerChromecastComponent
 import kotlinx.android.synthetic.main.activity_chromecast.*
@@ -31,6 +35,7 @@ class ChromecastActivity : BaseActivity(), ChromecastContract.View {
         setContentView(R.layout.activity_chromecast)
         DaggerChromecastComponent.builder().torrentRepositoryComponent(TricklComponent.torrentRepositoryComponent).build().inject(this)
         presenter.attachView(this)
+        presenter.setup()
 
         setSupportActionBar(chromecastToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -42,7 +47,27 @@ class ChromecastActivity : BaseActivity(), ChromecastContract.View {
 
         MyApplication.castHandler.initializeCastContext(this)
         MyApplication.castHandler.addSessionListener()
-        MyApplication.castHandler.getApproximatePosition()
+
+        playbackButton.setOnClickListener {
+            presenter.togglePlayback()
+        }
+    }
+
+    override fun updatePlayPauseButton(state: CastHandler.PlayerState) {
+        when(state){
+            CastHandler.PlayerState.PLAYING -> setPlaybackButtonDrawable(R.drawable.ic_pause_circle_outline_accent_24dp)
+            CastHandler.PlayerState.PAUSED -> setPlaybackButtonDrawable(R.drawable.ic_play_circle_outline_accent_24dp)
+            else-> {
+                playbackButton.visibility = View.GONE
+                playbackSpinner.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun setPlaybackButtonDrawable(drawableResId: Int){
+        playbackButton.visibility = View.VISIBLE
+        playbackSpinner.visibility = View.GONE
+        playbackButton.setImageDrawable(ResourcesCompat.getDrawable(resources, drawableResId, null) )
     }
 
 
