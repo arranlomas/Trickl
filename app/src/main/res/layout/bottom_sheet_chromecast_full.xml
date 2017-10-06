@@ -3,46 +3,62 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/chromecast_bottom_sheet_max_height"
     android:orientation="vertical"
-    android:padding="24dp"
-    android:background="@color/chromecast_bottom_sheet_background">
+    android:background="@color/chromecast_bottom_sheet_background"
+    android:paddingBottom="@dimen/default_padding"
+    android:paddingLeft="@dimen/default_padding"
+    android:paddingRight="@dimen/default_padding">
 
-    <TextView
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/default_padding"
-        android:gravity="center"
-        android:text="hello"
-        android:textColor="@color/white"
-        android:textSize="@dimen/chromecast_text_size" />
+        android:layout_height="24dp"
+        android:src="@drawable/ic_arrow_drop_down_white" />
 
-    <SeekBar
-        android:id="@+id/chromecastSeekbar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/default_padding"
-        android:max="100" />
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="0.8">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_gravity="center|bottom">
-
-        <ImageView
-            android:id="@+id/chromecastPlaybackButton"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_pause_circle_outline_accent"
-            android:visibility="gone" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:layout_marginBottom="@dimen/default_padding"
+            android:gravity="center"
+            android:text="hello"
+            android:textColor="@color/white"
+            android:textSize="@dimen/chromecast_text_size" />
 
-        <ProgressBar
-            android:id="@+id/chromecastPlaybackSpinner"
+        <SeekBar
+            android:id="@+id/chromecastSeekbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"></ProgressBar>
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/default_padding"
+            android:max="100" />
 
-    </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_gravity="center|bottom">
 
+            <ImageView
+                android:id="@+id/chromecastPlaybackButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_pause_circle_outline_white"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/chromecastPlaybackSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
+
+
+    </LinearLayout>
 
 </LinearLayout>

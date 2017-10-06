@@ -6,11 +6,25 @@
     android:layout_height="@dimen/chromecast_bottom_sheet_max_height"
     android:background="@color/chromecast_bottom_sheet_background"
     android:clipToPadding="true"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-    android:padding="@dimen/default_padding">
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-    <include
-        android:id="@+id/bottom_sheet_layoit"
-        layout="@layout/bottom_sheet_chromecast_full" />
+    <LinearLayout
+        android:id="@+id/bottom_sheet_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/chromecast_bottom_sheet_max_height"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/bottom_sheet_layout_full"
+            layout="@layout/bottom_sheet_chromecast_full"
+            android:visibility="visible"/>
+
+        <include
+            android:id="@+id/bottom_sheet_layout_peek"
+            layout="@layout/bottom_sheet_chromecast_peek"
+            android:visibility="gone"/>
+
+
+    </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

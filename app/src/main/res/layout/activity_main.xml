@@ -55,7 +55,7 @@
         android:layout_marginTop="@dimen/smart_tab_and_toolbar_height" />
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/right_labels"
+        android:id="@+id/main_activity_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

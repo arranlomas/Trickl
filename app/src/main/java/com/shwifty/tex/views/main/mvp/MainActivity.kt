@@ -1,12 +1,13 @@
 package com.shwifty.tex.views.main.mvp
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
+import android.util.Log
 import android.view.Menu
+import android.view.View
 import com.google.android.gms.cast.framework.CastButtonFactory
 import com.mikepenz.materialdrawer.DrawerBuilder
-import com.mikepenz.materialdrawer.holder.ColorHolder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.schiwfty.torrentwrapper.models.TorrentFile
@@ -25,11 +26,8 @@ import com.shwifty.tex.views.main.di.DaggerMainComponent
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.bottom_sheet_chromecast.*
 import javax.inject.Inject
-import android.support.annotation.NonNull
-import android.support.design.widget.BottomSheetBehavior
-import android.util.Log
-import android.view.View
 
 
 class MainActivity : BaseActivity(), MainContract.View {
@@ -66,17 +64,21 @@ class MainActivity : BaseActivity(), MainContract.View {
         setupBottomSheet()
     }
 
-    private fun setupBottomSheet(){
+    private fun setupBottomSheet() {
         val behavior = BottomSheetBehavior.from(bottom_sheet)
         behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 // React to state change
                 Log.e("onStateChanged", "onStateChanged:" + newState)
-//                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-//                    fab.setVisibility(View.GONE)
-//                } else {
-//                    fab.setVisibility(View.VISIBLE)
-//                }
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    main_activity_fab.visibility = View.GONE
+                    bottom_sheet_layout_full.visibility = View.VISIBLE
+                    bottom_sheet_layout_peek.visibility = View.GONE
+                } else {
+                    bottom_sheet_layout_full.visibility = View.GONE
+                    bottom_sheet_layout_peek.visibility = View.VISIBLE
+                    main_activity_fab.visibility = View.VISIBLE
+                }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
