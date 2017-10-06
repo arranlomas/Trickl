@@ -58,7 +58,7 @@
         app:stl_indicatorWithoutPadding="false"
         app:stl_overlineColor="#4D000000"
         app:stl_overlineThickness="0dp"
-        app:stl_titleOffset="24dp"
+        app:stl_titleOffset="@dimen/default_padding"
         app:stl_underlineColor="#4D000000"
         app:stl_underlineThickness="1dp"
         android:visibility="gone"/>

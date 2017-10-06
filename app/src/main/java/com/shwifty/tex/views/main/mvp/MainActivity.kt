@@ -26,6 +26,11 @@ import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
+import android.support.annotation.NonNull
+import android.support.design.widget.BottomSheetBehavior
+import android.util.Log
+import android.view.View
+
 
 class MainActivity : BaseActivity(), MainContract.View {
 
@@ -58,6 +63,29 @@ class MainActivity : BaseActivity(), MainContract.View {
         }
 
         setupDrawer()
+        setupBottomSheet()
+    }
+
+    private fun setupBottomSheet(){
+        val behavior = BottomSheetBehavior.from(bottom_sheet)
+        behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                // React to state change
+                Log.e("onStateChanged", "onStateChanged:" + newState)
+//                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+//                    fab.setVisibility(View.GONE)
+//                } else {
+//                    fab.setVisibility(View.VISIBLE)
+//                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                Log.e("onSlide", "onSlide")
+            }
+        })
+
+        val bottomSheetPeekHeight = resources.getDimensionPixelSize(R.dimen.chromecast_bottom_sheet_peek_height)
+        behavior.peekHeight = bottomSheetPeekHeight
     }
 
     private fun setupDrawer() {

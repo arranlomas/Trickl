@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--general-->
+    <color name="white">#ffffff</color>
+
     <!--theme-->
     <color name="colorPrimary">#4c4c4c</color>
     <color name="colorPrimaryDark">#2e2e2e</color>
@@ -15,6 +18,8 @@
     <color name="whiteText">#DDDDDD</color>
 
     <!--fab-->
-    <color name="white">#DDDDDD</color>
     <color name="black_semi_transparent">#B2000000</color>
+
+    <!--chromecast bottom sheet-->
+    <color name="chromecast_bottom_sheet_background">#292929</color>
 </resources>

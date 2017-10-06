@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.main.mvp.MainActivity"
-    android:background="@color/blackoutBackground">
+    android:background="@color/blackoutBackground"
+    tools:context=".views.main.mvp.MainActivity">
 
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -20,8 +20,8 @@
     <com.ogaclejapan.smarttablayout.SmartTabLayout
         android:id="@+id/mainSmartTab"
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/toolbar_height"
         android:layout_height="@dimen/smart_tab_height"
+        android:layout_marginTop="@dimen/toolbar_height"
         app:stl_clickable="true"
         app:stl_defaultTabBackground="?attr/selectableItemBackground"
         app:stl_defaultTabTextAllCaps="true"
@@ -44,10 +44,9 @@
         app:stl_indicatorWithoutPadding="false"
         app:stl_overlineColor="#4D000000"
         app:stl_overlineThickness="0dp"
-        app:stl_titleOffset="24dp"
+        app:stl_titleOffset="@dimen/default_padding"
         app:stl_underlineColor="#4D000000"
-        app:stl_underlineThickness="1dp"
-        />
+        app:stl_underlineThickness="1dp" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/mainViewPager"
@@ -90,5 +89,9 @@
             fab:fab_icon="@drawable/ic_magnet_white" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    <include
+        android:id="@+id/bottom_sheet"
+        layout="@layout/bottom_sheet_chromecast" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -57,8 +57,8 @@ class ChromecastActivity : BaseActivity(), ChromecastContract.View {
 
     override fun updatePlayPauseButton(state: CastHandler.PlayerState) {
         when (state) {
-            CastHandler.PlayerState.PLAYING -> setPlaybackButtonDrawable(R.drawable.ic_pause_circle_outline_accent_24dp)
-            CastHandler.PlayerState.PAUSED -> setPlaybackButtonDrawable(R.drawable.ic_play_circle_outline_accent_24dp)
+            CastHandler.PlayerState.PLAYING -> setPlaybackButtonDrawable(R.drawable.ic_pause_circle_outline_accent)
+            CastHandler.PlayerState.PAUSED -> setPlaybackButtonDrawable(R.drawable.ic_play_circle_outline_accent)
             else -> {
                 chromecastPlaybackButton.visibility = View.GONE
                 chromecastPlaybackSpinner.visibility = View.VISIBLE

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/chromecast_bottom_sheet_max_height"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/chromecast_bottom_sheet_background">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/default_padding"
+        android:gravity="center"
+        android:text="hello"
+        android:textColor="@color/white"
+        android:textSize="@dimen/chromecast_text_size" />
+
+    <SeekBar
+        android:id="@+id/chromecastSeekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/default_padding"
+        android:max="100" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="center|bottom">
+
+        <ImageView
+            android:id="@+id/chromecastPlaybackButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_pause_circle_outline_accent"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/chromecastPlaybackSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"></ProgressBar>
+
+    </FrameLayout>
+
+
+</LinearLayout>
