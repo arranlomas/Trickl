@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+     <!--generic-->
     <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="default_padding">24dp</dimen>
+    <dimen name="default_two_thirds_padding">16dp</dimen>
+
+
+    <!--smart tab-->
     <dimen name="smart_tab_height">48dp</dimen>
     <dimen name="smart_tab_and_toolbar_height">104dp</dimen>
-    <dimen name="default_padding">24dp</dimen>
-    <dimen name="default_text">16sp</dimen>\
+
 
     <!--Main Activity Chromecast Bottom Sheet-->
     <dimen name="chromecast_bottom_sheet_peek_height">100dp</dimen>
+    <dimen name="chromecast_bottom_sheet_peek_height_plus_two_thirds_padding">116dp</dimen>
     <dimen name="chromecast_bottom_sheet_max_height">250dp</dimen>
 
 
     <!--Text-->
     <dimen name="chromecast_text_size">16sp</dimen>
+    <dimen name="default_text">16sp</dimen>
+
 </resources>

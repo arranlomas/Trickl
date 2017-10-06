@@ -71,13 +71,13 @@ class MainActivity : BaseActivity(), MainContract.View {
                 // React to state change
                 Log.e("onStateChanged", "onStateChanged:" + newState)
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    main_activity_fab.visibility = View.GONE
+//                    main_activity_fab.visibility = View.GONE
                     bottom_sheet_layout_full.visibility = View.VISIBLE
                     bottom_sheet_layout_peek.visibility = View.GONE
                 } else {
                     bottom_sheet_layout_full.visibility = View.GONE
                     bottom_sheet_layout_peek.visibility = View.VISIBLE
-                    main_activity_fab.visibility = View.VISIBLE
+//                    main_activity_fab.visibility = View.VISIBLE
                 }
             }
 
@@ -86,6 +86,7 @@ class MainActivity : BaseActivity(), MainContract.View {
             }
         })
 
+        behavior.state = BottomSheetBehavior.STATE_COLLAPSED;
         val bottomSheetPeekHeight = resources.getDimensionPixelSize(R.dimen.chromecast_bottom_sheet_peek_height)
         behavior.peekHeight = bottomSheetPeekHeight
     }
