@@ -8,23 +8,9 @@
     android:clipToPadding="true"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-    <LinearLayout
-        android:id="@+id/bottom_sheet_layout"
+    <com.shwifty.tex.views.chromecast.mvp.ChromecastBottomSheet
+        android:id="@+id/chromecastBottomSheet"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/chromecast_bottom_sheet_max_height"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/bottom_sheet_layout_full"
-            layout="@layout/bottom_sheet_chromecast_full"
-            android:visibility="gone"/>
-
-        <include
-            android:id="@+id/bottom_sheet_layout_peek"
-            layout="@layout/bottom_sheet_chromecast_peek"
-            android:visibility="visible"/>
-
-
-    </LinearLayout>
+        android:layout_height="@dimen/chromecast_bottom_sheet_max_height" />
 
 </android.support.v4.widget.NestedScrollView>

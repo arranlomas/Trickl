@@ -21,7 +21,7 @@ import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.main.di.DaggerMainComponent
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.bottom_sheet_chromecast.*
+import kotlinx.android.synthetic.main.bottom_sheet_main_activity.*
 import javax.inject.Inject
 
 
@@ -55,35 +55,21 @@ class MainActivity : BaseActivity(), MainContract.View {
             TricklComponent.dialogManager.showAddHashDialog(fragmentManager)
         }
 
-        showChromecastController(false)
+        setupBottomSheet()
     }
 
-    override fun showChromecastController(show: Boolean) {
-        setupBottomSheet()
-        if (show) {
-            val lp = main_activity_fab.layoutParams as CoordinatorLayout.LayoutParams
-            lp.bottomMargin = resources.getDimensionPixelSize(R.dimen.chromecast_bottom_sheet_peek_height_plus_two_thirds_padding)
-            bottom_sheet.visibility = View.VISIBLE
-        } else {
-            val lp = main_activity_fab.layoutParams as CoordinatorLayout.LayoutParams
-            lp.bottomMargin = resources.getDimensionPixelSize(R.dimen.default_two_thirds_padding)
-            bottom_sheet.visibility = View.GONE
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        chromecastBottomSheet.onDestroy()
     }
 
     private fun setupBottomSheet() {
-        val behavior = BottomSheetBehavior.from(bottom_sheet)
+        val behavior = BottomSheetBehavior.from(bottom_sheet_layout)
         behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    bottom_sheet_layout_full.visibility = View.VISIBLE
-                    bottom_sheet_layout_peek.visibility = View.GONE
-                    main_activity_fab.visibility = View.GONE
-                } else {
-                    bottom_sheet_layout_full.visibility = View.GONE
-                    bottom_sheet_layout_peek.visibility = View.VISIBLE
-                    main_activity_fab.visibility = View.VISIBLE
-                }
+                chromecastBottomSheet.notifyBottomSheetStateChanged(newState)
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) main_activity_fab.visibility = View.GONE
+                else main_activity_fab.visibility = View.VISIBLE
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -95,14 +81,26 @@ class MainActivity : BaseActivity(), MainContract.View {
         behavior.peekHeight = bottomSheetPeekHeight
     }
 
+    override fun showChromecastController(show: Boolean) {
+        if (show) {
+            val lp = main_activity_fab.layoutParams as CoordinatorLayout.LayoutParams
+            lp.bottomMargin = resources.getDimensionPixelSize(R.dimen.chromecast_bottom_sheet_peek_height_plus_two_thirds_padding)
+            bottom_sheet_layout.visibility = View.VISIBLE
+        } else {
+            val lp = main_activity_fab.layoutParams as CoordinatorLayout.LayoutParams
+            lp.bottomMargin = resources.getDimensionPixelSize(R.dimen.default_two_thirds_padding)
+            bottom_sheet_layout.visibility = View.GONE
+        }
+    }
+
     override fun onResume() {
-        MyApplication.castHandler.addSessionListener()
+        chromecastBottomSheet.onResume()
         super.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        MyApplication.castHandler.removeSessionListener()
+        chromecastBottomSheet.onPause()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

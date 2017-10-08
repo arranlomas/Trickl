@@ -22,7 +22,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/chromecastTitlePeek"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -32,10 +32,19 @@
             android:textSize="@dimen/chromecast_text_size" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/chromecastPlaybackButtonPeek"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_play_circle_outline_white" />
+            android:src="@drawable/ic_play_circle_outline_white"
+            android:visibility="visible" />
+
+
+        <ProgressBar
+            android:id="@+id/chromecastPlaybackSpinnerPeek"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="gone" />
 
     </LinearLayout>
 

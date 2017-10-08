@@ -10,6 +10,7 @@ interface ChromecastContract {
     interface View : BaseContract.MvpView {
         fun updatePlayPauseButton(state: CastHandler.PlayerState)
         fun updateProgress(position: Long,  duration: Long)
+        fun setTitle(title: String)
     }
 
     interface Presenter : BaseContract.Presenter<View> {

@@ -91,8 +91,8 @@
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
     <include
-        android:id="@+id/bottom_sheet"
-        layout="@layout/bottom_sheet_chromecast"
+        android:id="@+id/bottom_sheet_layout"
+        layout="@layout/bottom_sheet_main_activity"
         android:visibility="gone"/>
 
 </android.support.design.widget.CoordinatorLayout>

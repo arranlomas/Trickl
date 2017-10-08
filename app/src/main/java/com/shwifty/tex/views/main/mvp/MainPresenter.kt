@@ -7,6 +7,7 @@ import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.canCast
 import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
+import com.shwifty.tex.chromecast.CastHandler
 import com.shwifty.tex.utils.CONNECTIVITY_STATUS
 import com.shwifty.tex.views.base.BasePresenter
 import com.shwifty.tex.views.main.MainEventHandler
@@ -20,6 +21,15 @@ class MainPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<M
     override fun attachView(mvpView: MainContract.View) {
         super.attachView(mvpView)
         setupEvents()
+        MyApplication.castHandler.stateListener
+                .subscribe(object : BaseSubscriber<CastHandler.PlayerState>() {
+                    override fun onNext(stat: CastHandler.PlayerState?) {
+                        when (stat) {
+                            CastHandler.PlayerState.DISCONNECTED, CastHandler.PlayerState.OTHER, null -> mvpView.showChromecastController(false)
+                            else -> mvpView.showChromecastController(true)
+                        }
+                    }
+                })
     }
 
     override fun showAddTorrentActivity(hash: String?, magnet: String?, torrentFilePath: String?) {
@@ -53,21 +63,21 @@ class MainPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<M
         }
     }
 
-    private fun setupEvents(){
+    private fun setupEvents() {
         MainEventHandler.addTorrentPublishSubject
-                .subscribe(object : BaseSubscriber<Pair<MainEventHandler.AddTorrentType, String>>(){
+                .subscribe(object : BaseSubscriber<Pair<MainEventHandler.AddTorrentType, String>>() {
                     override fun onNext(pair: Pair<MainEventHandler.AddTorrentType, String>) {
                         val (type, magnetOrHash) = pair
-                        when (type){
-                            MainEventHandler.AddTorrentType.MAGNET ->  showAddTorrentActivity(magnet = magnetOrHash)
-                            MainEventHandler.AddTorrentType.HASH ->  showAddTorrentActivity(hash = magnetOrHash)
+                        when (type) {
+                            MainEventHandler.AddTorrentType.MAGNET -> showAddTorrentActivity(magnet = magnetOrHash)
+                            MainEventHandler.AddTorrentType.HASH -> showAddTorrentActivity(hash = magnetOrHash)
                         }
                     }
                 })
                 .addSubscription()
 
         MainEventHandler.showTorrentInfoPublishSubject
-                .subscribe(object : BaseSubscriber<TorrentInfo>(){
+                .subscribe(object : BaseSubscriber<TorrentInfo>() {
                     override fun onNext(torrentInfo: TorrentInfo) {
                         mvpView.showTorrentInfoActivity(torrentInfo.info_hash)
                     }
@@ -75,10 +85,10 @@ class MainPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<M
                 .addSubscription()
 
         MainEventHandler.eventPublishSubject
-                .subscribe(object : BaseSubscriber<Pair<MainEventHandler.Action, TorrentFile>>(){
+                .subscribe(object : BaseSubscriber<Pair<MainEventHandler.Action, TorrentFile>>() {
                     override fun onNext(pair: Pair<MainEventHandler.Action, TorrentFile>) {
                         val (event, torrentFile) = pair
-                        when (event){
+                        when (event) {
                             MainEventHandler.Action.DOWNLOAD -> checkStatusForDownload(torrentFile)
                             MainEventHandler.Action.CHROMECAST -> startChromecast(torrentFile)
                             MainEventHandler.Action.OPEN -> mvpView.openTorrentFile(torrentFile, torrentRepository)

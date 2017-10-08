@@ -28,6 +28,8 @@ class CastHandler {
     val progressUpdateListener: BehaviorSubject<Pair<Long, Long>> = BehaviorSubject.create()
 
     enum class PlayerState {
+        CONNECTED,
+        DISCONNECTED,
         PLAYING,
         PAUSED,
         BUFFERING,
@@ -35,6 +37,10 @@ class CastHandler {
         PLAYING_AD,
         LOADING_NEXT_ITEM,
         OTHER
+    }
+
+    init {
+        stateListener.onNext(PlayerState.DISCONNECTED)
     }
 
     fun addListener() {
@@ -106,11 +112,13 @@ class CastHandler {
 
             private fun onApplicationConnected(castSession: CastSession) {
                 mCastSession = castSession
+                stateListener.onNext(PlayerState.CONNECTED)
                 Log.v("CHROMECAST", "session STARTED")
             }
 
             private fun onApplicationDisconnected() {
                 mCastSession = null
+                stateListener.onNext(PlayerState.DISCONNECTED)
                 Log.v("CHROMECAST", "session ENDED")
             }
         }
@@ -141,10 +149,9 @@ class CastHandler {
             result?.setResultCallback {
                 if (it.status.isSuccess) {
                     val position = getPositionNonObservable()
-                    if (position == null) subscriber.onError(throw IllegalStateException("Position or duration was null"))
-                    else subscriber.onNext(position)
+                    if(position!=null) subscriber.onNext(position)
                 }
-            } ?: subscriber.onError(IllegalStateException("Result from seek should not be null"))
+            }
         }, Emitter.BackpressureMode.BUFFER)
     }
 
@@ -184,7 +191,7 @@ class CastHandler {
     }
 
     private fun getStatusNonObservable(): PlayerState {
-        var state: PlayerState = PlayerState.OTHER
+        var state: PlayerState = PlayerState.DISCONNECTED
         mCastSession?.remoteMediaClient?.let {
             with(it, {
                 if (isPlaying) state = PlayerState.PLAYING
@@ -213,7 +220,7 @@ class CastHandler {
     fun getPosition(): Observable<Pair<Long, Long>> {
         getPositionNonObservable()?.let {
             return Observable.just(it)
-        } ?: return Observable.just(Pair(0L, 0L)).map { throw IllegalStateException("Position or duration was null") }
+        } ?: return Observable.just(Pair(0L, 0L))
     }
 
     companion object {
