@@ -8,7 +8,7 @@ import com.shwifty.tex.views.base.BasePresenter
 /**
  * Created by arran on 7/05/2017.
  */
-class ChromecastPresenter(val torrentRepository: ITorrentRepository, val castHandler: ICastHandler) : BasePresenter<ChromecastContract.View>(), ChromecastContract.Presenter {
+class ChromecastControllerPresenter(val torrentRepository: ITorrentRepository, val castHandler: ICastHandler) : BasePresenter<ChromecastControllerContract.View>(), ChromecastControllerContract.Presenter {
 
     override fun setup() {
         castHandler.getStatus()

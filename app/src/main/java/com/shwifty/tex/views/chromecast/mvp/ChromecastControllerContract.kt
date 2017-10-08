@@ -7,7 +7,7 @@ import com.shwifty.tex.views.base.BaseContract
 /**
  * Created by arran on 16/04/2017.
  */
-interface ChromecastContract {
+interface ChromecastControllerContract {
     interface View : BaseContract.MvpView {
         fun updatePlayPauseButton(state: ICastHandler.PlayerState)
         fun updateProgress(position: Long, duration: Long)

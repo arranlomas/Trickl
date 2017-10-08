@@ -20,7 +20,7 @@ import javax.inject.Inject
 /**
  * Created by arran on 7/05/2017.
  */
-class ChromecastBottomSheet : BaseNestedScrollView, ChromecastContract.View {
+class ChromecastBottomSheet : BaseNestedScrollView, ChromecastControllerContract.View {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -29,7 +29,7 @@ class ChromecastBottomSheet : BaseNestedScrollView, ChromecastContract.View {
     }
 
     @Inject
-    lateinit var presenter: ChromecastContract.Presenter
+    lateinit var presenter: ChromecastControllerContract.Presenter
 
     lateinit var chromecastFull: View
     lateinit var chromecastPeek: View

@@ -5,12 +5,11 @@ import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.chromecast.ICastHandler
 import com.shwifty.tex.views.base.PresenterScope
 import com.shwifty.tex.views.chromecast.mvp.ChromecastBottomSheet
-import com.shwifty.tex.views.chromecast.mvp.ChromecastContract
-import com.shwifty.tex.views.chromecast.mvp.ChromecastPresenter
+import com.shwifty.tex.views.chromecast.mvp.ChromecastControllerContract
+import com.shwifty.tex.views.chromecast.mvp.ChromecastControllerPresenter
 import dagger.Component
 import dagger.Module
 import dagger.Provides
-import dagger.Subcomponent
 
 /**
  * Created by arran on 15/02/2017.
@@ -25,8 +24,8 @@ interface ChromecastComponent {
 class ChromecastModule {
     @Provides
     @PresenterScope
-    internal fun providesChromecastPresenter(torrentRepository: ITorrentRepository, castHandler: ICastHandler): ChromecastContract.Presenter {
-        return ChromecastPresenter(torrentRepository, castHandler)
+    internal fun providesChromecastPresenter(torrentRepository: ITorrentRepository, castHandler: ICastHandler): ChromecastControllerContract.Presenter {
+        return ChromecastControllerPresenter(torrentRepository, castHandler)
     }
 
 }
