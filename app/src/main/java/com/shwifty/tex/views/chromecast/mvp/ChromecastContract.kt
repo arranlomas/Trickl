@@ -1,6 +1,7 @@
 package com.shwifty.tex.views.chromecast.mvp
 
-import com.shwifty.tex.chromecast.CastHandler
+import android.content.Context
+import com.shwifty.tex.chromecast.ICastHandler
 import com.shwifty.tex.views.base.BaseContract
 
 /**
@@ -8,13 +9,16 @@ import com.shwifty.tex.views.base.BaseContract
  */
 interface ChromecastContract {
     interface View : BaseContract.MvpView {
-        fun updatePlayPauseButton(state: CastHandler.PlayerState)
-        fun updateProgress(position: Long,  duration: Long)
+        fun updatePlayPauseButton(state: ICastHandler.PlayerState)
+        fun updateProgress(position: Long, duration: Long)
         fun setTitle(title: String)
     }
 
     interface Presenter : BaseContract.Presenter<View> {
         fun setup()
+        fun initializeCastContext(context: Context)
+        fun addSessionListener()
+        fun removeSessionListener()
         fun togglePlayback()
         fun seek(perc: Long)
     }

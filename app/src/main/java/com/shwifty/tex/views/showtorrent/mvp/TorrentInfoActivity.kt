@@ -5,7 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.shwifty.tex.R
-import com.shwifty.tex.TricklComponent
+import com.shwifty.tex.Trickl
 import com.shwifty.tex.views.base.BaseActivity
 import com.shwifty.tex.views.showtorrent.di.DaggerTorrentInfoComponent
 import com.shwifty.tex.views.showtorrent.list.ShowTorrentPagerAdapter
@@ -28,7 +28,7 @@ class TorrentInfoActivity : BaseActivity(), TorrentInfoContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_torrent)
-        DaggerTorrentInfoComponent.builder().torrentRepositoryComponent(TricklComponent.torrentRepositoryComponent).build().inject(this)
+        DaggerTorrentInfoComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.attachView(this)
         presenter.setup(intent.extras)
 
@@ -79,7 +79,7 @@ class TorrentInfoActivity : BaseActivity(), TorrentInfoContract.View {
 
     override fun notifyTorrentDeleted() {
         presenter.torrentInfo?.let {
-            TricklComponent.dialogManager.showDeleteTorrentDialog(this, it, {
+            Trickl.dialogManager.showDeleteTorrentDialog(this, it, {
                 showError(R.string.error_deleting_torrent)
             })
         }

@@ -1,16 +1,14 @@
 package com.shwifty.tex.views.chromecast.mvp
 
+import android.content.Context
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
-import com.shwifty.tex.MyApplication
-import com.shwifty.tex.chromecast.CastHandler
+import com.shwifty.tex.chromecast.ICastHandler
 import com.shwifty.tex.views.base.BasePresenter
 
 /**
  * Created by arran on 7/05/2017.
  */
-class ChromecastPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<ChromecastContract.View>(), ChromecastContract.Presenter {
-
-    val castHandler = MyApplication.castHandler
+class ChromecastPresenter(val torrentRepository: ITorrentRepository, val castHandler: ICastHandler) : BasePresenter<ChromecastContract.View>(), ChromecastContract.Presenter {
 
     override fun setup() {
         castHandler.getStatus()
@@ -30,6 +28,20 @@ class ChromecastPresenter(val torrentRepository: ITorrentRepository) : BasePrese
                 .addSubscription()
     }
 
+    override fun initializeCastContext(context: Context) {
+        castHandler.initializeCastContext(context)
+        castHandler.addSessionListener()
+    }
+
+    override fun addSessionListener() {
+        castHandler.addListener()
+    }
+
+    override fun removeSessionListener() {
+        castHandler.removeSessionListener()
+    }
+
+
     override fun togglePlayback() {
         castHandler.togglePlayback()
                 .subscribe(PlaybackStateSubscriber())
@@ -42,8 +54,8 @@ class ChromecastPresenter(val torrentRepository: ITorrentRepository) : BasePrese
                 .addSubscription()
     }
 
-    inner class PlaybackStateSubscriber: BaseSubscriber<CastHandler.PlayerState>(){
-        override fun onNext(state: CastHandler.PlayerState) {
+    inner class PlaybackStateSubscriber : BaseSubscriber<ICastHandler.PlayerState>() {
+        override fun onNext(state: ICastHandler.PlayerState) {
             mvpView.updatePlayPauseButton(state)
         }
     }

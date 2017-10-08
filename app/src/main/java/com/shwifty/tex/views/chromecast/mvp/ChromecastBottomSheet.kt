@@ -6,16 +6,14 @@ import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.view.View
 import android.widget.SeekBar
-import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
-import com.shwifty.tex.TricklComponent
-import com.shwifty.tex.chromecast.CastHandler
+import com.shwifty.tex.Trickl
+import com.shwifty.tex.chromecast.ICastHandler
 import com.shwifty.tex.views.base.BaseNestedScrollView
 import com.shwifty.tex.views.chromecast.di.DaggerChromecastComponent
 import kotlinx.android.synthetic.main.bottom_sheet_chromecast_full.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_chromecast_peek.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_chromecast_view.view.*
-import kotlinx.android.synthetic.main.bottom_sheet_main_activity.*
 import javax.inject.Inject
 
 
@@ -38,12 +36,10 @@ class ChromecastBottomSheet : BaseNestedScrollView, ChromecastContract.View {
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        DaggerChromecastComponent.builder().torrentRepositoryComponent(TricklComponent.torrentRepositoryComponent).build().inject(this)
+        DaggerChromecastComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.attachView(this)
         presenter.setup()
-
-        MyApplication.castHandler.initializeCastContext(context)
-        MyApplication.castHandler.addSessionListener()
+        presenter.initializeCastContext(context)
         chromecastFull = bottom_sheet_layout_full
         chromecastPeek = bottom_sheet_layout_peek
 
@@ -74,10 +70,10 @@ class ChromecastBottomSheet : BaseNestedScrollView, ChromecastContract.View {
     }
 
 
-    override fun updatePlayPauseButton(state: CastHandler.PlayerState) {
+    override fun updatePlayPauseButton(state: ICastHandler.PlayerState) {
         when (state) {
-            CastHandler.PlayerState.PLAYING -> setPlaybackButtonDrawable(R.drawable.ic_pause_circle_outline_accent)
-            CastHandler.PlayerState.PAUSED -> setPlaybackButtonDrawable(R.drawable.ic_play_circle_outline_accent)
+            ICastHandler.PlayerState.PLAYING -> setPlaybackButtonDrawable(R.drawable.ic_pause_circle_outline_accent)
+            ICastHandler.PlayerState.PAUSED -> setPlaybackButtonDrawable(R.drawable.ic_play_circle_outline_accent)
             else -> {
                 chromecastPlaybackButtonFull.visibility = View.GONE
                 chromecastPlaybackSpinnerFull.visibility = View.VISIBLE
@@ -109,11 +105,11 @@ class ChromecastBottomSheet : BaseNestedScrollView, ChromecastContract.View {
     }
 
     fun onResume() {
-        MyApplication.castHandler.addSessionListener()
+        presenter.addSessionListener()
     }
 
     fun onPause() {
-        MyApplication.castHandler.removeSessionListener()
+        presenter.removeSessionListener()
     }
 
     val seeckBarChangedListener = object : SeekBar.OnSeekBarChangeListener {

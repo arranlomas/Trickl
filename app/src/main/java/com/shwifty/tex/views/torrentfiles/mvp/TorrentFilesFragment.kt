@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.shwifty.tex.R
-import com.shwifty.tex.TricklComponent
+import com.shwifty.tex.Trickl
 import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.torrentfiles.di.DaggerTorrentFilesComponent
 import com.shwifty.tex.views.torrentfiles.list.TorrentFilesAdapter
@@ -46,7 +46,7 @@ class TorrentFilesFragment : BaseFragment(), TorrentFilesContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerTorrentFilesComponent.builder().torrentRepositoryComponent(TricklComponent.torrentRepositoryComponent).build().inject(this)
+        DaggerTorrentFilesComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.setup(arguments)
         presenter.attachView(this)
     }

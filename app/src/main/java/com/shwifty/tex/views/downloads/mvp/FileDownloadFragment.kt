@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.R
-import com.shwifty.tex.TricklComponent
+import com.shwifty.tex.Trickl
 import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.downloads.di.DaggerFileDownloadComponent
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
@@ -40,7 +40,7 @@ class FileDownloadFragment : BaseFragment(), FileDownloadContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerFileDownloadComponent.builder().torrentRepositoryComponent(TricklComponent.torrentRepositoryComponent).build().inject(this)
+        DaggerFileDownloadComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.attachView(this)
 
     }

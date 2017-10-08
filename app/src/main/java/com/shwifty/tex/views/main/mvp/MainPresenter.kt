@@ -5,9 +5,8 @@ import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.canCast
-import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
-import com.shwifty.tex.chromecast.CastHandler
+import com.shwifty.tex.chromecast.ICastHandler
 import com.shwifty.tex.utils.CONNECTIVITY_STATUS
 import com.shwifty.tex.views.base.BasePresenter
 import com.shwifty.tex.views.main.MainEventHandler
@@ -16,16 +15,16 @@ import com.shwifty.tex.views.splash.mvp.SplashActivity
 /**
  * Created by arran on 16/04/2017.
  */
-class MainPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<MainContract.View>(), MainContract.Presenter {
+class MainPresenter(val torrentRepository: ITorrentRepository, val castHandler: ICastHandler) : BasePresenter<MainContract.View>(), MainContract.Presenter {
 
     override fun attachView(mvpView: MainContract.View) {
         super.attachView(mvpView)
         setupEvents()
-        MyApplication.castHandler.stateListener
-                .subscribe(object : BaseSubscriber<CastHandler.PlayerState>() {
-                    override fun onNext(stat: CastHandler.PlayerState?) {
+        castHandler.stateListener
+                .subscribe(object : BaseSubscriber<ICastHandler.PlayerState>() {
+                    override fun onNext(stat: ICastHandler.PlayerState?) {
                         when (stat) {
-                            CastHandler.PlayerState.DISCONNECTED, CastHandler.PlayerState.OTHER, null -> mvpView.showChromecastController(false)
+                            ICastHandler.PlayerState.DISCONNECTED, ICastHandler.PlayerState.OTHER, null -> mvpView.showChromecastController(false)
                             else -> mvpView.showChromecastController(true)
                         }
                     }
@@ -56,7 +55,7 @@ class MainPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<M
 
     override fun startChromecast(torrentFile: TorrentFile) {
         if (torrentFile.canCast()) {
-            val casted = MyApplication.castHandler.loadRemoteMedia(torrentFile)
+            val casted = castHandler.loadRemoteMedia(torrentFile)
             if (!casted) mvpView.showError(R.string.chromecast_not_connect)
         } else {
             mvpView.showError(R.string.error_file_not_supported_by_chromecast)

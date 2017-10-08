@@ -9,7 +9,7 @@ import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.utils.formatBytesAsSize
 import com.shwifty.tex.R
-import com.shwifty.tex.TricklComponent
+import com.shwifty.tex.Trickl
 import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.torrentdetails.di.DaggerTorrentDetailsComponent
 import kotlinx.android.synthetic.main.frag_torrent_details.*
@@ -38,7 +38,7 @@ class TorrentDetailsFragment : BaseFragment(), TorrentDetailsContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerTorrentDetailsComponent.builder().torrentRepositoryComponent(TricklComponent.torrentRepositoryComponent).build().inject(this)
+        DaggerTorrentDetailsComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.attachView(this)
         presenter.setup(arguments)
     }

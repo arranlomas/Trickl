@@ -10,9 +10,8 @@ import com.google.android.gms.cast.framework.CastButtonFactory
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.openFile
-import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
-import com.shwifty.tex.TricklComponent
+import com.shwifty.tex.Trickl
 import com.shwifty.tex.utils.CONNECTIVITY_STATUS
 import com.shwifty.tex.utils.getConnectivityStatus
 import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
@@ -34,9 +33,8 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerMainComponent.builder().torrentRepositoryComponent(TricklComponent.torrentRepositoryComponent).build().inject(this)
+        DaggerMainComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
 
-        MyApplication.castHandler.initializeCastContext(this)
         setContentView(R.layout.activity_main)
         presenter.attachView(this)
         presenter.handleIntent(intent)
@@ -48,11 +46,11 @@ class MainActivity : BaseActivity(), MainContract.View {
         mainSmartTab.setViewPager(mainViewPager)
 
         addMagnetFab.setOnClickListener {
-            TricklComponent.dialogManager.showAddMagnetDialog(fragmentManager)
+            Trickl.dialogManager.showAddMagnetDialog(fragmentManager)
         }
 
         addHashFab.setOnClickListener {
-            TricklComponent.dialogManager.showAddHashDialog(fragmentManager)
+            Trickl.dialogManager.showAddHashDialog(fragmentManager)
         }
 
         setupBottomSheet()
@@ -127,7 +125,7 @@ class MainActivity : BaseActivity(), MainContract.View {
     }
 
     override fun showNoWifiDialog(torrentFile: TorrentFile) {
-        TricklComponent.dialogManager.showNoWifiDialog(this, torrentFile)
+        Trickl.dialogManager.showNoWifiDialog(this, torrentFile)
     }
 
     override fun startFileDownloading(torrentFile: TorrentFile, torrentRepository: ITorrentRepository) {
@@ -141,7 +139,7 @@ class MainActivity : BaseActivity(), MainContract.View {
     }
 
     override fun openDeleteTorrentDialog(torrentFile: TorrentFile) {
-        TricklComponent.dialogManager.showDeleteFileDialog(fragmentManager, torrentFile)
+        Trickl.dialogManager.showDeleteFileDialog(fragmentManager, torrentFile)
     }
 
 }

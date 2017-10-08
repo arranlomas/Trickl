@@ -3,17 +3,21 @@ package com.shwifty.tex
 
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.dagger.network.TorrentRepositoryComponent
+import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.dialogs.DialogManager
 
 /**
  * Created by arran on 29/04/2017.
  */
-object TricklComponent {
+object Trickl {
     val dialogManager = DialogManager()
-    lateinit var torrentRepositoryComponent: TorrentRepositoryComponent
+    lateinit var tricklComponent: TricklComponent
+    lateinit var torrentRepository: ITorrentRepository
 
     fun install(torrentRepositoryComponent: TorrentRepositoryComponent) {
-        this.torrentRepositoryComponent = torrentRepositoryComponent
+        torrentRepository = torrentRepositoryComponent.getTorrentRepository()
+        tricklComponent = DaggerTricklComponent.builder()
+                .build()
         dialogManager.torrentRepository = Confluence.torrentRepository
     }
 }

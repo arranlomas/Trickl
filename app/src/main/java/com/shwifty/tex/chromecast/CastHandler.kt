@@ -16,7 +16,7 @@ import rx.subjects.BehaviorSubject
 /**
  * Created by arran on 4/06/2017.
  */
-class CastHandler {
+class CastHandler: ICastHandler {
     private var mCastSession: CastSession? = null
         private set(value) {
             field = value
@@ -24,26 +24,15 @@ class CastHandler {
         }
     private var mCastContext: CastContext? = null
 
-    val stateListener: BehaviorSubject<PlayerState> = BehaviorSubject.create()
-    val progressUpdateListener: BehaviorSubject<Pair<Long, Long>> = BehaviorSubject.create()
+    override val stateListener: BehaviorSubject<ICastHandler.PlayerState> = BehaviorSubject.create()
+    override val progressUpdateListener: BehaviorSubject<Pair<Long, Long>> = BehaviorSubject.create()
 
-    enum class PlayerState {
-        CONNECTED,
-        DISCONNECTED,
-        PLAYING,
-        PAUSED,
-        BUFFERING,
-        LIVE_STREAM,
-        PLAYING_AD,
-        LOADING_NEXT_ITEM,
-        OTHER
-    }
 
     init {
-        stateListener.onNext(PlayerState.DISCONNECTED)
+        stateListener.onNext(ICastHandler.PlayerState.DISCONNECTED)
     }
 
-    fun addListener() {
+    override fun addListener() {
         mCastSession?.remoteMediaClient?.addProgressListener({ progressMs, durationMs ->
             progressUpdateListener.onNext(Pair(progressMs, durationMs))
         }, 1000)
@@ -74,7 +63,7 @@ class CastHandler {
         })
     }
 
-    fun initializeCastContext(context: Context) {
+    override fun initializeCastContext(context: Context) {
         mCastContext = CastContext.getSharedInstance(context)
         setupCastListener()
     }
@@ -112,19 +101,19 @@ class CastHandler {
 
             private fun onApplicationConnected(castSession: CastSession) {
                 mCastSession = castSession
-                stateListener.onNext(PlayerState.CONNECTED)
+                stateListener.onNext(ICastHandler.PlayerState.CONNECTED)
                 Log.v("CHROMECAST", "session STARTED")
             }
 
             private fun onApplicationDisconnected() {
                 mCastSession = null
-                stateListener.onNext(PlayerState.DISCONNECTED)
+                stateListener.onNext(ICastHandler.PlayerState.DISCONNECTED)
                 Log.v("CHROMECAST", "session ENDED")
             }
         }
     }
 
-    fun loadRemoteMedia(torrentFile: TorrentFile): Boolean {
+    override fun loadRemoteMedia(torrentFile: TorrentFile): Boolean {
         if (mCastSession == null) {
             return false
         }
@@ -133,17 +122,17 @@ class CastHandler {
         return true
     }
 
-    fun addSessionListener() {
+    override fun addSessionListener() {
         mCastContext?.sessionManager?.addSessionManagerListener(
                 mSessionManagerListener, CastSession::class.java)
     }
 
-    fun removeSessionListener() {
+    override fun removeSessionListener() {
         mCastContext?.sessionManager?.removeSessionManagerListener(
                 mSessionManagerListener, CastSession::class.java)
     }
 
-    fun seek(seekPosition: Long): Observable<Pair<Long, Long>> {
+    override fun seek(seekPosition: Long): Observable<Pair<Long, Long>> {
         return Observable.create<Pair<Long, Long>>({ subscriber ->
             val result = mCastSession?.remoteMediaClient?.seek(seekPosition)
             result?.setResultCallback {
@@ -155,22 +144,22 @@ class CastHandler {
         }, Emitter.BackpressureMode.BUFFER)
     }
 
-    fun togglePlayback(): Observable<PlayerState> {
+    override fun togglePlayback(): Observable<ICastHandler.PlayerState> {
         return getStatus()
                 .flatMap {
                     when (it) {
-                        CastHandler.PlayerState.PLAYING -> pause()
-                        CastHandler.PlayerState.PAUSED -> play()
+                        ICastHandler.PlayerState.PLAYING -> pause()
+                        ICastHandler.PlayerState.PAUSED -> play()
                         else -> Observable.just(false)
                     }
                 }
                 .flatMap {
                     if (it) getStatus()
-                    else Observable.just(CastHandler.PlayerState.OTHER)
+                    else Observable.just(ICastHandler.PlayerState.OTHER)
                 }
     }
 
-    fun pause(): Observable<Boolean> {
+    override fun pause(): Observable<Boolean> {
         return Observable.create<Boolean>({ subscriber ->
             val result = mCastSession?.remoteMediaClient?.pause()
             result?.setResultCallback {
@@ -180,7 +169,7 @@ class CastHandler {
         }, Emitter.BackpressureMode.BUFFER)
     }
 
-    fun play(): Observable<Boolean> {
+    override fun play(): Observable<Boolean> {
         return Observable.create<Boolean>({ subscriber ->
             val result = mCastSession?.remoteMediaClient?.play()
             result?.setResultCallback {
@@ -190,23 +179,23 @@ class CastHandler {
         }, Emitter.BackpressureMode.BUFFER)
     }
 
-    private fun getStatusNonObservable(): PlayerState {
-        var state: PlayerState = PlayerState.DISCONNECTED
+    private fun getStatusNonObservable(): ICastHandler.PlayerState {
+        var state: ICastHandler.PlayerState = ICastHandler.PlayerState.DISCONNECTED
         mCastSession?.remoteMediaClient?.let {
             with(it, {
-                if (isPlaying) state = PlayerState.PLAYING
-                else if (isPaused) state = PlayerState.PAUSED
-                else if (isBuffering) state = PlayerState.BUFFERING
-                else if (isLiveStream) state = PlayerState.LIVE_STREAM
-                else if (isPlayingAd) state = PlayerState.PLAYING_AD
-                else if (isLoadingNextItem) state = PlayerState.LOADING_NEXT_ITEM
-                else state = PlayerState.OTHER
+                if (isPlaying) state = ICastHandler.PlayerState.PLAYING
+                else if (isPaused) state = ICastHandler.PlayerState.PAUSED
+                else if (isBuffering) state = ICastHandler.PlayerState.BUFFERING
+                else if (isLiveStream) state = ICastHandler.PlayerState.LIVE_STREAM
+                else if (isPlayingAd) state = ICastHandler.PlayerState.PLAYING_AD
+                else if (isLoadingNextItem) state = ICastHandler.PlayerState.LOADING_NEXT_ITEM
+                else state = ICastHandler.PlayerState.OTHER
             })
         }
         return state
     }
 
-    fun getStatus(): Observable<PlayerState> {
+    override fun getStatus(): Observable<ICastHandler.PlayerState> {
         return Observable.just(getStatusNonObservable())
     }
 
@@ -217,7 +206,7 @@ class CastHandler {
         else return null
     }
 
-    fun getPosition(): Observable<Pair<Long, Long>> {
+    override fun getPosition(): Observable<Pair<Long, Long>> {
         getPositionNonObservable()?.let {
             return Observable.just(it)
         } ?: return Observable.just(Pair(0L, 0L))
