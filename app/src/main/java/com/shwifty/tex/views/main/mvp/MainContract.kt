@@ -18,6 +18,7 @@ interface MainContract {
         fun startFileDownloading(torrentFile: TorrentFile, torrentRepository: ITorrentRepository)
         fun openTorrentFile(torrentFile: TorrentFile, torrentRepository: ITorrentRepository)
         fun openDeleteTorrentDialog(torrentFile: TorrentFile)
+        fun showChromecastController(show: Boolean)
     }
 
     interface Presenter : BaseContract.Presenter<View> {

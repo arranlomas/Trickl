@@ -61,14 +61,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_gravity="bottom|end"
-        android:layout_marginStart="@dimen/default_two_thirds_padding"
-        android:layout_marginEnd="@dimen/default_two_thirds_padding"
         fab:fab_addButtonColorNormal="@color/colorAccent"
         fab:fab_addButtonColorPressed="@color/colorAccentPressed"
         fab:fab_addButtonPlusIconColor="@color/white"
         fab:fab_labelStyle="@style/menu_labels_style"
         fab:fab_labelsPosition="left"
-        android:layout_marginBottom="@dimen/chromecast_bottom_sheet_peek_height_plus_two_thirds_padding">
+        android:layout_marginEnd="@dimen/default_two_thirds_padding"
+        android:layout_marginBottom="@dimen/default_two_thirds_padding">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/addHashFab"
@@ -93,6 +92,7 @@
 
     <include
         android:id="@+id/bottom_sheet"
-        layout="@layout/bottom_sheet_chromecast" />
+        layout="@layout/bottom_sheet_chromecast"
+        android:visibility="gone"/>
 
 </android.support.design.widget.CoordinatorLayout>

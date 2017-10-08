@@ -17,12 +17,12 @@
         <include
             android:id="@+id/bottom_sheet_layout_full"
             layout="@layout/bottom_sheet_chromecast_full"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
         <include
             android:id="@+id/bottom_sheet_layout_peek"
             layout="@layout/bottom_sheet_chromecast_peek"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
 
     </LinearLayout>

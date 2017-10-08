@@ -3,6 +3,7 @@ package com.shwifty.tex.views.main.mvp
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.CoordinatorLayout
 import android.util.Log
 import android.view.Menu
 import android.view.View
@@ -24,7 +25,6 @@ import com.shwifty.tex.views.chromecast.mvp.ChromecastActivity
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.main.di.DaggerMainComponent
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
-import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet_chromecast.*
 import javax.inject.Inject
@@ -60,33 +60,43 @@ class MainActivity : BaseActivity(), MainContract.View {
             TricklComponent.dialogManager.showAddHashDialog(fragmentManager)
         }
 
+        showChromecastController(false)
         setupDrawer()
+    }
+
+    override fun showChromecastController(show: Boolean) {
         setupBottomSheet()
+        if (show) {
+            val lp = main_activity_fab.layoutParams as CoordinatorLayout.LayoutParams
+            lp.bottomMargin = resources.getDimensionPixelSize(R.dimen.chromecast_bottom_sheet_peek_height_plus_two_thirds_padding)
+            bottom_sheet.visibility = View.VISIBLE
+        } else {
+            val lp = main_activity_fab.layoutParams as CoordinatorLayout.LayoutParams
+            lp.bottomMargin = resources.getDimensionPixelSize(R.dimen.default_two_thirds_padding)
+            bottom_sheet.visibility = View.GONE
+        }
     }
 
     private fun setupBottomSheet() {
         val behavior = BottomSheetBehavior.from(bottom_sheet)
         behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                // React to state change
-                Log.e("onStateChanged", "onStateChanged:" + newState)
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-//                    main_activity_fab.visibility = View.GONE
                     bottom_sheet_layout_full.visibility = View.VISIBLE
                     bottom_sheet_layout_peek.visibility = View.GONE
+                    main_activity_fab.visibility = View.GONE
                 } else {
                     bottom_sheet_layout_full.visibility = View.GONE
                     bottom_sheet_layout_peek.visibility = View.VISIBLE
-//                    main_activity_fab.visibility = View.VISIBLE
+                    main_activity_fab.visibility = View.VISIBLE
                 }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                Log.e("onSlide", "onSlide")
             }
         })
 
-        behavior.state = BottomSheetBehavior.STATE_COLLAPSED;
+        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         val bottomSheetPeekHeight = resources.getDimensionPixelSize(R.dimen.chromecast_bottom_sheet_peek_height)
         behavior.peekHeight = bottomSheetPeekHeight
     }
@@ -131,18 +141,6 @@ class MainActivity : BaseActivity(), MainContract.View {
                 menu,
                 R.id.media_route_menu_item)
         return true
-    }
-
-    override fun showError(stringId: Int) {
-        Toasty.error(this, getString(stringId)).show()
-    }
-
-    override fun showInfo(stringId: Int) {
-        Toasty.info(this, getString(stringId)).show()
-    }
-
-    override fun showSuccess(stringId: Int) {
-        Toasty.success(this, getString(stringId)).show()
     }
 
     override fun getConnectivityStatus(): CONNECTIVITY_STATUS {
