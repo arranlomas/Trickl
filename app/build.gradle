@@ -106,14 +106,6 @@ dependencies {
 
     //Confluence
     compile project(':confluencewrapper')
-
-    //Material navigation drawer
-    compile('com.mikepenz:materialdrawer:5.9.5@aar') {
-        transitive = true
-    }
-
-    //multidex
-    compile 'com.android.support:multidex:1.0.1'
 }
 repositories {
     mavenCentral()
