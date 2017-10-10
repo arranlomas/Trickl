@@ -22,8 +22,8 @@ class MainPresenter(val torrentRepository: ITorrentRepository, val castHandler: 
         setupEvents()
         castHandler.stateListener
                 .subscribe(object : BaseSubscriber<ICastHandler.PlayerState>() {
-                    override fun onNext(stat: ICastHandler.PlayerState?) {
-                        when (stat) {
+                    override fun onNext(state: ICastHandler.PlayerState?) {
+                        when (state) {
                             ICastHandler.PlayerState.DISCONNECTED, ICastHandler.PlayerState.OTHER, null -> mvpView.showChromecastController(false)
                             else -> mvpView.showChromecastController(true)
                         }

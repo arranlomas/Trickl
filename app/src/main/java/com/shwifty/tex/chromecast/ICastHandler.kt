@@ -46,4 +46,6 @@ interface ICastHandler {
 
     fun getPosition(): Observable<Pair<Long, Long>>
 
+    fun getTitle(): Observable<String>
+
 }

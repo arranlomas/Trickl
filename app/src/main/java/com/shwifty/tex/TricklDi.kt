@@ -24,11 +24,10 @@ class TricklModule {
     @Provides
     @Singleton
     internal fun providesCastHandler(): ICastHandler {
-        return CastHandler()
+        return Trickl.castHandler
     }
 
     @Provides
-    @Singleton
     internal fun providesTorrentRepository(): ITorrentRepository {
         return Trickl.torrentRepository
     }

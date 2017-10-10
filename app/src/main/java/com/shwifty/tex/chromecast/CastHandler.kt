@@ -2,6 +2,7 @@ package com.shwifty.tex.chromecast
 
 import android.content.Context
 import android.util.Log
+import com.google.android.gms.cast.MediaMetadata
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
 import com.google.android.gms.cast.framework.SessionManagerListener
@@ -16,7 +17,8 @@ import rx.subjects.BehaviorSubject
 /**
  * Created by arran on 4/06/2017.
  */
-class CastHandler: ICastHandler {
+class CastHandler : ICastHandler {
+
     private var mCastSession: CastSession? = null
         private set(value) {
             field = value
@@ -138,7 +140,7 @@ class CastHandler: ICastHandler {
             result?.setResultCallback {
                 if (it.status.isSuccess) {
                     val position = getPositionNonObservable()
-                    if(position!=null) subscriber.onNext(position)
+                    if (position != null) subscriber.onNext(position)
                 }
             }
         }, Emitter.BackpressureMode.BUFFER)
@@ -210,6 +212,12 @@ class CastHandler: ICastHandler {
         getPositionNonObservable()?.let {
             return Observable.just(it)
         } ?: return Observable.just(Pair(0L, 0L))
+    }
+
+    override fun getTitle(): Observable<String> {
+        mCastSession?.remoteMediaClient?.let {
+            return Observable.just(it.mediaInfo.metadata.getString(MediaMetadata.KEY_TITLE))
+        } ?: return Observable.just("")
     }
 
     companion object {
