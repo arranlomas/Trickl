@@ -14,7 +14,6 @@ object Trickl {
     val dialogManager = DialogManager()
     lateinit var tricklComponent: TricklComponent
     lateinit var torrentRepository: ITorrentRepository
-    val castHandler = CastHandler()
 
     fun install(torrentRepositoryComponent: TorrentRepositoryComponent) {
         torrentRepository = torrentRepositoryComponent.getTorrentRepository()

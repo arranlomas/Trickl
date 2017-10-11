@@ -30,3 +30,6 @@
 #fabric
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
+
+#chromecast
+-keep class android.support.** { *; }

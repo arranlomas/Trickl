@@ -8,7 +8,8 @@ import com.shwifty.tex.views.base.BasePresenter
 /**
  * Created by arran on 7/05/2017.
  */
-class ChromecastControllerPresenter(val torrentRepository: ITorrentRepository, val castHandler: ICastHandler) : BasePresenter<ChromecastControllerContract.View>(), ChromecastControllerContract.Presenter {
+class ChromecastControllerPresenter(val torrentRepository: ITorrentRepository, val castHandler: ICastHandler)
+    : BasePresenter<ChromecastControllerContract.View>(), ChromecastControllerContract.Presenter {
 
     override fun setup() {
         castHandler.getStatus()
@@ -19,6 +20,10 @@ class ChromecastControllerPresenter(val torrentRepository: ITorrentRepository, v
                 .subscribe(PositionSubscriber())
                 .addSubscription()
 
+        castHandler.getTitle()
+                .subscribe(TitleSubscriber())
+                .addSubscription()
+
         castHandler.stateListener
                 .subscribe(PlaybackStateSubscriber())
                 .addSubscription()
@@ -26,21 +31,11 @@ class ChromecastControllerPresenter(val torrentRepository: ITorrentRepository, v
         castHandler.progressUpdateListener
                 .subscribe(PositionSubscriber())
                 .addSubscription()
-    }
 
-    override fun initializeCastContext(context: Context) {
-        castHandler.initializeCastContext(context)
-        castHandler.addSessionListener()
+        castHandler.onMetadataChangedListener
+                .subscribe(TitleSubscriber())
+                .addSubscription()
     }
-
-    override fun addSessionListener() {
-        castHandler.addListener()
-    }
-
-    override fun removeSessionListener() {
-        castHandler.removeSessionListener()
-    }
-
 
     override fun togglePlayback() {
         castHandler.togglePlayback()
@@ -63,6 +58,12 @@ class ChromecastControllerPresenter(val torrentRepository: ITorrentRepository, v
     inner class PositionSubscriber : BaseSubscriber<Pair<Long, Long>>() {
         override fun onNext(pair: Pair<Long, Long>) {
             mvpView.updateProgress(pair.first, pair.second)
+        }
+    }
+
+    inner class TitleSubscriber : BaseSubscriber<String>() {
+        override fun onNext(title: String?) {
+            title?.let { mvpView.setTitle(it) }
         }
     }
 

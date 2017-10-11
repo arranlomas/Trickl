@@ -2,6 +2,8 @@ package com.shwifty.tex.views.main.di
 
 
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.shwifty.tex.MyApplication
+import com.shwifty.tex.Trickl
 import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.chromecast.ICastHandler
 import com.shwifty.tex.views.base.PresenterScope
@@ -25,8 +27,8 @@ interface MainComponent {
 class MainModule {
     @Provides
     @PresenterScope
-    internal fun providesMainPresenter(torrentRepository: ITorrentRepository, castHandler: ICastHandler): MainContract.Presenter {
-        return MainPresenter(torrentRepository, castHandler)
+    internal fun providesMainPresenter(torrentRepository: ITorrentRepository): MainContract.Presenter {
+        return MainPresenter(torrentRepository, MyApplication.castHandler)
     }
 
 }

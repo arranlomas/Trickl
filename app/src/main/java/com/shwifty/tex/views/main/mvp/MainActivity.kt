@@ -40,6 +40,7 @@ class MainActivity : BaseActivity(), MainContract.View {
 
         setContentView(R.layout.activity_main)
         presenter.attachView(this)
+        presenter.initializeCastContext(this)
         presenter.handleIntent(intent)
 
         setSupportActionBar(mainToolbar)
@@ -62,6 +63,19 @@ class MainActivity : BaseActivity(), MainContract.View {
     override fun onDestroy() {
         super.onDestroy()
         chromecastBottomSheet.onDestroy()
+        presenter.detachView()
+    }
+
+    override fun onResume() {
+        presenter.addSessionListener()
+//        chromecastBottomSheet.onResume()
+        super.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        presenter.removeSessionListener()
+//        chromecastBottomSheet.onPause()
     }
 
     private fun setupBottomSheet() {
@@ -92,16 +106,6 @@ class MainActivity : BaseActivity(), MainContract.View {
             lp.bottomMargin = resources.getDimensionPixelSize(R.dimen.default_two_thirds_padding)
             bottom_sheet_layout.visibility = View.GONE
         }
-    }
-
-    override fun onResume() {
-        chromecastBottomSheet.onResume()
-        super.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        chromecastBottomSheet.onPause()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

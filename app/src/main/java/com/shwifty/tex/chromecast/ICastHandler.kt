@@ -11,6 +11,7 @@ import rx.subjects.BehaviorSubject
 interface ICastHandler {
     val stateListener: BehaviorSubject<PlayerState>
     val progressUpdateListener: BehaviorSubject<Pair<Long, Long>>
+    val onMetadataChangedListener: BehaviorSubject<String>
 
     enum class PlayerState {
         CONNECTED,

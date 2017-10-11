@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.shwifty.tex.utils.composeIo
 import com.shwifty.tex.views.base.BasePresenter
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
 import rx.Subscriber
@@ -16,14 +17,8 @@ class FileDownloadPresenter(val torrentRepository: ITorrentRepository) : BasePre
     override fun setup(arguments: Bundle?) {
         torrentRepository.torrentFileProgressSource
                 .flatMap { torrentRepository.getDownloadingFilesFromPersistence() }
-                .subscribe(object : Subscriber<List<TorrentFile>>() {
-                    override fun onError(e: Throwable?) {
-                        e?.localizedMessage?.let { mvpView.showError(e.localizedMessage) }
-                        e?.printStackTrace()
-                    }
-
-                    override fun onCompleted() {}
-
+                .composeIo()
+                .subscribe(object : BaseSubscriber<List<TorrentFile>>(false) {
                     override fun onNext(torrentFiles: List<TorrentFile>) {
                         mvpView.setupViewFromTorrentInfo(torrentFiles)
                     }

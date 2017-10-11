@@ -14,18 +14,11 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = arrayOf(TricklModule::class))
 interface TricklComponent {
-    fun getCastHandler(): ICastHandler
     fun getTorrentrepository(): ITorrentRepository
 }
 
 @Module
 class TricklModule {
-
-    @Provides
-    @Singleton
-    internal fun providesCastHandler(): ICastHandler {
-        return Trickl.castHandler
-    }
 
     @Provides
     internal fun providesTorrentRepository(): ITorrentRepository {

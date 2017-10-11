@@ -1,6 +1,8 @@
 package com.shwifty.tex.views.chromecast.di
 
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.shwifty.tex.MyApplication
+import com.shwifty.tex.Trickl
 import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.chromecast.ICastHandler
 import com.shwifty.tex.views.base.PresenterScope
@@ -24,8 +26,8 @@ interface ChromecastComponent {
 class ChromecastModule {
     @Provides
     @PresenterScope
-    internal fun providesChromecastPresenter(torrentRepository: ITorrentRepository, castHandler: ICastHandler): ChromecastControllerContract.Presenter {
-        return ChromecastControllerPresenter(torrentRepository, castHandler)
+    internal fun providesChromecastPresenter(torrentRepository: ITorrentRepository): ChromecastControllerContract.Presenter {
+        return ChromecastControllerPresenter(torrentRepository, MyApplication.castHandler)
     }
 
 }

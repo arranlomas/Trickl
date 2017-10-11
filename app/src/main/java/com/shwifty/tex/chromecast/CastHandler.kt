@@ -28,6 +28,7 @@ class CastHandler : ICastHandler {
 
     override val stateListener: BehaviorSubject<ICastHandler.PlayerState> = BehaviorSubject.create()
     override val progressUpdateListener: BehaviorSubject<Pair<Long, Long>> = BehaviorSubject.create()
+    override val onMetadataChangedListener: BehaviorSubject<String> = BehaviorSubject.create()
 
 
     init {
@@ -49,6 +50,7 @@ class CastHandler : ICastHandler {
 
             override fun onMetadataUpdated() {
                 stateListener.onNext(getStatusNonObservable())
+                onMetadataChangedListener.onNext(getTitleNonObservable())
             }
 
             override fun onAdBreakStatusUpdated() {
@@ -215,9 +217,13 @@ class CastHandler : ICastHandler {
     }
 
     override fun getTitle(): Observable<String> {
+        return Observable.just(getTitleNonObservable())
+    }
+
+    private fun getTitleNonObservable(): String {
         mCastSession?.remoteMediaClient?.let {
-            return Observable.just(it.mediaInfo.metadata.getString(MediaMetadata.KEY_TITLE))
-        } ?: return Observable.just("")
+            return it.mediaInfo?.metadata?.getString(MediaMetadata.KEY_TITLE) ?: ""
+        } ?: return ""
     }
 
     companion object {

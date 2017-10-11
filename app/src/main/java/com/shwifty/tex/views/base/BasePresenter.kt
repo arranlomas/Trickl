@@ -26,19 +26,20 @@ open class BasePresenter<T : BaseContract.MvpView> : BaseContract.Presenter<T> {
         subscriptions.add(this)
     }
 
-    abstract inner class BaseSubscriber<T> : Subscriber<T>() {
+    abstract inner class BaseSubscriber<T>(val showLoading: Boolean = true) : Subscriber<T>() {
+
         override fun onError(e: Throwable?) {
-            mvpView.setLoading(false)
+            if(showLoading) mvpView.setLoading(false)
             e?.localizedMessage?.let { mvpView.showError(e.localizedMessage) }
             e?.printStackTrace()
         }
 
         override fun onCompleted() {
-            mvpView.setLoading(false)
+            if(showLoading) mvpView.setLoading(false)
         }
 
         override fun onStart() {
-            mvpView.setLoading(true)
+            if(showLoading) mvpView.setLoading(true)
             super.onStart()
         }
     }

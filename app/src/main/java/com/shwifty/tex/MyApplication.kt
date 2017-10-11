@@ -5,6 +5,7 @@ import android.os.Environment
 import android.util.Log
 import com.facebook.stetho.Stetho
 import com.schiwfty.torrentwrapper.confluence.Confluence
+import com.shwifty.tex.chromecast.CastHandler
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
 import java.io.File
 
@@ -13,6 +14,10 @@ import java.io.File
  */
 class MyApplication : Application() {
     val directoryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path + File.separator + "Trickl"
+
+    companion object{
+        val castHandler = CastHandler()
+    }
 
     override fun onCreate() {
         //be aware of the order of initialisation

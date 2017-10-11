@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.main.mvp
 
+import android.content.Context
 import android.content.Intent
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
@@ -27,5 +28,8 @@ interface MainContract {
         fun handleIntent(intent: Intent)
         fun checkStatusForDownload(torrentFile: TorrentFile)
         fun startChromecast(torrentFile: TorrentFile)
+        fun initializeCastContext(context: Context)
+        fun addSessionListener()
+        fun removeSessionListener()
     }
 }

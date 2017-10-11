@@ -1,6 +1,5 @@
 package com.shwifty.tex.views.chromecast.mvp
 
-import android.content.Context
 import com.shwifty.tex.chromecast.ICastHandler
 import com.shwifty.tex.views.base.BaseContract
 
@@ -16,9 +15,6 @@ interface ChromecastControllerContract {
 
     interface Presenter : BaseContract.Presenter<View> {
         fun setup()
-        fun initializeCastContext(context: Context)
-        fun addSessionListener()
-        fun removeSessionListener()
         fun togglePlayback()
         fun seek(perc: Long)
     }

@@ -39,7 +39,6 @@ class ChromecastBottomSheet : BaseNestedScrollView, ChromecastControllerContract
         DaggerChromecastComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.attachView(this)
         presenter.setup()
-        presenter.initializeCastContext(context)
         chromecastFull = bottom_sheet_layout_full
         chromecastPeek = bottom_sheet_layout_peek
 
@@ -102,14 +101,6 @@ class ChromecastBottomSheet : BaseNestedScrollView, ChromecastControllerContract
 
     fun onDestroy() {
         presenter.detachView()
-    }
-
-    fun onResume() {
-        presenter.addSessionListener()
-    }
-
-    fun onPause() {
-        presenter.removeSessionListener()
     }
 
     val seeckBarChangedListener = object : SeekBar.OnSeekBarChangeListener {

@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.main.mvp
 
+import android.content.Context
 import android.content.Intent
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
@@ -97,4 +98,18 @@ class MainPresenter(val torrentRepository: ITorrentRepository, val castHandler: 
                 })
                 .addSubscription()
     }
+
+    override fun initializeCastContext(context: Context) {
+        castHandler.initializeCastContext(context)
+        castHandler.addSessionListener()
+    }
+
+    override fun addSessionListener() {
+        castHandler.addListener()
+    }
+
+    override fun removeSessionListener() {
+        castHandler.removeSessionListener()
+    }
+
 }
