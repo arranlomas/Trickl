@@ -32,8 +32,6 @@
         android:layout_marginTop="100dp"
         android:textColor="@color/whiteText"/>
 
-
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addTorrentFab"
         android:layout_width="wrap_content"
