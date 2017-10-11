@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.bottom_sheet_chromecast_peek.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_chromecast_view.view.*
 import javax.inject.Inject
 
-
 /**
  * Created by arran on 7/05/2017.
  */
@@ -38,7 +37,6 @@ class ChromecastBottomSheet : BaseNestedScrollView, ChromecastControllerContract
         super.onFinishInflate()
         DaggerChromecastComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.attachView(this)
-        presenter.setup()
         chromecastFull = bottom_sheet_layout_full
         chromecastPeek = bottom_sheet_layout_peek
 
@@ -51,6 +49,10 @@ class ChromecastBottomSheet : BaseNestedScrollView, ChromecastControllerContract
         }
 
         chromecastSeekbarFull.setOnSeekBarChangeListener(seeckBarChangedListener)
+    }
+
+    fun onResume(){
+        presenter.setup()
     }
 
     override fun setTitle(title: String) {

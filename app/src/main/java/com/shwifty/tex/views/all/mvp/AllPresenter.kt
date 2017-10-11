@@ -14,7 +14,6 @@ class AllPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<Al
 
     override fun attachView(mvpView: AllContract.View) {
         super.attachView(mvpView)
-
         torrentRepository.torrentInfoDeleteListener
                 .subscribe(object : BaseSubscriber<TorrentInfo>() {
                     override fun onNext(pair: TorrentInfo?) {

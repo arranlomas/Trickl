@@ -30,6 +30,7 @@ class MainPresenter(val torrentRepository: ITorrentRepository, val castHandler: 
                         }
                     }
                 })
+                .addSubscription()
     }
 
     override fun showAddTorrentActivity(hash: String?, magnet: String?, torrentFilePath: String?) {
@@ -105,7 +106,7 @@ class MainPresenter(val torrentRepository: ITorrentRepository, val castHandler: 
     }
 
     override fun addSessionListener() {
-        castHandler.addListener()
+        castHandler.addSessionListener()
     }
 
     override fun removeSessionListener() {

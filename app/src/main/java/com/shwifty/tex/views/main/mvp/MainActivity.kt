@@ -37,10 +37,9 @@ class MainActivity : BaseActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
         DaggerMainComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
-
         setContentView(R.layout.activity_main)
-        presenter.attachView(this)
         presenter.initializeCastContext(this)
+        presenter.attachView(this)
         presenter.handleIntent(intent)
 
         setSupportActionBar(mainToolbar)
@@ -68,14 +67,13 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     override fun onResume() {
         presenter.addSessionListener()
-//        chromecastBottomSheet.onResume()
+        chromecastBottomSheet.onResume()
         super.onResume()
     }
 
     override fun onPause() {
         super.onPause()
         presenter.removeSessionListener()
-//        chromecastBottomSheet.onPause()
     }
 
     private fun setupBottomSheet() {

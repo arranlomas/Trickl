@@ -1,6 +1,5 @@
 package com.shwifty.tex.views.chromecast.mvp
 
-import android.content.Context
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.chromecast.ICastHandler
 import com.shwifty.tex.views.base.BasePresenter
