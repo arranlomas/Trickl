@@ -6,6 +6,7 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.CoordinatorLayout
 import android.view.Menu
 import android.view.View
+import com.crashlytics.android.Crashlytics
 import com.google.android.gms.cast.framework.CastButtonFactory
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
@@ -19,6 +20,7 @@ import com.shwifty.tex.views.base.BaseActivity
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.main.di.DaggerMainComponent
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
+import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet_main_activity.*
 import javax.inject.Inject
@@ -33,6 +35,7 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Fabric.with(this, Crashlytics())
         DaggerMainComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
 
         setContentView(R.layout.activity_main)

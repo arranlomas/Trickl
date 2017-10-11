@@ -3,7 +3,6 @@ package com.shwifty.tex.views.splash.mvp
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import com.shwifty.tex.R
 import com.shwifty.tex.views.base.BaseActivity
 import com.shwifty.tex.views.main.mvp.MainActivity
@@ -49,10 +48,10 @@ class SplashActivity : BaseActivity(), SplashContract.View {
     }
 
     override fun progressToMain() {
-            finish()
-            intent = Intent(this, MainActivity::class.java)
-            if (presenter.magnet != null) intent.putExtra(TAG_MAGNET_FROM_INTENT, presenter.magnet)
-            startActivity(intent)
+        finish()
+        intent = Intent(this, MainActivity::class.java)
+        if (presenter.magnet != null) intent.putExtra(TAG_MAGNET_FROM_INTENT, presenter.magnet)
+        startActivity(intent)
     }
 
     override fun showError(stringId: Int) {
