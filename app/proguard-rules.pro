@@ -25,3 +25,8 @@
 #-renamesourcefileattribute SourceFile
 
  -ignorewarnings
+
+
+#fabric
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
