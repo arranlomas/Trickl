@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,8 +9,7 @@
     android:background="@color/blackoutBackground"
     tools:context=".views.main.mvp.MainActivity">
 
-    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.Toolbar
         android:id="@+id/mainToolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
@@ -44,7 +44,7 @@
         app:stl_indicatorWithoutPadding="false"
         app:stl_overlineColor="#4D000000"
         app:stl_overlineThickness="0dp"
-        app:stl_titleOffset="@dimen/default_padding"
+        app:stl_titleOffset="@dimen/default_large_padding"
         app:stl_underlineColor="#4D000000"
         app:stl_underlineThickness="1dp" />
 
@@ -66,8 +66,8 @@
         fab:fab_addButtonPlusIconColor="@color/white"
         fab:fab_labelStyle="@style/menu_labels_style"
         fab:fab_labelsPosition="left"
-        android:layout_marginEnd="@dimen/default_two_thirds_padding"
-        android:layout_marginBottom="@dimen/default_two_thirds_padding">
+        android:layout_marginEnd="@dimen/default_medium_padding"
+        android:layout_marginBottom="@dimen/default_medium_padding">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/addHashFab"

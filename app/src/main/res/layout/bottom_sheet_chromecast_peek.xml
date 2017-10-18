@@ -6,9 +6,9 @@
     android:orientation="vertical"
     android:visibility="visible"
     android:background="@color/chromecast_bottom_sheet_background"
-    android:paddingBottom="@dimen/default_padding"
-    android:paddingLeft="@dimen/default_padding"
-    android:paddingRight="@dimen/default_padding">
+    android:paddingBottom="@dimen/default_large_padding"
+    android:paddingLeft="@dimen/default_large_padding"
+    android:paddingRight="@dimen/default_large_padding">
 
     <ImageView
         android:layout_width="match_parent"

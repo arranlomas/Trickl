@@ -101,7 +101,7 @@ class MainActivity : BaseActivity(), MainContract.View {
             bottom_sheet_layout.visibility = View.VISIBLE
         } else {
             val lp = main_activity_fab.layoutParams as CoordinatorLayout.LayoutParams
-            lp.bottomMargin = resources.getDimensionPixelSize(R.dimen.default_two_thirds_padding)
+            lp.bottomMargin = resources.getDimensionPixelSize(R.dimen.default_medium_padding)
             bottom_sheet_layout.visibility = View.GONE
         }
     }

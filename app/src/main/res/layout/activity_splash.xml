@@ -3,14 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".views.splash.mvp.SplashActivity"
-    android:background="@color/blackoutBackground">
+    android:background="@color/blackoutBackground"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="@dimen/splash_icon_size"
+        android:layout_height="@dimen/splash_icon_size"
+        android:src="@drawable/trikl_icon"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/default_small_padding"
+        android:id="@+id/imageView" />
 
     <TextView
-        android:id="@+id/splashText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="splash text"
-        tools:layout_editor_absoluteX="162dp"
-        tools:layout_editor_absoluteY="32dp" />
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="@dimen/splash_title_text_size"
+        android:layout_marginBottom="@dimen/default_small_padding"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        android:layout_marginRight="@dimen/default_small_padding"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="@dimen/default_small_padding"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/default_small_padding"
+        android:fontFamily="roboto-regular"/>
+
+
 </android.support.constraint.ConstraintLayout>

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Splash-->
+    <dimen name="splash_icon_size">200dp</dimen>
+    <dimen name="splash_title_text_size">40sp</dimen>
+
      <!--generic-->
     <dimen name="toolbar_height">56dp</dimen>
-    <dimen name="default_padding">24dp</dimen>
-    <dimen name="default_two_thirds_padding">16dp</dimen>
+    <dimen name="default_large_padding">24dp</dimen>
+    <dimen name="default_medium_padding">16dp</dimen>
+    <dimen name="default_small_padding">8dp</dimen>
 
 
     <!--smart tab-->

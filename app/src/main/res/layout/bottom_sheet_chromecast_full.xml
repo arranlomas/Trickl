@@ -4,9 +4,9 @@
     android:layout_height="@dimen/chromecast_bottom_sheet_max_height"
     android:orientation="vertical"
     android:background="@color/chromecast_bottom_sheet_background"
-    android:paddingBottom="@dimen/default_padding"
-    android:paddingLeft="@dimen/default_padding"
-    android:paddingRight="@dimen/default_padding">
+    android:paddingBottom="@dimen/default_large_padding"
+    android:paddingLeft="@dimen/default_large_padding"
+    android:paddingRight="@dimen/default_large_padding">
 
     <ImageView
         android:layout_width="match_parent"
@@ -23,8 +23,8 @@
             android:id="@+id/chromecastTitleFull"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_padding"
-            android:layout_marginTop="@dimen/default_padding"
+            android:layout_marginBottom="@dimen/default_large_padding"
+            android:layout_marginTop="@dimen/default_large_padding"
             android:gravity="center"
             android:text="hello"
             android:textColor="@color/white"
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="@dimen/default_padding"
+            android:layout_marginBottom="@dimen/default_large_padding"
             android:max="100" />
 
         <FrameLayout
