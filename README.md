@@ -4,7 +4,7 @@ trickl torrent client
 
 This is the repository for the trickl torrent client for android
 
-![Google Play store link](https://play.google.com/store/apps/details?id=com.shwifty.tex)
+[![Android app on Google Play](http://ligi.de/img/play_badge.png)](https://play.google.com/store/apps/details?id=com.shwifty.tex)
 
 This is a front end for Android-Confluence ![confluence](https://github.com/arranlomas/Android-Confluence-Wrapper), which is my fork of the go ![confluence](https://github.com/anacrolix/confluence), which is slightly modified to run on android.
 
