@@ -38,8 +38,8 @@ class MainActivity : BaseActivity(), MainContract.View {
         Fabric.with(this, Crashlytics())
         DaggerMainComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         setContentView(R.layout.activity_main)
-        presenter.initializeCastContext(this)
         presenter.attachView(this)
+        presenter.initializeCastContext(this)
         presenter.handleIntent(intent)
 
         setSupportActionBar(mainToolbar)
