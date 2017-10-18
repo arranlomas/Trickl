@@ -12,9 +12,9 @@ import com.shwifty.tex.views.main.mvp.MainContract
  */
 interface IDialogManager {
     var torrentRepository: ITorrentRepository
-    fun showAddMagnetDialog(fragmentManager: FragmentManager)
-    fun showAddHashDialog(fragmentManager: FragmentManager)
+    fun showAddMagnetDialog(context: Context)
+    fun showAddHashDialog(context: Context)
     fun showDeleteTorrentDialog(context: Context, torrentInfo: TorrentInfo, onError: () -> Unit)
-    fun showDeleteFileDialog(fragmentManager: FragmentManager, torrentFile: TorrentFile)
+    fun showDeleteFileDialog(context: Context, torrentFile: TorrentFile)
     fun showNoWifiDialog(context: Context, torrentFile: TorrentFile)
 }

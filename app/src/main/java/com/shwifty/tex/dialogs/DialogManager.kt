@@ -1,13 +1,16 @@
 package com.shwifty.tex.dialogs
 
+import android.app.AlertDialog
 import android.app.FragmentManager
 import android.content.Context
+import android.widget.EditText
 import com.afollestad.materialdialogs.MaterialDialog
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.getFullPath
 import com.shwifty.tex.R
+import com.shwifty.tex.views.main.MainEventHandler
 
 
 /**
@@ -15,6 +18,8 @@ import com.shwifty.tex.R
  */
 class DialogManager : IDialogManager {
     override lateinit var torrentRepository: ITorrentRepository
+
+    private var TAG_DIALOG = "dialog"
 
     override fun showNoWifiDialog(context: Context, torrentFile: TorrentFile) {
         MaterialDialog.Builder(context)
@@ -28,45 +33,56 @@ class DialogManager : IDialogManager {
                 .show()
     }
 
-    private var TAG_DIALOG = "dialog"
-
-    override fun showAddMagnetDialog(fragmentManager: FragmentManager) {
-        val ft = fragmentManager.beginTransaction()
-        val prev = fragmentManager.findFragmentByTag(TAG_DIALOG)
-        if (prev != null) {
-            ft.remove(prev)
-        }
-        ft.addToBackStack(null)
-
-        // Create and show the dialog.
-        val newFragment = AddMagnetDialog.newInstance()
-        newFragment.show(ft, TAG_DIALOG)
+    override fun showAddMagnetDialog(context: Context) {
+        MaterialDialog.Builder(context)
+                .title(R.string.dialog_add_magnet_title)
+                .customView(R.layout.dialog_frag_add_magnet, true)
+                .positiveText(android.R.string.ok)
+                .onPositive({ dialog, _ ->
+                    val magnetText = dialog.customView?.findViewById<EditText>(R.id.addMagnetDialogEditText)?.text?.toString()
+                    magnetText?.let { MainEventHandler.addMagnet(it) }
+                })
+                .negativeText(android.R.string.cancel)
+                .show()
     }
 
-    override fun showAddHashDialog(fragmentManager: FragmentManager) {
-        val ft = fragmentManager.beginTransaction()
-        val prev = fragmentManager.findFragmentByTag(TAG_DIALOG)
-        if (prev != null) {
-            ft.remove(prev)
-        }
-        ft.addToBackStack(null)
-
-        // Create and show the dialog.
-        val newFragment = AddHashDialog.newInstance()
-        newFragment.show(ft, TAG_DIALOG)
+    override fun showAddHashDialog(context: Context) {
+        MaterialDialog.Builder(context)
+                .title(R.string.dialog_add_hash_title)
+                .customView(R.layout.dialog_frag_add_hash, true)
+                .positiveText(android.R.string.ok)
+                .onPositive({ dialog, _ ->
+                    val hash = dialog.customView?.findViewById<EditText>(R.id.addHashDialogEditText)?.text?.toString()
+                    hash?.let { MainEventHandler.addHash(it) }
+                })
+                .negativeText(android.R.string.cancel)
+                .show()
     }
 
-    override fun showDeleteFileDialog(fragmentManager: FragmentManager, torrentFile: TorrentFile) {
-        val ft = fragmentManager.beginTransaction()
-        val prev = fragmentManager.findFragmentByTag(TAG_DIALOG)
-        if (prev != null) {
-            ft.remove(prev)
-        }
-        ft.addToBackStack(null)
+    override fun showDeleteFileDialog(context: Context, torrentFile: TorrentFile) {
+        val torrentName = torrentFile.parentTorrentName
+        val torrentHash = torrentFile.torrentHash
+        val filePath = torrentFile.getFullPath()
 
-        // Create and show the dialog.
-        val newFragment = DeleteFileDialog.newInstance(torrentFile.torrentHash, torrentFile.parentTorrentName, torrentFile.getFullPath())
-        newFragment.show(ft, TAG_DIALOG)
+        MaterialDialog.Builder(context)
+                .title("$torrentName Deleted")
+                .content(R.string.delete__file_dialog_text)
+                .positiveText(R.string.delete)
+                .onPositive({ dialog, _ ->
+                    val torrentFile = torrentRepository.getTorrentFileFromPersistence(torrentHash, filePath) ?: throw NullPointerException("Cannot delete a null torrent file")
+                    torrentRepository.deleteTorrentFileFromPersistence(torrentFile)
+                    torrentRepository.deleteTorrentFileData(torrentFile)
+                    dialog.dismiss()
+                })
+                .neutralText(android.R.string.cancel)
+                .onNeutral { dialog, _ -> dialog.dismiss() }
+                .negativeText(R.string.keep)
+                .onNegative { dialog, which ->
+                    val torrentFile = torrentRepository.getTorrentFileFromPersistence(torrentHash, filePath) ?: throw NullPointerException("Cannot delete a null torrent file")
+                    torrentRepository.deleteTorrentFileFromPersistence(torrentFile)
+                    dialog.dismiss()
+                }
+                .show()
     }
 
     override fun showDeleteTorrentDialog(context: Context, torrentInfo: TorrentInfo, onError: () -> Unit) {

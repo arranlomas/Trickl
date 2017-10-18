@@ -49,11 +49,11 @@ class MainActivity : BaseActivity(), MainContract.View {
         mainSmartTab.setViewPager(mainViewPager)
 
         addMagnetFab.setOnClickListener {
-            Trickl.dialogManager.showAddMagnetDialog(fragmentManager)
+            Trickl.dialogManager.showAddMagnetDialog(this)
         }
 
         addHashFab.setOnClickListener {
-            Trickl.dialogManager.showAddHashDialog(fragmentManager)
+            Trickl.dialogManager.showAddHashDialog(this)
         }
 
         setupBottomSheet()
@@ -144,7 +144,7 @@ class MainActivity : BaseActivity(), MainContract.View {
     }
 
     override fun openDeleteTorrentDialog(torrentFile: TorrentFile) {
-        Trickl.dialogManager.showDeleteFileDialog(fragmentManager, torrentFile)
+        Trickl.dialogManager.showDeleteFileDialog(this, torrentFile)
     }
 
 }
