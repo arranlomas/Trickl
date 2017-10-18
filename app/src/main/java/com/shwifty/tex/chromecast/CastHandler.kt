@@ -7,12 +7,17 @@ import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
 import com.google.android.gms.cast.framework.SessionManagerListener
 import com.google.android.gms.cast.framework.media.RemoteMediaClient
+import com.google.android.gms.common.GoogleApiAvailability
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.utils.getMimeType
 import com.shwifty.tex.utils.buildMediaInfo
 import rx.Emitter
 import rx.Observable
 import rx.subjects.BehaviorSubject
+import com.google.android.gms.common.GooglePlayServicesUtil
+import com.google.android.gms.common.ConnectionResult
+import com.shwifty.tex.utils.isChromecastAvailable
+
 
 /**
  * Created by arran on 4/06/2017.
@@ -68,8 +73,10 @@ class CastHandler : ICastHandler {
     }
 
     override fun initializeCastContext(context: Context) {
-        mCastContext = CastContext.getSharedInstance(context)
-        setupCastListener()
+        if(context.isChromecastAvailable()){
+            mCastContext = CastContext.getSharedInstance(context)
+            setupCastListener()
+        }
     }
 
     private fun setupCastListener() {

@@ -9,6 +9,7 @@ import com.schiwfty.torrentwrapper.utils.canCast
 import com.shwifty.tex.R
 import com.shwifty.tex.chromecast.ICastHandler
 import com.shwifty.tex.utils.CONNECTIVITY_STATUS
+import com.shwifty.tex.utils.isChromecastAvailable
 import com.shwifty.tex.views.base.BasePresenter
 import com.shwifty.tex.views.main.MainEventHandler
 import com.shwifty.tex.views.splash.mvp.SplashActivity
@@ -101,8 +102,11 @@ class MainPresenter(val torrentRepository: ITorrentRepository, val castHandler: 
     }
 
     override fun initializeCastContext(context: Context) {
-        castHandler.initializeCastContext(context)
-        castHandler.addSessionListener()
+        if(context.isChromecastAvailable()){
+            castHandler.initializeCastContext(context)
+            castHandler.addSessionListener()
+        }
+        else mvpView.showError(R.string.error_chromecast_not_available)
     }
 
     override fun addSessionListener() {

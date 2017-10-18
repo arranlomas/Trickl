@@ -38,6 +38,7 @@
     <!--Errors-->
     <string name="error_getting_torrent_from_storage">Error retriving torrent from storage</string>
     <string name="error_getting_torrent_file">Error getting file data</string>
+    <string name="error_chromecast_not_available">Error, Chromecast is not available on your device! Please update play services or use a devices with google play services</string>
 
     <!--list item download-->
     <string name="file_name">File Name</string>
