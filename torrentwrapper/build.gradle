@@ -1,2 +1,2 @@
 configurations.maybeCreate("default")
-artifacts.add("default", file('torrentwrapper-release.aar'))
+artifacts.add("default", file('torrent-wrapper.aar'))
