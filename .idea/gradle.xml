@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/confluencewrapper" />
+            <option value="$PROJECT_DIR$/kotlinfilebrowser" />
             <option value="$PROJECT_DIR$/torrentwrapper" />
           </set>
         </option>

@@ -29,6 +29,15 @@ kapt {
 }
 
 dependencies {
+    //Confluence Wrapper
+    compile project(':torrentwrapper')
+
+    //Confluence
+    compile project(':confluencewrapper')
+
+    //Confluence
+    compile project(':kotlinfilebrowser')
+
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -102,12 +111,6 @@ dependencies {
     //material dialog
     compile 'com.afollestad.material-dialogs:core:0.9.4.7'
 
-    //Confluence Wrapper
-    compile project(':torrentwrapper')
-
-    //Confluence
-    compile project(':confluencewrapper')
-
     //fabric
     compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
         transitive = true;
@@ -117,6 +120,10 @@ dependencies {
     compile('com.mikepenz:materialdrawer:5.9.5@aar') {
         transitive = true
     }
+
+    //Glide
+    compile 'com.github.bumptech.glide:glide:4.2.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
 }
 repositories {
     mavenCentral()

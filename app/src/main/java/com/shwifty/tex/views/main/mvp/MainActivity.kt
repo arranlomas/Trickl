@@ -4,11 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.CoordinatorLayout
+import android.util.Log
 import android.view.Menu
 import android.view.View
+import android.widget.Toast
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.cast.framework.CastButtonFactory
 import com.mikepenz.materialdrawer.Drawer
+import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
@@ -24,10 +27,12 @@ import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet_main_activity.*
+import java.io.File
 import javax.inject.Inject
 
 
 class MainActivity : BaseActivity(), MainContract.View {
+    private val RC_SELECT_FILE = 302
 
     @Inject
     lateinit var presenter: MainContract.Presenter
@@ -82,11 +87,13 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     private fun setupDrawer() {
         navDrawer = getDrawer(this, mainToolbar)
+        navDrawer.addItem(getStyledDrawerItem(R.string.open_directory, 2))
         navDrawer.addItem(getStyledDrawerItem(R.string.exit, 1))
         navDrawer.setItemClick {
             navDrawer.closeDrawer()
             when (it) {
                 1L -> Trickl.dialogManager.showExitAppDialog(this, { exitApplication() })
+                2L -> FileBrowserActivity.startActivity(this, RC_SELECT_FILE, Confluence.workingDir)
             }
         }
     }
@@ -170,6 +177,17 @@ class MainActivity : BaseActivity(), MainContract.View {
             val id = android.os.Process.myPid()
             android.os.Process.killProcess(id)
         }.start()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RC_SELECT_FILE) {
+            if (resultCode == RESULT_OK) {
+                data?.let {
+                    val file = data.extras.getSerializable(FileBrowserActivity.ARG_FILE_RESULT) as File
+                    file.openFileViaIntent(this, { showError(R.string.error_activity_not_found) })
+                }
+            }
+        }
     }
 
 }

@@ -1,1 +1,1 @@
-include ':app', ':confluencewrapper', ':torrentwrapper'
+include ':app', ':confluencewrapper', ':torrentwrapper', ':kotlinfilebrowser'
