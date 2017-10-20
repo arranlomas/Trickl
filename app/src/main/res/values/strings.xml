@@ -82,10 +82,16 @@
     <string name="error_deleting_torrent">Error deleting torrent</string>
     <string name="delete__file_dialog_text">Would you also like to delete the data associated with this file?</string>
 
+    <!--exit app dialog-->
+    <string name="exit_app_dialog_title">Are you sure you want to exit?</string>
+    <string name="exit_app_dialog_description">By exiting the app all download, streams and chromecasts will stop.</string>
+    <string name="exit_app_dialog_confirm">Exit</string>
+    <string name="exit_app_dialog_cancel">Cancel</string>
+
 
     <!--Chromecast Activity-->
     <string name="chromecast_toolbar_title">Chromecast</string>
 
     <!--Main Drawer-->
-    <string name="drawer_item_chromecast">Chromecast</string>
+    <string name="exit">Exit</string>
 </resources>

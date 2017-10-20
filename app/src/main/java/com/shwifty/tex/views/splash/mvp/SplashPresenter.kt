@@ -33,12 +33,11 @@ class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Pre
         val notificationIntent = Intent(context, SplashActivity::class.java)
         val seed = false
         val stopActionInNotification = true
-        val killAppOnConfluenceStop = true
         Confluence.torrentRepository.isConnected()
                 .subscribe(object : BaseSubscriber<Boolean>() {
                     override fun onNext(started: Boolean) {
                         mvpView.setLoading(false)
-                        if (!started) Confluence.start(context as Activity, R.drawable.trickl_notification, seed, stopActionInNotification, killAppOnConfluenceStop, notificationIntent, {
+                        if (!started) Confluence.start(context as Activity, R.drawable.trickl_notification, seed, stopActionInNotification, notificationIntent, {
                             mvpView.showError("Storage permissions is required to start the client")
                         })
                     }

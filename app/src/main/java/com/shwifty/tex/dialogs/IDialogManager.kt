@@ -17,4 +17,5 @@ interface IDialogManager {
     fun showDeleteTorrentDialog(context: Context, torrentInfo: TorrentInfo, onError: () -> Unit)
     fun showDeleteFileDialog(context: Context, torrentFile: TorrentFile)
     fun showNoWifiDialog(context: Context, torrentFile: TorrentFile)
+    fun showExitAppDialog(context: Context, onExit: () -> Unit)
 }

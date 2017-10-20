@@ -116,5 +116,4 @@ class MainPresenter(val torrentRepository: ITorrentRepository, val castHandler: 
     override fun removeSessionListener() {
         castHandler.removeSessionListener()
     }
-
 }

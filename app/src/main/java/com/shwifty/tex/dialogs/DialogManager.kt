@@ -17,6 +17,7 @@ import com.shwifty.tex.views.main.MainEventHandler
  * Created by arran on 10/05/2017.
  */
 class DialogManager : IDialogManager {
+
     override lateinit var torrentRepository: ITorrentRepository
 
     private var TAG_DIALOG = "dialog"
@@ -123,6 +124,22 @@ class DialogManager : IDialogManager {
                 .onNeutral { dialog, _ -> dialog.dismiss() }
                 .show()
     }
+
+    override fun showExitAppDialog(context: Context, onExit: () -> Unit) {
+        MaterialDialog.Builder(context)
+                .title(R.string.exit_app_dialog_title)
+                .content(R.string.exit_app_dialog_description)
+                .positiveText(R.string.exit_app_dialog_confirm)
+                .onPositive { dialog, _ ->
+                    dialog.dismiss()
+                    onExit.invoke()
+                }
+                .negativeText(R.string.exit_app_dialog_cancel)
+                .onNegative { dialog, _ -> dialog.dismiss() }
+                .show()
+    }
+
+
 
 
 }

@@ -112,6 +112,11 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
         transitive = true;
     }
+
+    //Material navigation drawer
+    compile('com.mikepenz:materialdrawer:5.9.5@aar') {
+        transitive = true
+    }
 }
 repositories {
     mavenCentral()

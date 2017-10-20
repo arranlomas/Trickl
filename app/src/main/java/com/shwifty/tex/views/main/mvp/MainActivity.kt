@@ -8,13 +8,14 @@ import android.view.Menu
 import android.view.View
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.cast.framework.CastButtonFactory
+import com.mikepenz.materialdrawer.Drawer
+import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.openFile
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
-import com.shwifty.tex.utils.CONNECTIVITY_STATUS
-import com.shwifty.tex.utils.getConnectivityStatus
+import com.shwifty.tex.utils.*
 import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
 import com.shwifty.tex.views.base.BaseActivity
 import com.shwifty.tex.views.main.MainPagerAdapter
@@ -32,6 +33,8 @@ class MainActivity : BaseActivity(), MainContract.View {
     lateinit var presenter: MainContract.Presenter
 
     private val fragAdapter = MainPagerAdapter(supportFragmentManager)
+
+    lateinit var navDrawer: Drawer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +60,7 @@ class MainActivity : BaseActivity(), MainContract.View {
         }
 
         setupBottomSheet()
+        setupDrawer()
     }
 
     override fun onDestroy() {
@@ -74,6 +78,17 @@ class MainActivity : BaseActivity(), MainContract.View {
     override fun onPause() {
         super.onPause()
         presenter.removeSessionListener()
+    }
+
+    private fun setupDrawer() {
+        navDrawer = getDrawer(this, mainToolbar)
+        navDrawer.addItem(getStyledDrawerItem(R.string.exit, 1))
+        navDrawer.setItemClick {
+            navDrawer.closeDrawer()
+            when (it) {
+                1L -> Trickl.dialogManager.showExitAppDialog(this, { exitApplication() })
+            }
+        }
     }
 
     private fun setupBottomSheet() {
@@ -145,6 +160,16 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     override fun openDeleteTorrentDialog(torrentFile: TorrentFile) {
         Trickl.dialogManager.showDeleteFileDialog(this, torrentFile)
+    }
+
+    private fun exitApplication() {
+        Confluence.stop()
+        finish()
+        Thread {
+            Thread.sleep(500)
+            val id = android.os.Process.myPid()
+            android.os.Process.killProcess(id)
+        }.start()
     }
 
 }
