@@ -130,11 +130,14 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.toolbar_main, menu)
-        CastButtonFactory.setUpMediaRouteButton(applicationContext,
-                menu,
-                R.id.media_route_menu_item)
-        return true
+        if(this.isChromecastAvailable()){
+            menuInflater.inflate(R.menu.toolbar_main, menu)
+            CastButtonFactory.setUpMediaRouteButton(applicationContext,
+                    menu,
+                    R.id.media_route_menu_item)
+            return true
+        }
+        return false
     }
 
     override fun getConnectivityStatus(): CONNECTIVITY_STATUS {
