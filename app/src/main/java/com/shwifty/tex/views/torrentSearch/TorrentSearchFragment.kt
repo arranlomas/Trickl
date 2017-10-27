@@ -7,7 +7,9 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.*
+import android.widget.Toast
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.models.TorrentSearchResult
@@ -17,6 +19,7 @@ import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.main.MainEventHandler
 import com.shwifty.tex.views.torrentSearch.di.DaggerTorrentSearchComponent
 import com.shwifty.tex.views.torrentSearch.list.TorrentSearchAdapter
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_torrent_search.*
 import javax.inject.Inject
 
@@ -85,6 +88,7 @@ class TorrentSearchFragment : BaseFragment(), TorrentSearchContract.View {
         val searchView: SearchView = searchItem.actionView as SearchView
         searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
         searchView.onSearchSubmitted {
+            searchView.clearFocus()
             lastQuesry = it
             presenter.search(it)
             this.closeKeyboard()
@@ -105,5 +109,9 @@ class TorrentSearchFragment : BaseFragment(), TorrentSearchContract.View {
 
     override fun setLoading(loading: Boolean) {
         torrentSearchSwipeRefresh.isRefreshing = loading
+    }
+
+    override fun showError(msg: String) {
+        Toasty.error(getActivityContext() , getString(R.string.error_search_server_unreachable), Toast.LENGTH_SHORT, true).show()
     }
 }

@@ -14,5 +14,11 @@ class TorrentSearchCardHolder(itemView: View) : RecyclerView.ViewHolder(itemView
     fun bind(torrentSearchResult: TorrentSearchResult) {
         this.torrentSearchResult = torrentSearchResult
         itemView.torrentName.text = torrentSearchResult.name
+        itemView.uploader.text = torrentSearchResult.uled
+        itemView.category.text = torrentSearchResult.category ?: torrentSearchResult.categoryParent
+        itemView.seeders.text = "Seeders: ${torrentSearchResult.seeds}"
+        itemView.leechers.text = "Leechers: ${torrentSearchResult.leechers}"
+        itemView.size.text = torrentSearchResult.size
+        itemView.date.text = torrentSearchResult.uploaded
     }
 }

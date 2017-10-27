@@ -40,7 +40,9 @@
     <string name="error_getting_torrent_file">Error getting file data</string>
     <string name="error_chromecast_not_available">Error, Chromecast is not available on your device! Please update play services or use a devices with google play services</string>
     <string name="error_activity_not_found">Error, No activity found to open this file</string>
-    <string name="error_cannot_open_torrent">Error, A problem occured trying to open the torrent</string>
+    <string name="error_cannot_open_torrent">Error, A problem occurred trying to open the torrent</string>
+    <string name="error_search_server_unreachable">Oops, Looks like our search server is down</string>
+
 
     <!--list item download-->
     <string name="file_name">File Name</string>
