@@ -62,4 +62,9 @@ class TorrentDetailsFragment : BaseFragment(), TorrentDetailsContract.View {
         summaryFileCount.text = torrentInfo.fileList.size.toString()
         summaryHash.text = torrentInfo.info_hash
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detachView()
+    }
 }

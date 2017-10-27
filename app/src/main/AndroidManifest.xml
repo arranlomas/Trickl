@@ -9,18 +9,16 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/trikl_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name="com.shwifty.tex.MyApplication">
-
-        <activity android:name="com.shwifty.tex.views.main.mvp.MainActivity" />
-        <activity android:name="com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity" />
-        <activity android:name="com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity" />
-
-        <activity android:name="com.shwifty.tex.views.splash.mvp.SplashActivity">
+        android:theme="@style/AppTheme">
+        <activity android:name=".views.main.mvp.MainActivity" />
+        <activity android:name=".views.addtorrent.mvp.AddTorrentActivity" />
+        <activity android:name=".views.showtorrent.mvp.TorrentInfoActivity" />
+        <activity android:name=".views.splash.mvp.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,16 +26,16 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="magnet" />
             </intent-filter>
-
         </activity>
 
         <meta-data
-            android:name=
-                "com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
             android:value="com.shwifty.tex.chromecast.CastOptionsProvider" />
 
         <provider
@@ -47,8 +45,10 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
+
+        <activity android:name=".views.torrentSearch.TorrentSearchActivity"></activity>
     </application>
 
 </manifest>

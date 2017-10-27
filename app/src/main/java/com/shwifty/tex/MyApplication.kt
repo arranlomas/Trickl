@@ -1,6 +1,5 @@
 package com.shwifty.tex
 
-import android.app.Application
 import android.os.Environment
 import android.support.multidex.MultiDexApplication
 import android.util.Log
