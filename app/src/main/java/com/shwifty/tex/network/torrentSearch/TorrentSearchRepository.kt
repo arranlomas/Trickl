@@ -12,7 +12,6 @@ import rx.Observable
 internal class TorrentSearchRepository(private val torrentSearchApi: TorrentSearchApi): ITorrentSearchRepository {
     override fun search(searchTerm: String, sortType: TorrentSearchSortType, pageNumber: Int, category: TorrentSearchCategory): Observable<List<TorrentSearchResult>> {
         return torrentSearchApi.search(searchTerm,sortType, pageNumber, category)
-                .map { emptyList<TorrentSearchResult>() }
                 .composeIo()
     }
 }
