@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import com.shwifty.tex.R
@@ -112,6 +111,6 @@ class TorrentSearchFragment : BaseFragment(), TorrentSearchContract.View {
     }
 
     override fun showError(msg: String) {
-        Toasty.error(getActivityContext() , getString(R.string.error_search_server_unreachable), Toast.LENGTH_SHORT, true).show()
+        Toasty.error(getActivityContext(), getString(R.string.error_search_server_unreachable), Toast.LENGTH_SHORT, true).show()
     }
 }
