@@ -1,30 +1,42 @@
 package com.shwifty.tex.views.torrentSearch
 
+import android.app.SearchManager
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.support.v7.widget.SearchView
+import android.view.*
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.models.TorrentSearchResult
+import com.shwifty.tex.utils.closeKeyboard
+import com.shwifty.tex.utils.onSearchSubmitted
 import com.shwifty.tex.views.base.BaseFragment
+import com.shwifty.tex.views.main.MainEventHandler
 import com.shwifty.tex.views.torrentSearch.di.DaggerTorrentSearchComponent
 import com.shwifty.tex.views.torrentSearch.list.TorrentSearchAdapter
 import kotlinx.android.synthetic.main.frag_torrent_search.*
 import javax.inject.Inject
+
 
 /**
  * Created by arran on 27/10/2017.
  */
 class TorrentSearchFragment : BaseFragment(), TorrentSearchContract.View {
 
-    val itemOnClick: (searchResult: TorrentSearchResult, type: TorrentSearchAdapter.Companion.ClickTypes) -> Unit = { torrentSearchResult, actionType ->
-        //        presenter.viewClicked(torrentFile, type)
+    val itemOnClick: (searchResult: TorrentSearchResult) -> Unit = { torrentSearchResult ->
+        if (torrentSearchResult.magnet != null) {
+            MainEventHandler.addMagnet(torrentSearchResult.magnet)
+            activity.finish()
+        } else {
+            showError(R.string.error_cannot_open_torrent)
+        }
     }
-    val filesAdapter = TorrentSearchAdapter(itemOnClick)
+    val searchResultsAdapter = TorrentSearchAdapter(itemOnClick)
+
+    var lastQuesry: String? = null
 
     @Inject
     lateinit var presenter: TorrentSearchContract.Presenter
@@ -38,6 +50,7 @@ class TorrentSearchFragment : BaseFragment(), TorrentSearchContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         DaggerTorrentSearchComponent.builder().networkComponent(Trickl.networkComponent).build().inject(this)
         presenter.attachView(this)
     }
@@ -51,12 +64,34 @@ class TorrentSearchFragment : BaseFragment(), TorrentSearchContract.View {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView.adapter = filesAdapter
+        recyclerView.adapter = searchResultsAdapter
         recyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         recyclerView.layoutManager = llm as RecyclerView.LayoutManager?
-        presenter.search("hello")
+        torrentSearchSwipeRefresh.setOnRefreshListener {
+            lastQuesry?.let {
+                searchResultsAdapter.torrentSearchResults = emptyList()
+                searchResultsAdapter.notifyDataSetChanged()
+                presenter.search(it)
+            }
+        }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_search_fragment, menu)
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+
+        val searchView: SearchView = searchItem.actionView as SearchView
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
+        searchView.onSearchSubmitted {
+            lastQuesry = it
+            presenter.search(it)
+            this.closeKeyboard()
+        }
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -64,7 +99,11 @@ class TorrentSearchFragment : BaseFragment(), TorrentSearchContract.View {
     }
 
     override fun showTorrents(searchResults: List<TorrentSearchResult>) {
-        filesAdapter.updateSearchResults(searchResults)
-        filesAdapter.notifyDataSetChanged()
+        searchResultsAdapter.updateSearchResults(searchResults)
+        searchResultsAdapter.notifyDataSetChanged()
+    }
+
+    override fun setLoading(loading: Boolean) {
+        torrentSearchSwipeRefresh.isRefreshing = loading
     }
 }

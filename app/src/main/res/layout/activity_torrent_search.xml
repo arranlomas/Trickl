@@ -3,7 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.shwifty.tex.views.torrentSearch.TorrentSearchActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.shwifty.tex.views.torrentSearch.TorrentSearchActivity"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/torrentSearchToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/colorPrimary"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <FrameLayout
         android:id="@+id/frameLayout"

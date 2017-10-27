@@ -16,7 +16,7 @@ class TorrentSearchPresenter(private val torrentSearchRepository: ITorrentSearch
                     override fun onNext(searchResults: List<TorrentSearchResult>) {
                         mvpView.showTorrents(searchResults)
                     }
-                })
+                }).addSubscription()
     }
 
 }
