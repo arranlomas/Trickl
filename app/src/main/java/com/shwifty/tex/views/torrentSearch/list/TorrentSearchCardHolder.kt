@@ -1,0 +1,18 @@
+package com.shwifty.tex.views.torrentSearch.list
+
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import com.shwifty.tex.models.TorrentSearchResult
+import kotlinx.android.synthetic.main.list_item_torrent_search_result.view.*
+
+/**
+ * Created by arran on 19/04/2017.
+ */
+class TorrentSearchCardHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    lateinit var torrentSearchResult: TorrentSearchResult
+
+    fun bind(torrentSearchResult: TorrentSearchResult) {
+        this.torrentSearchResult = torrentSearchResult
+        itemView.torrentName.text = torrentSearchResult.name
+    }
+}

@@ -59,6 +59,6 @@ class NetworkModule {
 
     @Provides
     internal fun provideBaseUrl(): String {
-        return BuildConfig.TorrentBrowseServerIP
+        return "http://${BuildConfig.TorrentBrowseServerIP}/"
     }
 }

@@ -24,6 +24,7 @@ import com.shwifty.tex.views.base.BaseActivity
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.main.di.DaggerMainComponent
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
+import com.shwifty.tex.views.torrentSearch.TorrentSearchActivity
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet_main_activity.*
@@ -87,6 +88,7 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     private fun setupDrawer() {
         navDrawer = getDrawer(this, mainToolbar)
+        navDrawer.addItem(getStyledDrawerItem(R.string.search, 3))
         navDrawer.addItem(getStyledDrawerItem(R.string.open_directory, 2))
         navDrawer.addItem(getStyledDrawerItem(R.string.exit, 1))
         navDrawer.setItemClick {
@@ -94,6 +96,7 @@ class MainActivity : BaseActivity(), MainContract.View {
             when (it) {
                 1L -> Trickl.dialogManager.showExitAppDialog(this, { exitApplication() })
                 2L -> FileBrowserActivity.startActivity(this, RC_SELECT_FILE, Confluence.workingDir)
+                3L -> TorrentSearchActivity.startActivity(this)
             }
         }
     }

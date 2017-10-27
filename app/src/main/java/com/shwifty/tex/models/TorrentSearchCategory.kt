@@ -56,8 +56,4 @@ enum class TorrentSearchCategory {
     Covers,
     Physibles,
     Other;
-
-    override fun toString(): String {
-        return name.toUpperCase()
-    }
 }

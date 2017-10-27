@@ -1,5 +1,8 @@
 package com.shwifty.tex.views.torrentSearch
 
+import com.shwifty.tex.models.TorrentSearchCategory
+import com.shwifty.tex.models.TorrentSearchResult
+import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.network.torrentSearch.ITorrentSearchRepository
 import com.shwifty.tex.views.base.BasePresenter
 
@@ -7,5 +10,13 @@ import com.shwifty.tex.views.base.BasePresenter
  * Created by arran on 27/10/2017.
  */
 class TorrentSearchPresenter(private val torrentSearchRepository: ITorrentSearchRepository) : BasePresenter<TorrentSearchContract.View>(), TorrentSearchContract.Presenter {
+    override fun search(query: String) {
+        torrentSearchRepository.search(query, TorrentSearchSortType.DEFAULT, 0, TorrentSearchCategory.All)
+                .subscribe(object : BaseSubscriber<List<TorrentSearchResult>>(){
+                    override fun onNext(searchResults: List<TorrentSearchResult>) {
+                        mvpView.showTorrents(searchResults)
+                    }
+                })
+    }
 
 }
