@@ -18,11 +18,27 @@ fun Fragment.closeKeyboard() {
     }
 }
 
+fun Fragment.openKeyboard() {
+    val view = activity.currentFocus
+    if (view != null) {
+        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInputFromInputMethod(view.windowToken, 0)
+    }
+}
+
 fun Activity.closeKeyboard() {
     val view = currentFocus
     if (view != null) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+}
+
+fun Activity.openKeyboard() {
+    val view = currentFocus
+    if (view != null) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInputFromInputMethod(view.windowToken, 0)
     }
 }
 

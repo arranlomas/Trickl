@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.shwifty.tex.R
@@ -27,6 +26,11 @@ class TorrentBrowseActivity : AppCompatActivity() {
         setContentView(R.layout.activity_torrent_browse)
         setSupportActionBar(torrentBrowseToolbar)
         supportActionBar?.title = getString(R.string.browse)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        torrentBrowseToolbar.setNavigationOnClickListener {
+            super.onBackPressed()
+        }
         supportFragmentManager.beginTransaction()
                 .replace(R.id.frameLayout, torrentBrowseFragment)
                 .commit()
@@ -43,7 +47,7 @@ class TorrentBrowseActivity : AppCompatActivity() {
             R.id.action_browse_filter -> {
                 Trickl.dialogManager.showBrowseFilterDialog(this,
                         { sortType, category ->
-                           torrentBrowseFragment.updateFilter(sortType, category)
+                            torrentBrowseFragment.updateFilter(sortType, category)
                         })
                 return true
             }

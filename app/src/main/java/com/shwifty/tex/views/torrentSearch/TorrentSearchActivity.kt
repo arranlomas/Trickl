@@ -21,6 +21,11 @@ class TorrentSearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_torrent_search)
         setSupportActionBar(torrentSearchToolbar)
         supportActionBar?.title = getString(R.string.search)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        torrentSearchToolbar.setNavigationOnClickListener {
+            super.onBackPressed()
+        }
         supportFragmentManager.beginTransaction()
                 .replace(R.id.frameLayout, TorrentSearchFragment.newInstance())
                 .commit()

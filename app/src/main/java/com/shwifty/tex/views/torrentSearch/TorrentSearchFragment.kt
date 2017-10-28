@@ -14,6 +14,7 @@ import com.shwifty.tex.Trickl
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.utils.closeKeyboard
 import com.shwifty.tex.utils.onSearchSubmitted
+import com.shwifty.tex.utils.openKeyboard
 import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.main.MainEventHandler
 import com.shwifty.tex.views.torrentSearch.di.DaggerTorrentSearchComponent
@@ -21,7 +22,6 @@ import com.shwifty.tex.views.torrentSearch.list.TorrentSearchAdapter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_torrent_search.*
 import javax.inject.Inject
-
 
 /**
  * Created by arran on 27/10/2017.
