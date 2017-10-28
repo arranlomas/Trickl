@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.base
 
+import com.crashlytics.android.Crashlytics
 import rx.Subscriber
 import rx.Subscription
 import rx.subscriptions.CompositeSubscription
@@ -29,6 +30,7 @@ open class BasePresenter<T : BaseContract.MvpView> : BaseContract.Presenter<T> {
     abstract inner class BaseSubscriber<T>(val showLoading: Boolean = true) : Subscriber<T>() {
 
         override fun onError(e: Throwable?) {
+            Crashlytics.logException(e)
             if(showLoading) mvpView.setLoading(false)
             e?.localizedMessage?.let { mvpView.showError(e.localizedMessage) }
             e?.printStackTrace()
