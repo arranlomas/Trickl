@@ -48,7 +48,8 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".views.torrentSearch.TorrentSearchActivity"></activity>
+        <activity android:name=".views.torrentSearch.TorrentSearchActivity" />
+        <activity android:name=".views.browse.mvp.TorrentBrowseActivity"></activity>
     </application>
 
 </manifest>

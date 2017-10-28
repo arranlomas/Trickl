@@ -98,6 +98,7 @@
 
     <!--Main Drawer-->
     <string name="search">Search</string>
+    <string name="browse">Browse</string>
     <string name="exit">Exit</string>
     <string name="open_directory">Open Directory</string>
 

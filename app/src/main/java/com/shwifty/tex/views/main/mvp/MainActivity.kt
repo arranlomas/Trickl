@@ -21,6 +21,7 @@ import com.shwifty.tex.Trickl
 import com.shwifty.tex.utils.*
 import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
 import com.shwifty.tex.views.base.BaseActivity
+import com.shwifty.tex.views.browse.mvp.TorrentBrowseActivity
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.main.di.DaggerMainComponent
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
@@ -88,6 +89,7 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     private fun setupDrawer() {
         navDrawer = getDrawer(this, mainToolbar)
+        navDrawer.addItem(getStyledDrawerItem(R.string.search, 4))
         navDrawer.addItem(getStyledDrawerItem(R.string.search, 3))
         navDrawer.addItem(getStyledDrawerItem(R.string.open_directory, 2))
         navDrawer.addItem(getStyledDrawerItem(R.string.exit, 1))
@@ -97,6 +99,7 @@ class MainActivity : BaseActivity(), MainContract.View {
                 1L -> Trickl.dialogManager.showExitAppDialog(this, { exitApplication() })
                 2L -> FileBrowserActivity.startActivity(this, RC_SELECT_FILE, Confluence.workingDir)
                 3L -> TorrentSearchActivity.startActivity(this)
+                4L -> TorrentBrowseActivity.startActivity(this)
             }
         }
     }

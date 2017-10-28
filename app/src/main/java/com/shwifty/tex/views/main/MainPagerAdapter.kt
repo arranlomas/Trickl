@@ -10,10 +10,6 @@ import com.shwifty.tex.views.downloads.mvp.FileDownloadFragment
  * Created by arran on 9/05/2017.
  */
 class MainPagerAdapter(fragmentManager: FragmentManager) : BaseFragmentStatePagerAdapter(fragmentManager) {
-    enum class FragmentPositions{
-        ALL_FRAGMENT,
-        FILE_DOWNLOAD_FRAGMENT
-    }
     override fun getItem(position: Int): Fragment {
         when (position) {
             0 -> return AllFragment.newInstance()
@@ -28,7 +24,7 @@ class MainPagerAdapter(fragmentManager: FragmentManager) : BaseFragmentStatePage
 
     override fun getPageTitle(position: Int): CharSequence {
         when (position) {
-            0 -> return "All torrents"
+            0 -> return "My torrents"
             1 -> return "Downloads"
             else -> throw IllegalStateException("No more that 2 fregments required")
         }
