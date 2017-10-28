@@ -53,7 +53,7 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         if (inflater == null) throw IllegalStateException("Torrent Details Fragment layout inflater is null!")
-        val view = inflater.inflate(R.layout.frag_torrent_search, container, false)
+        val view = inflater.inflate(R.layout.frag_torrent_browse, container, false)
         return view
     }
 

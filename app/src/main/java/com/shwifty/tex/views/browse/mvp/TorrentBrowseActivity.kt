@@ -21,7 +21,7 @@ class TorrentBrowseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_torrent_browse)
         setSupportActionBar(torrentBrowseToolbar)
-        supportActionBar?.title = getString(R.string.search)
+        supportActionBar?.title = getString(R.string.browse)
         supportFragmentManager.beginTransaction()
                 .replace(R.id.frameLayout, TorrentBrowseFragment.newInstance())
                 .commit()

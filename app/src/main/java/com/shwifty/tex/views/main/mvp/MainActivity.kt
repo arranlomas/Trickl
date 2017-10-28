@@ -89,7 +89,7 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     private fun setupDrawer() {
         navDrawer = getDrawer(this, mainToolbar)
-        navDrawer.addItem(getStyledDrawerItem(R.string.search, 4))
+        navDrawer.addItem(getStyledDrawerItem(R.string.browse, 4))
         navDrawer.addItem(getStyledDrawerItem(R.string.search, 3))
         navDrawer.addItem(getStyledDrawerItem(R.string.open_directory, 2))
         navDrawer.addItem(getStyledDrawerItem(R.string.exit, 1))
