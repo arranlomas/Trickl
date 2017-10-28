@@ -4,6 +4,7 @@ import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.utils.composeIo
+import com.shwifty.tex.utils.composeIoWithRetryXTimes
 import rx.Observable
 
 /**
@@ -17,6 +18,6 @@ internal class TorrentSearchRepository(private val torrentSearchApi: TorrentSear
 
     override fun browse(sortType: TorrentSearchSortType, pageNumber: Int, category: TorrentSearchCategory): Observable<List<TorrentSearchResult>> {
         return torrentSearchApi.browse(sortType, pageNumber, category)
-                .composeIo()
+                .composeIoWithRetryXTimes(3)
     }
 }

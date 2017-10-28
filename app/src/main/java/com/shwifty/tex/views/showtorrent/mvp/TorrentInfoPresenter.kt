@@ -44,7 +44,6 @@ class TorrentInfoPresenter(val torrentRepository: ITorrentRepository) : BasePres
                     }
                 })
                 .addSubscription()
-
     }
 
     override fun fetchTorrent() {
