@@ -45,7 +45,7 @@ class TorrentBrowseActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_browse_filter -> {
-                Trickl.dialogManager.showBrowseFilterDialog(this,
+                Trickl.dialogManager.showBrowseFilterDialog(this, torrentBrowseFragment.sortType, torrentBrowseFragment.category,
                         { sortType, category ->
                             torrentBrowseFragment.updateFilter(sortType, category)
                         })

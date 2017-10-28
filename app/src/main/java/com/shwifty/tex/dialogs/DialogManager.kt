@@ -140,9 +140,13 @@ class DialogManager : IDialogManager {
                 .show()
     }
 
-    override fun showBrowseFilterDialog(context: Context, onConfirm: (TorrentSearchSortType?, TorrentSearchCategory?) -> Unit) {
-        var selectedSort: TorrentSearchSortType? = null
-        var selectedCategory: TorrentSearchCategory? = null
+    override fun showBrowseFilterDialog(context: Context,
+                                        defaultSortType: TorrentSearchSortType,
+                                        defaultCategory: TorrentSearchCategory,
+                                        onConfirm: (TorrentSearchSortType, TorrentSearchCategory) -> Unit) {
+
+        var selectedSort: TorrentSearchSortType = defaultSortType
+        var selectedCategory: TorrentSearchCategory = defaultCategory
 
         val categoriesAdapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item)
         val filteredCategories = TorrentSearchCategory.values().filter { it != TorrentSearchCategory.All }
@@ -170,6 +174,14 @@ class DialogManager : IDialogManager {
         categorySpinner?.adapter = categoriesAdapter
         val sortedBySpinner = dialog.customView?.findViewById<Spinner>(R.id.sortBySpinner)
         sortedBySpinner?.adapter = sortedByAdapter
+
+        filteredCategories.forEachIndexed { index, torrentSearchCategory ->
+            if(torrentSearchCategory == defaultCategory) categorySpinner?.setSelection(index)
+        }
+
+        sortItems.forEachIndexed { index, sortItem ->
+            if(sortItem == defaultSortType) sortedBySpinner?.setSelection(index)
+        }
 
         categorySpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {}
