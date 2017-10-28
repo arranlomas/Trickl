@@ -1,17 +1,20 @@
 package com.shwifty.tex.dialogs
 
-import android.app.AlertDialog
-import android.app.FragmentManager
 import android.content.Context
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.Spinner
 import com.afollestad.materialdialogs.MaterialDialog
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.getFullPath
 import com.shwifty.tex.R
+import com.shwifty.tex.models.TorrentSearchCategory
+import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.views.main.MainEventHandler
-
 
 /**
  * Created by arran on 10/05/2017.
@@ -19,8 +22,6 @@ import com.shwifty.tex.views.main.MainEventHandler
 class DialogManager : IDialogManager {
 
     override lateinit var torrentRepository: ITorrentRepository
-
-    private var TAG_DIALOG = "dialog"
 
     override fun showNoWifiDialog(context: Context, torrentFile: TorrentFile) {
         MaterialDialog.Builder(context)
@@ -78,7 +79,7 @@ class DialogManager : IDialogManager {
                 .neutralText(android.R.string.cancel)
                 .onNeutral { dialog, _ -> dialog.dismiss() }
                 .negativeText(R.string.keep)
-                .onNegative { dialog, which ->
+                .onNegative { dialog, _ ->
                     val torrentFile = torrentRepository.getTorrentFileFromPersistence(torrentHash, filePath) ?: throw NullPointerException("Cannot delete a null torrent file")
                     torrentRepository.deleteTorrentFileFromPersistence(torrentFile)
                     dialog.dismiss()
@@ -139,7 +140,52 @@ class DialogManager : IDialogManager {
                 .show()
     }
 
+    override fun showBrowseFilterDialog(context: Context, onConfirm: (TorrentSearchSortType?, TorrentSearchCategory?) -> Unit) {
+        var selectedSort: TorrentSearchSortType? = null
+        var selectedCategory: TorrentSearchCategory? = null
 
+        val categoriesAdapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item)
+        val filteredCategories = TorrentSearchCategory.values().filter { it != TorrentSearchCategory.All }
+        filteredCategories.forEach {
+            categoriesAdapter.add(it.toSpinnerItemString())
+        }
 
+        val sortedByAdapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item)
+        val sortItems = TorrentSearchSortType.values()
+        sortItems.forEach { sortedByAdapter.add(it.toSpinnerItemString()) }
+
+        val dialog = MaterialDialog.Builder(context)
+                .title(R.string.dialog_filter_browse_title)
+                .customView(R.layout.dialog_browse_filters, true)
+                .positiveText(R.string.dialog_filter_browse_confirm)
+                .negativeText(R.string.dialog_filter_browse_cancel)
+                .onPositive { dialog, _ ->
+                    dialog.dismiss()
+                    onConfirm.invoke(selectedSort, selectedCategory)
+                }
+                .onNegative { dialog, _ -> dialog.dismiss() }
+                .show()
+
+        val categorySpinner = dialog.customView?.findViewById<Spinner>(R.id.categorySpinner)
+        categorySpinner?.adapter = categoriesAdapter
+        val sortedBySpinner = dialog.customView?.findViewById<Spinner>(R.id.sortBySpinner)
+        sortedBySpinner?.adapter = sortedByAdapter
+
+        categorySpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {}
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                filteredCategories.forEach { if (it.toSpinnerItemString() == categoriesAdapter.getItem(position)) selectedCategory = it }
+            }
+        }
+
+        sortedBySpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {}
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                sortItems.forEach { if (it.toSpinnerItemString() == sortedByAdapter.getItem(position)) selectedSort = it }
+            }
+        }
+    }
 
 }

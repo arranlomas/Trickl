@@ -13,4 +13,8 @@ interface ITorrentSearchRepository {
                sortType: TorrentSearchSortType,
                pageNumber: Int,
                category: TorrentSearchCategory): Observable<List<TorrentSearchResult>>
+
+    fun browse(sortType: TorrentSearchSortType,
+               pageNumber: Int,
+               category: TorrentSearchCategory): Observable<List<TorrentSearchResult>>
 }

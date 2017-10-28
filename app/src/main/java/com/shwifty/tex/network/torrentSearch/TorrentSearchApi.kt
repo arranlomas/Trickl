@@ -16,4 +16,9 @@ internal interface TorrentSearchApi {
                @Query("sortedBy") sortType: TorrentSearchSortType,
                @Query("pageNumber") pageNumber: Int,
                @Query("category") category: TorrentSearchCategory): Observable<List<TorrentSearchResult>>
+
+    @GET("/browse")
+    fun browse(@Query("sortedBy") sortType: TorrentSearchSortType,
+               @Query("pageNumber") pageNumber: Int,
+               @Query("category") category: TorrentSearchCategory): Observable<List<TorrentSearchResult>>
 }

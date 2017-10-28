@@ -86,6 +86,13 @@
     <string name="error_deleting_torrent">Error deleting torrent</string>
     <string name="delete__file_dialog_text">Would you also like to delete the data associated with this file?</string>
 
+    <!--dialog filter browse-->
+    <string name="dialog_filter_browse_title">Select the category and sort order to browse by</string>
+    <string name="dialog_filter_browse_category_title">Category:</string>
+    <string name="dialog_filter_browse_sorted_by_title">Sorted By:</string>
+    <string name="dialog_filter_browse_confirm">Confirm</string>
+    <string name="dialog_filter_browse_cancel">Cancel</string>
+
     <!--exit app dialog-->
     <string name="exit_app_dialog_title">Are you sure you want to exit?</string>
     <string name="exit_app_dialog_description">By exiting the app all download, streams and chromecasts will stop.</string>

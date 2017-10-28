@@ -61,8 +61,8 @@ class TorrentInfoActivity : BaseActivity(), TorrentInfoContract.View {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.let { presenter.optionsItemSelected(it) }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        presenter.optionsItemSelected(item)
         return true
     }
 

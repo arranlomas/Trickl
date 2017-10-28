@@ -1,6 +1,8 @@
 package com.shwifty.tex.views.browse.mvp
 
+import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
+import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.views.base.BaseContract
 
 /**
@@ -12,6 +14,7 @@ interface TorrentBrowseContract {
     }
 
     interface Presenter : BaseContract.Presenter<View> {
-
+        fun load(sortType: TorrentSearchSortType,
+                 category: TorrentSearchCategory)
     }
 }

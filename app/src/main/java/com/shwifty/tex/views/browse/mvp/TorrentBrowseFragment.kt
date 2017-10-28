@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
+import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
+import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.browse.di.DaggerTorrentBrowseComponent
 import com.shwifty.tex.views.main.MainEventHandler
@@ -18,7 +20,6 @@ import com.shwifty.tex.views.torrentSearch.list.TorrentSearchAdapter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_torrent_browse.*
 import javax.inject.Inject
-
 
 /**
  * Created by arran on 27/10/2017.
@@ -37,6 +38,9 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
 
     @Inject
     lateinit var presenter: TorrentBrowseContract.Presenter
+
+    var sortType: TorrentSearchSortType = TorrentSearchSortType.SEEDS
+    var category: TorrentSearchCategory = TorrentSearchCategory.Movies
 
     companion object {
         fun newInstance(): Fragment {
@@ -65,8 +69,9 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         val llm = LinearLayoutManager(context)
         recyclerView.layoutManager = llm as RecyclerView.LayoutManager?
         torrentBrowseSwipeRefresh.setOnRefreshListener {
-
+            reload()
         }
+        reload()
     }
 
     override fun onDestroy() {
@@ -85,5 +90,17 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
 
     override fun showError(msg: String) {
         Toasty.error(getActivityContext(), getString(R.string.error_search_server_unreachable), Toast.LENGTH_SHORT, true).show()
+    }
+
+    fun updateFilter(sortType: TorrentSearchSortType?, category: TorrentSearchCategory?){
+        sortType?.let { this.sortType = sortType }
+        category?.let { this.category = category }
+        reload()
+    }
+
+    private fun reload(){
+        searchResultsAdapter.torrentSearchResults = emptyList()
+        searchResultsAdapter.notifyDataSetChanged()
+        presenter.load(this.sortType, this.category)
     }
 }
