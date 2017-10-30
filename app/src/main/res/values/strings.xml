@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Trickl</string>
 
+    <!--Generic-->
+    <string name="filter">Filter</string>
+
     <!--Splash-->
     <!--confluence-->
     <string name="splash_copy_confluence_error">error setting up </string>

@@ -39,7 +39,7 @@
         app:stl_clickable="true"
         app:stl_defaultTabBackground="?attr/selectableItemBackground"
         app:stl_defaultTabTextAllCaps="true"
-        app:stl_defaultTabTextColor="@color/whiteText"
+        app:stl_defaultTabTextColor="@color/white"
         app:stl_defaultTabTextHorizontalPadding="16dp"
         app:stl_defaultTabTextMinWidth="0dp"
         app:stl_defaultTabTextSize="12sp"

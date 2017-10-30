@@ -14,8 +14,8 @@ import com.shwifty.tex.R
 fun getStyledDrawerItem(@StringRes stringRes: Int, identifier: Long = -1): PrimaryDrawerItem {
     return PrimaryDrawerItem().withIdentifier(identifier)
             .withName(stringRes)
-            .withSelectedTextColorRes(R.color.whiteText).withSelectedColorRes(R.color.colorPrimary)
-            .withTextColorRes(R.color.whiteText)
+            .withSelectedTextColorRes(R.color.white).withSelectedColorRes(R.color.colorPrimary)
+            .withTextColorRes(R.color.white)
 }
 
 fun getDrawer(activity: Activity, toolbar: Toolbar): Drawer {

@@ -13,6 +13,7 @@ import com.shwifty.tex.Trickl
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
+import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.browse.di.DaggerTorrentBrowseComponent
 import com.shwifty.tex.views.main.MainEventHandler
@@ -71,6 +72,13 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         torrentBrowseSwipeRefresh.setOnRefreshListener {
             reload()
         }
+        browseFilterLayout.setOnClickListener {
+            Trickl.dialogManager.showBrowseFilterDialog(context, sortType, category, { sortType, category ->
+                this.sortType = sortType
+                this.category = category
+                reload()
+            })
+        }
         reload()
     }
 
@@ -86,16 +94,11 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
 
     override fun setLoading(loading: Boolean) {
         torrentBrowseSwipeRefresh.isRefreshing = loading
+        browseFilterLayout.setVisible(!loading)
     }
 
     override fun showError(msg: String) {
         Toasty.error(getActivityContext(), getString(R.string.error_search_server_unreachable), Toast.LENGTH_SHORT, true).show()
-    }
-
-    fun updateFilter(sortType: TorrentSearchSortType?, category: TorrentSearchCategory?){
-        sortType?.let { this.sortType = sortType }
-        category?.let { this.category = category }
-        reload()
     }
 
     private fun reload(){

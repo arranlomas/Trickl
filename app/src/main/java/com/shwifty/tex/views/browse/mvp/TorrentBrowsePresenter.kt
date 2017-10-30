@@ -17,7 +17,5 @@ class TorrentBrowsePresenter(private val torrentSearchRepository: ITorrentSearch
                         mvpView.showTorrents(searchResults)
                     }
                 }).addSubscription()
-
-
     }
 }

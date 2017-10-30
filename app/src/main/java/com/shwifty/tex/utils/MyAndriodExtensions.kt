@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v7.widget.SearchView
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 
 
@@ -53,4 +54,9 @@ fun SearchView.onSearchSubmitted(onSubmit: (String) -> Unit){
             return true
         }
     })
+}
+
+fun View.setVisible(visible: Boolean){
+    if(visible) visibility = View.VISIBLE
+    else visibility = View.GONE
 }

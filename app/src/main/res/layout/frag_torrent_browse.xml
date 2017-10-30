@@ -5,6 +5,26 @@
     android:background="@color/blackoutBackground"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/browseFilterLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:padding="@dimen/default_medium_padding">
+
+        <TextView
+            android:text="@string/filter"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_filter_list_white"/>
+    </LinearLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/torrentBrowseSwipeRefresh"
         android:layout_width="match_parent"
