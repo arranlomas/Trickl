@@ -151,12 +151,12 @@ class DialogManager : IDialogManager {
         val categoriesAdapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item)
         val filteredCategories = TorrentSearchCategory.values().filter { it != TorrentSearchCategory.All }
         filteredCategories.forEach {
-            categoriesAdapter.add(it.toSpinnerItemString())
+            categoriesAdapter.add(it.toHumanFriendlyString())
         }
 
         val sortedByAdapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item)
         val sortItems = TorrentSearchSortType.values()
-        sortItems.forEach { sortedByAdapter.add(it.toSpinnerItemString()) }
+        sortItems.forEach { sortedByAdapter.add(it.toHumanFriendlyString()) }
 
         val dialog = MaterialDialog.Builder(context)
                 .title(R.string.dialog_filter_browse_title)
@@ -187,7 +187,7 @@ class DialogManager : IDialogManager {
             override fun onNothingSelected(p0: AdapterView<*>?) {}
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                filteredCategories.forEach { if (it.toSpinnerItemString() == categoriesAdapter.getItem(position)) selectedCategory = it }
+                filteredCategories.forEach { if (it.toHumanFriendlyString() == categoriesAdapter.getItem(position)) selectedCategory = it }
             }
         }
 
@@ -195,7 +195,7 @@ class DialogManager : IDialogManager {
             override fun onNothingSelected(p0: AdapterView<*>?) {}
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                sortItems.forEach { if (it.toSpinnerItemString() == sortedByAdapter.getItem(position)) selectedSort = it }
+                sortItems.forEach { if (it.toHumanFriendlyString() == sortedByAdapter.getItem(position)) selectedSort = it }
             }
         }
     }

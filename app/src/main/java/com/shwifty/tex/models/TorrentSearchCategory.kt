@@ -57,7 +57,7 @@ enum class TorrentSearchCategory {
 //    Physibles,
 //    Other;
 
-    fun toSpinnerItemString(): String {
+    fun toHumanFriendlyString(): String {
         return when(this){
             TorrentSearchCategory.AllAudio -> "Audio"
             TorrentSearchCategory.All -> "All"

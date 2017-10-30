@@ -20,7 +20,7 @@ enum class TorrentSearchSortType {
     TYPE_DESCENDING,
     DEFAULT;
 
-    fun toSpinnerItemString(): String {
+    fun toHumanFriendlyString(): String {
         return when (this){
             TorrentSearchSortType.NAME -> "Name"
             TorrentSearchSortType.NAME_DESCENDING -> "Name Descending"

@@ -1,9 +1,6 @@
 <resources>
     <string name="app_name">Trickl</string>
 
-    <!--Generic-->
-    <string name="filter">Filter</string>
-
     <!--Splash-->
     <!--confluence-->
     <string name="splash_copy_confluence_error">error setting up </string>
@@ -111,5 +108,9 @@
     <string name="browse">Browse</string>
     <string name="exit">Exit</string>
     <string name="open_directory">Open Directory</string>
+
+    <!--Browse Fragment-->
+    <string name="filter_description_category">Category: %1$s</string>
+    <string name="filter_description_sorted_by">Sorted By: %1$s</string>
 
 </resources>

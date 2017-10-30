@@ -17,6 +17,7 @@ import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.browse.di.DaggerTorrentBrowseComponent
 import com.shwifty.tex.views.main.MainEventHandler
+import com.shwifty.tex.views.torrentSearch.TorrentSearchActivity
 import com.shwifty.tex.views.torrentSearch.list.TorrentSearchAdapter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_torrent_browse.*
@@ -72,6 +73,16 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         torrentBrowseSwipeRefresh.setOnRefreshListener {
             reload()
         }
+        fabFilter.setOnClickListener {
+            Trickl.dialogManager.showBrowseFilterDialog(context, sortType, category, { sortType, category ->
+                this.sortType = sortType
+                this.category = category
+                reload()
+            })
+        }
+        fabSearch.setOnClickListener {
+            TorrentSearchActivity.startActivity(context)
+        }
         browseFilterLayout.setOnClickListener {
             Trickl.dialogManager.showBrowseFilterDialog(context, sortType, category, { sortType, category ->
                 this.sortType = sortType
@@ -94,6 +105,7 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
 
     override fun setLoading(loading: Boolean) {
         torrentBrowseSwipeRefresh.isRefreshing = loading
+        floatingActionButtonLayout.setVisible(!loading)
         browseFilterLayout.setVisible(!loading)
     }
 
@@ -101,7 +113,9 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         Toasty.error(getActivityContext(), getString(R.string.error_search_server_unreachable), Toast.LENGTH_SHORT, true).show()
     }
 
-    private fun reload(){
+    private fun reload() {
+        filterTextCategory.text = getString(R.string.filter_description_category, this.category.toHumanFriendlyString())
+        filterTextSortedBy.text = getString(R.string.filter_description_sorted_by, this.sortType.toHumanFriendlyString())
         searchResultsAdapter.torrentSearchResults = emptyList()
         searchResultsAdapter.notifyDataSetChanged()
         presenter.load(this.sortType, this.category)

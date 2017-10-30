@@ -60,3 +60,7 @@ fun View.setVisible(visible: Boolean){
     if(visible) visibility = View.VISIBLE
     else visibility = View.GONE
 }
+
+fun View.isVisible(): Boolean{
+    return !(visibility == View.INVISIBLE || visibility == View.GONE)
+}

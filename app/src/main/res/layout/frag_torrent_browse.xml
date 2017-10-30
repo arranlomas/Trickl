@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blackoutBackground"
@@ -8,21 +10,65 @@
     <LinearLayout
         android:id="@+id/browseFilterLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:padding="@dimen/default_medium_padding">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_small_padding"
+        android:orientation="horizontal">
 
-        <TextView
-            android:text="@string/filter"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:textColor="@color/white"/>
+            android:orientation="vertical">
 
-        <ImageView
+            <TextView
+                android:id="@+id/filterTextCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_small_padding"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                tools:text="Category: Movies" />
+
+            <TextView
+                android:id="@+id/filterTextSortedBy"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="6dp"
+                android:gravity="bottom"
+                android:textColor="@color/white"
+                tools:text="Sorted By: Seeder" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/floatingActionButtonLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_filter_list_white"/>
+            android:layout_margin="@dimen/default_small_padding"
+            android:orientation="horizontal">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabFilter"
+                android:layout_width="@dimen/fab_size_mini"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/default_small_padding"
+                android:clickable="true"
+                android:scaleType="center"
+                android:src="@drawable/ic_filter_list_white"
+                app:fabSize="normal" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabSearch"
+                android:layout_width="@dimen/fab_size_mini"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:clickable="true"
+                android:scaleType="center"
+                android:src="@drawable/chuck_ic_search_white_24dp"
+                app:fabSize="normal" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -30,11 +76,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/browseFilterLayout" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </LinearLayout>
