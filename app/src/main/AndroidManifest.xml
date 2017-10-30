@@ -49,7 +49,6 @@
         </provider>
 
         <activity android:name=".views.torrentSearch.TorrentSearchActivity" />
-        <activity android:name=".views.browse.mvp.TorrentBrowseActivity"></activity>
     </application>
 
 </manifest>
