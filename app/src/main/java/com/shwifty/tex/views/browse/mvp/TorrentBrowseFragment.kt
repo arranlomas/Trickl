@@ -31,7 +31,6 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
     val itemOnClick: (searchResult: TorrentSearchResult) -> Unit = { torrentSearchResult ->
         if (torrentSearchResult.magnet != null) {
             MainEventHandler.addMagnet(torrentSearchResult.magnet)
-            activity.finish()
         } else {
             showError(R.string.error_cannot_open_torrent)
         }
