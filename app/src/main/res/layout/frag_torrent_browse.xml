@@ -65,7 +65,7 @@
                 android:layout_gravity="end"
                 android:clickable="true"
                 android:scaleType="center"
-                android:src="@drawable/chuck_ic_search_white_24dp"
+                android:src="@drawable/ic_search_white_24dp"
                 app:fabSize="normal" />
         </LinearLayout>
 
