@@ -13,10 +13,10 @@ interface AddTorrentContract {
 
     interface Presenter : BaseContract.Presenter<View> {
         fun setup(arguments: Bundle?)
+        fun notifyBackPressed()
         var torrentHash: String?
         var torrentMagnet: String?
         var torrentName: String?
         var torrentTrackers: List<String>?
-        fun fetchTorrent()
     }
 }

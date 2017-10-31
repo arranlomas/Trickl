@@ -25,7 +25,6 @@ class AllFragment : BaseFragment(), AllContract.View {
     @Inject
     lateinit var presenter: AllContract.Presenter
 
-
     val itemOnClick: (View, Int, Int) -> Unit = { _, position, _ ->
         val torrentFile = filesAdapter.torrentFiles[position]
         MainEventHandler.showTorrentInfo(torrentFile)

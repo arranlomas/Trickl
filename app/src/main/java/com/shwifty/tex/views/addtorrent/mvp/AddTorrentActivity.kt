@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
@@ -43,7 +44,6 @@ class AddTorrentActivity : BaseActivity(), AddTorrentContract.View {
         DaggerAddTorrentComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.attachView(this)
         presenter.setup(intent.extras)
-        presenter.fetchTorrent()
 
         addTorrentFab.setOnClickListener {
             val returnIntent = Intent()
@@ -54,7 +54,6 @@ class AddTorrentActivity : BaseActivity(), AddTorrentContract.View {
 
         setSupportActionBar(addTorrentToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = getString(R.string.add_torrent_title)
         addTorrentToolbar.setNavigationOnClickListener {
             super.onBackPressed()
@@ -62,6 +61,16 @@ class AddTorrentActivity : BaseActivity(), AddTorrentContract.View {
 
         if (presenter.torrentName != null) {
             addTorrentLoadingText.text = getString(R.string.loading_torrent_info_for, presenter.torrentName)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                presenter.notifyBackPressed()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
     }
 

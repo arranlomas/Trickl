@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.addtorrent.mvp
 
+import android.os.Bundle
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.findHashFromMagnet
@@ -13,12 +14,14 @@ import java.net.URLDecoder
  */
 class AddTorrentPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<AddTorrentContract.View>(), AddTorrentContract.Presenter {
 
+    private var alreadyExisted = false
+
     override var torrentHash: String? = null
     override var torrentMagnet: String? = null
     override var torrentName: String? = null
     override var torrentTrackers: List<String>? = null
 
-    override fun setup(arguments: android.os.Bundle?) {
+    override fun setup(arguments: Bundle?) {
         if (arguments?.containsKey(AddTorrentActivity.Companion.ARG_TORRENT_HASH) ?: false) {
             torrentHash = arguments?.getString(AddTorrentActivity.Companion.ARG_TORRENT_HASH) ?: ""
         }
@@ -31,9 +34,32 @@ class AddTorrentPresenter(val torrentRepository: ITorrentRepository) : BasePrese
             }
             torrentTrackers = torrentMagnet?.findTrackersFromMagnet()
         }
+
+        torrentRepository.getAllTorrentsFromStorage()
+                .subscribe(object : BaseSubscriber<List<TorrentInfo>>() {
+                    override fun onNext(torrents: List<TorrentInfo>) {
+                        var alreadyExists = false
+                        torrents.forEach { if (it.info_hash == torrentHash) alreadyExists = true }
+                        this@AddTorrentPresenter.alreadyExisted = alreadyExists
+                        fetchTorrent()
+                    }
+                })
     }
 
-    override fun fetchTorrent() {
+    override fun notifyBackPressed() {
+        if (alreadyExisted) {
+            torrentRepository.getAllTorrentsFromStorage()
+                    .subscribe(object : BaseSubscriber<List<TorrentInfo>>() {
+                        override fun onNext(torrents: List<TorrentInfo>) {
+                            torrents.forEach {
+                                if (it.info_hash == torrentHash) torrentRepository.deleteTorrentInfoFromStorage(it)
+                            }
+                        }
+                    })
+        }
+    }
+
+    private fun fetchTorrent() {
         val hash = torrentHash ?: return
         torrentRepository.getTorrentInfo(hash)
                 .subscribe(object : BaseSubscriber<TorrentInfo>() {
