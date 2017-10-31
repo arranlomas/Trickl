@@ -46,9 +46,9 @@ dependencies {
     compile project(':torrentwrapper')
 
     //Confluence
-    compile project(':confluencewrapper')
+    compile project(':go-confluence')
 
-    //Confluence
+    //file browse
     compile project(':kotlinfilebrowser')
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
