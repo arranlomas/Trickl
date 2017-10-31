@@ -99,7 +99,7 @@ class TorrentSearchFragment : BaseFragment(), TorrentSearchContract.View {
             searchView.clearFocus()
             lastQuesry = it
             presenter.search(it)
-            this.closeKeyboard()
+            searchView.closeKeyboard()
         }
         super.onCreateOptionsMenu(menu, inflater)
     }

@@ -130,7 +130,7 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         searchQueryInput.animateWidthChange(fullWidthWithPadding, {
             searchQueryInput.requestFocus()
             queryInputIsExpanded = true
-            openKeyboard()
+            searchQueryInput.openKeyboard()
             fabSearch.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_close_white, null))
         })
     }
@@ -139,8 +139,7 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         searchQueryInput.setText("")
         searchQueryInput.animateWidthChange(context.resources.getDimensionPixelSize(R.dimen.fab_size_mini), {
             searchQueryInput.clearFocus()
-            closeKeyboard()
-            fabSearch.show()
+            searchQueryInput.closeKeyboard()
             queryInputIsExpanded = false
             fabSearch.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_search_white, null))
         })

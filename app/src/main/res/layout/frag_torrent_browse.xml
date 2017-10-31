@@ -59,6 +59,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/default_small_padding"
         android:layout_marginEnd="@dimen/default_small_padding"
+        android:textColorHint="@color/white"
         android:hint="Enter your search here....."/>
 
 </RelativeLayout>
