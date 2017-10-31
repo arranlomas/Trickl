@@ -28,6 +28,8 @@ import javax.inject.Inject
  */
 class TorrentSearchFragment : BaseFragment(), TorrentSearchContract.View {
 
+    var initialQuery: String? = null
+
     val itemOnClick: (searchResult: TorrentSearchResult) -> Unit = { torrentSearchResult ->
         if (torrentSearchResult.magnet != null) {
             MainEventHandler.addMagnet(torrentSearchResult.magnet)
@@ -44,8 +46,13 @@ class TorrentSearchFragment : BaseFragment(), TorrentSearchContract.View {
     lateinit var presenter: TorrentSearchContract.Presenter
 
     companion object {
-        fun newInstance(): Fragment {
+
+        val ARG_INITIAL_QUERY = "arg_initial_query"
+
+        fun newInstance(initialQuery: String? = null): Fragment {
             val frag = TorrentSearchFragment()
+            val bundle = Bundle()
+            bundle.putString(ARG_INITIAL_QUERY, initialQuery)
             return frag
         }
     }
@@ -55,6 +62,7 @@ class TorrentSearchFragment : BaseFragment(), TorrentSearchContract.View {
         setHasOptionsMenu(true)
         DaggerTorrentSearchComponent.builder().networkComponent(Trickl.networkComponent).build().inject(this)
         presenter.attachView(this)
+        initialQuery = arguments.getString(ARG_INITIAL_QUERY)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -77,6 +85,7 @@ class TorrentSearchFragment : BaseFragment(), TorrentSearchContract.View {
                 presenter.search(it)
             }
         }
+        initialQuery?.let { presenter.search(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

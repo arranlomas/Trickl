@@ -9,9 +9,13 @@ import kotlinx.android.synthetic.main.activity_torrent_search.*
 
 class TorrentSearchActivity : AppCompatActivity() {
 
+
     companion object {
-        fun startActivity(context: Context) {
+        val ARG_INITIAL_QUERY = "arg_initial_query"
+
+        fun startActivity(context: Context, initialQuery: String? = null) {
             val intent = Intent(context, TorrentSearchActivity::class.java)
+            intent.putExtra(ARG_INITIAL_QUERY, initialQuery)
             context.startActivity(intent)
         }
     }
@@ -26,6 +30,8 @@ class TorrentSearchActivity : AppCompatActivity() {
         torrentSearchToolbar.setNavigationOnClickListener {
             super.onBackPressed()
         }
+
+        val initialQuery = intent.getStringExtra(ARG_INITIAL_QUERY)
         supportFragmentManager.beginTransaction()
                 .replace(R.id.frameLayout, TorrentSearchFragment.newInstance())
                 .commit()

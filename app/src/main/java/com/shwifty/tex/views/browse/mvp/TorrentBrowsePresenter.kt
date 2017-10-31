@@ -18,4 +18,13 @@ class TorrentBrowsePresenter(private val torrentSearchRepository: ITorrentSearch
                     }
                 }).addSubscription()
     }
+
+    override fun search(query: String) {
+        torrentSearchRepository.search(query, TorrentSearchSortType.DEFAULT, 0, TorrentSearchCategory.All)
+                .subscribe(object : BaseSubscriber<List<TorrentSearchResult>>(){
+                    override fun onNext(searchResults: List<TorrentSearchResult>) {
+                        mvpView.showTorrents(searchResults)
+                    }
+                }).addSubscription()
+    }
 }

@@ -1,75 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootBrowseLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blackoutBackground"
     android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/browseFilterLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_small_padding"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/filterTextCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_small_padding"
-                android:layout_marginTop="6dp"
-                android:gravity="center"
-                android:textColor="@color/white"
-                tools:text="Category: Movies" />
-
-            <TextView
-                android:id="@+id/filterTextSortedBy"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="6dp"
-                android:gravity="bottom"
-                android:textColor="@color/white"
-                tools:text="Sorted By: Seeder" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/floatingActionButtonLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_small_padding"
-            android:orientation="horizontal">
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fabFilter"
-                android:layout_width="@dimen/fab_size_mini"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:layout_marginEnd="@dimen/default_small_padding"
-                android:clickable="true"
-                android:scaleType="center"
-                android:src="@drawable/ic_filter_list_white"
-                app:fabSize="normal" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fabSearch"
-                android:layout_width="@dimen/fab_size_mini"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:clickable="true"
-                android:scaleType="center"
-                android:src="@drawable/ic_search_white_24dp"
-                app:fabSize="normal" />
-        </LinearLayout>
-
-    </LinearLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/torrentBrowseSwipeRefresh"
@@ -85,5 +21,43 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabSearch"
+        android:layout_width="@dimen/fab_size_mini"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
+        android:layout_marginBottom="@dimen/default_small_padding"
+        android:layout_marginEnd="@dimen/default_small_padding"
+        android:layout_marginTop="@dimen/default_small_padding"
+        android:clickable="true"
+        android:scaleType="center"
+        android:src="@drawable/ic_search_white"
+        app:fabSize="normal" />
 
-</LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabFilter"
+        android:layout_width="@dimen/fab_size_mini"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/fabSearch"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/default_small_padding"
+        android:clickable="true"
+        android:scaleType="center"
+        android:src="@drawable/ic_filter_list_white"
+        app:fabSize="normal" />
+
+    <EditText
+        android:id="@+id/searchQueryInput"
+        android:layout_width="@dimen/fab_size_mini"
+        android:layout_height="@dimen/fab_size_mini"
+        android:background="@drawable/bg_edit_text_rounded_corners"
+        android:textColor="@color/white"
+        android:paddingStart="@dimen/default_small_padding"
+        android:paddingEnd="@dimen/default_small_padding"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="@dimen/default_small_padding"
+        android:layout_marginEnd="@dimen/default_small_padding"/>
+
+</RelativeLayout>

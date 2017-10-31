@@ -2,6 +2,7 @@
 <resources>
     <!--general-->
     <color name="white">#ffffff</color>
+    <color name="soft_white">#c9c9c9</color>
 
     <!--theme-->
     <color name="colorPrimary">#4c4c4c</color>

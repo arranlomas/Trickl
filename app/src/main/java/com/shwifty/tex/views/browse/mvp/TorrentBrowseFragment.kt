@@ -2,8 +2,10 @@ package com.shwifty.tex.views.browse.mvp
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,15 +15,18 @@ import com.shwifty.tex.Trickl
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
-import com.shwifty.tex.utils.setVisible
+import com.shwifty.tex.utils.animateWidthChange
+import com.shwifty.tex.utils.closeKeyboard
+import com.shwifty.tex.utils.dpToPx
+import com.shwifty.tex.utils.openKeyboard
 import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.browse.di.DaggerTorrentBrowseComponent
 import com.shwifty.tex.views.main.MainEventHandler
-import com.shwifty.tex.views.torrentSearch.TorrentSearchActivity
 import com.shwifty.tex.views.torrentSearch.list.TorrentSearchAdapter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_torrent_browse.*
 import javax.inject.Inject
+
 
 /**
  * Created by arran on 27/10/2017.
@@ -42,6 +47,8 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
 
     var sortType: TorrentSearchSortType = TorrentSearchSortType.SEEDS
     var category: TorrentSearchCategory = TorrentSearchCategory.Movies
+
+    private var queryInputIsExpanded = false
 
     companion object {
         fun newInstance(): Fragment {
@@ -80,15 +87,9 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
             })
         }
         fabSearch.setOnClickListener {
-            TorrentSearchActivity.startActivity(context)
+            toggleSearchQueryInput()
         }
-        browseFilterLayout.setOnClickListener {
-            Trickl.dialogManager.showBrowseFilterDialog(context, sortType, category, { sortType, category ->
-                this.sortType = sortType
-                this.category = category
-                reload()
-            })
-        }
+
         reload()
     }
 
@@ -104,8 +105,6 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
 
     override fun setLoading(loading: Boolean) {
         torrentBrowseSwipeRefresh.isRefreshing = loading
-        floatingActionButtonLayout.setVisible(!loading)
-        browseFilterLayout.setVisible(!loading)
     }
 
     override fun showError(msg: String) {
@@ -113,10 +112,37 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
     }
 
     private fun reload() {
-        filterTextCategory.text = getString(R.string.filter_description_category, this.category.toHumanFriendlyString())
-        filterTextSortedBy.text = getString(R.string.filter_description_sorted_by, this.sortType.toHumanFriendlyString())
         searchResultsAdapter.torrentSearchResults = emptyList()
         searchResultsAdapter.notifyDataSetChanged()
         presenter.load(this.sortType, this.category)
     }
+
+    fun toggleSearchQueryInput() {
+        if(queryInputIsExpanded) collapseQueryInput()
+        else expandQueryInput()
+    }
+
+    private fun expandQueryInput() {
+        val displayMetrics = DisplayMetrics()
+        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val screenWidth = displayMetrics.widthPixels
+        val fullWidthWithPadding = screenWidth - context.dpToPx(30)
+        searchQueryInput.animateWidthChange(fullWidthWithPadding, {
+            searchQueryInput.requestFocus()
+            queryInputIsExpanded = true
+            openKeyboard()
+            fabSearch.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_close_white, null))
+        })
+    }
+
+    private fun collapseQueryInput() {
+        searchQueryInput.animateWidthChange(context.resources.getDimensionPixelSize(R.dimen.fab_size_mini), {
+            searchQueryInput.clearFocus()
+            closeKeyboard()
+            fabSearch.show()
+            queryInputIsExpanded = false
+            fabSearch.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_search_white, null))
+        })
+    }
+
 }

@@ -14,7 +14,7 @@ interface TorrentBrowseContract {
     }
 
     interface Presenter : BaseContract.Presenter<View> {
-        fun load(sortType: TorrentSearchSortType,
-                 category: TorrentSearchCategory)
+        fun load(sortType: TorrentSearchSortType, category: TorrentSearchCategory)
+        fun search(query: String)
     }
 }
