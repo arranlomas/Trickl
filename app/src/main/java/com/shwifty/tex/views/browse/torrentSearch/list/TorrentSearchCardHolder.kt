@@ -1,4 +1,4 @@
-package com.shwifty.tex.views.torrentSearch.list
+package com.shwifty.tex.views.browse.torrentSearch.list
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

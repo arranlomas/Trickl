@@ -20,12 +20,11 @@ import com.shwifty.tex.views.browse.di.DaggerTorrentBrowseComponent
 import com.shwifty.tex.views.browse.state.BrowseViewEvents
 import com.shwifty.tex.views.browse.state.BrowseViewState
 import com.shwifty.tex.views.browse.state.Reducer
+import com.shwifty.tex.views.browse.torrentSearch.list.TorrentSearchAdapter
 import com.shwifty.tex.views.main.MainEventHandler
-import com.shwifty.tex.views.torrentSearch.list.TorrentSearchAdapter
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.frag_torrent_browse.*
 import javax.inject.Inject
-
 
 /**
  * Created by arran on 27/10/2017.
