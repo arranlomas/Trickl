@@ -5,6 +5,7 @@ import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.network.torrentSearch.ITorrentSearchRepository
 import com.shwifty.tex.views.base.BasePresenter
+import com.shwifty.tex.views.browse.state.BrowseViewEvents
 
 /**
  * Created by arran on 27/10/2017.
@@ -14,7 +15,7 @@ class TorrentBrowsePresenter(private val torrentSearchRepository: ITorrentSearch
         torrentSearchRepository.browse(sortType, 0, category)
                 .subscribe(object : BaseSubscriber<List<TorrentSearchResult>>(){
                     override fun onNext(searchResults: List<TorrentSearchResult>) {
-                        mvpView.showTorrents(searchResults)
+                        mvpView.reducer.reduce(BrowseViewEvents.UpdateBrowseResults(searchResults))
                     }
                 }).addSubscription()
     }
@@ -23,7 +24,7 @@ class TorrentBrowsePresenter(private val torrentSearchRepository: ITorrentSearch
         torrentSearchRepository.search(query, TorrentSearchSortType.DEFAULT, 0, TorrentSearchCategory.All)
                 .subscribe(object : BaseSubscriber<List<TorrentSearchResult>>(){
                     override fun onNext(searchResults: List<TorrentSearchResult>) {
-                        mvpView.showTorrents(searchResults)
+                        mvpView.reducer.reduce(BrowseViewEvents.UpdateSearchResults(searchResults))
                     }
                 }).addSubscription()
     }

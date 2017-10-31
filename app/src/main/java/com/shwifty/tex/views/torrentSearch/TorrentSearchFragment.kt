@@ -14,7 +14,6 @@ import com.shwifty.tex.Trickl
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.utils.closeKeyboard
 import com.shwifty.tex.utils.onSearchSubmitted
-import com.shwifty.tex.utils.openKeyboard
 import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.main.MainEventHandler
 import com.shwifty.tex.views.torrentSearch.di.DaggerTorrentSearchComponent
@@ -111,7 +110,7 @@ class TorrentSearchFragment : BaseFragment(), TorrentSearchContract.View {
     }
 
     override fun showTorrents(searchResults: List<TorrentSearchResult>) {
-        searchResultsAdapter.updateSearchResults(searchResults)
+        searchResultsAdapter.updateResults(searchResults)
         searchResultsAdapter.notifyDataSetChanged()
     }
 

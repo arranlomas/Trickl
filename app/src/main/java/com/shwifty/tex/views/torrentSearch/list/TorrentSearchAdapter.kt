@@ -30,7 +30,7 @@ class TorrentSearchAdapter(val itemClickListener: (TorrentSearchResult) -> Unit)
         return torrentSearchResults.size
     }
 
-    fun updateSearchResults(torrentSearchResults: List<TorrentSearchResult>) {
+    fun updateResults(torrentSearchResults: List<TorrentSearchResult>) {
         this.torrentSearchResults = torrentSearchResults
     }
 }

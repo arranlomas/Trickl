@@ -23,6 +23,14 @@ fun View.openKeyboard() {
     imm.showSoftInputFromInputMethod(windowToken, 0)
 }
 
+fun Context.forceOpenKeyboard(){
+    (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+}
+
+fun Context.forceCloseKeyboard(){
+    (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+}
+
 fun SearchView.onSearchSubmitted(onSubmit: (String) -> Unit) {
     this.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
         override fun onQueryTextChange(newText: String): Boolean {
@@ -55,7 +63,7 @@ fun Context.pxToDp(px: Int): Int {
     return Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT))
 }
 
-fun View.animateWidthChange(newWidth: Int, onAnimationFinished: () -> Unit, duration: Long = 250) {
+fun View.animateWidthChange(newWidth: Int, onAnimationFinished: (() -> Unit)? = null, duration: Long = 250) {
     val anim = ValueAnimator.ofInt(layoutParams.width, newWidth)
     anim.duration = duration
     anim.addUpdateListener { valueAnimator ->
@@ -71,7 +79,7 @@ fun View.animateWidthChange(newWidth: Int, onAnimationFinished: () -> Unit, dura
 
         override fun onAnimationEnd(p0: Animator?) {
             layoutParams.width = newWidth
-            onAnimationFinished.invoke()
+            onAnimationFinished?.invoke()
         }
 
         override fun onAnimationCancel(p0: Animator?) {

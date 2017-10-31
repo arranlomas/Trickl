@@ -12,15 +12,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
-import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
-import com.shwifty.tex.models.TorrentSearchSortType
-import com.shwifty.tex.utils.animateWidthChange
-import com.shwifty.tex.utils.closeKeyboard
-import com.shwifty.tex.utils.dpToPx
-import com.shwifty.tex.utils.openKeyboard
+import com.shwifty.tex.utils.*
 import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.browse.di.DaggerTorrentBrowseComponent
+import com.shwifty.tex.views.browse.state.BrowseViewEvents
+import com.shwifty.tex.views.browse.state.BrowseViewState
+import com.shwifty.tex.views.browse.state.Reducer
 import com.shwifty.tex.views.main.MainEventHandler
 import com.shwifty.tex.views.torrentSearch.list.TorrentSearchAdapter
 import es.dmoral.toasty.Toasty
@@ -33,6 +31,8 @@ import javax.inject.Inject
  */
 class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
 
+    override val reducer = Reducer()
+
     val itemOnClick: (searchResult: TorrentSearchResult) -> Unit = { torrentSearchResult ->
         if (torrentSearchResult.magnet != null) {
             MainEventHandler.addMagnet(torrentSearchResult.magnet)
@@ -41,14 +41,10 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         }
     }
     val searchResultsAdapter = TorrentSearchAdapter(itemOnClick)
+    val browseResultsAdapter = TorrentSearchAdapter(itemOnClick)
 
     @Inject
     lateinit var presenter: TorrentBrowseContract.Presenter
-
-    var sortType: TorrentSearchSortType = TorrentSearchSortType.SEEDS
-    var category: TorrentSearchCategory = TorrentSearchCategory.Movies
-
-    private var queryInputIsExpanded = false
 
     companion object {
         fun newInstance(): Fragment {
@@ -72,7 +68,6 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView.adapter = searchResultsAdapter
         recyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         recyclerView.layoutManager = llm as RecyclerView.LayoutManager?
@@ -80,27 +75,22 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
             reload()
         }
         fabFilter.setOnClickListener {
-            Trickl.dialogManager.showBrowseFilterDialog(context, sortType, category, { sortType, category ->
-                this.sortType = sortType
-                this.category = category
+            Trickl.dialogManager.showBrowseFilterDialog(context, reducer.getState().sortType, reducer.getState().category, { sortType, category ->
+                reducer.reduce(BrowseViewEvents.UpdateFilter(sortType, category))
                 reload()
             })
         }
         fabSearch.setOnClickListener {
-            toggleSearchQueryInput()
+            reducer.reduce(BrowseViewEvents.UpdateSearchMode(!reducer.getState().isInSearchMode))
         }
-
+        render(reducer.getState())
+        reducer.getViewStateChangeStream().subscribe { render(it) }
         reload()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
-    }
-
-    override fun showTorrents(searchResults: List<TorrentSearchResult>) {
-        searchResultsAdapter.updateSearchResults(searchResults)
-        searchResultsAdapter.notifyDataSetChanged()
     }
 
     override fun setLoading(loading: Boolean) {
@@ -112,14 +102,9 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
     }
 
     private fun reload() {
-        searchResultsAdapter.torrentSearchResults = emptyList()
-        searchResultsAdapter.notifyDataSetChanged()
-        presenter.load(this.sortType, this.category)
-    }
-
-    fun toggleSearchQueryInput() {
-        if(queryInputIsExpanded) collapseQueryInput()
-        else expandQueryInput()
+        if(reducer.getState().isInSearchMode) reducer.reduce(BrowseViewEvents.UpdateSearchResults(emptyList()))
+        else reducer.reduce(BrowseViewEvents.UpdateBrowseResults(emptyList()))
+        presenter.load(reducer.getState().sortType, reducer.getState().category)
     }
 
     private fun expandQueryInput() {
@@ -127,22 +112,34 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
         val screenWidth = displayMetrics.widthPixels
         val fullWidthWithPadding = screenWidth - context.dpToPx(30)
-        searchQueryInput.animateWidthChange(fullWidthWithPadding, {
-            searchQueryInput.requestFocus()
-            queryInputIsExpanded = true
-            searchQueryInput.openKeyboard()
-            fabSearch.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_close_white, null))
-        })
+        searchQueryInput.animateWidthChange(fullWidthWithPadding)
     }
 
     private fun collapseQueryInput() {
         searchQueryInput.setText("")
-        searchQueryInput.animateWidthChange(context.resources.getDimensionPixelSize(R.dimen.fab_size_mini), {
+        searchQueryInput.animateWidthChange(context.resources.getDimensionPixelSize(R.dimen.fab_size_mini))
+    }
+
+    private fun render(viewState: BrowseViewState){
+        if(!isAdded || !isVisible) return
+        if(viewState.isInSearchMode){
+            expandQueryInput()
+            fabSearch.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_close_white, null))
+            searchQueryInput.requestFocus()
+            context.forceOpenKeyboard()
+            recyclerView.adapter = searchResultsAdapter
+        }
+        else {
+            collapseQueryInput()
+            fabSearch.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_search_white, null))
             searchQueryInput.clearFocus()
             searchQueryInput.closeKeyboard()
-            queryInputIsExpanded = false
-            fabSearch.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_search_white, null))
-        })
+            recyclerView.adapter = browseResultsAdapter
+        }
+        searchResultsAdapter.updateResults(viewState.searchResults)
+        browseResultsAdapter.updateResults(viewState.browseResults)
+        searchResultsAdapter.notifyDataSetChanged()
+        browseResultsAdapter.notifyDataSetChanged()
     }
 
 }

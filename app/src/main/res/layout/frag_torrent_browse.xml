@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/browseFilterLayout" />
+            android:layout_alignParentTop="true" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -28,7 +28,7 @@
         android:layout_alignParentEnd="true"
         android:layout_gravity="end"
         android:layout_marginBottom="@dimen/default_small_padding"
-        android:layout_marginEnd="@dimen/default_small_padding"
+        android:layout_marginEnd="@dimen/default_medium_padding"
         android:layout_marginTop="@dimen/default_small_padding"
         android:clickable="true"
         android:scaleType="center"
@@ -42,7 +42,7 @@
         android:layout_alignParentEnd="true"
         android:layout_below="@id/fabSearch"
         android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/default_small_padding"
+        android:layout_marginEnd="@dimen/default_medium_padding"
         android:clickable="true"
         android:scaleType="center"
         android:src="@drawable/ic_filter_list_white"
@@ -52,14 +52,14 @@
         android:id="@+id/searchQueryInput"
         android:layout_width="@dimen/fab_size_mini"
         android:layout_height="@dimen/fab_size_mini"
-        android:background="@drawable/bg_edit_text_rounded_corners"
-        android:textColor="@color/white"
-        android:paddingStart="@dimen/default_small_padding"
-        android:paddingEnd="@dimen/default_small_padding"
         android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/default_medium_padding"
         android:layout_marginTop="@dimen/default_small_padding"
-        android:layout_marginEnd="@dimen/default_small_padding"
-        android:textColorHint="@color/white"
-        android:hint="Enter your search here....."/>
+        android:background="@drawable/bg_edit_text_rounded_corners"
+        android:paddingEnd="@dimen/default_small_padding"
+        android:paddingStart="@dimen/default_small_padding"
+        android:textColor="@color/white"
+        android:clickable="true"
+        android:focusable="true"/>
 
 </RelativeLayout>
