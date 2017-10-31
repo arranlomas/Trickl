@@ -136,6 +136,7 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
     }
 
     private fun collapseQueryInput() {
+        searchQueryInput.setText("")
         searchQueryInput.animateWidthChange(context.resources.getDimensionPixelSize(R.dimen.fab_size_mini), {
             searchQueryInput.clearFocus()
             closeKeyboard()

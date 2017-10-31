@@ -58,6 +58,7 @@
         android:paddingEnd="@dimen/default_small_padding"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/default_small_padding"
-        android:layout_marginEnd="@dimen/default_small_padding"/>
+        android:layout_marginEnd="@dimen/default_small_padding"
+        android:hint="Enter your search here....."/>
 
 </RelativeLayout>
