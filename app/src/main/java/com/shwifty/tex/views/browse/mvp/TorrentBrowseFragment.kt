@@ -9,6 +9,7 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
@@ -65,7 +66,6 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         return view
     }
 
-
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.setHasFixedSize(true)
@@ -81,8 +81,24 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
             })
         }
         fabSearch.setOnClickListener {
-            reducer.reduce(BrowseViewEvents.UpdateSearchMode(!reducer.getState().isInSearchMode))
+            if (reducer.getState().isInSearchMode) {
+                reducer.reduce(BrowseViewEvents.UpdateSearchResults(emptyList()))
+                reducer.reduce(BrowseViewEvents.UpdateShowingSearchBar(false))
+                reducer.reduce(BrowseViewEvents.UpdateSearchMode(false))
+            } else {
+                reducer.reduce(BrowseViewEvents.UpdateShowingSearchBar(true))
+                reducer.reduce(BrowseViewEvents.UpdateSearchMode(true))
+            }
         }
+        fabSendSearch.setOnClickListener {
+            getQueryFromInputAndSearch()
+        }
+        searchQueryInput.setOnEditorActionListener({ _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                getQueryFromInputAndSearch()
+            }
+            false
+        })
         render(reducer.getState())
         reducer.getViewStateChangeStream().subscribe { render(it) }
         reload()
@@ -102,9 +118,13 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
     }
 
     private fun reload() {
-        if(reducer.getState().isInSearchMode) reducer.reduce(BrowseViewEvents.UpdateSearchResults(emptyList()))
-        else reducer.reduce(BrowseViewEvents.UpdateBrowseResults(emptyList()))
-        presenter.load(reducer.getState().sortType, reducer.getState().category)
+        if (reducer.getState().isInSearchMode) {
+            reducer.reduce(BrowseViewEvents.UpdateSearchResults(emptyList()))
+            reducer.getState().lastQuery?.let { if (it.isNotEmpty()) presenter.search(it) }
+        } else {
+            reducer.reduce(BrowseViewEvents.UpdateBrowseResults(emptyList()))
+            presenter.load(reducer.getState().sortType, reducer.getState().category)
+        }
     }
 
     private fun expandQueryInput() {
@@ -120,21 +140,39 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         searchQueryInput.animateWidthChange(context.resources.getDimensionPixelSize(R.dimen.fab_size_mini))
     }
 
-    private fun render(viewState: BrowseViewState){
-        if(!isAdded || !isVisible) return
-        if(viewState.isInSearchMode){
+    private fun getQueryFromInputAndSearch() {
+        val query = searchQueryInput.text.toString()
+        if (query.isNotEmpty()) {
+            presenter.search(query)
+            reducer.reduce(BrowseViewEvents.UpdateLastQuery(query))
+            reducer.reduce(BrowseViewEvents.UpdateShowingSearchBar(false))
+        }
+    }
+
+    private fun render(viewState: BrowseViewState) {
+        if (!isAdded || !isVisible) return
+        if (viewState.showingSearchBar) {
             expandQueryInput()
-            fabSearch.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_close_white, null))
             searchQueryInput.requestFocus()
             context.forceOpenKeyboard()
-            recyclerView.adapter = searchResultsAdapter
-        }
-        else {
-            collapseQueryInput()
-            fabSearch.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_search_white, null))
+            searchQueryInput.setVisible(true)
+            fabSendSearch.show()
+        } else {
             searchQueryInput.clearFocus()
             searchQueryInput.closeKeyboard()
+            collapseQueryInput()
+            searchQueryInput.setVisible(false)
+            fabSendSearch.hide()
+        }
+
+        if (viewState.isInSearchMode) {
+            fabSearch.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_close_white, null))
+            recyclerView.adapter = searchResultsAdapter
+            fabFilter.hide()
+        } else {
+            fabSearch.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_search_white, null))
             recyclerView.adapter = browseResultsAdapter
+            fabFilter.show()
         }
         searchResultsAdapter.updateResults(viewState.searchResults)
         browseResultsAdapter.updateResults(viewState.browseResults)

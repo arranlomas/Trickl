@@ -10,6 +10,8 @@ import rx.subjects.PublishSubject
  */
 data class BrowseViewState(
         var isInSearchMode: Boolean = false,
+        var showingSearchBar: Boolean = false,
+        var lastQuery: String? = null,
         var sortType: TorrentSearchSortType = TorrentSearchSortType.SEEDS,
         var category: TorrentSearchCategory = TorrentSearchCategory.Movies,
         var browseResults: List<TorrentSearchResult> = emptyList(),
@@ -27,6 +29,8 @@ class Reducer{
             is BrowseViewEvents.UpdateBrowseResults -> state.copy(browseResults = event.result)
             is BrowseViewEvents.UpdateSearchResults -> state.copy(searchResults = event.result)
             is BrowseViewEvents.UpdateFilter -> state.copy(sortType = event.newSortType, category = event.newCategory)
+            is BrowseViewEvents.UpdateShowingSearchBar -> state.copy(showingSearchBar = event.showing)
+            is BrowseViewEvents.UpdateLastQuery -> state.copy(lastQuery = event.query)
         }
         state = newState
         stateChangeSubject.onNext(state)
@@ -43,6 +47,8 @@ class Reducer{
 
 sealed class BrowseViewEvents{
     data class UpdateSearchMode(val isInSearchMode: Boolean): BrowseViewEvents()
+    data class UpdateShowingSearchBar(val showing: Boolean): BrowseViewEvents()
+    data class UpdateLastQuery(val query: String): BrowseViewEvents()
     data class UpdateFilter(val newSortType: TorrentSearchSortType, val newCategory: TorrentSearchCategory): BrowseViewEvents()
     data class UpdateBrowseResults(val result: List<TorrentSearchResult>): BrowseViewEvents()
     data class UpdateSearchResults(val result: List<TorrentSearchResult>): BrowseViewEvents()

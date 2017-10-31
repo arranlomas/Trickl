@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_check_white_48dp"
+        android:src="@drawable/ic_tick_white"
         app:layout_anchorGravity="bottom|right|end"
         android:visibility="gone"/>
 

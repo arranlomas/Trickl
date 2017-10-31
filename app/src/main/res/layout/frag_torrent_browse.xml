@@ -7,7 +7,7 @@
     android:background="@color/blackoutBackground"
     android:orientation="vertical">
 
-    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/torrentBrowseSwipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -52,14 +52,29 @@
         android:id="@+id/searchQueryInput"
         android:layout_width="@dimen/fab_size_mini"
         android:layout_height="@dimen/fab_size_mini"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/default_medium_padding"
         android:layout_marginTop="@dimen/default_small_padding"
         android:background="@drawable/bg_edit_text_rounded_corners"
+        android:clickable="true"
+        android:focusable="true"
+        android:maxLines="1"
         android:paddingEnd="@dimen/default_small_padding"
         android:paddingStart="@dimen/default_small_padding"
         android:textColor="@color/white"
+        android:layout_toStartOf="@+id/fabSearch"
+        android:layout_marginEnd="@dimen/default_small_padding"
+        android:imeOptions="actionDone"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabSendSearch"
+        android:layout_width="@dimen/fab_size_mini"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/default_small_padding"
+        android:layout_marginTop="@dimen/default_small_padding"
+        android:layout_toStartOf="@+id/fabSearch"
         android:clickable="true"
-        android:focusable="true"/>
+        android:scaleType="center"
+        android:src="@drawable/ic_tick_white"
+        app:fabSize="normal" />
 
 </RelativeLayout>

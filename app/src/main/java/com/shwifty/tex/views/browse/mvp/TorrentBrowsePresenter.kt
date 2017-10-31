@@ -12,6 +12,7 @@ import com.shwifty.tex.views.browse.state.BrowseViewEvents
  */
 class TorrentBrowsePresenter(private val torrentSearchRepository: ITorrentSearchRepository) : BasePresenter<TorrentBrowseContract.View>(), TorrentBrowseContract.Presenter {
     override fun load(sortType: TorrentSearchSortType, category: TorrentSearchCategory) {
+        subscriptions.clear()
         torrentSearchRepository.browse(sortType, 0, category)
                 .subscribe(object : BaseSubscriber<List<TorrentSearchResult>>(){
                     override fun onNext(searchResults: List<TorrentSearchResult>) {
@@ -21,6 +22,7 @@ class TorrentBrowsePresenter(private val torrentSearchRepository: ITorrentSearch
     }
 
     override fun search(query: String) {
+        subscriptions.clear()
         torrentSearchRepository.search(query, TorrentSearchSortType.DEFAULT, 0, TorrentSearchCategory.All)
                 .subscribe(object : BaseSubscriber<List<TorrentSearchResult>>(){
                     override fun onNext(searchResults: List<TorrentSearchResult>) {

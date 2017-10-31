@@ -13,7 +13,7 @@ import rx.Observable
 internal class TorrentSearchRepository(private val torrentSearchApi: TorrentSearchApi) : ITorrentSearchRepository {
     override fun search(searchTerm: String, sortType: TorrentSearchSortType, pageNumber: Int, category: TorrentSearchCategory): Observable<List<TorrentSearchResult>> {
         return torrentSearchApi.search(searchTerm, sortType, pageNumber, category)
-                .composeIo()
+                .composeIoWithRetryXTimes(3)
     }
 
     override fun browse(sortType: TorrentSearchSortType, pageNumber: Int, category: TorrentSearchCategory): Observable<List<TorrentSearchResult>> {

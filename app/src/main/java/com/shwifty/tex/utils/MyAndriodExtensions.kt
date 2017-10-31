@@ -4,9 +4,12 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.support.v7.widget.SearchView
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 
 
 /**
@@ -89,4 +92,21 @@ fun View.animateWidthChange(newWidth: Int, onAnimationFinished: (() -> Unit)? = 
         }
     })
     anim.start()
+}
+
+fun EditText.afterTextChanged(afterTextChange: (String) -> Unit){
+    addTextChangedListener(object : TextWatcher {
+        override fun afterTextChanged(editable: Editable?) {
+            afterTextChange.invoke(editable?.toString() ?: "")
+        }
+
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+        }
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+        }
+
+    })
 }
