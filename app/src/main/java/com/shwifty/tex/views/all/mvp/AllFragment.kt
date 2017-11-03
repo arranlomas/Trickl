@@ -29,7 +29,15 @@ class AllFragment : BaseFragment(), AllContract.View {
         val torrentFile = filesAdapter.torrentFiles[position]
         MainEventHandler.showTorrentInfo(torrentFile)
     }
-    val filesAdapter = AllTorrentsAdapter(itemOnClick)
+
+    val onDeleteItem: (View, Int, Int) -> Unit = { _, position, _ ->
+        val torrentFile = filesAdapter.torrentFiles[position]
+        Trickl.dialogManager.showDeleteTorrentDialog(context, torrentFile, {
+            showError(R.string.error_deleting_torrent)
+        })
+    }
+
+    val filesAdapter = AllTorrentsAdapter(itemOnClick, onDeleteItem)
 
     companion object {
         fun newInstance(): Fragment {
