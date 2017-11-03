@@ -7,8 +7,6 @@
     android:background="@color/blackoutBackground">
 
     <android.support.v7.widget.Toolbar
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/addTorrentToolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"

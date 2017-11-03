@@ -37,6 +37,12 @@ class AddTorrentPresenter(val torrentRepository: ITorrentRepository) : BasePrese
 
         torrentRepository.getAllTorrentsFromStorage()
                 .subscribe(object : BaseSubscriber<List<TorrentInfo>>() {
+                    override fun onCompleted() {
+                    }
+
+                    override fun onStart() {
+                    }
+
                     override fun onNext(torrents: List<TorrentInfo>) {
                         var alreadyExists = false
                         torrents.forEach { if (it.info_hash == torrentHash) alreadyExists = true }
@@ -47,7 +53,7 @@ class AddTorrentPresenter(val torrentRepository: ITorrentRepository) : BasePrese
     }
 
     override fun notifyBackPressed() {
-        if (alreadyExisted) {
+        if (!alreadyExisted) {
             torrentRepository.getAllTorrentsFromStorage()
                     .subscribe(object : BaseSubscriber<List<TorrentInfo>>() {
                         override fun onNext(torrents: List<TorrentInfo>) {
@@ -62,10 +68,14 @@ class AddTorrentPresenter(val torrentRepository: ITorrentRepository) : BasePrese
     private fun fetchTorrent() {
         val hash = torrentHash ?: return
         torrentRepository.getTorrentInfo(hash)
-                .subscribe(object : BaseSubscriber<TorrentInfo>() {
+                .subscribe(object : BaseSubscriber<TorrentInfo?>() {
                     override fun onNext(pair: TorrentInfo?) {
                         mvpView.setLoading(false)
                         mvpView.notifyTorrentAdded()
+                    }
+
+                    override fun onError(e: Throwable?) {
+                        super.onError(e)
                     }
                 })
                 .addSubscription()

@@ -56,7 +56,7 @@ class AddTorrentActivity : BaseActivity(), AddTorrentContract.View {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.add_torrent_title)
         addTorrentToolbar.setNavigationOnClickListener {
-            super.onBackPressed()
+            onBackPressed()
         }
 
         if (presenter.torrentName != null) {
@@ -64,19 +64,14 @@ class AddTorrentActivity : BaseActivity(), AddTorrentContract.View {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            android.R.id.home -> {
-                presenter.notifyBackPressed()
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
+    }
+
+    override fun onBackPressed() {
+        presenter.notifyBackPressed()
+        super.onBackPressed()
     }
 
     override fun notifyTorrentAdded() {
