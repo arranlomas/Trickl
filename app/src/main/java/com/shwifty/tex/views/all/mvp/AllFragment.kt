@@ -83,4 +83,9 @@ class AllFragment : BaseFragment(), AllContract.View {
     override fun setLoading(loading: Boolean) {
         allTorrentsSwipeRefresh.isRefreshing = loading
     }
+
+    override fun showSomeTorrentsCouldNotBeLoaded(torrentCount: Int) {
+        showError(getString(R.string.error_all_torrents_some_could_not_be_parsed, torrentCount))
+    }
+
 }

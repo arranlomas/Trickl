@@ -27,7 +27,7 @@ class FileDownloadPresenter(val torrentRepository: ITorrentRepository) : BasePre
 
         torrentRepository.torrentFileDeleteListener
                 .subscribe(object : BaseSubscriber<TorrentFile>() {
-                    override fun onNext(pair: TorrentFile?) {
+                    override fun onNext(result: TorrentFile?) {
                         mvpView.setLoading(false)
                         refresh()
                     }

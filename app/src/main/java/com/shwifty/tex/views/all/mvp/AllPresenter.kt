@@ -3,6 +3,8 @@ package com.shwifty.tex.views.all.mvp
 import android.content.Context
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.schiwfty.torrentwrapper.utils.ParseTorrentResult
+import com.shwifty.tex.utils.logTorrentParseError
 import com.shwifty.tex.views.base.BasePresenter
 
 /**
@@ -16,7 +18,7 @@ class AllPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<Al
         super.attachView(mvpView)
         torrentRepository.torrentInfoDeleteListener
                 .subscribe(object : BaseSubscriber<TorrentInfo>() {
-                    override fun onNext(pair: TorrentInfo?) {
+                    override fun onNext(result: TorrentInfo?) {
                         mvpView.setLoading(false)
                         refresh()
                     }
@@ -26,10 +28,20 @@ class AllPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<Al
 
     override fun refresh() {
         torrentRepository.getAllTorrentsFromStorage()
-                .subscribe(object : BaseSubscriber<List<TorrentInfo>>() {
-                    override fun onNext(torrentInfos: List<TorrentInfo>) {
+                .subscribe(object : BaseSubscriber<List<ParseTorrentResult>>() {
+                    override fun onNext(results: List<ParseTorrentResult>) {
+                        val success = results.filter { it is ParseTorrentResult.Success }
+                        val error = results.filter { it is ParseTorrentResult.Error }
+                        if (error.isNotEmpty()) {
+                            mvpView.showSomeTorrentsCouldNotBeLoaded(error.size)
+                            error.forEach { it.logTorrentParseError() }
+                        }
                         mvpView.setLoading(false)
-                        mvpView.showAllTorrents(torrentInfos)
+                        val torrentInfos = mutableListOf<TorrentInfo>()
+                        success.forEach { result ->
+                            result.unwrapIfSuccess { torrentInfos.add(it) } ?: let { result.logTorrentParseError() }
+                        }
+                        mvpView.showAllTorrents(torrentInfos.toList())
                     }
                 })
     }

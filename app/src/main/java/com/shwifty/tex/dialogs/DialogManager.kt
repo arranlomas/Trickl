@@ -7,13 +7,16 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 import com.afollestad.materialdialogs.MaterialDialog
+import com.crashlytics.android.Crashlytics
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.schiwfty.torrentwrapper.utils.ParseTorrentResult
 import com.schiwfty.torrentwrapper.utils.getFullPath
 import com.shwifty.tex.R
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchSortType
+import com.shwifty.tex.utils.logTorrentParseError
 import com.shwifty.tex.views.main.MainEventHandler
 
 /**
@@ -93,9 +96,9 @@ class DialogManager : IDialogManager {
                 .content(R.string.delete_torrent_dialog_text)
                 .positiveText(R.string.delete)
                 .onPositive { dialog, _ ->
-                    torrentRepository.getTorrentInfo(torrentInfo.info_hash)
-                            .subscribe({
-                                it?.let {
+                    torrentRepository.downloadTorrentInfo(torrentInfo.info_hash)
+                            .subscribe({ result ->
+                                result.unwrapIfSuccess {
                                     val deleted = torrentRepository.deleteTorrentInfoFromStorage(it)
                                     if (deleted) {
                                         it.fileList.forEach {
@@ -105,7 +108,7 @@ class DialogManager : IDialogManager {
                                     } else {
                                         onError.invoke()
                                     }
-                                }
+                                }?.let { result.logTorrentParseError() }
                             }, {
                                 it.printStackTrace()
                             })
@@ -113,9 +116,11 @@ class DialogManager : IDialogManager {
                 }
                 .negativeText(R.string.keep)
                 .onNegative { dialog, _ ->
-                    torrentRepository.getTorrentInfo(torrentInfo.info_hash)
-                            .subscribe({
-                                it?.let { torrentRepository.deleteTorrentInfoFromStorage(it) }
+                    torrentRepository.downloadTorrentInfo(torrentInfo.info_hash)
+                            .subscribe({ result ->
+                                result.unwrapIfSuccess {
+                                    torrentRepository.deleteTorrentInfoFromStorage(it)
+                                } ?: let { result.logTorrentParseError() }
                             }, {
                                 it.printStackTrace()
                             })

@@ -1,8 +1,9 @@
 package com.shwifty.tex.views.torrentdetails.mvp
 
 import android.os.Bundle
-import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.schiwfty.torrentwrapper.utils.ParseTorrentResult
+import com.shwifty.tex.utils.logTorrentParseError
 import com.shwifty.tex.views.base.BasePresenter
 
 /**
@@ -20,11 +21,13 @@ class TorrentDetailsPresenter(val torrentRepository: ITorrentRepository) : BaseP
     }
 
     override fun loadTorrent(torrentHash: String) {
-        torrentRepository.getTorrentInfo(torrentHash)
-                .subscribe(object : BaseSubscriber<TorrentInfo>() {
-                    override fun onNext(pair: TorrentInfo?) {
+        torrentRepository.downloadTorrentInfo(torrentHash)
+                .subscribe(object : BaseSubscriber<ParseTorrentResult>() {
+                    override fun onNext(result: ParseTorrentResult) {
                         mvpView.setLoading(false)
-                        pair?.let { mvpView.setupViewFromTorrentInfo(it) }
+                        result.unwrapIfSuccess {
+                            mvpView.setupViewFromTorrentInfo(it)
+                        } ?: let { result.logTorrentParseError() }
                     }
                 })
                 .addSubscription()

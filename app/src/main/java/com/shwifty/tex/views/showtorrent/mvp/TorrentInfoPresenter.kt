@@ -2,13 +2,14 @@ package com.shwifty.tex.views.showtorrent.mvp
 
 import android.os.Bundle
 import android.view.MenuItem
-import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.schiwfty.torrentwrapper.utils.ParseTorrentResult
 import com.schiwfty.torrentwrapper.utils.findHashFromMagnet
 import com.schiwfty.torrentwrapper.utils.findNameFromMagnet
 import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
 import com.shwifty.tex.R
+import com.shwifty.tex.utils.logTorrentParseError
 import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
 import com.shwifty.tex.views.base.BasePresenter
 import java.net.URLDecoder
@@ -38,7 +39,7 @@ class TorrentInfoPresenter(val torrentRepository: ITorrentRepository) : BasePres
 
         torrentRepository.torrentInfoDeleteListener
                 .subscribe(object : BaseSubscriber<TorrentInfo>() {
-                    override fun onNext(pair: TorrentInfo?) {
+                    override fun onNext(result: TorrentInfo?) {
                         mvpView.setLoading(false)
                         mvpView.dismiss()
                     }
@@ -48,15 +49,17 @@ class TorrentInfoPresenter(val torrentRepository: ITorrentRepository) : BasePres
 
     override fun fetchTorrent() {
         val hash = torrentHash
-        torrentRepository.getTorrentInfo(hash)
-                .subscribe(object : BaseSubscriber<TorrentInfo>(){
-                    override fun onNext(pair: TorrentInfo?) {
+        torrentRepository.downloadTorrentInfo(hash)
+                .subscribe(object : BaseSubscriber<ParseTorrentResult>() {
+                    override fun onNext(result: ParseTorrentResult) {
                         mvpView.setLoading(false)
-                        torrentInfo = pair
-                        torrentName = pair?.name
-                        pair?.info_hash?.let { torrentHash = it }
-                        torrentTrackers = pair?.announceList
                         mvpView.notifyTorrentAdded()
+                        result.unwrapIfSuccess {
+                            torrentInfo = it
+                            torrentName = it.name
+                            torrentHash = it.info_hash
+                            torrentTrackers = it.announceList
+                        } ?: let { result.logTorrentParseError() }
                     }
                 })
                 .addSubscription()

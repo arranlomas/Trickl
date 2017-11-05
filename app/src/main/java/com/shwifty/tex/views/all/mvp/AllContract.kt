@@ -10,6 +10,7 @@ import com.shwifty.tex.views.base.BaseContract
 interface AllContract {
     interface View: BaseContract.MvpView {
         fun showAllTorrents(torrentInfoList: List<TorrentInfo>)
+        fun showSomeTorrentsCouldNotBeLoaded(torrentCount: Int)
     }
 
     interface Presenter: BaseContract.Presenter<View> {

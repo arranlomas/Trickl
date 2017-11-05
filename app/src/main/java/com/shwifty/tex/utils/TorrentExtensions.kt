@@ -1,8 +1,10 @@
 package com.shwifty.tex.utils
 
+import com.crashlytics.android.Crashlytics
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaMetadata
 import com.schiwfty.torrentwrapper.models.TorrentFile
+import com.schiwfty.torrentwrapper.utils.ParseTorrentResult
 import com.schiwfty.torrentwrapper.utils.getFullPath
 import com.schiwfty.torrentwrapper.utils.getShareableDataUrl
 
@@ -18,4 +20,12 @@ fun TorrentFile.buildMediaInfo(mime: String): MediaInfo {
             .setContentType(mime)
             .setMetadata(movieMetadata)
             .build()
+}
+
+fun ParseTorrentResult.logTorrentParseError() {
+    if (this is ParseTorrentResult.Error) {
+        val error = this.exception
+        error.printStackTrace()
+        Crashlytics.logException(error)
+    }
 }

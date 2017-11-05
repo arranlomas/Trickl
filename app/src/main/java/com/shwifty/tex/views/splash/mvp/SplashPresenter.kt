@@ -50,9 +50,9 @@ class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Pre
         torrentRepository.getStatus()
                 .retry()
                 .subscribe(object : BaseSubscriber<String>() {
-                    override fun onNext(pair: String?) {
+                    override fun onNext(result: String?) {
                         mvpView.setLoading(false)
-                        pair?.let {
+                        result?.let {
                             subscriptions.unsubscribe()
                             mvpView.showSuccess(R.string.splash_start_confluence_success)
                             mvpView.progressToMain()
