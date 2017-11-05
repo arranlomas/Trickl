@@ -27,7 +27,7 @@ class AllPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<Al
     }
 
     override fun refresh() {
-        torrentRepository.getAllTorrentsFromStorage()
+        torrentRepository.getAllTorrentsFromStorage(deleteErroneousTorrents = true)
                 .subscribe(object : BaseSubscriber<List<ParseTorrentResult>>() {
                     override fun onNext(results: List<ParseTorrentResult>) {
                         val success = results.filter { it is ParseTorrentResult.Success }
