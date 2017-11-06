@@ -16,7 +16,7 @@ class TorrentBrowsePresenter(private val torrentSearchRepository: ITorrentSearch
         torrentSearchRepository.browse(sortType, 0, category)
                 .subscribe(object : BaseSubscriber<List<TorrentSearchResult>>(){
                     override fun onNext(searchResults: List<TorrentSearchResult>) {
-                        mvpView.reducer.reduce(BrowseViewEvents.UpdateBrowseResults(searchResults))
+                        mvpView.browseReducer.reduce(BrowseViewEvents.UpdateBrowseResults(searchResults))
                     }
                 }).addSubscription()
     }
@@ -26,7 +26,7 @@ class TorrentBrowsePresenter(private val torrentSearchRepository: ITorrentSearch
         torrentSearchRepository.search(query, TorrentSearchSortType.DEFAULT, 0, TorrentSearchCategory.All)
                 .subscribe(object : BaseSubscriber<List<TorrentSearchResult>>(){
                     override fun onNext(searchResults: List<TorrentSearchResult>) {
-                        mvpView.reducer.reduce(BrowseViewEvents.UpdateSearchResults(searchResults))
+                        mvpView.browseReducer.reduce(BrowseViewEvents.UpdateSearchResults(searchResults))
                     }
                 }).addSubscription()
     }

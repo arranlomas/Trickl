@@ -18,7 +18,7 @@ data class BrowseViewState(
         var searchResults: List<TorrentSearchResult> = emptyList()
 )
 
-class Reducer{
+class BrowseReducer {
     private var state = BrowseViewState()
 
     private val stateChangeSubject: PublishSubject<BrowseViewState> = PublishSubject.create()

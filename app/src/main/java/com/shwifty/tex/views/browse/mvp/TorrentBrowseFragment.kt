@@ -19,7 +19,7 @@ import com.shwifty.tex.views.base.BaseFragment
 import com.shwifty.tex.views.browse.di.DaggerTorrentBrowseComponent
 import com.shwifty.tex.views.browse.state.BrowseViewEvents
 import com.shwifty.tex.views.browse.state.BrowseViewState
-import com.shwifty.tex.views.browse.state.Reducer
+import com.shwifty.tex.views.browse.state.BrowseReducer
 import com.shwifty.tex.views.browse.torrentSearch.list.TorrentSearchAdapter
 import com.shwifty.tex.views.main.MainEventHandler
 import es.dmoral.toasty.Toasty
@@ -31,7 +31,7 @@ import javax.inject.Inject
  */
 class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
 
-    override val reducer = Reducer()
+    override val browseReducer = BrowseReducer()
 
     val itemOnClick: (searchResult: TorrentSearchResult) -> Unit = { torrentSearchResult ->
         if (torrentSearchResult.magnet != null) {
@@ -74,19 +74,19 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
             reload()
         }
         fabFilter.setOnClickListener {
-            Trickl.dialogManager.showBrowseFilterDialog(context, reducer.getState().sortType, reducer.getState().category, { sortType, category ->
-                reducer.reduce(BrowseViewEvents.UpdateFilter(sortType, category))
+            Trickl.dialogManager.showBrowseFilterDialog(context, browseReducer.getState().sortType, browseReducer.getState().category, { sortType, category ->
+                browseReducer.reduce(BrowseViewEvents.UpdateFilter(sortType, category))
                 reload()
             })
         }
         fabSearch.setOnClickListener {
-            if (reducer.getState().isInSearchMode) {
-                reducer.reduce(BrowseViewEvents.UpdateSearchResults(emptyList()))
-                reducer.reduce(BrowseViewEvents.UpdateShowingSearchBar(false))
-                reducer.reduce(BrowseViewEvents.UpdateSearchMode(false))
+            if (browseReducer.getState().isInSearchMode) {
+                browseReducer.reduce(BrowseViewEvents.UpdateSearchResults(emptyList()))
+                browseReducer.reduce(BrowseViewEvents.UpdateShowingSearchBar(false))
+                browseReducer.reduce(BrowseViewEvents.UpdateSearchMode(false))
             } else {
-                reducer.reduce(BrowseViewEvents.UpdateShowingSearchBar(true))
-                reducer.reduce(BrowseViewEvents.UpdateSearchMode(true))
+                browseReducer.reduce(BrowseViewEvents.UpdateShowingSearchBar(true))
+                browseReducer.reduce(BrowseViewEvents.UpdateSearchMode(true))
             }
         }
         fabSendSearch.setOnClickListener {
@@ -98,8 +98,8 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
             }
             false
         })
-        render(reducer.getState())
-        reducer.getViewStateChangeStream().subscribe { render(it) }
+        render(browseReducer.getState())
+        browseReducer.getViewStateChangeStream().subscribe { render(it) }
         reload()
     }
 
@@ -117,12 +117,12 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
     }
 
     private fun reload() {
-        if (reducer.getState().isInSearchMode) {
-            reducer.reduce(BrowseViewEvents.UpdateSearchResults(emptyList()))
-            reducer.getState().lastQuery?.let { if (it.isNotEmpty()) presenter.search(it) }
+        if (browseReducer.getState().isInSearchMode) {
+            browseReducer.reduce(BrowseViewEvents.UpdateSearchResults(emptyList()))
+            browseReducer.getState().lastQuery?.let { if (it.isNotEmpty()) presenter.search(it) }
         } else {
-            reducer.reduce(BrowseViewEvents.UpdateBrowseResults(emptyList()))
-            presenter.load(reducer.getState().sortType, reducer.getState().category)
+            browseReducer.reduce(BrowseViewEvents.UpdateBrowseResults(emptyList()))
+            presenter.load(browseReducer.getState().sortType, browseReducer.getState().category)
         }
     }
 
@@ -143,8 +143,8 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         val query = searchQueryInput.text.toString()
         if (query.isNotEmpty()) {
             presenter.search(query)
-            reducer.reduce(BrowseViewEvents.UpdateLastQuery(query))
-            reducer.reduce(BrowseViewEvents.UpdateShowingSearchBar(false))
+            browseReducer.reduce(BrowseViewEvents.UpdateLastQuery(query))
+            browseReducer.reduce(BrowseViewEvents.UpdateShowingSearchBar(false))
         }
     }
 

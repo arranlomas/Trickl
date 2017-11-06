@@ -1,17 +1,16 @@
 package com.shwifty.tex.views.browse.mvp
 
 import com.shwifty.tex.models.TorrentSearchCategory
-import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.views.base.BaseContract
-import com.shwifty.tex.views.browse.state.Reducer
+import com.shwifty.tex.views.browse.state.BrowseReducer
 
 /**
  * Created by arran on 7/05/2017.
  */
 interface TorrentBrowseContract {
     interface View : BaseContract.MvpView {
-        val reducer: Reducer
+        val browseReducer: BrowseReducer
     }
 
     interface Presenter : BaseContract.Presenter<View> {

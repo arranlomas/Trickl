@@ -16,11 +16,15 @@ import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.openFile
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
-import com.shwifty.tex.utils.*
+import com.shwifty.tex.utils.CONNECTIVITY_STATUS
+import com.shwifty.tex.utils.getConnectivityStatus
+import com.shwifty.tex.utils.isChromecastAvailable
+import com.shwifty.tex.utils.openFileViaIntent
 import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
 import com.shwifty.tex.views.base.BaseActivity
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.main.di.DaggerMainComponent
+import com.shwifty.tex.views.settings.mvp.SettingsActivity
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
@@ -113,26 +117,30 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
-        if(this.isChromecastAvailable()){
+        if (this.isChromecastAvailable()) {
             menuInflater.inflate(R.menu.toolbar_main_with_chromecast, menu)
             CastButtonFactory.setUpMediaRouteButton(applicationContext,
                     menu,
                     R.id.media_route_menu_item)
             return true
-        }else{
+        } else {
             menuInflater.inflate(R.menu.toolbar_main_default, menu)
             return true
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId){
+        when (item?.itemId) {
             R.id.openDirectory -> {
                 FileBrowserActivity.startActivity(this, RC_SELECT_FILE, Confluence.workingDir)
                 return true
             }
             R.id.exit -> {
                 Trickl.dialogManager.showExitAppDialog(this, { exitApplication() })
+                return true
+            }
+            R.id.settings -> {
+                SettingsActivity.startActivity(this)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
