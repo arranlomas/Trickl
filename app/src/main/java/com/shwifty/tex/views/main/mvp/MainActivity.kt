@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.CoordinatorLayout
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.cast.framework.CastButtonFactory
-import com.mikepenz.materialdrawer.Drawer
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentFile
@@ -37,8 +37,6 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     private val fragAdapter = MainPagerAdapter(supportFragmentManager)
 
-    lateinit var navDrawer: Drawer
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
@@ -64,7 +62,6 @@ class MainActivity : BaseActivity(), MainContract.View {
 
         mainViewPager.offscreenPageLimit = 2
         setupBottomSheet()
-        setupDrawer()
     }
 
     override fun onDestroy() {
@@ -82,19 +79,6 @@ class MainActivity : BaseActivity(), MainContract.View {
     override fun onPause() {
         super.onPause()
         presenter.removeSessionListener()
-    }
-
-    private fun setupDrawer() {
-        navDrawer = getDrawer(this, mainToolbar)
-        navDrawer.addItem(getStyledDrawerItem(R.string.open_directory, 2))
-        navDrawer.addItem(getStyledDrawerItem(R.string.exit, 1))
-        navDrawer.setItemClick {
-            navDrawer.closeDrawer()
-            when (it) {
-                1L -> Trickl.dialogManager.showExitAppDialog(this, { exitApplication() })
-                2L -> FileBrowserActivity.startActivity(this, RC_SELECT_FILE, Confluence.workingDir)
-            }
-        }
     }
 
     private fun setupBottomSheet() {
@@ -130,13 +114,29 @@ class MainActivity : BaseActivity(), MainContract.View {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         if(this.isChromecastAvailable()){
-            menuInflater.inflate(R.menu.toolbar_main, menu)
+            menuInflater.inflate(R.menu.toolbar_main_with_chromecast, menu)
             CastButtonFactory.setUpMediaRouteButton(applicationContext,
                     menu,
                     R.id.media_route_menu_item)
             return true
+        }else{
+            menuInflater.inflate(R.menu.toolbar_main_default, menu)
+            return true
         }
-        return false
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.openDirectory -> {
+                FileBrowserActivity.startActivity(this, RC_SELECT_FILE, Confluence.workingDir)
+                return true
+            }
+            R.id.exit -> {
+                Trickl.dialogManager.showExitAppDialog(this, { exitApplication() })
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
     override fun getConnectivityStatus(): CONNECTIVITY_STATUS {

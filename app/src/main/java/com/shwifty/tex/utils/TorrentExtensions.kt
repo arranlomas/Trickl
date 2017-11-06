@@ -8,7 +8,6 @@ import com.schiwfty.torrentwrapper.utils.ParseTorrentResult
 import com.schiwfty.torrentwrapper.utils.getFullPath
 import com.schiwfty.torrentwrapper.utils.getShareableDataUrl
 
-
 /**
  * Created by arran on 30/04/2017.
  */

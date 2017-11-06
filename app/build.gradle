@@ -16,8 +16,8 @@ android {
         applicationId "com.shwifty.tex"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 16
-        versionName "2.0.9"
+        versionCode 17
+        versionName "2.0.10"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -129,17 +129,15 @@ dependencies {
         transitive = true;
     }
 
-    //Material navigation drawer
-    compile('com.mikepenz:materialdrawer:5.9.5@aar') {
-        transitive = true
-    }
-
     //Glide
     compile 'com.github.bumptech.glide:glide:4.2.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
 
     //multidex
     compile 'com.android.support:multidex:1.0.1'
+
+    //https://mvnrepository.com/artifact/commons-codec/commons-codec
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
 }
 repositories {
     mavenCentral()
