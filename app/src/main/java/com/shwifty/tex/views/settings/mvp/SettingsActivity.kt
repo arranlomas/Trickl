@@ -32,6 +32,14 @@ class SettingsActivity : BaseActivity(), SettingsContract.View {
         setContentView(R.layout.activity_settings)
         DaggerSettingsComponent.builder().networkComponent(Trickl.networkComponent).build().inject(this)
         presenter.attachView(this)
+
+        setSupportActionBar(settingsToolbar)
+        supportActionBar?.title = getString(R.string.settings_title)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        settingsToolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
+
         render(reducer.getState())
         reducer.getViewStateChangeStream().subscribe { render(it) }
     }
