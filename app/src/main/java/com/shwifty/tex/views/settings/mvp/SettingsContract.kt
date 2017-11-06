@@ -1,6 +1,5 @@
 package com.shwifty.tex.views.settings.mvp
 
-import com.shwifty.tex.chromecast.ICastHandler
 import com.shwifty.tex.views.base.BaseContract
 
 /**

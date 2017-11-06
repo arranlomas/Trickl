@@ -7,5 +7,4 @@ import com.shwifty.tex.views.base.BasePresenter
  */
 class SettingsPresenter() : BasePresenter<SettingsContract.View>(), SettingsContract.Presenter {
 
-
 }
