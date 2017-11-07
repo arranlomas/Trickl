@@ -1,6 +1,6 @@
 package com.shwifty.tex.views.settings.di
 
-import com.shwifty.tex.network.di.NetworkComponent
+import com.shwifty.tex.repository.network.di.NetworkComponent
 import com.shwifty.tex.views.base.PresenterScope
 import com.shwifty.tex.views.settings.mvp.SettingsActivity
 import com.shwifty.tex.views.settings.mvp.SettingsContract

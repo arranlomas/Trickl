@@ -1,9 +1,8 @@
-package com.shwifty.tex.network.torrentSearch
+package com.shwifty.tex.repository.network.torrentSearch
 
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
-import com.shwifty.tex.utils.composeIo
 import com.shwifty.tex.utils.composeIoWithRetryXTimes
 import rx.Observable
 

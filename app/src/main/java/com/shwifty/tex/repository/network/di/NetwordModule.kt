@@ -1,9 +1,9 @@
-package com.shwifty.tex.network.di
+package com.shwifty.tex.repository.network.di
 
 import com.shwifty.tex.BuildConfig
-import com.shwifty.tex.network.torrentSearch.ITorrentSearchRepository
-import com.shwifty.tex.network.torrentSearch.TorrentSearchApi
-import com.shwifty.tex.network.torrentSearch.TorrentSearchRepository
+import com.shwifty.tex.repository.network.torrentSearch.ITorrentSearchRepository
+import com.shwifty.tex.repository.network.torrentSearch.TorrentSearchApi
+import com.shwifty.tex.repository.network.torrentSearch.TorrentSearchRepository
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

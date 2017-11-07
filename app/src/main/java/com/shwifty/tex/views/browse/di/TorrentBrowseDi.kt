@@ -1,7 +1,7 @@
 package com.shwifty.tex.views.browse.di
 
-import com.shwifty.tex.network.di.NetworkComponent
-import com.shwifty.tex.network.torrentSearch.ITorrentSearchRepository
+import com.shwifty.tex.repository.network.di.NetworkComponent
+import com.shwifty.tex.repository.network.torrentSearch.ITorrentSearchRepository
 import com.shwifty.tex.views.base.PresenterScope
 import com.shwifty.tex.views.browse.mvp.TorrentBrowseContract
 import com.shwifty.tex.views.browse.mvp.TorrentBrowsePresenter

@@ -1,28 +1,32 @@
 package com.shwifty.tex
 
-import android.os.Environment
 import android.support.multidex.MultiDexApplication
 import android.util.Log
 import com.facebook.stetho.Stetho
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.shwifty.tex.chromecast.CastHandler
+import com.shwifty.tex.repository.preferences.di.DaggerPreferencesComponent
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
-import java.io.File
+import es.dmoral.toasty.Toasty
 
 /**
  * Created by arran on 29/04/2017.
  */
 class MyApplication : MultiDexApplication() {
-    val directoryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path + File.separator + "Trickl"
 
-    companion object{
+    companion object {
         val castHandler = CastHandler()
     }
 
     override fun onCreate() {
-        //be aware of the order of initialisation
-        Confluence.install(this, directoryPath)
-        Trickl.install(Confluence.torrentRepositoryComponent)
+        val preferencesComponent = DaggerPreferencesComponent.create()
+        preferencesComponent.getPreferencesRepository().getWorkingDirectoryPreference(this)
+                .subscribe({
+                    Confluence.install(this, it.absolutePath)
+                    Trickl.install(Confluence.torrentRepositoryComponent)
+                }, {
+                    Toasty.error(this, getString(R.string.error_loading_working_directory_prefs))
+                })
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
@@ -32,6 +36,4 @@ class MyApplication : MultiDexApplication() {
         val arch = System.getProperty("os.arch")
         Log.v("architecture", arch)
     }
-
-
 }
