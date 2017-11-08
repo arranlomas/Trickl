@@ -3,7 +3,7 @@ package com.shwifty.tex.views.main
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import com.shwifty.tex.views.all.mvp.AllFragment
-import com.shwifty.tex.views.base.BaseFragmentStatePagerAdapter
+import com.shwifty.tex.views.base.mvp.BaseFragmentStatePagerAdapter
 import com.shwifty.tex.views.browse.mvp.TorrentBrowseFragment
 import com.shwifty.tex.views.downloads.mvp.FileDownloadFragment
 

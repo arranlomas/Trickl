@@ -10,7 +10,7 @@ import com.shwifty.tex.R
 import com.shwifty.tex.chromecast.ICastHandler
 import com.shwifty.tex.utils.CONNECTIVITY_STATUS
 import com.shwifty.tex.utils.isChromecastAvailable
-import com.shwifty.tex.views.base.BasePresenter
+import com.shwifty.tex.views.base.mvp.BasePresenter
 import com.shwifty.tex.views.main.MainEventHandler
 import com.shwifty.tex.views.splash.mvp.SplashActivity
 

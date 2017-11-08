@@ -4,13 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.views.addtorrent.di.DaggerAddTorrentComponent
 import com.shwifty.tex.views.addtorrent.list.AddTorrentPagerAdapter
-import com.shwifty.tex.views.base.BaseActivity
+import com.shwifty.tex.views.base.mvp.BaseActivity
 import kotlinx.android.synthetic.main.activity_add_torrent.*
 import javax.inject.Inject
 

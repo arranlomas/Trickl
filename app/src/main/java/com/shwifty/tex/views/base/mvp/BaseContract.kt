@@ -1,4 +1,4 @@
-package com.shwifty.tex.views.base
+package com.shwifty.tex.views.base.mvp
 
 /**
  * Created by arran on 11/07/2017.

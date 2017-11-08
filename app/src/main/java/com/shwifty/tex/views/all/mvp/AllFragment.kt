@@ -12,7 +12,7 @@ import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.views.all.di.DaggerAllTorrentsComponent
 import com.shwifty.tex.views.all.list.AllTorrentsAdapter
-import com.shwifty.tex.views.base.BaseFragment
+import com.shwifty.tex.views.base.mvp.BaseFragment
 import com.shwifty.tex.views.main.MainEventHandler
 import kotlinx.android.synthetic.main.frag_all.*
 import javax.inject.Inject

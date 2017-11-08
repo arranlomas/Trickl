@@ -1,10 +1,9 @@
 package com.shwifty.tex.views.downloads.mvp
 
-import android.content.Context
 import android.os.Bundle
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
-import com.shwifty.tex.views.base.BaseContract
+import com.shwifty.tex.views.base.mvp.BaseContract
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
 
 /**

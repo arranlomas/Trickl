@@ -4,7 +4,7 @@ import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.repository.network.torrentSearch.ITorrentSearchRepository
-import com.shwifty.tex.views.base.BasePresenter
+import com.shwifty.tex.views.base.mvp.BasePresenter
 import com.shwifty.tex.views.browse.state.BrowseViewEvents
 
 /**

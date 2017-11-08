@@ -11,7 +11,7 @@ import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
-import com.shwifty.tex.views.base.BaseFragment
+import com.shwifty.tex.views.base.mvp.BaseFragment
 import com.shwifty.tex.views.downloads.di.DaggerFileDownloadComponent
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
 import com.shwifty.tex.views.main.MainEventHandler

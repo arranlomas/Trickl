@@ -2,7 +2,7 @@ package com.shwifty.tex.views.chromecast.mvp
 
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.chromecast.ICastHandler
-import com.shwifty.tex.views.base.BasePresenter
+import com.shwifty.tex.views.base.mvp.BasePresenter
 
 /**
  * Created by arran on 7/05/2017.

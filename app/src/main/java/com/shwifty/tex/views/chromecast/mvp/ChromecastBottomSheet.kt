@@ -9,7 +9,7 @@ import android.widget.SeekBar
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.chromecast.ICastHandler
-import com.shwifty.tex.views.base.BaseNestedScrollView
+import com.shwifty.tex.views.base.mvp.BaseNestedScrollView
 import com.shwifty.tex.views.chromecast.di.DaggerChromecastComponent
 import kotlinx.android.synthetic.main.bottom_sheet_chromecast_full.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_chromecast_peek.view.*

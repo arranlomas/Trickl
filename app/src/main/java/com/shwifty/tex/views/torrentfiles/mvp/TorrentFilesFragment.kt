@@ -11,7 +11,7 @@ import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
-import com.shwifty.tex.views.base.BaseFragment
+import com.shwifty.tex.views.base.mvp.BaseFragment
 import com.shwifty.tex.views.torrentfiles.di.DaggerTorrentFilesComponent
 import com.shwifty.tex.views.torrentfiles.list.TorrentFilesAdapter
 import kotlinx.android.synthetic.main.frag_torrent_files.*

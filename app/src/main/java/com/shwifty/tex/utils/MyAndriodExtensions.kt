@@ -3,6 +3,9 @@ package com.shwifty.tex.utils
 import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.text.Editable
 import android.text.TextWatcher
@@ -109,4 +112,14 @@ fun EditText.afterTextChanged(afterTextChange: (String) -> Unit){
         }
 
     })
+}
+
+fun Intent?.validateOnActivityResult(requestCode: Int, expectedRequestCode: Int, resultCode: Int, expectedResultCode: Int, onIsValid: (Bundle) -> Unit){
+    if (requestCode == expectedRequestCode) {
+        if (resultCode == expectedResultCode) {
+            this?.extras?.let {
+                onIsValid.invoke(it)
+            }
+        }
+    }
 }

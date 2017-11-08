@@ -1,8 +1,7 @@
 package com.shwifty.tex.views.all.mvp
 
-import android.content.Context
 import com.schiwfty.torrentwrapper.models.TorrentInfo
-import com.shwifty.tex.views.base.BaseContract
+import com.shwifty.tex.views.base.mvp.BaseContract
 
 /**
  * Created by arran on 16/04/2017.

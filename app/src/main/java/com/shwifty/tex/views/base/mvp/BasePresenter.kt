@@ -1,4 +1,4 @@
-package com.shwifty.tex.views.base
+package com.shwifty.tex.views.base.mvp
 
 import com.crashlytics.android.Crashlytics
 import rx.Subscriber

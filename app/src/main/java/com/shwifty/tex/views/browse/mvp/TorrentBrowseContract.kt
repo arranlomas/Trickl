@@ -2,7 +2,7 @@ package com.shwifty.tex.views.browse.mvp
 
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchSortType
-import com.shwifty.tex.views.base.BaseContract
+import com.shwifty.tex.views.base.mvp.BaseContract
 import com.shwifty.tex.views.browse.state.BrowseReducer
 
 /**

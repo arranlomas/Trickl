@@ -1,13 +1,11 @@
 package com.shwifty.tex.views.downloads.mvp
 
 import android.os.Bundle
-import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.utils.composeIo
-import com.shwifty.tex.views.base.BasePresenter
+import com.shwifty.tex.views.base.mvp.BasePresenter
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
-import rx.Subscriber
 
 /**
  * Created by arran on 7/05/2017.

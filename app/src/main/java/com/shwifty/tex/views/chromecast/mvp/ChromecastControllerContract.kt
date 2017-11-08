@@ -1,7 +1,7 @@
 package com.shwifty.tex.views.chromecast.mvp
 
 import com.shwifty.tex.chromecast.ICastHandler
-import com.shwifty.tex.views.base.BaseContract
+import com.shwifty.tex.views.base.mvp.BaseContract
 
 /**
  * Created by arran on 16/04/2017.

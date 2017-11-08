@@ -1,8 +1,6 @@
 package com.shwifty.tex
 
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
-import com.shwifty.tex.chromecast.CastHandler
-import com.shwifty.tex.chromecast.ICastHandler
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -18,11 +16,11 @@ interface TricklComponent {
 }
 
 @Module
-class TricklModule {
+class TricklModule(val torrentRepository: ITorrentRepository) {
 
     @Provides
     internal fun providesTorrentRepository(): ITorrentRepository {
-        return Trickl.torrentRepository
+        return torrentRepository
     }
 
 }

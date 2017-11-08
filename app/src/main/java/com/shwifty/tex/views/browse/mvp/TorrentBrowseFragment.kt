@@ -15,7 +15,7 @@ import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.utils.*
-import com.shwifty.tex.views.base.BaseFragment
+import com.shwifty.tex.views.base.mvp.BaseFragment
 import com.shwifty.tex.views.browse.di.DaggerTorrentBrowseComponent
 import com.shwifty.tex.views.browse.state.BrowseViewEvents
 import com.shwifty.tex.views.browse.state.BrowseViewState
@@ -55,7 +55,7 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerTorrentBrowseComponent.builder().networkComponent(Trickl.networkComponent).build().inject(this)
+        DaggerTorrentBrowseComponent.builder().repositoryComponent(Trickl.repositoryComponent).build().inject(this)
         presenter.attachView(this)
     }
 

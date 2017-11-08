@@ -1,4 +1,4 @@
-package com.shwifty.tex.views.base
+package com.shwifty.tex.views.base.mvp
 
 import android.content.Context
 import android.support.v4.widget.NestedScrollView

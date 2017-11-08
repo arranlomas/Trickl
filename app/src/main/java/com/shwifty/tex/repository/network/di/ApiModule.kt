@@ -1,9 +1,7 @@
 package com.shwifty.tex.repository.network.di
 
 import com.shwifty.tex.BuildConfig
-import com.shwifty.tex.repository.network.torrentSearch.ITorrentSearchRepository
 import com.shwifty.tex.repository.network.torrentSearch.TorrentSearchApi
-import com.shwifty.tex.repository.network.torrentSearch.TorrentSearchRepository
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -12,22 +10,13 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 
 /**
- * Created by arran on 27/10/2017.
+ * Created by arran on 8/11/2017.
  */
 
 @Module
-class NetworkModule {
-
-    @Provides
-    @Singleton
-    internal fun provideTorrentRepository(torrentSearchApi: TorrentSearchApi): ITorrentSearchRepository {
-        return TorrentSearchRepository(torrentSearchApi)
-
-    }
-
+class ApiModule {
 
     @Provides
     internal fun provideTorrentSearchApi(retrofit: Retrofit): TorrentSearchApi {

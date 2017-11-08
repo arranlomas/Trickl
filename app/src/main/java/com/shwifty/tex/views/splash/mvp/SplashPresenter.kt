@@ -6,7 +6,7 @@ import android.content.Intent
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.R
-import com.shwifty.tex.views.base.BasePresenter
+import com.shwifty.tex.views.base.mvp.BasePresenter
 
 /**
  * Created by arran on 16/04/2017.

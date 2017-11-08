@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.main.mvp
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
@@ -16,12 +17,9 @@ import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.openFile
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
-import com.shwifty.tex.utils.CONNECTIVITY_STATUS
-import com.shwifty.tex.utils.getConnectivityStatus
-import com.shwifty.tex.utils.isChromecastAvailable
-import com.shwifty.tex.utils.openFileViaIntent
+import com.shwifty.tex.utils.*
 import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
-import com.shwifty.tex.views.base.BaseActivity
+import com.shwifty.tex.views.base.mvp.BaseActivity
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.main.di.DaggerMainComponent
 import com.shwifty.tex.views.settings.mvp.SettingsActivity
@@ -190,14 +188,10 @@ class MainActivity : BaseActivity(), MainContract.View {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RC_SELECT_FILE) {
-            if (resultCode == RESULT_OK) {
-                data?.let {
-                    val file = data.extras.getSerializable(FileBrowserActivity.ARG_FILE_RESULT) as File
-                    file.openFileViaIntent(this, { showError(R.string.error_activity_not_found) })
-                }
-            }
-        }
+        data.validateOnActivityResult(requestCode, RC_SELECT_FILE, resultCode, Activity.RESULT_OK, {
+            val file = it.getSerializable(FileBrowserActivity.ARG_FILE_RESULT) as File
+            file.openFileViaIntent(this, { showError(R.string.error_activity_not_found) })
+        })
     }
 
 }

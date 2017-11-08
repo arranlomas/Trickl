@@ -5,7 +5,7 @@ import android.content.Intent
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.utils.CONNECTIVITY_STATUS
-import com.shwifty.tex.views.base.BaseContract
+import com.shwifty.tex.views.base.mvp.BaseContract
 
 /**
  * Created by arran on 16/04/2017.

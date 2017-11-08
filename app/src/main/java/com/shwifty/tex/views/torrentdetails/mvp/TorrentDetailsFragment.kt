@@ -10,7 +10,7 @@ import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.utils.formatBytesAsSize
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
-import com.shwifty.tex.views.base.BaseFragment
+import com.shwifty.tex.views.base.mvp.BaseFragment
 import com.shwifty.tex.views.torrentdetails.di.DaggerTorrentDetailsComponent
 import kotlinx.android.synthetic.main.frag_torrent_details.*
 import java.io.File

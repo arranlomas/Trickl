@@ -2,7 +2,7 @@ package com.shwifty.tex.views.splash.mvp
 
 import android.content.Context
 import android.content.Intent
-import com.shwifty.tex.views.base.BaseContract
+import com.shwifty.tex.views.base.mvp.BaseContract
 
 /**
  * Created by arran on 16/04/2017.

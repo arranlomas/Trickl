@@ -6,7 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
-import com.shwifty.tex.views.base.BaseActivity
+import com.shwifty.tex.views.base.mvp.BaseActivity
 import com.shwifty.tex.views.showtorrent.di.DaggerTorrentInfoComponent
 import com.shwifty.tex.views.showtorrent.list.ShowTorrentPagerAdapter
 import kotlinx.android.synthetic.main.activity_show_torrent.*

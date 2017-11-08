@@ -4,7 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import com.shwifty.tex.R
-import com.shwifty.tex.views.base.BaseActivity
+import com.shwifty.tex.views.base.mvp.BaseActivity
 import com.shwifty.tex.views.main.mvp.MainActivity
 import com.tbruyelle.rxpermissions.RxPermissions
 import es.dmoral.toasty.Toasty

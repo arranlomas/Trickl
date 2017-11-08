@@ -5,7 +5,7 @@ import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.ParseTorrentResult
 import com.shwifty.tex.utils.logTorrentParseError
-import com.shwifty.tex.views.base.BasePresenter
+import com.shwifty.tex.views.base.mvp.BasePresenter
 import com.shwifty.tex.views.main.MainEventHandler
 import com.shwifty.tex.views.torrentfiles.list.TorrentFilesAdapter
 

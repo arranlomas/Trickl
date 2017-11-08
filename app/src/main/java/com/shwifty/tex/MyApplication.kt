@@ -5,7 +5,7 @@ import android.util.Log
 import com.facebook.stetho.Stetho
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.shwifty.tex.chromecast.CastHandler
-import com.shwifty.tex.repository.preferences.di.DaggerPreferencesComponent
+import com.shwifty.tex.repository.preferences.PreferencesRepository
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
 import es.dmoral.toasty.Toasty
 
@@ -19,11 +19,10 @@ class MyApplication : MultiDexApplication() {
     }
 
     override fun onCreate() {
-        val preferencesComponent = DaggerPreferencesComponent.create()
-        preferencesComponent.getPreferencesRepository().getWorkingDirectoryPreference(this)
+        PreferencesRepository().getWorkingDirectoryPreference(this)
                 .subscribe({
                     Confluence.install(this, it.absolutePath)
-                    Trickl.install(Confluence.torrentRepositoryComponent)
+                    Trickl.install(Confluence.torrentRepositoryComponent.getTorrentRepository())
                 }, {
                     Toasty.error(this, getString(R.string.error_loading_working_directory_prefs))
                 })

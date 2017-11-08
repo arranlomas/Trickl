@@ -1,11 +1,9 @@
-package com.shwifty.tex.views.base
+package com.shwifty.tex.views.base.mvp
 
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
-import android.view.View
-import android.widget.Spinner
 import android.widget.Toast
 import es.dmoral.toasty.Toasty
 

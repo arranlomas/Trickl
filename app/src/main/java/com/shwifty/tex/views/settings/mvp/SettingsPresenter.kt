@@ -1,10 +1,32 @@
 package com.shwifty.tex.views.settings.mvp
 
-import com.shwifty.tex.views.base.BasePresenter
+import android.content.Context
+import com.shwifty.tex.repository.preferences.IPreferenceRepository
+import com.shwifty.tex.views.base.mvi.BaseMviPresenter
+import com.shwifty.tex.views.settings.state.SettingsViewEvent
+import com.shwifty.tex.views.settings.state.SettingsViewState
+import java.io.File
 
 /**
  * Created by arran on 7/05/2017.
  */
-class SettingsPresenter() : BasePresenter<SettingsContract.View>(), SettingsContract.Presenter {
+class SettingsPresenter(private val reducer: SettingsContract.Reducer, private val preferencesRepository: IPreferenceRepository)
+    : BaseMviPresenter<SettingsViewState, SettingsViewEvent, SettingsContract.Reducer>(reducer), SettingsContract.Presenter {
+
+    override fun publishEvent(event: SettingsViewEvent) {
+        super.publishEvent(event)
+        when (event) {
+            is SettingsViewEvent.UpdateWorkingDirectory -> saveWorkingDirectory(event.context, event.newDirectory)
+        }
+    }
+
+    private fun saveWorkingDirectory(context: Context, file: File) {
+        preferencesRepository.saveWorkingDirectoryPreference(context, file)
+                .subscribe(object : BaseSubscriber<Boolean>() {
+                    override fun onNext(t: Boolean?) {
+                        reducer.reduce(SettingsViewEvent.WorkingDirectoryUpdated(true))
+                    }
+                })
+    }
 
 }

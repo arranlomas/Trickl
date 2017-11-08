@@ -2,13 +2,10 @@ package com.shwifty.tex
 
 
 import com.schiwfty.torrentwrapper.confluence.Confluence
-import com.schiwfty.torrentwrapper.dagger.network.TorrentRepositoryComponent
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.dialogs.DialogManager
-import com.shwifty.tex.repository.network.di.DaggerNetworkComponent
-import com.shwifty.tex.repository.network.di.NetworkComponent
-import com.shwifty.tex.repository.preferences.di.DaggerPreferencesComponent
-import com.shwifty.tex.repository.preferences.di.PreferencesComponent
+import com.shwifty.tex.repository.network.di.DaggerRepositoryComponent
+import com.shwifty.tex.repository.network.di.RepositoryComponent
 
 /**
  * Created by arran on 29/04/2017.
@@ -16,15 +13,11 @@ import com.shwifty.tex.repository.preferences.di.PreferencesComponent
 object Trickl {
     val dialogManager = DialogManager()
     lateinit var tricklComponent: TricklComponent
-    lateinit var torrentRepository: ITorrentRepository
-    lateinit var networkComponent: NetworkComponent
-    lateinit var preferencesComponent: PreferencesComponent
+    lateinit var repositoryComponent: RepositoryComponent
 
-    fun install(torrentRepositoryComponent: TorrentRepositoryComponent) {
-        torrentRepository = torrentRepositoryComponent.getTorrentRepository()
-        this.preferencesComponent = DaggerPreferencesComponent.create()
-        tricklComponent = DaggerTricklComponent.create()
-        networkComponent = DaggerNetworkComponent.create()
+    fun install(torrentRepository: ITorrentRepository) {
+        tricklComponent = DaggerTricklComponent.builder().tricklModule(TricklModule(torrentRepository)).build()
+        repositoryComponent = DaggerRepositoryComponent.create()
         dialogManager.torrentRepository = Confluence.torrentRepository
     }
 }
