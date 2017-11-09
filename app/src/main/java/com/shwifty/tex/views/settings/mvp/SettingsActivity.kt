@@ -42,6 +42,10 @@ class SettingsActivity : BaseMviActivity() {
             onBackPressed()
         }
 
+        workingDirectoryRootLayout.setOnClickListener {
+            presenter.publishEvent(SettingsViewEvent.SelectNewWorkingDirectory(true))
+        }
+
         presenter.getViewStateStream().subscribeToEventStream { render(it) }
         render(presenter.getInitialState())
     }
@@ -49,10 +53,11 @@ class SettingsActivity : BaseMviActivity() {
     private fun render(state: SettingsViewState) {
         workingDirectoryField.text = state.currentWorkingDirectory.absolutePath
 
-        if (state.selectNewWorkingDirectory) FileBrowserActivity.startActivity(this, RC_SELECT_FILE, Confluence.workingDir)
-        workingDirectoryRootLayout.setOnClickListener {
-            presenter.publishEvent(SettingsViewEvent.SelectNewWorkingDirectory(true))
-        }
+        if (state.selectNewWorkingDirectory) FileBrowserActivity.startActivity(this, RC_SELECT_FILE, true, Confluence.workingDir)
+        if (state.workingDirectoryUpdated) Trickl.dialogManager.showChangeWorkingDirectoryDialog(this, state.previousWorkingDirectory, state.currentWorkingDirectory, {
+            previousDirectory, newDirectory ->
+            previousDirectory.copyRecursively(newDirectory, overwrite = true)
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

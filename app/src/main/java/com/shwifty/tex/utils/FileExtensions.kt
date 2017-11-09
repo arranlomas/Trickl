@@ -22,5 +22,4 @@ fun File.openFileViaIntent(context: Context, onActivityNotFound: () -> Unit) {
     } catch (e: ActivityNotFoundException) {
         onActivityNotFound.invoke()
     }
-
 }

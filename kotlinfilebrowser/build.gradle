@@ -1,2 +1,2 @@
 configurations.maybeCreate("default")
-artifacts.add("default", file('kotlinfilebrowser-release.aar'))
+artifacts.add("default", file('kotlinfilebrowser.aar'))

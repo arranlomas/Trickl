@@ -1,1 +1,1 @@
-include ':app', ':go-confluence', ':kotlinfilebrowser', ':torrentwrapper'
+include ':app', ':go-confluence', ':torrentwrapper', ':kotlinfilebrowser'

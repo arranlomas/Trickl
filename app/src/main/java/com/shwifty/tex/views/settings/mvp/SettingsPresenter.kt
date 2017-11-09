@@ -13,6 +13,10 @@ import java.io.File
 class SettingsPresenter(private val reducer: SettingsContract.Reducer, private val preferencesRepository: IPreferenceRepository)
     : BaseMviPresenter<SettingsViewState, SettingsViewEvent, SettingsContract.Reducer>(reducer), SettingsContract.Presenter {
 
+    /**
+     * This is where we manage side effects like network requests and writing to disk
+     * Also where we can do any business logic
+     */
     override fun publishEvent(event: SettingsViewEvent) {
         super.publishEvent(event)
         when (event) {

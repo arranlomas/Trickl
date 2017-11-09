@@ -14,6 +14,7 @@ import java.io.File
  */
 data class SettingsViewState(
         val currentWorkingDirectory: File = Confluence.workingDir,
+        val previousWorkingDirectory: File = Confluence.workingDir,
         val workingDirectoryUpdated: Boolean = false,
         val selectNewWorkingDirectory: Boolean = false
 ) : BaseViewState()
@@ -24,7 +25,7 @@ class SettingsReducer : SettingsContract.Reducer, BaseReducer<SettingsViewState,
 
     override fun reduce(event: SettingsViewEvent) {
         val newState: SettingsViewState = when (event) {
-            is SettingsViewEvent.UpdateWorkingDirectory -> getState().copy(currentWorkingDirectory = event.newDirectory)
+            is SettingsViewEvent.UpdateWorkingDirectory -> getState().copy(previousWorkingDirectory = getState().currentWorkingDirectory, currentWorkingDirectory = event.newDirectory)
             is SettingsViewEvent.SelectNewWorkingDirectory -> getState().copy(selectNewWorkingDirectory = event.selecting)
             is SettingsViewEvent.WorkingDirectoryUpdated -> getState().copy(workingDirectoryUpdated = event.updated)
             else -> getState()

@@ -130,7 +130,7 @@ class MainActivity : BaseActivity(), MainContract.View {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.openDirectory -> {
-                FileBrowserActivity.startActivity(this, RC_SELECT_FILE, Confluence.workingDir)
+                FileBrowserActivity.startActivity(this, RC_SELECT_FILE, false, Confluence.workingDir)
                 return true
             }
             R.id.exit -> {

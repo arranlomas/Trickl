@@ -7,17 +7,16 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 import com.afollestad.materialdialogs.MaterialDialog
-import com.crashlytics.android.Crashlytics
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
-import com.schiwfty.torrentwrapper.utils.ParseTorrentResult
 import com.schiwfty.torrentwrapper.utils.getFullPath
 import com.shwifty.tex.R
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.utils.logTorrentParseError
 import com.shwifty.tex.views.main.MainEventHandler
+import java.io.File
 
 /**
  * Created by arran on 10/05/2017.
@@ -181,11 +180,11 @@ class DialogManager : IDialogManager {
         sortedBySpinner?.adapter = sortedByAdapter
 
         filteredCategories.forEachIndexed { index, torrentSearchCategory ->
-            if(torrentSearchCategory == defaultCategory) categorySpinner?.setSelection(index)
+            if (torrentSearchCategory == defaultCategory) categorySpinner?.setSelection(index)
         }
 
         sortItems.forEachIndexed { index, sortItem ->
-            if(sortItem == defaultSortType) sortedBySpinner?.setSelection(index)
+            if (sortItem == defaultSortType) sortedBySpinner?.setSelection(index)
         }
 
         categorySpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -203,6 +202,20 @@ class DialogManager : IDialogManager {
                 sortItems.forEach { if (it.toHumanFriendlyString() == sortedByAdapter.getItem(position)) selectedSort = it }
             }
         }
+    }
+
+    override fun showChangeWorkingDirectoryDialog(context: Context, previousDirectory: File, newDirectory: File, onMove: (File, File) -> Unit) {
+        MaterialDialog.Builder(context)
+                .title(R.string.change_working_directory_dialog_title)
+                .content(R.string.change_working_directory_dialog_description)
+                .positiveText(R.string.change_working_directory_dialog_confirm)
+                .onPositive { dialog, _ ->
+                    dialog.dismiss()
+                    onMove.invoke(previousDirectory, newDirectory)
+                }
+                .negativeText(R.string.change_working_directory_dialog_cancel)
+                .onNegative { dialog, _ -> dialog.dismiss() }
+                .show()
     }
 
 }

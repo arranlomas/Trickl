@@ -6,6 +6,7 @@ import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchSortType
+import java.io.File
 
 /**
  * Created by arran on 10/05/2017.
@@ -18,6 +19,7 @@ interface IDialogManager {
     fun showDeleteFileDialog(context: Context, torrentFile: TorrentFile)
     fun showNoWifiDialog(context: Context, torrentFile: TorrentFile)
     fun showExitAppDialog(context: Context, onExit: () -> Unit)
+    fun showChangeWorkingDirectoryDialog(context: Context, previousDirectory: File, newDirectory: File, onMove: (File, File) -> Unit)
     fun showBrowseFilterDialog(context: Context,
                                defaultSortType: TorrentSearchSortType,
                                defaultCategory: TorrentSearchCategory,
