@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
 import com.schiwfty.torrentwrapper.confluence.Confluence
+import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.utils.validateOnActivityResult
@@ -21,7 +22,7 @@ class SettingsActivity : BaseMviActivity() {
     private val RC_SELECT_FILE = 303
 
     @Inject
-    lateinit var presenter: SettingsContract.Presenter
+    lateinit var interactor: SettingsContract.Interactor
 
     companion object {
         fun startActivity(context: Context) {
@@ -43,28 +44,29 @@ class SettingsActivity : BaseMviActivity() {
         }
 
         workingDirectoryRootLayout.setOnClickListener {
-            presenter.publishEvent(SettingsViewEvent.SelectNewWorkingDirectory(true))
+            Trickl.dialogManager.showChangeWorkingDirectoryRestartRequired(this, {
+                FileBrowserActivity.startActivity(this, RC_SELECT_FILE, true, Confluence.workingDir)
+            })
         }
 
-        presenter.getViewStateStream().subscribeToEventStream { render(it) }
-        render(presenter.getInitialState())
+        interactor.getViewStateStream().subscribeToEventStream { render(it) }
+        render(interactor.getInitialState())
     }
 
     private fun render(state: SettingsViewState) {
         workingDirectoryField.text = state.currentWorkingDirectory.absolutePath
-
-        if (state.selectNewWorkingDirectory) FileBrowserActivity.startActivity(this, RC_SELECT_FILE, true, Confluence.workingDir)
-        if (state.workingDirectoryUpdated) Trickl.dialogManager.showChangeWorkingDirectoryDialog(this, state.previousWorkingDirectory, state.currentWorkingDirectory, {
-            previousDirectory, newDirectory ->
-            previousDirectory.copyRecursively(newDirectory, overwrite = true)
-        })
+        if (state.restartApp) (this.application as MyApplication).restart()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         data.validateOnActivityResult(requestCode, RC_SELECT_FILE, resultCode, Activity.RESULT_OK, {
-            presenter.publishEvent(SettingsViewEvent.SelectNewWorkingDirectory(false))
             val file = it.getSerializable(FileBrowserActivity.ARG_FILE_RESULT) as File
-            presenter.publishEvent(SettingsViewEvent.UpdateWorkingDirectory(this, file))
+            Trickl.dialogManager.showChangeWorkingDirectoryDialog(this, Confluence.workingDir, file, {
+                previousDirectory, newDirectory ->
+                interactor.publishEvent(SettingsViewEvent.UpdateWorkingDirectory(this, previousDirectory, newDirectory, moveFiles = true))
+            }, { previousDirectory, newDirectory ->
+                interactor.publishEvent(SettingsViewEvent.UpdateWorkingDirectory(this, previousDirectory, newDirectory, moveFiles = false))
+            })
         })
     }
 }

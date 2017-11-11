@@ -14,8 +14,10 @@ object Trickl {
     val dialogManager = DialogManager()
     lateinit var tricklComponent: TricklComponent
     lateinit var repositoryComponent: RepositoryComponent
+    lateinit var clientPrefs: ClientPrefs
 
-    fun install(torrentRepository: ITorrentRepository) {
+    fun install(clientPrefs: ClientPrefs, torrentRepository: ITorrentRepository) {
+        this.clientPrefs = clientPrefs
         tricklComponent = DaggerTricklComponent.builder().tricklModule(TricklModule(torrentRepository)).build()
         repositoryComponent = DaggerRepositoryComponent.create()
         dialogManager.torrentRepository = Confluence.torrentRepository

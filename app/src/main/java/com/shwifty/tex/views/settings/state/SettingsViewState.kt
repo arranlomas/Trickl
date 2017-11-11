@@ -6,7 +6,6 @@ import com.shwifty.tex.views.base.mvi.BaseReducer
 import com.shwifty.tex.views.base.mvi.BaseViewEvent
 import com.shwifty.tex.views.base.mvi.BaseViewState
 import com.shwifty.tex.views.settings.mvp.SettingsContract
-import rx.subjects.PublishSubject
 import java.io.File
 
 /**
@@ -14,28 +13,21 @@ import java.io.File
  */
 data class SettingsViewState(
         val currentWorkingDirectory: File = Confluence.workingDir,
-        val previousWorkingDirectory: File = Confluence.workingDir,
-        val workingDirectoryUpdated: Boolean = false,
-        val selectNewWorkingDirectory: Boolean = false
+        val restartApp: Boolean = false
 ) : BaseViewState()
+
+sealed class SettingsViewEvent : BaseViewEvent() {
+    data class UpdateWorkingDirectory(val context: Context, val previousDirectory: File, val newDirectory: File, val moveFiles: Boolean) : SettingsViewEvent()
+    data class RestartClient(val restart: Boolean) : SettingsViewEvent()
+}
 
 class SettingsReducer : SettingsContract.Reducer, BaseReducer<SettingsViewState, SettingsViewEvent>(SettingsViewState()) {
 
-    private val stateChangeSubject: PublishSubject<SettingsViewState> = PublishSubject.create()
-
     override fun reduce(event: SettingsViewEvent) {
         val newState: SettingsViewState = when (event) {
-            is SettingsViewEvent.UpdateWorkingDirectory -> getState().copy(previousWorkingDirectory = getState().currentWorkingDirectory, currentWorkingDirectory = event.newDirectory)
-            is SettingsViewEvent.SelectNewWorkingDirectory -> getState().copy(selectNewWorkingDirectory = event.selecting)
-            is SettingsViewEvent.WorkingDirectoryUpdated -> getState().copy(workingDirectoryUpdated = event.updated)
-            else -> getState()
+            is SettingsViewEvent.UpdateWorkingDirectory -> getState().copy(currentWorkingDirectory = event.newDirectory)
+            is SettingsViewEvent.RestartClient -> getState().copy(restartApp = event.restart)
         }
         super.saveState(newState)
     }
-}
-
-sealed class SettingsViewEvent : BaseViewEvent() {
-    data class UpdateWorkingDirectory(val context: Context, val newDirectory: File) : SettingsViewEvent()
-    data class WorkingDirectoryUpdated(val updated: Boolean) : SettingsViewEvent()
-    data class SelectNewWorkingDirectory(val selecting: Boolean) : SettingsViewEvent()
 }

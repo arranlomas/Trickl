@@ -8,7 +8,7 @@ import rx.subjects.PublishSubject
  */
 interface BaseMviContract {
 
-    interface Presenter<S : State, in E : Event> {
+    interface Interactor<S : State, in E : Event> {
         fun getInitialState(): S
         fun getViewStateStream(): Observable<S>
         fun publishEvent(event: E)
@@ -24,7 +24,9 @@ interface BaseMviContract {
         val showInfoRes: Int?
     }
 
-    interface Event
+    interface Event{
+
+    }
 
     interface Reducer<S : State, in E : Event> {
         fun reduce(event: E)

@@ -9,7 +9,7 @@ import rx.subscriptions.CompositeSubscription
 /**
  * Created by arran on 8/11/2017.
  */
-open class BaseMviPresenter<S : BaseMviContract.State, in E : BaseMviContract.Event, in R : BaseMviContract.Reducer<S, E>>(private val reducer: R) : BaseMviContract.Presenter<S, E> {
+open class BaseMviInteractor<S : BaseMviContract.State, in E : BaseMviContract.Event, in R : BaseMviContract.Reducer<S, E>>(private val reducer: R) : BaseMviContract.Interactor<S, E> {
     override fun getInitialState(): S {
         return reducer.getState()
     }

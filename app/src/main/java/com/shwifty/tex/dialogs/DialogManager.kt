@@ -204,7 +204,23 @@ class DialogManager : IDialogManager {
         }
     }
 
-    override fun showChangeWorkingDirectoryDialog(context: Context, previousDirectory: File, newDirectory: File, onMove: (File, File) -> Unit) {
+    override fun showChangeWorkingDirectoryRestartRequired(context: Context, onContinue: () -> Unit) {
+        MaterialDialog.Builder(context)
+                .title(R.string.change_working_directory_warning_dialog_title)
+                .content(R.string.change_working_directory_warning_dialog_description)
+                .positiveText(R.string.change_working_directory_warning_dialog_confirm)
+                .onPositive { dialog, _ ->
+                    dialog.dismiss()
+                    onContinue.invoke()
+                }
+                .negativeText(R.string.change_working_directory_warning_dialog_cancel)
+                .onNegative { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+    }
+
+    override fun showChangeWorkingDirectoryDialog(context: Context, previousDirectory: File, newDirectory: File, onMove: (File, File) -> Unit, onKeepInDirectory: (File, File) -> Unit) {
         MaterialDialog.Builder(context)
                 .title(R.string.change_working_directory_dialog_title)
                 .content(R.string.change_working_directory_dialog_description)
@@ -214,7 +230,10 @@ class DialogManager : IDialogManager {
                     onMove.invoke(previousDirectory, newDirectory)
                 }
                 .negativeText(R.string.change_working_directory_dialog_cancel)
-                .onNegative { dialog, _ -> dialog.dismiss() }
+                .onNegative { dialog, _ ->
+                    dialog.dismiss()
+                    onKeepInDirectory.invoke(previousDirectory, newDirectory)
+                }
                 .show()
     }
 

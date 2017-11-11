@@ -29,15 +29,15 @@ class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Pre
         torrentRepository = Confluence.torrentRepository
     }
 
-    override fun startConfluenceDaemon(context: Context) {
-        val notificationIntent = Intent(context, SplashActivity::class.java)
+    override fun startConfluenceDaemon(activity: Activity) {
+        val notificationIntent = Intent(activity, SplashActivity::class.java)
         val seed = false
         val stopActionInNotification = true
         Confluence.torrentRepository.isConnected()
                 .subscribe(object : BaseSubscriber<Boolean>() {
                     override fun onNext(started: Boolean) {
                         mvpView.setLoading(false)
-                        if (!started) Confluence.start(context as Activity, R.drawable.trickl_notification, seed, stopActionInNotification, notificationIntent, {
+                        if (!started) Confluence.start(activity, R.drawable.trickl_notification, seed, stopActionInNotification, notificationIntent, {
                             mvpView.showError("Storage permissions is required to start the client")
                         })
                     }

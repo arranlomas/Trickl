@@ -9,7 +9,7 @@ import com.shwifty.tex.views.settings.state.SettingsViewState
  */
 interface SettingsContract {
 
-    interface Presenter : BaseMviContract.Presenter<SettingsViewState, SettingsViewEvent>
+    interface Interactor : BaseMviContract.Interactor<SettingsViewState, SettingsViewEvent>
 
     interface Reducer : BaseMviContract.Reducer<SettingsViewState, SettingsViewEvent>
 }

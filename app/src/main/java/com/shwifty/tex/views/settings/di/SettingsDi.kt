@@ -5,7 +5,7 @@ import com.shwifty.tex.repository.preferences.IPreferenceRepository
 import com.shwifty.tex.views.base.PresenterScope
 import com.shwifty.tex.views.settings.mvp.SettingsActivity
 import com.shwifty.tex.views.settings.mvp.SettingsContract
-import com.shwifty.tex.views.settings.mvp.SettingsPresenter
+import com.shwifty.tex.views.settings.mvp.SettingsInteractor
 import com.shwifty.tex.views.settings.state.SettingsReducer
 import dagger.Component
 import dagger.Module
@@ -25,8 +25,8 @@ class SettingsModule {
 
     @Provides
     @PresenterScope
-    internal fun providesSettingsPresenter(preferencesRepository: IPreferenceRepository): SettingsContract.Presenter {
-        return SettingsPresenter(SettingsReducer(), preferencesRepository)
+    internal fun providesSettingsPresenter(preferencesRepository: IPreferenceRepository): SettingsContract.Interactor {
+        return SettingsInteractor(SettingsReducer(), preferencesRepository)
     }
 
 
