@@ -9,11 +9,12 @@ import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
+import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.utils.validateOnActivityResult
 import com.shwifty.tex.views.base.mvi.BaseMviActivity
 import com.shwifty.tex.views.settings.di.DaggerSettingsComponent
-import com.shwifty.tex.views.settings.state.SettingsViewEvent
-import com.shwifty.tex.views.settings.state.SettingsViewState
+import com.shwifty.tex.views.settings.mvi.SettingsIntents
+import com.shwifty.tex.views.settings.mvi.SettingsViewState
 import kotlinx.android.synthetic.main.activity_settings.*
 import java.io.File
 import javax.inject.Inject
@@ -44,18 +45,31 @@ class SettingsActivity : BaseMviActivity() {
         }
 
         workingDirectoryRootLayout.setOnClickListener {
+            interactor.publishEvent(SettingsIntents.UpdateWorkingDirectoryClearErrors())
             Trickl.dialogManager.showChangeWorkingDirectoryRestartRequired(this, {
                 FileBrowserActivity.startActivity(this, RC_SELECT_FILE, true, Confluence.workingDir)
             })
         }
 
-        interactor.getViewStateStream().subscribeToEventStream { render(it) }
+        interactor.getViewStateStream().subscribeToEventStream { runOnUiThread { render(it) } }
         render(interactor.getInitialState())
     }
 
     private fun render(state: SettingsViewState) {
-        workingDirectoryField.text = state.currentWorkingDirectory.absolutePath
-        if (state.restartApp) (this.application as MyApplication).restart()
+        if (state.restartAppState.restart) (this.application as MyApplication).restart()
+        workingDirectoryField.text = state.workingDirectoryState.currentWorkingDirectory.absolutePath
+        when {
+            state.workingDirectoryState.errorString != null -> {
+                workingDirectoryError.setVisible(true)
+                workingDirectoryError.text = state.workingDirectoryState.errorString
+            }
+            state.workingDirectoryState.errorRes != null -> {
+                workingDirectoryError.setVisible(true)
+                workingDirectoryError.text = getString(state.workingDirectoryState.errorRes)
+            }
+            else -> workingDirectoryError.setVisible(false)
+        }
+        workingDirectorySpinner.setVisible(state.workingDirectoryState.isLoading)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -63,9 +77,9 @@ class SettingsActivity : BaseMviActivity() {
             val file = it.getSerializable(FileBrowserActivity.ARG_FILE_RESULT) as File
             Trickl.dialogManager.showChangeWorkingDirectoryDialog(this, Confluence.workingDir, file, {
                 previousDirectory, newDirectory ->
-                interactor.publishEvent(SettingsViewEvent.UpdateWorkingDirectory(this, previousDirectory, newDirectory, moveFiles = true))
+                interactor.publishEvent(SettingsIntents.UpdateWorkingDirectory(this, previousDirectory, newDirectory, moveFiles = true))
             }, { previousDirectory, newDirectory ->
-                interactor.publishEvent(SettingsViewEvent.UpdateWorkingDirectory(this, previousDirectory, newDirectory, moveFiles = false))
+                interactor.publishEvent(SettingsIntents.UpdateWorkingDirectory(this, previousDirectory, newDirectory, moveFiles = false))
             })
         })
     }

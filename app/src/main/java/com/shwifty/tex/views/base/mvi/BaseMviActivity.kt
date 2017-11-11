@@ -3,7 +3,9 @@ package com.shwifty.tex.views.base.mvi
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 import com.crashlytics.android.Crashlytics
+import es.dmoral.toasty.Toasty
 import rx.Observable
 import rx.Subscriber
 import rx.Subscription
@@ -31,8 +33,9 @@ open class BaseMviActivity : AppCompatActivity() {
 
     abstract inner class BaseSubscriber<T>(val showLoading: Boolean = true) : Subscriber<T>() {
 
-        override fun onError(e: Throwable?) {
+        override fun onError(e: Throwable) {
             Crashlytics.logException(e)
+            runOnUiThread { Toasty.error(this@BaseMviActivity, e.localizedMessage, Toast.LENGTH_LONG).show() }
         }
 
         override fun onCompleted() {

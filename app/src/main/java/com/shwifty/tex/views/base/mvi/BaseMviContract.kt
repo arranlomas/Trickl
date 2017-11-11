@@ -8,27 +8,17 @@ import rx.subjects.PublishSubject
  */
 interface BaseMviContract {
 
-    interface Interactor<S : State, in E : Event> {
+    interface Interactor<S : State, in E : Intent> {
         fun getInitialState(): S
         fun getViewStateStream(): Observable<S>
         fun publishEvent(event: E)
     }
 
-    interface State {
-        val showLoading: Boolean
-        val showErrorMessage: String?
-        val showErrorRes: Int?
-        val showSuccessMessage: String?
-        val showSuccessRes: Int?
-        val showInfoMessage: String?
-        val showInfoRes: Int?
-    }
+    interface State
 
-    interface Event{
+    interface Intent
 
-    }
-
-    interface Reducer<S : State, in E : Event> {
+    interface Reducer<S : State, in E : Intent> {
         fun reduce(event: E)
         fun getInitialState(): S
         fun getState(): S

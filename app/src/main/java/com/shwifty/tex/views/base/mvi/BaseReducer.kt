@@ -5,7 +5,7 @@ import rx.subjects.PublishSubject
 /**
  * Created by arran on 8/11/2017.
  */
-open class BaseReducer<S : BaseMviContract.State, in E : BaseMviContract.Event>(private val initialState: S) : BaseMviContract.Reducer<S, E> {
+open class BaseReducer<S : BaseMviContract.State, in E : BaseMviContract.Intent>(private val initialState: S) : BaseMviContract.Reducer<S, E> {
     override fun getInitialState(): S {
         return initialState
     }

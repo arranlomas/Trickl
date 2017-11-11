@@ -21,4 +21,7 @@
 
     <!--chromecast bottom sheet-->
     <color name="chromecast_bottom_sheet_background">#292929</color>
+
+    <!--Error-->
+    <color name="error_red">#d40909</color>
 </resources>

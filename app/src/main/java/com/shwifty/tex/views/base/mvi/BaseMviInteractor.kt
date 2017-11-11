@@ -9,7 +9,7 @@ import rx.subscriptions.CompositeSubscription
 /**
  * Created by arran on 8/11/2017.
  */
-open class BaseMviInteractor<S : BaseMviContract.State, in E : BaseMviContract.Event, in R : BaseMviContract.Reducer<S, E>>(private val reducer: R) : BaseMviContract.Interactor<S, E> {
+open class BaseMviInteractor<S : BaseMviContract.State, in E : BaseMviContract.Intent, in R : BaseMviContract.Reducer<S, E>>(private val reducer: R) : BaseMviContract.Interactor<S, E> {
     override fun getInitialState(): S {
         return reducer.getState()
     }
@@ -28,23 +28,24 @@ open class BaseMviInteractor<S : BaseMviContract.State, in E : BaseMviContract.E
         subscriptions.add(this)
     }
 
-    abstract inner class BaseSubscriber<T>(val showLoading: Boolean = true) : Subscriber<T>() {
+    inner class BaseSubscriber<T>(val onNextAction: (T) -> Unit, val onErrorAction: (Throwable) -> Unit, val onLoadingEvent: ((Boolean) -> Unit)? = null) : Subscriber<T>() {
+        override fun onNext(t: T) {
+            onLoadingEvent?.invoke(false)
+            onNextAction.invoke(t)
+        }
 
-        //TODO work out how to do this with the reducer pattern. Might just have to directly access the view :(
-        override fun onError(e: Throwable?) {
+        override fun onError(e: Throwable) {
             Crashlytics.logException(e)
-//            if (showLoading) reducer.reduce(BaseMviContract.Event.UpdateLoading(false))
-//            e?.localizedMessage?.let { mvpView.showError(e.localizedMessage) }
-//            e?.printStackTrace()
+            onLoadingEvent?.invoke(false)
+            onErrorAction.invoke(e)
         }
 
         override fun onCompleted() {
-//            if (showLoading) mvpView.setLoading(false)
+            onLoadingEvent?.invoke(false)
         }
 
         override fun onStart() {
-//            if (showLoading) mvpView.setLoading(true)
-//            super.onStart()
+            onLoadingEvent?.invoke(true)
         }
     }
 }

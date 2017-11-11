@@ -2,10 +2,7 @@ package com.shwifty.tex.dialogs
 
 import android.content.Context
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
+import android.widget.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
@@ -16,6 +13,7 @@ import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.utils.logTorrentParseError
 import com.shwifty.tex.views.main.MainEventHandler
+import es.dmoral.toasty.Toasty
 import java.io.File
 
 /**
@@ -73,9 +71,11 @@ class DialogManager : IDialogManager {
                 .content(R.string.delete__file_dialog_text)
                 .positiveText(R.string.delete)
                 .onPositive({ dialog, _ ->
-                    val torrentFile = torrentRepository.getTorrentFileFromPersistence(torrentHash, filePath) ?: throw NullPointerException("Cannot delete a null torrent file")
-                    torrentRepository.deleteTorrentFileFromPersistence(torrentFile)
-                    torrentRepository.deleteTorrentFileData(torrentFile)
+                    val foundTorrentFile = torrentRepository.getTorrentFileFromPersistence(torrentHash, filePath)
+                    foundTorrentFile?.let {
+                        torrentRepository.deleteTorrentFileFromPersistence(torrentFile)
+                        torrentRepository.deleteTorrentFileData(torrentFile)
+                    } ?: Toasty.error(context, context.getString(R.string.error_deleting_torrent), Toast.LENGTH_LONG).show()
                     dialog.dismiss()
                 })
                 .neutralText(android.R.string.cancel)

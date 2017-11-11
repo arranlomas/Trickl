@@ -3,10 +3,10 @@ package com.shwifty.tex.views.settings.di
 import com.shwifty.tex.repository.network.di.RepositoryComponent
 import com.shwifty.tex.repository.preferences.IPreferenceRepository
 import com.shwifty.tex.views.base.PresenterScope
+import com.shwifty.tex.views.settings.mvi.SettingsReducer
 import com.shwifty.tex.views.settings.mvp.SettingsActivity
 import com.shwifty.tex.views.settings.mvp.SettingsContract
-import com.shwifty.tex.views.settings.mvp.SettingsInteractor
-import com.shwifty.tex.views.settings.state.SettingsReducer
+import com.shwifty.tex.views.settings.mvi.SettingsInteractor
 import dagger.Component
 import dagger.Module
 import dagger.Provides
