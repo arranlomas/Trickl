@@ -30,7 +30,6 @@ import kotlinx.android.synthetic.main.bottom_sheet_main_activity.*
 import java.io.File
 import javax.inject.Inject
 
-
 class MainActivity : BaseActivity(), MainContract.View {
     private val RC_SELECT_FILE = 302
 
@@ -47,6 +46,7 @@ class MainActivity : BaseActivity(), MainContract.View {
         presenter.attachView(this)
         presenter.initializeCastContext(this)
         presenter.handleIntent(intent)
+        setupBottomSheet()
 
         setSupportActionBar(mainToolbar)
         supportActionBar?.title = getString(R.string.app_name)
@@ -63,7 +63,6 @@ class MainActivity : BaseActivity(), MainContract.View {
         }
 
         mainViewPager.offscreenPageLimit = 2
-        setupBottomSheet()
     }
 
     override fun onDestroy() {

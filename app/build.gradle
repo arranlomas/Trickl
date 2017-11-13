@@ -16,8 +16,8 @@ android {
         applicationId "com.shwifty.tex"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 17
-        versionName "2.0.10"
+        versionCode 18
+        versionName "2.0.11"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
