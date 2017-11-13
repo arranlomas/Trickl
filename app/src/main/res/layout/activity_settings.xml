@@ -27,9 +27,9 @@
             android:id="@+id/workingDirectoryRootLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_small_padding"
             android:background="@color/blackoutBackground"
-            card_view:cardCornerRadius="2dp"
-            android:layout_marginBottom="@dimen/default_small_padding">
+            card_view:cardCornerRadius="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -88,6 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/blackoutBackground"
+            android:visibility="gone"
             card_view:cardCornerRadius="2dp">
 
             <LinearLayout

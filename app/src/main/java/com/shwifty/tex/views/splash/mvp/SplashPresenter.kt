@@ -1,7 +1,6 @@
 package com.shwifty.tex.views.splash.mvp
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
@@ -33,11 +32,13 @@ class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Pre
         val notificationIntent = Intent(activity, SplashActivity::class.java)
         val seed = false
         val stopActionInNotification = true
+        val notificationChannelId = "trickl_daemon_notif"
+        val notificationChannelName = "Trick Client Daemon"
         Confluence.torrentRepository.isConnected()
                 .subscribe(object : BaseSubscriber<Boolean>() {
                     override fun onNext(started: Boolean) {
                         mvpView.setLoading(false)
-                        if (!started) Confluence.start(activity, R.drawable.trickl_notification, seed, stopActionInNotification, notificationIntent, {
+                        if (!started) Confluence.start(activity, R.drawable.trickl_notification, notificationChannelId, notificationChannelName, seed, stopActionInNotification, notificationIntent, {
                             mvpView.showError("Storage permissions is required to start the client")
                         })
                     }
