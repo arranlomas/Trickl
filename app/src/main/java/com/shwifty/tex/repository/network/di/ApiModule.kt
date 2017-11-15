@@ -37,13 +37,12 @@ class ApiModule {
     internal fun provideOkHttpClient(): OkHttpClient {
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.HEADERS
-        val client = OkHttpClient.Builder()
+        val clientBuilder = OkHttpClient.Builder()
                 .connectTimeout(45, TimeUnit.SECONDS)
                 .readTimeout(45, TimeUnit.SECONDS)
-                .addInterceptor(logging)
-                .build()
+        if(BuildConfig.DEBUG) clientBuilder.addInterceptor(logging)
 
-        return client
+        return clientBuilder.build()
     }
 
     @Provides

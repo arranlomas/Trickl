@@ -44,6 +44,7 @@
     <string name="error_search_server_unreachable">Oops, Looks like our search server is down</string>
     <string name="error_all_torrents_some_could_not_be_parsed">%1$d torrents could not be loaded, those torrent files have been deleted. Please manually redownload them</string>
     <string name="error_loading_working_directory_prefs">Error, could not load working directory preference, default storage will be used</string>
+    <string name="error_unexpected_error_opening_file">Unexpected error when opening file</string>
 
     <!--list item download-->
     <string name="file_name">File Name</string>

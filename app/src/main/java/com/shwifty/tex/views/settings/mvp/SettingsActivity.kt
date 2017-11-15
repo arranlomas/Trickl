@@ -47,7 +47,7 @@ class SettingsActivity : BaseMviActivity() {
         workingDirectoryRootLayout.setOnClickListener {
             interactor.publishEvent(SettingsIntents.UpdateWorkingDirectoryClearErrors())
             Trickl.dialogManager.showChangeWorkingDirectoryRestartRequired(this, {
-                FileBrowserActivity.startActivity(this, RC_SELECT_FILE, true, Confluence.workingDir)
+                FileBrowserActivity.startActivity(this, RC_SELECT_FILE, true)
             })
         }
 

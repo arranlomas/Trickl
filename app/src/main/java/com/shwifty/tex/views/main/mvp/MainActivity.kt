@@ -189,7 +189,7 @@ class MainActivity : BaseActivity(), MainContract.View {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         data.validateOnActivityResult(requestCode, RC_SELECT_FILE, resultCode, Activity.RESULT_OK, {
             val file = it.getSerializable(FileBrowserActivity.ARG_FILE_RESULT) as File
-            file.openFileViaIntent(this, { showError(R.string.error_activity_not_found) })
+            file.openFileViaIntent(this, { showError(R.string.error_activity_not_found) }, { showError(R.string.error_unexpected_error_opening_file) })
         })
     }
 
