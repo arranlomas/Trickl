@@ -142,6 +142,12 @@
 
         </android.support.v7.widget.CardView>
 
+        <Button
+            android:id="@+id/restartClientButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Restart App"/>
+
     </LinearLayout>
 
 </LinearLayout>

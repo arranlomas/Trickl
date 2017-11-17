@@ -6,16 +6,17 @@ import android.content.Intent
 import android.os.Bundle
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
 import com.schiwfty.torrentwrapper.confluence.Confluence
-import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
-import com.shwifty.tex.utils.setVisible
+import com.shwifty.tex.utils.createObservableFrom
 import com.shwifty.tex.utils.validateOnActivityResult
 import com.shwifty.tex.views.base.mvi.BaseMviActivity
 import com.shwifty.tex.views.settings.di.DaggerSettingsComponent
 import com.shwifty.tex.views.settings.mvi.SettingsIntents
 import com.shwifty.tex.views.settings.mvi.SettingsViewState
 import kotlinx.android.synthetic.main.activity_settings.*
+import rx.Emitter
+import rx.Observable
 import java.io.File
 import javax.inject.Inject
 
@@ -24,6 +25,8 @@ class SettingsActivity : BaseMviActivity() {
 
     @Inject
     lateinit var interactor: SettingsContract.Interactor
+
+    private lateinit var newWorkingDirecotyrEmiter: Emitter<SettingsIntents.NewWorkingDirectorySelected>
 
     companion object {
         fun startActivity(context: Context) {
@@ -44,32 +47,9 @@ class SettingsActivity : BaseMviActivity() {
             onBackPressed()
         }
 
-        workingDirectoryRootLayout.setOnClickListener {
-            interactor.publishEvent(SettingsIntents.UpdateWorkingDirectoryClearErrors())
-            Trickl.dialogManager.showChangeWorkingDirectoryRestartRequired(this, {
-                FileBrowserActivity.startActivity(this, RC_SELECT_FILE, true)
-            })
-        }
-
         interactor.getViewStateStream().subscribeToEventStream { runOnUiThread { render(it) } }
+        interactor.addView(intents())
         render(interactor.getInitialState())
-    }
-
-    private fun render(state: SettingsViewState) {
-        if (state.restartAppState.restart) (this.application as MyApplication).restart()
-        workingDirectoryField.text = state.workingDirectoryState.currentWorkingDirectory.absolutePath
-        when {
-            state.workingDirectoryState.errorString != null -> {
-                workingDirectoryError.setVisible(true)
-                workingDirectoryError.text = state.workingDirectoryState.errorString
-            }
-            state.workingDirectoryState.errorRes != null -> {
-                workingDirectoryError.setVisible(true)
-                workingDirectoryError.text = getString(state.workingDirectoryState.errorRes)
-            }
-            else -> workingDirectoryError.setVisible(false)
-        }
-        workingDirectorySpinner.setVisible(state.workingDirectoryState.isLoading)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -77,10 +57,45 @@ class SettingsActivity : BaseMviActivity() {
             val file = it.getSerializable(FileBrowserActivity.ARG_FILE_RESULT) as File
             Trickl.dialogManager.showChangeWorkingDirectoryDialog(this, Confluence.workingDir, file, {
                 previousDirectory, newDirectory ->
-                interactor.publishEvent(SettingsIntents.UpdateWorkingDirectory(this, previousDirectory, newDirectory, moveFiles = true))
+                updateWorkingDirectoryIntent()
+                newWorkingDirecotyrEmiter.onNext(SettingsIntents.NewWorkingDirectorySelected(this, previousDirectory, newDirectory, true))
             }, { previousDirectory, newDirectory ->
-                interactor.publishEvent(SettingsIntents.UpdateWorkingDirectory(this, previousDirectory, newDirectory, moveFiles = false))
+                newWorkingDirecotyrEmiter.onNext(SettingsIntents.NewWorkingDirectorySelected(this, previousDirectory, newDirectory, false))
             })
         })
+    }
+
+
+    private fun render(state: SettingsViewState) {
+//        if (state.restartAppState.restart) (this.application as MyApplication).restart()
+//        workingDirectoryField.text = state.workingDirectoryState.currentWorkingDirectory.absolutePath
+//        when {
+//            state.workingDirectoryState.errorString != null -> {
+//                workingDirectoryError.setVisible(true)
+//                workingDirectoryError.text = state.workingDirectoryState.errorString
+//            }
+//            state.workingDirectoryState.errorRes != null -> {
+//                workingDirectoryError.setVisible(true)
+//                workingDirectoryError.text = getString(state.workingDirectoryState.errorRes)
+//            }
+//            else -> workingDirectoryError.setVisible(false)
+//        }
+//        workingDirectorySpinner.setVisible(state.workingDirectoryState.isLoading)
+    }
+    private fun updateWorkingDirectoryIntent(): Observable<SettingsIntents.NewWorkingDirectorySelected> = createObservableFrom { newWorkingDirecotyrEmiter = it }
+
+    private fun restartClientIntent(): Observable<SettingsIntents.RestartClient> {
+        return createObservableFrom { emiter ->
+            restartClientButton.setOnClickListener {
+                emiter.onNext(SettingsIntents.RestartClient())
+            }
+        }
+    }
+
+    fun intents(): Observable<SettingsIntents> {
+        return Observable.merge(
+                updateWorkingDirectoryIntent(),
+                restartClientIntent()
+        )
     }
 }

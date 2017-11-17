@@ -8,7 +8,8 @@ import rx.subjects.PublishSubject
  */
 interface BaseMviContract {
 
-    interface Interactor<S : State, in E : Intent> {
+    interface Interactor<S : State, E : Intent> {
+        fun addView(intents: Observable<E>)
         fun getInitialState(): S
         fun getViewStateStream(): Observable<S>
         fun publishEvent(event: E)
@@ -17,6 +18,8 @@ interface BaseMviContract {
     interface State
 
     interface Intent
+
+    interface Event
 
     interface Reducer<S : State, in E : Intent> {
         fun reduce(event: E)

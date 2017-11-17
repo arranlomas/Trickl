@@ -1,5 +1,6 @@
 package com.shwifty.tex.utils
 
+import rx.Emitter
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Func1
@@ -57,4 +58,10 @@ private class Retry(val maxRetries: Int)
             }
         })
     }
+}
+
+fun <T> createObservableFrom(event: (Emitter<T>) -> Unit): Observable<T> {
+    return Observable.create<T>({ emitter ->
+        event.invoke(emitter)
+    }, Emitter.BackpressureMode.BUFFER)
 }
