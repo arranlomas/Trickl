@@ -59,9 +59,3 @@ private class Retry(val maxRetries: Int)
         })
     }
 }
-
-fun <T> createObservableFrom(event: (Emitter<T>) -> Unit): Observable<T> {
-    return Observable.create<T>({ emitter ->
-        event.invoke(emitter)
-    }, Emitter.BackpressureMode.BUFFER)
-}

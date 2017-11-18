@@ -14,9 +14,9 @@ import com.shwifty.tex.views.base.mvi.BaseMviActivity
 import com.shwifty.tex.views.settings.di.DaggerSettingsComponent
 import com.shwifty.tex.views.settings.mvi.SettingsIntents
 import com.shwifty.tex.views.settings.mvi.SettingsViewState
+import io.reactivex.Emitter
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_settings.*
-import rx.Emitter
-import rx.Observable
 import java.io.File
 import javax.inject.Inject
 
@@ -47,9 +47,14 @@ class SettingsActivity : BaseMviActivity() {
             onBackPressed()
         }
 
-        interactor.getViewStateStream().subscribeToEventStream { runOnUiThread { render(it) } }
-        interactor.addView(intents())
-        render(interactor.getInitialState())
+        interactor.attachView(intents())
+                .subscribeWith(object : BaseSubscriber<SettingsViewState>() {
+                    override fun onNext(state: SettingsViewState) {
+                        render(state)
+                    }
+                })
+                .addDisposable()
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -65,6 +70,22 @@ class SettingsActivity : BaseMviActivity() {
         })
     }
 
+    private fun updateWorkingDirectoryIntent(): Observable<SettingsIntents.NewWorkingDirectorySelected> = createObservableFrom { newWorkingDirecotyrEmiter = it }
+
+    private fun restartClientIntent(): Observable<SettingsIntents.RestartApp> {
+        return createObservableFrom { emitter ->
+            restartClientButton.setOnClickListener {
+                emitter.onNext(SettingsIntents.RestartApp())
+            }
+        }
+    }
+
+    fun intents(): Observable<SettingsIntents> {
+        return Observable.merge(
+                updateWorkingDirectoryIntent(),
+                restartClientIntent()
+        )
+    }
 
     private fun render(state: SettingsViewState) {
 //        if (state.restartAppState.restart) (this.application as MyApplication).restart()
@@ -81,21 +102,5 @@ class SettingsActivity : BaseMviActivity() {
 //            else -> workingDirectoryError.setVisible(false)
 //        }
 //        workingDirectorySpinner.setVisible(state.workingDirectoryState.isLoading)
-    }
-    private fun updateWorkingDirectoryIntent(): Observable<SettingsIntents.NewWorkingDirectorySelected> = createObservableFrom { newWorkingDirecotyrEmiter = it }
-
-    private fun restartClientIntent(): Observable<SettingsIntents.RestartClient> {
-        return createObservableFrom { emiter ->
-            restartClientButton.setOnClickListener {
-                emiter.onNext(SettingsIntents.RestartClient())
-            }
-        }
-    }
-
-    fun intents(): Observable<SettingsIntents> {
-        return Observable.merge(
-                updateWorkingDirectoryIntent(),
-                restartClientIntent()
-        )
     }
 }

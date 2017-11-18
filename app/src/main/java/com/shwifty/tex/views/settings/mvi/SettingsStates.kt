@@ -1,7 +1,6 @@
 package com.shwifty.tex.views.settings.mvi
 
 import com.schiwfty.torrentwrapper.confluence.Confluence
-import com.shwifty.tex.views.base.mvi.BaseViewState
 import java.io.File
 
 /**
@@ -11,7 +10,11 @@ import java.io.File
 data class SettingsViewState(
         val workingDirectoryState: WorkingDirectoryState = WorkingDirectoryState(),
         val restartAppState: RestartAppState = RestartAppState()
-) : BaseViewState()
+){
+    companion object Factory{
+        fun default() = SettingsViewState()
+    }
+}
 
 data class WorkingDirectoryState(
         val currentWorkingDirectory: File = Confluence.workingDir,
