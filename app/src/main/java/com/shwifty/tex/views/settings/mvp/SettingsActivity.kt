@@ -6,9 +6,11 @@ import android.content.Intent
 import android.os.Bundle
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
 import com.schiwfty.torrentwrapper.confluence.Confluence
+import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.utils.createObservableFrom
+import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.utils.validateOnActivityResult
 import com.shwifty.tex.views.base.mvi.BaseMviActivity
 import com.shwifty.tex.views.settings.di.DaggerSettingsComponent
@@ -20,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_settings.*
 import java.io.File
 import javax.inject.Inject
 
-class SettingsActivity : BaseMviActivity() {
+class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
     private val RC_SELECT_FILE = 303
 
     @Inject
@@ -35,10 +37,14 @@ class SettingsActivity : BaseMviActivity() {
         }
     }
 
+    init {
+        DaggerSettingsComponent.builder().repositoryComponent(Trickl.repositoryComponent).build().inject(this)
+        super.setup(interactor, intents())
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        DaggerSettingsComponent.builder().repositoryComponent(Trickl.repositoryComponent).build().inject(this)
 
         setSupportActionBar(settingsToolbar)
         supportActionBar?.title = getString(R.string.settings_title)
@@ -46,15 +52,6 @@ class SettingsActivity : BaseMviActivity() {
         settingsToolbar.setNavigationOnClickListener {
             onBackPressed()
         }
-
-        interactor.attachView(intents())
-                .subscribeWith(object : BaseSubscriber<SettingsViewState>() {
-                    override fun onNext(state: SettingsViewState) {
-                        render(state)
-                    }
-                })
-                .addDisposable()
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -62,7 +59,6 @@ class SettingsActivity : BaseMviActivity() {
             val file = it.getSerializable(FileBrowserActivity.ARG_FILE_RESULT) as File
             Trickl.dialogManager.showChangeWorkingDirectoryDialog(this, Confluence.workingDir, file, {
                 previousDirectory, newDirectory ->
-                updateWorkingDirectoryIntent()
                 newWorkingDirecotyrEmiter.onNext(SettingsIntents.NewWorkingDirectorySelected(this, previousDirectory, newDirectory, true))
             }, { previousDirectory, newDirectory ->
                 newWorkingDirecotyrEmiter.onNext(SettingsIntents.NewWorkingDirectorySelected(this, previousDirectory, newDirectory, false))
@@ -87,20 +83,20 @@ class SettingsActivity : BaseMviActivity() {
         )
     }
 
-    private fun render(state: SettingsViewState) {
-//        if (state.restartAppState.restart) (this.application as MyApplication).restart()
-//        workingDirectoryField.text = state.workingDirectoryState.currentWorkingDirectory.absolutePath
-//        when {
-//            state.workingDirectoryState.errorString != null -> {
-//                workingDirectoryError.setVisible(true)
-//                workingDirectoryError.text = state.workingDirectoryState.errorString
-//            }
-//            state.workingDirectoryState.errorRes != null -> {
-//                workingDirectoryError.setVisible(true)
-//                workingDirectoryError.text = getString(state.workingDirectoryState.errorRes)
-//            }
-//            else -> workingDirectoryError.setVisible(false)
-//        }
-//        workingDirectorySpinner.setVisible(state.workingDirectoryState.isLoading)
+    override fun render(state: SettingsViewState) {
+        if (state.restartAppState.restart) (this.application as MyApplication).restart()
+        workingDirectoryField.text = state.workingDirectoryState.currentWorkingDirectory.absolutePath
+        when {
+            state.workingDirectoryState.errorString != null -> {
+                workingDirectoryError.setVisible(true)
+                workingDirectoryError.text = state.workingDirectoryState.errorString
+            }
+            state.workingDirectoryState.errorRes != null -> {
+                workingDirectoryError.setVisible(true)
+                workingDirectoryError.text = getString(state.workingDirectoryState.errorRes)
+            }
+            else -> workingDirectoryError.setVisible(false)
+        }
+        workingDirectorySpinner.setVisible(state.workingDirectoryState.isLoading)
     }
 }

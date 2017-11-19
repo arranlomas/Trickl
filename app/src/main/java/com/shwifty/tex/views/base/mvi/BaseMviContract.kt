@@ -1,30 +1,18 @@
 package com.shwifty.tex.views.base.mvi
 
-import rx.Observable
-import rx.subjects.PublishSubject
+import io.reactivex.Observable
+
 
 /**
  * Created by arran on 11/07/2017.
  */
 interface BaseMviContract {
 
-    interface Interactor<S : State, E : Intent> {
-        fun addView(intents: Observable<E>)
-        fun getInitialState(): S
-        fun getViewStateStream(): Observable<S>
-        fun publishEvent(event: E)
+    interface Interactor<S : ViewState, E : Intent> {
+        fun attachView(intents: Observable<E>): Observable<S>
     }
 
-    interface State
+    interface ViewState
 
     interface Intent
-
-    interface Event
-
-    interface Reducer<S : State, in E : Intent> {
-        fun reduce(event: E)
-        fun getInitialState(): S
-        fun getState(): S
-        fun getViewStateChangeStream(): PublishSubject<S>
-    }
 }
