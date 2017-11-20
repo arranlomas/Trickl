@@ -48,7 +48,7 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".views.settings.mvp.SettingsActivity"></activity>
+        <activity android:name=".views.settings.mvi.SettingsActivity" />
     </application>
 
 </manifest>
