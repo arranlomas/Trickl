@@ -2,7 +2,6 @@ package com.shwifty.tex.views.base.mvi
 
 import io.reactivex.Observable
 
-
 /**
  * Created by arran on 11/07/2017.
  */

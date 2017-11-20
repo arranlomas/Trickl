@@ -14,10 +14,10 @@ import io.reactivex.functions.BiFunction
 val reducer = BiFunction <SettingsViewState, SettingsResult, SettingsViewState> {
     previousState: SettingsViewState, result: SettingsResult ->
     when (result) {
-        is SettingsResult.UpdateWorkingDirectoryInFlight -> previousState.copy(workingDirectoryState = previousState.workingDirectoryState.copy(isLoading = true))
-        is SettingsResult.UpdateWorkingDirectorySuccess -> previousState.copy(workingDirectoryState = previousState.workingDirectoryState.copy(isLoading = false, currentWorkingDirectory = result.newFile))
-        is SettingsResult.UpdateWorkingDirectoryError -> previousState.copy(workingDirectoryState = previousState.workingDirectoryState.copy(isLoading = false, errorString = result.error.localizedMessage))
-        SettingsResult.RestartApp -> previousState.copy(restartAppState = previousState.restartAppState.copy(restart = true))
+        is SettingsResult.UpdateWorkingDirectoryInFlight -> previousState.copy(isLoading = true)
+        is SettingsResult.UpdateWorkingDirectorySuccess -> previousState.copy(isLoading = false, currentWorkingDirectory = result.newFile)
+        is SettingsResult.UpdateWorkingDirectoryError -> previousState.copy(isLoading = false, errorString = result.error.localizedMessage)
+        SettingsResult.RestartApp -> previousState.copy(restart = true)
     }
 }
 
