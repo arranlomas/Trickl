@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.activity_settings.*
 import java.io.File
 import javax.inject.Inject
 
+
 class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
     private val RC_SELECT_FILE = 303
 
@@ -66,6 +67,10 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
         })
     }
 
+    private fun initialIntent(): Observable<SettingsIntents.InitialIntent> {
+        return Observable.just(SettingsIntents.InitialIntent(this))
+    }
+
     private fun updateWorkingDirectoryIntent(): Observable<SettingsIntents.NewWorkingDirectorySelected> = createObservableFrom { newWorkingDirecotyrEmiter = it }
 
     private fun restartClientIntent(): Observable<SettingsIntents.RestartApp> {
@@ -78,6 +83,7 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
 
     fun intents(): Observable<SettingsIntents> {
         return Observable.merge(
+                initialIntent(),
                 updateWorkingDirectoryIntent(),
                 restartClientIntent()
         )

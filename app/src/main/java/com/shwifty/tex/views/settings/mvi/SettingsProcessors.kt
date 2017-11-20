@@ -18,12 +18,15 @@ val reducer = BiFunction <SettingsViewState, SettingsResult, SettingsViewState> 
         is SettingsResult.UpdateWorkingDirectorySuccess -> previousState.copy(isLoading = false, currentWorkingDirectory = result.newFile)
         is SettingsResult.UpdateWorkingDirectoryError -> previousState.copy(isLoading = false, errorString = result.error.localizedMessage)
         SettingsResult.RestartApp -> previousState.copy(restart = true)
+        is SettingsResult.LoadWorkingDirectorySuccess -> previousState.copy(isLoading = false, currentWorkingDirectory = result.newFile)
+        is SettingsResult.LoadWorkingDirectoryError -> previousState.copy(isLoading = false, errorString = result.error.localizedMessage)
     }
 }
 
 fun actionFromIntent(intent: SettingsIntents): SettingsActions = when (intent) {
     is SettingsIntents.NewWorkingDirectorySelected -> SettingsActions.ClearErrorsAndUpdateWorkingDirectory(intent.context, intent.previousDirectory, intent.newDirectory, intent.moveFiles)
     is SettingsIntents.RestartApp -> SettingsActions.RestartApp
+    is SettingsIntents.InitialIntent -> SettingsActions.LoadWorkingDirectory(intent.context)
 }
 
 fun settingsActionProcessor(preferencesRepository: IPreferenceRepository): ObservableTransformer<SettingsActions, SettingsResult> =
@@ -31,7 +34,8 @@ fun settingsActionProcessor(preferencesRepository: IPreferenceRepository): Obser
             action.publish { shared ->
                 Observable.merge(
                         shared.ofType(SettingsActions.ClearErrorsAndUpdateWorkingDirectory::class.java).compose(updateWorkingDirectoryProcessor(preferencesRepository)),
-                        shared.ofType(SettingsActions.RestartApp::class.java).compose(restartAppProcessor)
+                        shared.ofType(SettingsActions.RestartApp::class.java).compose(restartAppProcessor),
+                        shared.ofType(SettingsActions.LoadWorkingDirectory::class.java).compose(loadWorkingDirectoryProcessor(preferencesRepository))
                 )
             }
         }
@@ -42,8 +46,18 @@ val restartAppProcessor = ObservableTransformer<SettingsActions.RestartApp, Sett
     }
 }
 
-fun updateWorkingDirectoryProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer<SettingsActions.ClearErrorsAndUpdateWorkingDirectory, SettingsResult> { actions: Observable<SettingsActions.ClearErrorsAndUpdateWorkingDirectory> ->
-    actions.flatMap { action ->
+fun loadWorkingDirectoryProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer { actions: Observable<SettingsActions.LoadWorkingDirectory> ->
+    actions.switchMap { (context) ->
+        preferencesRepository.getWorkingDirectoryPreference(context)
+                .map { SettingsResult.LoadWorkingDirectorySuccess(it) as SettingsResult }
+                .onErrorReturn { SettingsResult.LoadWorkingDirectoryError(it) }
+                .composeIo()
+                .startWith(SettingsResult.UpdateWorkingDirectoryInFlight)
+    }
+}
+
+fun updateWorkingDirectoryProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer { actions: Observable<SettingsActions.ClearErrorsAndUpdateWorkingDirectory> ->
+    actions.switchMap { action ->
         Observable.just(action.newDirectory.validateWorkingDirectoryCanBeChanged(action.previousDirectory))
                 .map { isValid ->
                     if (isValid is ValidateChangeWorkingDirectoryResult.Error) {

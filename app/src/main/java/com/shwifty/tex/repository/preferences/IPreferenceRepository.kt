@@ -1,7 +1,7 @@
 package com.shwifty.tex.repository.preferences
 
 import android.content.Context
-import rx.Observable
+import io.reactivex.Observable
 import java.io.File
 
 /**

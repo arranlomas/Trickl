@@ -3,7 +3,7 @@ package com.shwifty.tex.repository.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Environment
-import rx.Observable
+import io.reactivex.Observable
 import java.io.File
 
 
