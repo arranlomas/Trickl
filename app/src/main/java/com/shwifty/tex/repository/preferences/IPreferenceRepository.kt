@@ -10,4 +10,6 @@ import java.io.File
 interface IPreferenceRepository {
     fun getWorkingDirectoryPreference(context: Context): Observable<File>
     fun saveWorkingDirectoryPreference(context: Context, file: File): Observable<Boolean>
+    fun saveWifiOnlyPreference(context: Context, selected: Boolean): Observable<Boolean>
+    fun getWifiOnlyPreference(context: Context): Observable<Boolean>
 }

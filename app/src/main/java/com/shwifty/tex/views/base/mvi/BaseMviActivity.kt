@@ -19,14 +19,12 @@ open class BaseMviActivity<S : BaseMviContract.ViewState, E : BaseMviContract.In
     private lateinit var interactor: BaseMviContract.Interactor<S, E>
     private lateinit var intents: Observable<E>
 
-    fun setup(interactor: BaseMviContract.Interactor<S, E>, intents: Observable<E>) {
+    fun setup(interactor: BaseMviContract.Interactor<S, E>) {
         this.interactor = interactor
-        this.intents = intents
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    fun attachIntents(intents: Observable<E>){
+        this.intents = intents
         interactor.attachView(intents)
                 .subscribeWith(object : BaseSubscriber<S>() {
                     override fun onNext(state: S) {
@@ -34,22 +32,16 @@ open class BaseMviActivity<S : BaseMviContract.ViewState, E : BaseMviContract.In
                     }
                 })
                 .addDisposable()
-
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         subscriptions.dispose()
     }
 
     fun Disposable.addDisposable() {
         subscriptions.add(this)
     }
-
 
     abstract inner class BaseSubscriber<T>(val showLoading: Boolean = true) : DisposableObserver<T>() {
         override fun onError(e: Throwable) {

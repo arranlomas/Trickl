@@ -22,7 +22,7 @@ import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
 import com.shwifty.tex.views.base.mvp.BaseActivity
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.main.di.DaggerMainComponent
-import com.shwifty.tex.views.settings.mvp.SettingsActivity
+import com.shwifty.tex.views.settings.mvi.SettingsActivity
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*

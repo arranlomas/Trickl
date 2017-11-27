@@ -9,8 +9,10 @@ import java.io.File
 
 data class SettingsViewState(
         val currentWorkingDirectory: File? = null,
-        val errorRes: Int? = null,
-        val errorString: String? = null,
+        val wifiOnly: Boolean = false,
+        val loadSettingsErrorString: String? = null,
+        val workingDirectoryErrorString: String? = null,
+        val wifiOnlyErrorString: String? = null,
         val isLoading: Boolean = false,
         val restart: Boolean = false
 ) : BaseMviContract.ViewState {

@@ -14,9 +14,6 @@ import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.utils.validateOnActivityResult
 import com.shwifty.tex.views.base.mvi.BaseMviActivity
 import com.shwifty.tex.views.settings.di.DaggerSettingsComponent
-import com.shwifty.tex.views.settings.mvi.SettingsContract
-import com.shwifty.tex.views.settings.mvi.SettingsIntents
-import com.shwifty.tex.views.settings.mvi.SettingsViewState
 import io.reactivex.Emitter
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -34,26 +31,32 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
 
     companion object {
         fun startActivity(context: Context) {
-            val intent = Intent(context, mvSettingsActivity::class.java)
+            val intent = Intent(context, SettingsActivity::class.java)
             context.startActivity(intent)
         }
     }
 
     init {
         DaggerSettingsComponent.builder().repositoryComponent(Trickl.repositoryComponent).build().inject(this)
-        super.setup(interactor, intents())
+        super.setup(interactor)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
         setSupportActionBar(settingsToolbar)
         supportActionBar?.title = getString(R.string.settings_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         settingsToolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+
+        workingDirectoryRootLayout.setOnClickListener {
+            Trickl.dialogManager.showChangeWorkingDirectoryRestartRequired(this, {
+                FileBrowserActivity.startActivity(this, RC_SELECT_FILE, true)
+            })
+        }
+        super.attachIntents(intents())
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -74,6 +77,14 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
 
     private fun updateWorkingDirectoryIntent(): Observable<SettingsIntents.NewWorkingDirectorySelected> = createObservableFrom { newWorkingDirecotyrEmiter = it }
 
+    private fun toggleWifiOnlyIntent(): Observable<SettingsIntents.ToggleWifiOnly> {
+        return createObservableFrom { emitter ->
+            wifiOnlySwich.setOnCheckedChangeListener { _, selected ->
+                emitter.onNext(SettingsIntents.ToggleWifiOnly(this, selected))
+            }
+        }
+    }
+
     private fun restartClientIntent(): Observable<SettingsIntents.RestartApp> {
         return createObservableFrom { emitter ->
             restartClientButton.setOnClickListener {
@@ -86,7 +97,8 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
         return Observable.merge(
                 initialIntent(),
                 updateWorkingDirectoryIntent(),
-                restartClientIntent()
+                restartClientIntent(),
+                toggleWifiOnlyIntent()
         )
     }
 
@@ -94,13 +106,9 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
         if (state.restart) (this.application as MyApplication).restart()
         state.currentWorkingDirectory?.absolutePath?.let { workingDirectoryField.text = it }
         when {
-            state.errorString != null -> {
+            state.workingDirectoryErrorString != null -> {
                 workingDirectoryError.setVisible(true)
-                workingDirectoryError.text = state.errorString
-            }
-            state.errorRes != null -> {
-                workingDirectoryError.setVisible(true)
-                workingDirectoryError.text = getString(state.errorRes)
+                workingDirectoryError.text = state.workingDirectoryErrorString
             }
             else -> workingDirectoryError.setVisible(false)
         }
