@@ -16,4 +16,6 @@
 
     <attr name="toolbarBackground" format="reference|color" />
     <attr name="toolbarTextColor" format="reference|color" />
+    <attr name="light" format="reference|boolean" />
+
 </resources>
