@@ -10,7 +10,6 @@
         android:id="@+id/showTorrentToolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:background="?colorPrimary"
         app:theme="@style/ToolbarStyle" />
 
 
