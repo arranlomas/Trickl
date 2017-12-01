@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/chromecast_bottom_sheet_max_height"
     android:orientation="vertical"
-    android:background="@color/chromecast_bottom_sheet_background"
+    android:background="?chromecastSheetBackground"
     android:paddingBottom="@dimen/default_large_padding"
     android:paddingLeft="@dimen/default_large_padding"
     android:paddingRight="@dimen/default_large_padding">
@@ -11,7 +11,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="24dp"
-        android:src="@drawable/ic_arrow_drop_down_white" />
+        android:src="@drawable/ic_arrow_drop_down_white"
+        android:tint="?drawableColor"/>
 
     <LinearLayout
         android:layout_width="match_parent"

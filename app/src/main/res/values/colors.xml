@@ -2,26 +2,31 @@
 <resources>
     <!--general-->
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
 
     <!--theme-->
-    <color name="colorPrimary">#4c4c4c</color>
-    <color name="colorPrimaryDark">#2e2e2e</color>
-    <color name="colorAccent">#51c8ae</color>
-    <color name="colorAccentPressed">#225954</color>
-    <color name="darkBackground">#303030</color>
+    <color name="primary">#4c4c4c</color>
+    <color name="primaryDark">#2e2e2e</color>
+    <color name="accent">#51c8ae</color>
+    <color name="accentPressed">#225954</color>
+    <color name="background">#d9393939</color>
+    <color name="chromecastBottomSheetBackground">#292929</color>
+    <color name="drawableColor">#ffffff</color>
+
+
+    <!--Theme Light-->
+    <color name="lightPrimary">#ffffff</color>
+    <color name="lightPrimaryDark">#937f7f</color>
+    <color name="lightAccent">#ff00ee</color>
+    <color name="lightAccentPressed">#bc03b0</color>
+    <color name="lightBackground">#d9ffffff</color>
+    <color name="lightChromecastBottomSheetBackground">#d9ffffff</color>
+    <color name="lightDrawableColor">#000000</color>
+
+
+    <!--Generic Colors-->
     <color name="transparent">#00000000</color>
-
-    <!--torrent list item-->
-    <color name="cardview_light_background">#FFFFFFFF</color>
     <color name="divider">#E0E0E0</color>
-    <color name="blackoutBackground">#d9393939</color>
-
-    <!--fab-->
-    <color name="black_semi_transparent">#B2000000</color>
-
-    <!--chromecast bottom sheet-->
-    <color name="chromecast_bottom_sheet_background">#292929</color>
-
-    <!--Error-->
     <color name="error_red">#d40909</color>
+    <color name="blackSemiTransparent">#B2000000</color>
 </resources>

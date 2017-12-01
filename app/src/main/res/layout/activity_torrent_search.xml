@@ -9,8 +9,8 @@
         android:id="@+id/torrentSearchToolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:background="@color/colorPrimary"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        android:background="?colorPrimary"
+        app:theme="@style/ToolbarStyle"  />
 
     <FrameLayout
         android:id="@+id/frameLayout"

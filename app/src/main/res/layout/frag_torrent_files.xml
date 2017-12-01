@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blackoutBackground">
+    android:background="?fragmentBackground">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/torrentFilesRecyclerView"

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/blackoutBackground"
+    android:background="?fragmentBackground"
     android:padding="@dimen/default_large_padding"
     app:cardUseCompatPadding="true"
     card_view:cardCornerRadius="2dp">

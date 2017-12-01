@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="primary" format="reference|color" />
+    <attr name="primaryDark" format="reference|color" />
+
+    <attr name="accent" format="reference|color" />
+    <attr name="accentPressed" format="reference|color" />
+
+    <attr name="fragmentBackground" format="reference|color" />
+    <attr name="chromecastSheetBackground" format="reference|color" />
+
+    <attr name="drawableColor" format="reference|color" />
+    <attr name="textColor" format="reference|color" />
+    <attr name="blackTransparent" format="reference|color" />
+
+    <attr name="toolbarBackground" format="reference|color" />
+    <attr name="toolbarTextColor" format="reference|color" />
+</resources>

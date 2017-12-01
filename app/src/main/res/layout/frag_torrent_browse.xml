@@ -4,20 +4,12 @@
     android:id="@+id/rootBrowseLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blackoutBackground"
     android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/torrentBrowseSwipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -52,17 +44,17 @@
         android:id="@+id/searchQueryInput"
         android:layout_width="@dimen/fab_size_mini"
         android:layout_height="@dimen/fab_size_mini"
+        android:layout_marginEnd="@dimen/default_small_padding"
         android:layout_marginTop="@dimen/default_small_padding"
+        android:layout_toStartOf="@+id/fabSearch"
         android:background="@drawable/bg_edit_text_rounded_corners"
         android:clickable="true"
         android:focusable="true"
+        android:imeOptions="actionDone"
         android:maxLines="1"
         android:paddingEnd="@dimen/default_small_padding"
         android:paddingStart="@dimen/default_small_padding"
-        android:textColor="@color/white"
-        android:layout_toStartOf="@+id/fabSearch"
-        android:layout_marginEnd="@dimen/default_small_padding"
-        android:imeOptions="actionDone"/>
+        android:textColor="@color/white" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabSendSearch"
@@ -76,5 +68,12 @@
         android:scaleType="center"
         android:src="@drawable/ic_tick_white"
         app:fabSize="normal" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blackoutBackground"
+    android:background="?fragmentBackground"
     android:orientation="vertical"
     tools:context="com.shwifty.tex.views.settings.mvi.SettingsActivity">
 
@@ -13,8 +13,8 @@
         android:id="@+id/settingsToolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:background="@color/colorPrimary"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        android:background="?colorPrimary"
+        app:theme="@style/ToolbarStyle"  />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_small_padding"
-            android:background="@color/blackoutBackground"
+            android:background="?fragmentBackground"
             card_view:cardCornerRadius="2dp">
 
             <LinearLayout
@@ -87,7 +87,7 @@
             android:id="@+id/wifiOnlyRootLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/blackoutBackground"
+            android:background="?fragmentBackground"
             card_view:cardCornerRadius="2dp"
             android:visibility="gone">
 

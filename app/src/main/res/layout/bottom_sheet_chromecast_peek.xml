@@ -5,7 +5,7 @@
     android:layout_height="@dimen/chromecast_bottom_sheet_peek_height"
     android:orientation="vertical"
     android:visibility="visible"
-    android:background="@color/chromecast_bottom_sheet_background"
+    android:background="?chromecastSheetBackground"
     android:paddingBottom="@dimen/default_large_padding"
     android:paddingLeft="@dimen/default_large_padding"
     android:paddingRight="@dimen/default_large_padding">
