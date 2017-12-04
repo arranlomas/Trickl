@@ -54,7 +54,7 @@
         android:maxLines="1"
         android:paddingEnd="@dimen/default_small_padding"
         android:paddingStart="@dimen/default_small_padding"
-        android:textColor="@color/white" />
+        android:textColor="?textColor" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabSendSearch"

@@ -27,7 +27,8 @@
         android:layout_gravity="center"
         android:layout_marginTop="100dp"
         android:gravity="center"
-        android:text="@string/loading_torrent_info" />
+        android:text="@string/loading_torrent_info"
+        android:textColor="?textColor"/>
 
     <com.ogaclejapan.smarttablayout.SmartTabLayout
         android:id="@+id/showTorrentSmartTab"

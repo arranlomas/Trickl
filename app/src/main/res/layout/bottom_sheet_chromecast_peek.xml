@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="hello"
-            android:textColor="@color/white"
+            android:textColor="?textColor"
             android:textSize="@dimen/chromecast_text_size" />
 
         <ImageView

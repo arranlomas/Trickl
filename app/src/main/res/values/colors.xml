@@ -11,7 +11,8 @@
     <color name="accentPressed">#225954</color>
     <color name="background">#d9393939</color>
     <color name="chromecastBottomSheetBackground">#292929</color>
-    <color name="drawableColor">#ffffff</color>
+    <color name="iconColor">#ffffff</color>
+    <color name="cardTextColor">#808080</color>
 
 
     <!--Theme Light-->
@@ -19,9 +20,10 @@
     <color name="lightPrimaryDark">#937f7f</color>
     <color name="lightAccent">#ff00ee</color>
     <color name="lightAccentPressed">#bc03b0</color>
-    <color name="lightBackground">#d9ffffff</color>
+    <color name="lightBackground">#7c7c7c</color>
     <color name="lightChromecastBottomSheetBackground">#d9ffffff</color>
-    <color name="lightDrawableColor">#000000</color>
+    <color name="lightIconColor">#000000</color>
+    <color name="lightCardTextColor">#808080</color>
 
 
     <!--Generic Colors-->

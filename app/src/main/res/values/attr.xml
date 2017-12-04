@@ -10,12 +10,15 @@
     <attr name="fragmentBackground" format="reference|color" />
     <attr name="chromecastSheetBackground" format="reference|color" />
 
-    <attr name="drawableColor" format="reference|color" />
-    <attr name="textColor" format="reference|color" />
+    <attr name="iconColor" format="reference|color" />
     <attr name="blackTransparent" format="reference|color" />
 
     <attr name="toolbarBackground" format="reference|color" />
-    <attr name="toolbarTextColor" format="reference|color" />
     <attr name="light" format="reference|boolean" />
+
+    <attr name="tabTitleTextColor" format="reference|color" />
+    <attr name="textColor" format="reference|color" />
+    <attr name="toolbarTextColor" format="reference|color" />
+    <attr name="cardTextColor" format="reference|color" />
 
 </resources>

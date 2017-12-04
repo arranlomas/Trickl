@@ -21,7 +21,8 @@
             android:layout_margin="8dp"
             android:text="change me"
             tools:layout_editor_absoluteY="25dp"
-            tools:layout_editor_absoluteX="8dp" />
+            tools:layout_editor_absoluteX="8dp"
+            android:textColor="?cardTextColor"/>
 
         <View
             android:id="@+id/divider"
@@ -43,7 +44,8 @@
                 android:layout_margin="8dp"
                 android:text="change me"
                 tools:layout_editor_absoluteY="25dp"
-                tools:layout_editor_absoluteX="8dp" />
+                tools:layout_editor_absoluteX="8dp"
+                android:textColor="?cardTextColor"/>
 
             <TextView
                 android:id="@+id/torrentInfoSize"
@@ -53,7 +55,8 @@
                 android:text="change me"
                 android:gravity="end"
                 tools:layout_editor_absoluteY="25dp"
-                tools:layout_editor_absoluteX="8dp" />
+                tools:layout_editor_absoluteX="8dp"
+                android:textColor="?cardTextColor"/>
 
         </LinearLayout>
 

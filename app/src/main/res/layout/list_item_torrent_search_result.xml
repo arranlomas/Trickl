@@ -21,7 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_small_padding"
-            tools:text="torrent name" />
+            tools:text="torrent name"
+            android:textColor="?cardTextColor"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,20 +33,23 @@
                 android:id="@+id/uploader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="uploader" />
+                tools:text="uploader"
+                android:textColor="?cardTextColor"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/default_small_padding"
                 android:layout_marginStart="@dimen/default_small_padding"
-                android:text="•" />
+                android:text="•"
+                android:textColor="?cardTextColor"/>
 
             <TextView
                 android:id="@+id/category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Category" />
+                tools:text="Category"
+                android:textColor="?cardTextColor"/>
 
         </LinearLayout>
 
@@ -68,13 +72,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                tools:text="Seeders" />
+                tools:text="Seeders"
+                android:textColor="?cardTextColor"/>
 
             <TextView
                 android:id="@+id/size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Size" />
+                tools:text="Size"
+                android:textColor="?cardTextColor"/>
 
         </LinearLayout>
 
@@ -88,13 +94,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                tools:text="Leechers" />
+                tools:text="Leechers"
+                android:textColor="?cardTextColor"/>
 
             <TextView
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="date" />
+                tools:text="date"
+                android:textColor="?cardTextColor"/>
 
         </LinearLayout>
 

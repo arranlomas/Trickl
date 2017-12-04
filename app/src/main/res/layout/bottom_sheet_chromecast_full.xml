@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:src="@drawable/ic_arrow_drop_down_white"
-        android:tint="?drawableColor"/>
+        android:tint="?attr/iconColor"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             android:layout_marginTop="@dimen/default_large_padding"
             android:gravity="center"
             android:text="hello"
-            android:textColor="@color/white"
+            android:textColor="?textColor"
             android:textSize="@dimen/chromecast_text_size" />
 
         <SeekBar

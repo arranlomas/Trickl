@@ -26,14 +26,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:text="name" />
+                    android:text="name"
+                    android:textColor="?cardTextColor"/>
 
                 <TextView
                     android:id="@+id/torrentFileSize"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:text="size" />
+                    android:text="size"
+                    android:textColor="?cardTextColor"/>
             </LinearLayout>
 
     </LinearLayout>

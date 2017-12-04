@@ -13,11 +13,15 @@
         <item name="fragmentBackground">@color/background</item>
         <item name="chromecastSheetBackground">@color/chromecastBottomSheetBackground</item>
         <item name="blackTransparent">@color/blackSemiTransparent</item>
-        <item name="drawableColor">@color/white</item>
+        <item name="iconColor">@color/iconColor</item>
 
         <item name="toolbarBackground">@color/primaryDark</item>
-        <item name="toolbarTextColor">@color/white</item>
         <item name="light">false</item>
+
+        <item name="textColor">@color/white</item>
+        <item name="toolbarTextColor">@color/white</item>
+        <item name="tabTitleTextColor">@color/black</item>
+        <item name="cardTextColor">@color/cardTextColor</item>
     </style>
 
     <style name="AppTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
@@ -32,11 +36,15 @@
         <item name="fragmentBackground">@color/lightBackground</item>
         <item name="chromecastSheetBackground">@color/lightChromecastBottomSheetBackground</item>
         <item name="blackTransparent">@color/blackSemiTransparent</item>
-        <item name="drawableColor">@color/black</item>
+        <item name="iconColor">@color/lightIconColor</item>
 
         <item name="toolbarBackground">@color/white</item>
-        <item name="toolbarTextColor">@color/black</item>
         <item name="light">true</item>
+
+        <item name="textColor">@color/black</item>
+        <item name="toolbarTextColor">@color/black</item>
+        <item name="tabTitleTextColor">@color/lightCardTextColor</item>
+        <item name="cardTextColor">@color/cardTextColor</item>
     </style>
 
     <style name="menu_labels_style">
@@ -51,7 +59,6 @@
         <item name="isLightTheme">?light</item>
         <item name="android:textColorSecondary">?toolbarTextColor</item>
     </style>
-
 
 
 </resources>
