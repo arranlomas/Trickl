@@ -27,7 +27,7 @@ sealed class SettingsResult {
     data class LoadSettingsSuccess(val workingDirectory: File, val wifiOnly: Boolean) : SettingsResult()
     data class LoadSettingsError(val error: Throwable) : SettingsResult()
 
-    object UpdateWorkingDirectoryInFlight : SettingsResult()
+    object LoadSettingsinFlight : SettingsResult()
     data class UpdateWorkingDirectorySuccess(val newFile: File) : SettingsResult()
     data class UpdateWorkingDirectoryError(val error: Throwable) : SettingsResult()
 

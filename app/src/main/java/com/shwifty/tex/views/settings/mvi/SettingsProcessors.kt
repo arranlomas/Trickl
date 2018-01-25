@@ -16,7 +16,7 @@ import java.io.File
 val reducer = BiFunction <SettingsViewState, SettingsResult, SettingsViewState> {
     previousState: SettingsViewState, result: SettingsResult ->
     when (result) {
-        is SettingsResult.UpdateWorkingDirectoryInFlight -> previousState.copy(isLoading = true)
+        is SettingsResult.LoadSettingsinFlight -> previousState.copy(isLoading = true)
         is SettingsResult.UpdateWorkingDirectorySuccess -> previousState.copy(isLoading = false, currentWorkingDirectory = result.newFile, restart = true)
         is SettingsResult.UpdateWorkingDirectoryError -> previousState.copy(isLoading = false, workingDirectoryErrorString = result.error.localizedMessage)
         SettingsResult.RestartApp -> previousState.copy(restart = true)
@@ -60,7 +60,7 @@ fun loadPrederencesProcessor(preferencesRepository: IPreferenceRepository) = Obs
         })
                 .onErrorReturn { SettingsResult.LoadSettingsError(it) }
                 .composeIo()
-                .startWith(SettingsResult.UpdateWorkingDirectoryInFlight)
+                .startWith(SettingsResult.LoadSettingsinFlight)
     }
 }
 
@@ -90,9 +90,6 @@ fun updateWorkingDirectoryProcessor(preferencesRepository: IPreferenceRepository
                     }
                 }
                 .map { SettingsResult.UpdateWorkingDirectorySuccess(action.newDirectory) as SettingsResult }
-                .onErrorResumeNext(Observable.empty())
-                .onErrorReturn { SettingsResult.UpdateWorkingDirectoryError(it) }
-                .composeIo()
-                .startWith(SettingsResult.UpdateWorkingDirectoryInFlight)
+
     }
 }
