@@ -16,7 +16,7 @@ Note: keystore.properties is in gitignore as it contains the private api key for
 
 * git clone https://github.com/arranlomas/Trickl.git
 
-* cd Trickl
+* ```cd Trickl```
 
 * create a file here called keystore.properties
 
@@ -45,6 +45,17 @@ compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
 
 ```  
 maven { url 'https://maven.fabric.io/public' }
+```
+
+* remove all references to crashlytics from the following files:
+```
+TorrentExtensions.kt
+
+BaseMviActivity.kt
+
+BasePresenter.kt
+
+MainActivity.kt
 ```
 
 # Setting up Fabric
