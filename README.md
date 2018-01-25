@@ -65,5 +65,7 @@ For the next steps you will need to [create a project on fabric](https://www.fab
 * create a file called fabric.properties
 
 * paste the following (where the fields in <> are the details you get from fabric) :-
+
     apiSecret=<your_api_secret>
+    
     apiKey=<your_api_key
