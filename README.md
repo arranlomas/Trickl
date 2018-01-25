@@ -14,7 +14,7 @@ Confluence is a http wrapper for torrent client written in [go](https://github.c
 # Compilation
 Note: keystore.properties is in gitignore as it contains the private api key for my fabric project that tracks crashes. To fix this simply remove the fabric dependency or create a fabric project and copy the api key into a keystore.properties file at the project root.
 
-* git clone https://github.com/arranlomas/Trickl.git
+* ```git clone https://github.com/arranlomas/Trickl.git```
 
 * ```cd Trickl```
 
