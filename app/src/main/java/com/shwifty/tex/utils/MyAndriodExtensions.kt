@@ -2,10 +2,10 @@ package com.shwifty.tex.utils
 
 import android.animation.Animator
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,6 +13,10 @@ import android.util.DisplayMetrics
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import com.crashlytics.android.Crashlytics
+import com.shwifty.tex.R
+import com.shwifty.tex.models.AppTheme
+import com.shwifty.tex.repository.preferences.PreferencesRepository
 
 
 /**
@@ -29,11 +33,11 @@ fun View.openKeyboard() {
     imm.showSoftInputFromInputMethod(windowToken, 0)
 }
 
-fun Context.forceOpenKeyboard(){
+fun Context.forceOpenKeyboard() {
     (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 }
 
-fun Context.forceCloseKeyboard(){
+fun Context.forceCloseKeyboard() {
     (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 }
 
@@ -97,7 +101,7 @@ fun View.animateWidthChange(newWidth: Int, onAnimationFinished: (() -> Unit)? = 
     anim.start()
 }
 
-fun EditText.afterTextChanged(afterTextChange: (String) -> Unit){
+fun EditText.afterTextChanged(afterTextChange: (String) -> Unit) {
     addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(editable: Editable?) {
             afterTextChange.invoke(editable?.toString() ?: "")
@@ -114,7 +118,7 @@ fun EditText.afterTextChanged(afterTextChange: (String) -> Unit){
     })
 }
 
-fun Intent?.validateOnActivityResult(requestCode: Int, expectedRequestCode: Int, resultCode: Int, expectedResultCode: Int, onIsValid: (Bundle) -> Unit){
+fun Intent?.validateOnActivityResult(requestCode: Int, expectedRequestCode: Int, resultCode: Int, expectedResultCode: Int, onIsValid: (Bundle) -> Unit) {
     if (requestCode == expectedRequestCode) {
         if (resultCode == expectedResultCode) {
             this?.extras?.let {
@@ -123,3 +127,15 @@ fun Intent?.validateOnActivityResult(requestCode: Int, expectedRequestCode: Int,
         }
     }
 }
+
+fun Activity.oncreateSetThemeAndCallSuper(onLoaded: () -> Unit) = PreferencesRepository().getThemPreference(this)
+        .subscribe({
+            when (it) {
+                AppTheme.LIGHT -> setTheme(R.style.AppTheme_Light)
+                AppTheme.DARK -> setTheme(R.style.AppTheme)
+            }
+        }, {
+            Crashlytics.logException(it)
+        }, {
+            onLoaded.invoke()
+        })

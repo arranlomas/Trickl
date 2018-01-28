@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.crashlytics.android.Crashlytics
-import com.shwifty.tex.R
+import com.shwifty.tex.utils.oncreateSetThemeAndCallSuper
 import es.dmoral.toasty.Toasty
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -21,15 +21,14 @@ open class BaseMviActivity<S : BaseMviContract.ViewState, E : BaseMviContract.In
     private lateinit var intents: Observable<E>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.AppTheme_Light)
-        super.onCreate(savedInstanceState)
+        oncreateSetThemeAndCallSuper { super.onCreate(savedInstanceState) }
     }
 
     fun setup(interactor: BaseMviContract.Interactor<S, E>) {
         this.interactor = interactor
     }
 
-    fun attachIntents(intents: Observable<E>){
+    fun attachIntents(intents: Observable<E>) {
         this.intents = intents
         interactor.attachView(intents)
                 .subscribeWith(object : BaseSubscriber<S>() {

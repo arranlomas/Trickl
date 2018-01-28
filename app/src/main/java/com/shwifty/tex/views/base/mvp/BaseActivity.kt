@@ -1,11 +1,10 @@
 package com.shwifty.tex.views.base.mvp
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
-import com.shwifty.tex.R
+import com.shwifty.tex.utils.oncreateSetThemeAndCallSuper
 import es.dmoral.toasty.Toasty
 
 /**
@@ -14,8 +13,6 @@ import es.dmoral.toasty.Toasty
 open class BaseActivity : AppCompatActivity(), BaseContract.MvpView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.AppTheme)
-        super.onCreate(savedInstanceState)
     }
 
     override fun onDestroy() {

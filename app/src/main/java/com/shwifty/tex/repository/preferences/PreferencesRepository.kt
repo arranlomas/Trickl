@@ -3,6 +3,7 @@ package com.shwifty.tex.repository.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Environment
+import com.shwifty.tex.models.AppTheme
 import io.reactivex.Observable
 import java.io.File
 
@@ -16,6 +17,7 @@ internal class PreferencesRepository : IPreferenceRepository {
 
     private val KEY_WORKING_DIRECTORY = "pref_working_directory"
     private val KEY_WIFI_ONLY = "pref_wifi_only"
+    private val KEY_THEME = "pref_theme"
 
     private fun getSharedPref(context: Context): SharedPreferences = context.getSharedPreferences(KEY_PREFERENCES_FILE, Context.MODE_PRIVATE)
 
@@ -42,6 +44,18 @@ internal class PreferencesRepository : IPreferenceRepository {
     override fun getWifiOnlyPreference(context: Context): Observable<Boolean> {
         val wifiOnly = getSharedPref(context).getBoolean(KEY_WIFI_ONLY, true)
         return Observable.just(wifiOnly)
+    }
+
+    override fun saveThemePreference(context: Context, theme: AppTheme): Observable<AppTheme> {
+        val editor = getSharedPref(context).edit()
+        editor.putInt(KEY_THEME, theme.ordinal)
+        editor.apply()
+        return Observable.just(theme)
+    }
+
+    override fun getThemPreference(context: Context): Observable<AppTheme> {
+        val theme = getSharedPref(context).getInt(KEY_THEME, AppTheme.DARK.ordinal)
+        return Observable.just(AppTheme.values()[theme])
     }
 
 
