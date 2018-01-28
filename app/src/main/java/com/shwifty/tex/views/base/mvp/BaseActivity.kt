@@ -5,6 +5,7 @@ import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
+import com.shwifty.tex.R
 import es.dmoral.toasty.Toasty
 
 /**
@@ -12,8 +13,9 @@ import es.dmoral.toasty.Toasty
  */
 open class BaseActivity : AppCompatActivity(), BaseContract.MvpView {
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme_Light)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onDestroy() {

@@ -105,12 +105,12 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
     override fun render(state: SettingsViewState) {
         if (state.restart) (this.application as MyApplication).restart()
         state.currentWorkingDirectory?.absolutePath?.let { workingDirectoryField.text = it }
-        when {
-            state.workingDirectoryErrorString != null -> {
-                workingDirectoryError.setVisible(true)
-                workingDirectoryError.text = state.workingDirectoryErrorString
-            }
-            else -> workingDirectoryError.setVisible(false)
+
+        state.workingDirectoryErrorString?.let {
+            workingDirectoryError.setVisible(true)
+            workingDirectoryError.text = state.workingDirectoryErrorString
+        }?: let {
+            workingDirectoryError.setVisible(false)
         }
         workingDirectorySpinner.setVisible(state.isLoading)
     }

@@ -130,7 +130,10 @@
     <string name="settings_title">Settings</string>
     <string name="settings_title_working_directory">Working Directory</string>
     <string name="settings_title_wifi_only">Wifi Only</string>
+    <string name="settings_title_theme">Themes</string>
     <string name="settings_description_wifi_only">Only allow downloading and streaming while on wifi</string>
+    <string name="settings_theme_1">Material Dark</string>
+    <string name="settings_theme_2">Material Light</string>
 
     <!--Settings Error-->
     <string name="working_directory_error_cannot_be_child">Error, Cannot use a subdirectory of the current working directory</string>

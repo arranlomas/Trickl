@@ -25,6 +25,7 @@ class MyApplication : MultiDexApplication() {
     }
 
     override fun onCreate() {
+        super.onCreate()
         PreferencesRepository().getWorkingDirectoryPreference(this)
                 .subscribe({
                     Confluence.install(this, it.absolutePath)
