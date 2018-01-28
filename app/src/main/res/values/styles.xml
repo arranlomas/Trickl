@@ -20,7 +20,7 @@
 
         <item name="textColor">@color/white</item>
         <item name="toolbarTextColor">@color/white</item>
-        <item name="tabTitleTextColor">@color/black</item>
+        <item name="tabTitleTextColor">@color/white</item>
         <item name="cardTextColor">@color/cardTextColor</item>
     </style>
 

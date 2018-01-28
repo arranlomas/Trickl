@@ -12,7 +12,6 @@
         android:layout_height="@dimen/toolbar_height"
         app:theme="@style/ToolbarStyle" />
 
-
     <ProgressBar
         android:id="@+id/addTorrentProgressBar"
         style="?android:attr/progressBarStyle"

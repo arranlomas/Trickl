@@ -34,7 +34,6 @@ class TorrentInfoActivity : BaseActivity(), TorrentInfoContract.View {
 
         setSupportActionBar(showTorrentToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
         showTorrentToolbar.setNavigationOnClickListener {
             super.onBackPressed()
         }

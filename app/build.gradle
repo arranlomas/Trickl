@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 apply plugin: 'io.fabric'
 
@@ -92,7 +93,7 @@ dependencies {
     releaseCompile 'com.readystatesoftware.chuck:library-no-op:1.0.3'
 
     //Number progress bar
-    compile 'com.daimajia.numberprogressbar:library:1.2@aar'
+    compile 'com.daimajia.numberprogressbar:library:1.4@aar'
 
     // IO UTILS
     compile group: 'commons-io', name: 'commons-io', version: '2.5'

@@ -26,11 +26,11 @@ class TorrentInfoPresenter(val torrentRepository: ITorrentRepository) : BasePres
     override var torrentInfo: TorrentInfo? = null
 
     override fun setup(arguments: Bundle?) {
-        if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_HASH) ?: false) {
+        if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_HASH) == true) {
             torrentHash = arguments?.getString(AddTorrentActivity.ARG_TORRENT_HASH) ?: ""
         }
 
-        if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_MAGNET) ?: false) {
+        if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_MAGNET) == true) {
             torrentMagnet = arguments?.getString(AddTorrentActivity.ARG_TORRENT_MAGNET) ?: ""
             torrentMagnet?.findHashFromMagnet()?.let { torrentHash = it }
             torrentName = URLDecoder.decode(torrentMagnet?.findNameFromMagnet(), "UTF-8")
@@ -52,14 +52,14 @@ class TorrentInfoPresenter(val torrentRepository: ITorrentRepository) : BasePres
         torrentRepository.downloadTorrentInfo(hash)
                 .subscribe(object : BaseSubscriber<ParseTorrentResult>() {
                     override fun onNext(result: ParseTorrentResult) {
-                        mvpView.setLoading(false)
-                        mvpView.notifyTorrentAdded()
                         result.unwrapIfSuccess {
                             torrentInfo = it
                             torrentName = it.name
                             torrentHash = it.info_hash
                             torrentTrackers = it.announceList
                         } ?: let { result.logTorrentParseError() }
+                        mvpView.setLoading(false)
+                        mvpView.notifyTorrentAdded()
                     }
                 })
                 .addSubscription()
