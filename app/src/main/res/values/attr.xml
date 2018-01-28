@@ -21,5 +21,6 @@
     <attr name="toolbarTextColor" format="reference|color" />
     <attr name="cardTextColor" format="reference|color" />
     <attr name="dialogTextColor" format="reference|color" />
+    <attr name="searchBarBackground" format="reference|color" />
 
 </resources>

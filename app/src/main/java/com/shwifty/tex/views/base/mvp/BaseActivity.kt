@@ -14,7 +14,7 @@ import es.dmoral.toasty.Toasty
 open class BaseActivity : AppCompatActivity(), BaseContract.MvpView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.AppTheme_Light)
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
     }
 

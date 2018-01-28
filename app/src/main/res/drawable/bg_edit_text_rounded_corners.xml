@@ -4,6 +4,6 @@
         android:radius="20dp"
         />
     <solid
-        android:color="?primary"/>
+        android:color="?searchBarBackground"/>
 
 </shape>

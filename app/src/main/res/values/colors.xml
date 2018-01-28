@@ -14,18 +14,20 @@
     <color name="iconColor">#ffffff</color>
     <color name="cardTextColor">#808080</color>
     <color name="dialogTextColor">#000000</color>
+    <color name="searchBarBackground">#4c4c4c</color>
 
 
     <!--Theme Light-->
     <color name="lightPrimary">#ffffff</color>
     <color name="lightPrimaryDark">#ffffff</color>
-    <color name="lightAccent">#ff00ee</color>
-    <color name="lightAccentPressed">#bc03b0</color>
+    <color name="lightAccent">#51c8ae</color>
+    <color name="lightAccentPressed">#225954</color>
     <color name="lightBackground">#ffffff</color>
     <color name="lightChromecastBottomSheetBackground">#d9ffffff</color>
     <color name="lightIconColor">#000000</color>
     <color name="lightCardTextColor">#151515</color>
     <color name="lightDialogTextColor">#000000</color>
+    <color name="lightSearchBarBackground">#f2f2f2</color>
 
 
     <!--Generic Colors-->

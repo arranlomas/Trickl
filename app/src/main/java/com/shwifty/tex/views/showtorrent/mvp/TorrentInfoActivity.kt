@@ -12,7 +12,6 @@ import com.shwifty.tex.views.showtorrent.list.ShowTorrentPagerAdapter
 import kotlinx.android.synthetic.main.activity_show_torrent.*
 import javax.inject.Inject
 
-
 /**
  * Created by arran on 7/05/2017.
  */

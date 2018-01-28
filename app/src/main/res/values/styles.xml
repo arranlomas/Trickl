@@ -23,6 +23,7 @@
         <item name="tabTitleTextColor">@color/white</item>
         <item name="cardTextColor">@color/cardTextColor</item>
         <item name="dialogTextColor">@color/dialogTextColor</item>
+        <item name="searchBarBackground">@color/searchBarBackground</item>
     </style>
 
     <style name="AppTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
@@ -47,6 +48,7 @@
         <item name="tabTitleTextColor">@color/lightCardTextColor</item>
         <item name="cardTextColor">@color/cardTextColor</item>
         <item name="dialogTextColor">@color/lightDialogTextColor</item>
+        <item name="searchBarBackground">@color/lightSearchBarBackground</item>
     </style>
 
     <style name="menu_labels_style">
