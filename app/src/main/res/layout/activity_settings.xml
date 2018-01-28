@@ -49,7 +49,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/default_small_padding"
                         android:text="@string/settings_title_working_directory"
-                        android:textColor="?textColor"/>
+                        android:textColor="?cardTextColor"/>
 
                     <TextView
                         android:id="@+id/workingDirectoryField"
@@ -57,7 +57,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/default_small_padding"
                         tools:text="root/downloads/Trickl"
-                        android:textColor="?textColor"/>
+                        android:textColor="?cardTextColor"/>
 
                     <TextView
                         android:id="@+id/workingDirectoryError"
@@ -103,7 +103,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:padding="@dimen/default_small_padding"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/wifiOnlyTitle"
@@ -111,7 +111,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/default_small_padding"
                         android:text="@string/settings_title_wifi_only"
-                        android:textColor="?textColor"/>
+                        android:textColor="?cardTextColor"/>
 
                     <TextView
                         android:id="@+id/wifiOnlyField"
@@ -119,7 +119,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/default_small_padding"
                         android:text="@string/settings_description_wifi_only"
-                        android:textColor="?textColor"/>
+                        android:textColor="?cardTextColor"/>
 
                     <TextView
                         android:id="@+id/wifiOnlyError"
