@@ -13,6 +13,7 @@
     <color name="chromecastBottomSheetBackground">#292929</color>
     <color name="iconColor">#ffffff</color>
     <color name="cardTextColor">#808080</color>
+    <color name="dialogTextColor">#000000</color>
 
 
     <!--Theme Light-->
@@ -24,6 +25,7 @@
     <color name="lightChromecastBottomSheetBackground">#d9ffffff</color>
     <color name="lightIconColor">#000000</color>
     <color name="lightCardTextColor">#808080</color>
+    <color name="lightDialogTextColor">#000000</color>
 
 
     <!--Generic Colors-->

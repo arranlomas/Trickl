@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/default_small_padding"
         android:text="@string/dialog_filter_browse_category_title"
-        android:textColor="?textColor" />
+        android:textColor="?dialogTextColor" />
 
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/categorySpinner"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/default_small_padding"
         android:text="@string/dialog_filter_browse_sorted_by_title"
-        android:textColor="?textColor"/>
+        android:textColor="?dialogTextColor"/>
 
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/sortBySpinner"

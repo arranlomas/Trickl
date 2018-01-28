@@ -20,5 +20,6 @@
     <attr name="textColor" format="reference|color" />
     <attr name="toolbarTextColor" format="reference|color" />
     <attr name="cardTextColor" format="reference|color" />
+    <attr name="dialogTextColor" format="reference|color" />
 
 </resources>
