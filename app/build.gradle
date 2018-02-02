@@ -144,6 +144,10 @@ dependencies {
     //PowerMockito
     testCompile 'org.powermock:powermock-api-mockito:1.6.6'
     testCompile 'org.powermock:powermock-module-junit4:1.6.6'
+
+    //RxBinding
+    compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+    compile 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
 }
 repositories {
     mavenCentral()

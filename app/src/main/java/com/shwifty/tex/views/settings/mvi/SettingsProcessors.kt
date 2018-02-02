@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.settings.mvi
 
+import com.shwifty.tex.models.AppTheme
 import com.shwifty.tex.repository.preferences.IPreferenceRepository
 import com.shwifty.tex.utils.ValidateChangeWorkingDirectoryResult
 import com.shwifty.tex.utils.composeIo
@@ -7,56 +8,66 @@ import com.shwifty.tex.utils.validateWorkingDirectoryCanBeChanged
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function3
 import java.io.File
-
 
 /**
  * Created by arran on 19/11/2017.
  */
-val reducer = BiFunction <SettingsViewState, SettingsResult, SettingsViewState> {
-    previousState: SettingsViewState, result: SettingsResult ->
+val reducer = BiFunction { previousState: SettingsViewState, result: SettingsResult ->
     when (result) {
-        is SettingsResult.LoadSettingsinFlight -> previousState.copy(isLoading = true)
-        is SettingsResult.UpdateWorkingDirectorySuccess -> previousState.copy(isLoading = false, currentWorkingDirectory = result.newFile, restart = true)
-        is SettingsResult.UpdateWorkingDirectoryError -> previousState.copy(isLoading = false, workingDirectoryErrorString = result.error.localizedMessage)
-        SettingsResult.RestartApp -> previousState.copy(restart = true)
-        is SettingsResult.LoadSettingsSuccess -> previousState.copy(isLoading = false, currentWorkingDirectory = result.workingDirectory, wifiOnly = result.wifiOnly)
-        is SettingsResult.LoadSettingsError -> previousState.copy(isLoading = false, loadSettingsErrorString = result.error.localizedMessage)
-        SettingsResult.ToggleWifiOnlyInFlight -> previousState.copy(isLoading = true)
-        is SettingsResult.ToggleWifiOnlySuccess -> previousState.copy(isLoading = false, wifiOnly = result.selected)
-        is SettingsResult.ToggleWifiOnlyError -> previousState.copy(isLoading = false, wifiOnlyErrorString = result.error.localizedMessage)
+        is SettingsResult.LoadSettingsinFlight -> previousState.copy(
+                workingDirectoryLoading = true, workingDirectoryErrorString = null, currentWorkingDirectory = null,
+                wifiOnlyLoading = true, wifiOnlyErrorString = null, wifiOnly = false,
+                themeLoading = true, themeErrorString = null, theme = null)
+        is SettingsResult.LoadSettingsError -> previousState.copy(
+                workingDirectoryLoading = false, workingDirectoryErrorString = result.error.localizedMessage, currentWorkingDirectory = null,
+                wifiOnlyLoading = false, wifiOnlyErrorString = result.error.localizedMessage, wifiOnly = false,
+                themeLoading = false, themeErrorString = result.error.localizedMessage, theme = null)
+        is SettingsResult.LoadSettingsSuccess -> previousState.copy(
+                workingDirectoryLoading = false, workingDirectoryErrorString = null, currentWorkingDirectory = result.workingDirectory,
+                wifiOnlyLoading = false, wifiOnlyErrorString = null, wifiOnly = result.wifiOnly,
+                themeLoading = false, themeErrorString = null, theme = result.theme)
+
+        is SettingsResult.UpdateworkingDirectoryInFlight -> previousState.copy(workingDirectoryLoading = true, workingDirectoryErrorString = null, currentWorkingDirectory = null)
+        is SettingsResult.UpdateWorkingDirectorySuccess -> previousState.copy(workingDirectoryLoading = false, workingDirectoryErrorString = null, currentWorkingDirectory = result.newFile)
+        is SettingsResult.UpdateWorkingDirectoryError -> previousState.copy(workingDirectoryLoading = false, workingDirectoryErrorString = result.error.localizedMessage, currentWorkingDirectory = null)
+
+        is SettingsResult.ToggleWifiOnlyInFlight -> previousState.copy(wifiOnlyLoading = true,wifiOnlyErrorString = null,  wifiOnly = false)
+        is SettingsResult.ToggleWifiOnlySuccess -> previousState.copy(wifiOnlyLoading = false, wifiOnlyErrorString = null, wifiOnly = result.wifiOnly)
+        is SettingsResult.ToggleWifiOnlyError -> previousState.copy(wifiOnlyLoading = false, wifiOnlyErrorString = result.error.localizedMessage, wifiOnly = null)
+
+        is SettingsResult.ToggleChangeThemeInFlight -> previousState.copy(themeLoading = true, themeErrorString = null, theme = null)
+        is SettingsResult.ToggleChangeThemeSuccess -> previousState.copy(themeLoading = false, themeErrorString = null, theme = result.theme)
+        is SettingsResult.ToggleChangeThemeError -> previousState.copy(themeLoading = false, themeErrorString = result.error.localizedMessage, theme = null)
     }
 }
 
 fun actionFromIntent(intent: SettingsIntents): SettingsActions = when (intent) {
     is SettingsIntents.NewWorkingDirectorySelected -> SettingsActions.ClearErrorsAndUpdateWorkingDirectory(intent.context, intent.previousDirectory, intent.newDirectory, intent.moveFiles)
-    is SettingsIntents.RestartApp -> SettingsActions.RestartApp
     is SettingsIntents.InitialIntent -> SettingsActions.LoadPreferences(intent.context)
     is SettingsIntents.ToggleWifiOnly -> SettingsActions.UpdateWifiOnly(intent.context, intent.selected)
+    is SettingsIntents.ChangeTheme -> SettingsActions.ChangeTheme(intent.context, intent.newTheme)
 }
 
 fun settingsActionProcessor(preferencesRepository: IPreferenceRepository): ObservableTransformer<SettingsActions, SettingsResult> =
         ObservableTransformer { action: Observable<SettingsActions> ->
             action.publish { shared ->
                 Observable.merge(
-                        shared.ofType(SettingsActions.LoadPreferences::class.java).compose(loadPrederencesProcessor(preferencesRepository)),
+                        shared.ofType(SettingsActions.LoadPreferences::class.java).compose(loadPreferencesProcessor(preferencesRepository)),
                         shared.ofType(SettingsActions.ClearErrorsAndUpdateWorkingDirectory::class.java).compose(updateWorkingDirectoryProcessor(preferencesRepository)),
-                        shared.ofType(SettingsActions.RestartApp::class.java).compose(restartAppProcessor),
-                        shared.ofType(SettingsActions.UpdateWifiOnly::class.java).compose(updateWifiOnlyProcessor(preferencesRepository))
+                        shared.ofType(SettingsActions.UpdateWifiOnly::class.java).compose(updateWifiOnlyProcessor(preferencesRepository)),
+                        shared.ofType(SettingsActions.ChangeTheme::class.java).compose(changeThemeProcessor(preferencesRepository))
                 )
             }
         }
 
-val restartAppProcessor = ObservableTransformer<SettingsActions.RestartApp, SettingsResult> { action: Observable<SettingsActions.RestartApp> ->
-    action.switchMap {
-        Observable.just(SettingsResult.RestartApp)
-    }
-}
-
-fun loadPrederencesProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer { actions: Observable<SettingsActions.LoadPreferences> ->
+fun loadPreferencesProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer { actions: Observable<SettingsActions.LoadPreferences> ->
     actions.switchMap { (context) ->
-        Observable.zip(preferencesRepository.getWorkingDirectoryPreference(context), preferencesRepository.getWifiOnlyPreference(context), BiFunction<File, Boolean, SettingsResult> { t1, t2 ->
-            SettingsResult.LoadSettingsSuccess(t1, t2)
+        Observable.zip(preferencesRepository.getWorkingDirectoryPreference(context),
+                preferencesRepository.getWifiOnlyPreference(context),
+                preferencesRepository.getThemPreference(context), Function3<File, Boolean, AppTheme, SettingsResult> { file, wifiOnly, theme ->
+            SettingsResult.LoadSettingsSuccess(file, wifiOnly, theme)
         })
                 .onErrorReturn { SettingsResult.LoadSettingsError(it) }
                 .composeIo()
@@ -91,5 +102,15 @@ fun updateWorkingDirectoryProcessor(preferencesRepository: IPreferenceRepository
                 }
                 .map { SettingsResult.UpdateWorkingDirectorySuccess(action.newDirectory) as SettingsResult }
 
+    }
+}
+
+fun changeThemeProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer { actions: Observable<SettingsActions.ChangeTheme> ->
+    actions.switchMap { action ->
+        preferencesRepository.saveThemePreference(action.context, action.theme)
+                .map { SettingsResult.ToggleChangeThemeSuccess(action.theme) as SettingsResult }
+                .onErrorReturn { SettingsResult.ToggleChangeThemeError(it) }
+                .composeIo()
+                .startWith(SettingsResult.ToggleChangeThemeInFlight)
     }
 }

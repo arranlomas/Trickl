@@ -4,11 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
 import com.schiwfty.torrentwrapper.confluence.Confluence
-import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
+import com.shwifty.tex.models.AppTheme
 import com.shwifty.tex.utils.createObservableFrom
 import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.utils.validateOnActivityResult
@@ -62,8 +63,7 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         data.validateOnActivityResult(requestCode, RC_SELECT_FILE, resultCode, Activity.RESULT_OK, {
             val file = it.getSerializable(FileBrowserActivity.ARG_FILE_RESULT) as File
-            Trickl.dialogManager.showChangeWorkingDirectoryDialog(this, Confluence.workingDir, file, {
-                previousDirectory, newDirectory ->
+            Trickl.dialogManager.showChangeWorkingDirectoryDialog(this, Confluence.workingDir, file, { previousDirectory, newDirectory ->
                 newWorkingDirecotyrEmiter.onNext(SettingsIntents.NewWorkingDirectorySelected(this, previousDirectory, newDirectory, true))
             }, { previousDirectory, newDirectory ->
                 newWorkingDirecotyrEmiter.onNext(SettingsIntents.NewWorkingDirectorySelected(this, previousDirectory, newDirectory, false))
@@ -77,41 +77,45 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
 
     private fun updateWorkingDirectoryIntent(): Observable<SettingsIntents.NewWorkingDirectorySelected> = createObservableFrom { newWorkingDirecotyrEmiter = it }
 
-    private fun toggleWifiOnlyIntent(): Observable<SettingsIntents.ToggleWifiOnly> {
-        return createObservableFrom { emitter ->
-            wifiOnlySwich.setOnCheckedChangeListener { _, selected ->
-                emitter.onNext(SettingsIntents.ToggleWifiOnly(this, selected))
+//    private fun toggleWifiOnlyIntent(): Observable<SettingsIntents.ToggleWifiOnly> =
+//            RxCompoundButton.checkedChanges(wifiOnlySwich)
+//                    .map { isChecked: Boolean -> SettingsIntents.ToggleWifiOnly(this, isChecked) }
+
+    private fun changeThemeIntent(): Observable<SettingsIntents.ChangeTheme> = createObservableFrom { emitter ->
+        themeRadioGroup.setOnCheckedChangeListener { radioGroup, i ->
+            Log.v("I", i.toString())
+            when (i) {
+                R.id.radioThemeDark -> emitter.onNext(SettingsIntents.ChangeTheme(this, AppTheme.DARK))
+                R.id.radioThemeLight -> emitter.onNext(SettingsIntents.ChangeTheme(this, AppTheme.LIGHT))
             }
         }
     }
 
-    private fun restartClientIntent(): Observable<SettingsIntents.RestartApp> {
-        return createObservableFrom { emitter ->
-            restartClientButton.setOnClickListener {
-                emitter.onNext(SettingsIntents.RestartApp())
-            }
-        }
+    private fun intents(): Observable<SettingsIntents> {
+        return Observable.merge(intentList)
     }
 
-    fun intents(): Observable<SettingsIntents> {
-        return Observable.merge(
-                initialIntent(),
-                updateWorkingDirectoryIntent(),
-                restartClientIntent(),
-                toggleWifiOnlyIntent()
-        )
-    }
+    private val intentList = listOf(initialIntent(),
+            updateWorkingDirectoryIntent(),
+//            toggleWifiOnlyIntent(),  TODO
+            changeThemeIntent())
 
     override fun render(state: SettingsViewState) {
-        if (state.restart) (this.application as MyApplication).restart()
         state.currentWorkingDirectory?.absolutePath?.let { workingDirectoryField.text = it }
+        workingDirectorySpinner.setVisible(state.workingDirectoryLoading)
 
         state.workingDirectoryErrorString?.let {
             workingDirectoryError.setVisible(true)
             workingDirectoryError.text = state.workingDirectoryErrorString
-        }?: let {
-            workingDirectoryError.setVisible(false)
+        } ?: workingDirectoryError.setVisible(false)
+
+        state.theme?.let {
+            when (it) {
+                AppTheme.LIGHT -> themeRadioGroup.check(R.id.radioThemeLight)
+                AppTheme.DARK -> themeRadioGroup.check(R.id.radioThemeDark)
+            }
         }
-        workingDirectorySpinner.setVisible(state.isLoading)
+
+
     }
 }

@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.settings.mvi
 
+import com.shwifty.tex.models.AppTheme
 import com.shwifty.tex.views.base.mvi.BaseMviContract
 import java.io.File
 
@@ -9,12 +10,16 @@ import java.io.File
 
 data class SettingsViewState(
         val currentWorkingDirectory: File? = null,
-        val wifiOnly: Boolean = false,
-        val loadSettingsErrorString: String? = null,
+        val workingDirectoryLoading: Boolean = false,
         val workingDirectoryErrorString: String? = null,
+
+        val wifiOnly: Boolean? = null,
+        val wifiOnlyLoading: Boolean = false,
         val wifiOnlyErrorString: String? = null,
-        val isLoading: Boolean = false,
-        val restart: Boolean = false
+
+        val theme: AppTheme? = null,
+        val themeLoading: Boolean = false,
+        val themeErrorString: String? = null
 ) : BaseMviContract.ViewState {
     companion object Factory {
         fun default(): SettingsViewState {

@@ -6,6 +6,8 @@
     <string name="splash_copy_confluence_error">error setting up </string>
     <string name="splash_start_confluence_error">error setting up</string>
     <string name="splash_start_confluence_success">ready to go!</string>
+    <string name="splash_socket_timeout_maybe_no_internet">Could not connect to client, you may not be able to browse or download torrents</string>
+
 
     <!--permissions-->
     <string name="write_permissions_error">Cannot proceed to use the app without storage permissions</string>

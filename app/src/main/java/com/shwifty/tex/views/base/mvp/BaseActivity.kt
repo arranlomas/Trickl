@@ -13,6 +13,7 @@ import es.dmoral.toasty.Toasty
 open class BaseActivity : AppCompatActivity(), BaseContract.MvpView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        oncreateSetThemeAndCallSuper { super.onCreate(savedInstanceState) }
     }
 
     override fun onDestroy() {
