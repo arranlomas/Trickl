@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.settings.mvi
 
+import com.shwifty.tex.Trickl
 import com.shwifty.tex.models.AppTheme
 import com.shwifty.tex.repository.preferences.IPreferenceRepository
 import com.shwifty.tex.utils.ValidateChangeWorkingDirectoryResult
@@ -47,7 +48,7 @@ val settingsReducer = BiFunction { previousState: SettingsViewState, result: Set
 }
 
 fun actionFromIntent(intent: SettingsIntents): SettingsActions = when (intent) {
-    is SettingsIntents.NewWorkingDirectorySelected -> SettingsActions.ClearErrorsAndUpdateWorkingDirectory(intent.context, intent.previousDirectory, intent.newDirectory, intent.moveFiles)
+    is SettingsIntents.NewWorkingDirectorySelected -> SettingsActions.ClearErrorsAndUpdateWorkingDirectory(intent.context, intent.newDirectory, intent.moveFiles)
     is SettingsIntents.InitialIntent -> SettingsActions.LoadPreferencesForFirstTime(intent.context)
     is SettingsIntents.ToggleWifiOnly -> SettingsActions.UpdateWifiOnly(intent.context, intent.selected)
     is SettingsIntents.ChangeTheme -> SettingsActions.ChangeTheme(intent.context, intent.newTheme)
@@ -91,15 +92,16 @@ fun updateWifiOnlyProcessor(preferencesRepository: IPreferenceRepository) = Obse
 fun updateWorkingDirectoryProcessor(preferencesRepository: IPreferenceRepository):
         ObservableTransformer<SettingsActions.ClearErrorsAndUpdateWorkingDirectory, SettingsResult> = ObservableTransformer { actions: Observable<SettingsActions.ClearErrorsAndUpdateWorkingDirectory> ->
     actions.switchMap { action ->
-        Observable.just(action.newDirectory.validateWorkingDirectoryCanBeChanged(action.previousDirectory))
-                .map { isValid ->
+        Trickl.repositoryComponent.getPreferencesRepository().getWorkingDirectoryPreference(action.context)
+                .map { previousDirectory -> Pair(previousDirectory, action.newDirectory.validateWorkingDirectoryCanBeChanged(previousDirectory)) }
+                .map { (previousDirectory, isValid) ->
                     if (isValid is ValidateChangeWorkingDirectoryResult.Error) {
                         throw IllegalArgumentException(action.context.getString(isValid.messageRes))
                     }
                     preferencesRepository.saveWorkingDirectoryPreference(action.context, action.newDirectory)
                     if (action.moveFiles) {
-                        action.previousDirectory.copyRecursively(action.newDirectory, overwrite = true)
-                        action.previousDirectory.deleteRecursively()
+                        previousDirectory.copyRecursively(action.newDirectory, overwrite = true)
+                        previousDirectory.deleteRecursively()
                     }
                 }
                 .map { SettingsResult.UpdateWorkingDirectorySuccess(action.newDirectory) as SettingsResult }

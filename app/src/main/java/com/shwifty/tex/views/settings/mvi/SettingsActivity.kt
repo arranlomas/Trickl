@@ -5,11 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
-import com.crashlytics.android.Crashlytics
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
-import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
@@ -19,7 +16,6 @@ import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.utils.validateOnActivityResult
 import com.shwifty.tex.views.base.mvi.BaseMviActivity
 import com.shwifty.tex.views.settings.di.DaggerSettingsComponent
-import es.dmoral.toasty.Toasty
 import io.reactivex.Emitter
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -73,17 +69,11 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         data.validateOnActivityResult(requestCode, RC_SELECT_FILE, resultCode, Activity.RESULT_OK, {
             val file = it.getSerializable(FileBrowserActivity.ARG_FILE_RESULT) as File
-            Trickl.repositoryComponent.getPreferencesRepository().getWorkingDirectoryPreference(this)
-                    .subscribe({
-                        Trickl.dialogManager.showChangeWorkingDirectoryDialog(this, it, file, { previousDirectory, newDirectory ->
-                            newWorkingDirecotyrEmiter.onNext(SettingsIntents.NewWorkingDirectorySelected(this, previousDirectory, newDirectory, true))
-                        }, { previousDirectory, newDirectory ->
-                            newWorkingDirecotyrEmiter.onNext(SettingsIntents.NewWorkingDirectorySelected(this, previousDirectory, newDirectory, false))
-                        })
-                    },{
-                        Toasty.error(this, getString(R.string.settings_error_cannot_get_working_directory)).show()
-                        Crashlytics.logException(it)
-                    })
+            Trickl.dialogManager.showChangeWorkingDirectoryDialog(this, file, { newDirectory ->
+                newWorkingDirecotyrEmiter.onNext(SettingsIntents.NewWorkingDirectorySelected(this, newDirectory, true))
+            }, { newDirectory ->
+                newWorkingDirecotyrEmiter.onNext(SettingsIntents.NewWorkingDirectorySelected(this, newDirectory, false))
+            })
         })
     }
 

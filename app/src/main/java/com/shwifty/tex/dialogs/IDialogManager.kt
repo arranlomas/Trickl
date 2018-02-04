@@ -20,7 +20,7 @@ interface IDialogManager {
     fun showNoWifiDialog(context: Context, torrentFile: TorrentFile)
     fun showExitAppDialog(context: Context, onExit: () -> Unit)
     fun showChangeWorkingDirectoryRestartRequired(context: Context, onContinue: () -> Unit)
-    fun showChangeWorkingDirectoryDialog(context: Context, previousDirectory: File, newDirectory: File, onMove: (File, File) -> Unit, onKeepInDirectory: (File, File) -> Unit)
+    fun showChangeWorkingDirectoryDialog(context: Context, newDirectory: File, onMove: (File) -> Unit, onKeepInDirectory: (File) -> Unit)
     fun showBrowseFilterDialog(context: Context,
                                defaultSortType: TorrentSearchSortType,
                                defaultCategory: TorrentSearchCategory,

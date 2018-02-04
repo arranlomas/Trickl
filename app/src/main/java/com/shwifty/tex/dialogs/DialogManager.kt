@@ -220,19 +220,19 @@ class DialogManager : IDialogManager {
                 .show()
     }
 
-    override fun showChangeWorkingDirectoryDialog(context: Context, previousDirectory: File, newDirectory: File, onMove: (File, File) -> Unit, onKeepInDirectory: (File, File) -> Unit) {
+    override fun showChangeWorkingDirectoryDialog(context: Context, newDirectory: File, onMove: (File) -> Unit, onKeepInDirectory: (File) -> Unit) {
         MaterialDialog.Builder(context)
                 .title(R.string.change_working_directory_dialog_title)
                 .content(R.string.change_working_directory_dialog_description)
                 .positiveText(R.string.change_working_directory_dialog_confirm)
                 .onPositive { dialog, _ ->
                     dialog.dismiss()
-                    onMove.invoke(previousDirectory, newDirectory)
+                    onMove.invoke(newDirectory)
                 }
                 .negativeText(R.string.change_working_directory_dialog_cancel)
                 .onNegative { dialog, _ ->
                     dialog.dismiss()
-                    onKeepInDirectory.invoke(previousDirectory, newDirectory)
+                    onKeepInDirectory.invoke(newDirectory)
                 }
                 .show()
     }

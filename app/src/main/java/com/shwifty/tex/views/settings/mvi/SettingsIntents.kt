@@ -10,13 +10,13 @@ import java.io.File
  */
 sealed class SettingsIntents : BaseMviContract.Intent {
     data class InitialIntent(val context: Context) : SettingsIntents()
-    data class NewWorkingDirectorySelected(val context: Context, val previousDirectory: File, val newDirectory: File, val moveFiles: Boolean) : SettingsIntents()
+    data class NewWorkingDirectorySelected(val context: Context, val newDirectory: File, val moveFiles: Boolean) : SettingsIntents()
     data class ToggleWifiOnly(val context: Context, val selected: Boolean) : SettingsIntents()
     data class ChangeTheme(val context: Context, val newTheme: AppTheme): SettingsIntents()
 }
 
 sealed class SettingsActions {
-    data class ClearErrorsAndUpdateWorkingDirectory(val context: Context, val previousDirectory: File, val newDirectory: File, val moveFiles: Boolean) : SettingsActions()
+    data class ClearErrorsAndUpdateWorkingDirectory(val context: Context, val newDirectory: File, val moveFiles: Boolean) : SettingsActions()
     data class LoadPreferencesForFirstTime(val context: Context) : SettingsActions()
     data class UpdateWifiOnly(val context: Context, val selected: Boolean) : SettingsActions()
     data class ChangeTheme(val context: Context, val theme: AppTheme): SettingsActions()
