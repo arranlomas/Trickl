@@ -10,6 +10,7 @@ import com.crashlytics.android.Crashlytics
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
 import com.schiwfty.torrentwrapper.confluence.Confluence
+import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.models.AppTheme
@@ -61,6 +62,10 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
 //            Trickl.dialogManager.showChangeWorkingDirectoryRestartRequired(this, {
 //
 //            })
+        }
+
+        restartButton.setOnClickListener {
+            (application as MyApplication).restart()
         }
         super.attachIntents(intents())
     }

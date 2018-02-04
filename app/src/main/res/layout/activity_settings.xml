@@ -222,7 +222,6 @@
         android:orientation="horizontal"
         android:padding="@dimen/default_medium_padding">
 
-
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -231,6 +230,7 @@
             android:textColor="?textColor" />
 
         <Button
+            android:id="@+id/restartButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
