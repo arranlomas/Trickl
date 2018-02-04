@@ -15,7 +15,7 @@
     <color name="cardTextColor">#808080</color>
     <color name="dialogTextColor">#000000</color>
     <color name="searchBarBackground">#4c4c4c</color>
-
+    <color name="snackbarRestart">#51c8ae</color>
 
     AppThemeheme Light-->
     <color name="lightPrimary">#ffffff</color>
@@ -28,6 +28,7 @@
     <color name="lightCardTextColor">#151515</color>
     <color name="lightDialogTextColor">#000000</color>
     <color name="lightSearchBarBackground">#f2f2f2</color>
+    <color name="lightSnackbarRestart">#51c8ae</color>
 
 
     <!--Generic Colors-->

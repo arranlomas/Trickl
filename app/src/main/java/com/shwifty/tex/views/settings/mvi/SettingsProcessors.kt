@@ -14,20 +14,23 @@ import java.io.File
 /**
  * Created by arran on 19/11/2017.
  */
-val reducer = BiFunction { previousState: SettingsViewState, result: SettingsResult ->
+val settingsReducer = BiFunction { previousState: SettingsViewState, result: SettingsResult ->
     when (result) {
+        is SettingsResult.LoadSettingsSuccess -> previousState.copy(
+                originalTheme = result.theme, originalWifiOnly = result.wifiOnly, originalWorkingDirectory = result.workingDirectory,
+                workingDirectoryLoading = false, workingDirectoryErrorString = null, currentWorkingDirectory = result.workingDirectory,
+                wifiOnlyLoading = false, wifiOnlyErrorString = null, wifiOnly = result.wifiOnly,
+                themeLoading = false, themeErrorString = null, theme = result.theme)
+
         is SettingsResult.LoadSettingsinFlight -> previousState.copy(
                 workingDirectoryLoading = true, workingDirectoryErrorString = null, currentWorkingDirectory = null,
                 wifiOnlyLoading = true, wifiOnlyErrorString = null, wifiOnly = false,
                 themeLoading = true, themeErrorString = null, theme = null)
+
         is SettingsResult.LoadSettingsError -> previousState.copy(
                 workingDirectoryLoading = false, workingDirectoryErrorString = result.error.localizedMessage, currentWorkingDirectory = null,
                 wifiOnlyLoading = false, wifiOnlyErrorString = result.error.localizedMessage, wifiOnly = false,
                 themeLoading = false, themeErrorString = result.error.localizedMessage, theme = null)
-        is SettingsResult.LoadSettingsSuccess -> previousState.copy(
-                workingDirectoryLoading = false, workingDirectoryErrorString = null, currentWorkingDirectory = result.workingDirectory,
-                wifiOnlyLoading = false, wifiOnlyErrorString = null, wifiOnly = result.wifiOnly,
-                themeLoading = false, themeErrorString = null, theme = result.theme)
 
         is SettingsResult.UpdateworkingDirectoryInFlight -> previousState.copy(workingDirectoryLoading = true, workingDirectoryErrorString = null, currentWorkingDirectory = null)
         is SettingsResult.UpdateWorkingDirectorySuccess -> previousState.copy(workingDirectoryLoading = false, workingDirectoryErrorString = null, currentWorkingDirectory = result.newFile)
@@ -45,7 +48,7 @@ val reducer = BiFunction { previousState: SettingsViewState, result: SettingsRes
 
 fun actionFromIntent(intent: SettingsIntents): SettingsActions = when (intent) {
     is SettingsIntents.NewWorkingDirectorySelected -> SettingsActions.ClearErrorsAndUpdateWorkingDirectory(intent.context, intent.previousDirectory, intent.newDirectory, intent.moveFiles)
-    is SettingsIntents.InitialIntent -> SettingsActions.LoadPreferences(intent.context)
+    is SettingsIntents.InitialIntent -> SettingsActions.LoadPreferencesForFirstTime(intent.context)
     is SettingsIntents.ToggleWifiOnly -> SettingsActions.UpdateWifiOnly(intent.context, intent.selected)
     is SettingsIntents.ChangeTheme -> SettingsActions.ChangeTheme(intent.context, intent.newTheme)
 }
@@ -54,7 +57,7 @@ fun settingsActionProcessor(preferencesRepository: IPreferenceRepository): Obser
         ObservableTransformer { action: Observable<SettingsActions> ->
             action.publish { shared ->
                 Observable.merge(
-                        shared.ofType(SettingsActions.LoadPreferences::class.java).compose(loadPreferencesProcessor(preferencesRepository)),
+                        shared.ofType(SettingsActions.LoadPreferencesForFirstTime::class.java).compose(loadPreferencesProcessor(preferencesRepository)),
                         shared.ofType(SettingsActions.ClearErrorsAndUpdateWorkingDirectory::class.java).compose(updateWorkingDirectoryProcessor(preferencesRepository)),
                         shared.ofType(SettingsActions.UpdateWifiOnly::class.java).compose(updateWifiOnlyProcessor(preferencesRepository)),
                         shared.ofType(SettingsActions.ChangeTheme::class.java).compose(changeThemeProcessor(preferencesRepository))
@@ -62,7 +65,7 @@ fun settingsActionProcessor(preferencesRepository: IPreferenceRepository): Obser
             }
         }
 
-fun loadPreferencesProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer { actions: Observable<SettingsActions.LoadPreferences> ->
+fun loadPreferencesProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer { actions: Observable<SettingsActions.LoadPreferencesForFirstTime> ->
     actions.switchMap { (context) ->
         Observable.zip(preferencesRepository.getWorkingDirectoryPreference(context),
                 preferencesRepository.getWifiOnlyPreference(context),

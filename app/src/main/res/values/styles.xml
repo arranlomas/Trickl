@@ -24,6 +24,7 @@
         <item name="cardTextColor">@color/cardTextColor</item>
         <item name="dialogTextColor">@color/dialogTextColor</item>
         <item name="searchBarBackground">@color/searchBarBackground</item>
+        <item name="settingsSnackBarBackgroundRestart">@color/snackbarRestart</item>
     </style>
 
     <style name="AppTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
@@ -49,6 +50,7 @@
         <item name="cardTextColor">@color/cardTextColor</item>
         <item name="dialogTextColor">@color/lightDialogTextColor</item>
         <item name="searchBarBackground">@color/lightSearchBarBackground</item>
+        <item name="settingsSnackBarBackgroundRestart">@color/lightSnackbarRestart</item>
     </style>
 
     <style name="menu_labels_style">

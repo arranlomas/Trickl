@@ -136,6 +136,8 @@
     <string name="settings_description_wifi_only">Only allow downloading and streaming while on wifi</string>
     <string name="settings_theme_1">Material Dark</string>
     <string name="settings_theme_2">Material Light</string>
+    <string name="settings_restart_required">Restart required</string>
+    <string name="settings_restart">Restart</string>
 
     <!--Settings Error-->
     <string name="working_directory_error_cannot_be_child">Error, Cannot use a subdirectory of the current working directory</string>

@@ -9,6 +9,11 @@ import java.io.File
  */
 
 data class SettingsViewState(
+        val originalWorkingDirectory: File? = null,
+        val originalWifiOnly: Boolean? = null,
+        val originalTheme: AppTheme? = null,
+        val settingsChanged: Boolean = false,
+
         val currentWorkingDirectory: File? = null,
         val workingDirectoryLoading: Boolean = false,
         val workingDirectoryErrorString: String? = null,

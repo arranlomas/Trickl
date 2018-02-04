@@ -17,13 +17,12 @@ sealed class SettingsIntents : BaseMviContract.Intent {
 
 sealed class SettingsActions {
     data class ClearErrorsAndUpdateWorkingDirectory(val context: Context, val previousDirectory: File, val newDirectory: File, val moveFiles: Boolean) : SettingsActions()
-    data class LoadPreferences(val context: Context) : SettingsActions()
+    data class LoadPreferencesForFirstTime(val context: Context) : SettingsActions()
     data class UpdateWifiOnly(val context: Context, val selected: Boolean) : SettingsActions()
     data class ChangeTheme(val context: Context, val theme: AppTheme): SettingsActions()
 }
 
 sealed class SettingsResult {
-
     data class LoadSettingsSuccess(val workingDirectory: File, val wifiOnly: Boolean, val theme: AppTheme) : SettingsResult()
     data class LoadSettingsError(val error: Throwable) : SettingsResult()
     object LoadSettingsinFlight : SettingsResult()

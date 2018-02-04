@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.shwifty.tex.R
@@ -81,24 +82,27 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
 //            RxCompoundButton.checkedChanges(wifiOnlySwich)
 //                    .map { isChecked: Boolean -> SettingsIntents.ToggleWifiOnly(this, isChecked) }
 
-    private fun changeThemeIntent(): Observable<SettingsIntents.ChangeTheme> = createObservableFrom { emitter ->
-        themeRadioGroup.setOnCheckedChangeListener { radioGroup, i ->
-            Log.v("I", i.toString())
-            when (i) {
-                R.id.radioThemeDark -> emitter.onNext(SettingsIntents.ChangeTheme(this, AppTheme.DARK))
-                R.id.radioThemeLight -> emitter.onNext(SettingsIntents.ChangeTheme(this, AppTheme.LIGHT))
+    private fun changeThemeIntent(): Observable<SettingsIntents.ChangeTheme> = RxRadioGroup.checkedChanges(themeRadioGroup)
+            .map {
+                when (it) {
+                    R.id.radioThemeDark -> SettingsIntents.ChangeTheme(this, AppTheme.DARK)
+                    R.id.radioThemeLight -> SettingsIntents.ChangeTheme(this, AppTheme.LIGHT)
+                    else -> {
+                        Log.v("Error", "Error changing theme")
+                        SettingsIntents.ChangeTheme(this, AppTheme.DARK)
+                    }
+                }
             }
-        }
-    }
 
-    private fun intents(): Observable<SettingsIntents> {
-        return Observable.merge(intentList)
-    }
+    private fun intents(): Observable<SettingsIntents> = Observable.merge(intentList)
 
-    private val intentList = listOf(initialIntent(),
-            updateWorkingDirectoryIntent(),
+    private val intentList by lazy {
+        listOf(
+                initialIntent(),
+                updateWorkingDirectoryIntent(),
 //            toggleWifiOnlyIntent(),  TODO
-            changeThemeIntent())
+                changeThemeIntent())
+    }
 
     override fun render(state: SettingsViewState) {
         state.currentWorkingDirectory?.absolutePath?.let { workingDirectoryField.text = it }
@@ -116,6 +120,6 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
             }
         }
 
-
+        snackbarRestart.setVisible(state.settingsChanged)
     }
 }
