@@ -36,7 +36,7 @@ val settingsReducer = BiFunction { previousState: SettingsViewState, result: Set
         is SettingsResult.UpdateWorkingDirectorySuccess -> previousState.copy(workingDirectoryLoading = false, workingDirectoryErrorString = null, currentWorkingDirectory = result.newFile)
         is SettingsResult.UpdateWorkingDirectoryError -> previousState.copy(workingDirectoryLoading = false, workingDirectoryErrorString = result.error.localizedMessage, currentWorkingDirectory = null)
 
-        is SettingsResult.ToggleWifiOnlyInFlight -> previousState.copy(wifiOnlyLoading = true,wifiOnlyErrorString = null,  wifiOnly = false)
+        is SettingsResult.ToggleWifiOnlyInFlight -> previousState.copy(wifiOnlyLoading = true, wifiOnlyErrorString = null, wifiOnly = false)
         is SettingsResult.ToggleWifiOnlySuccess -> previousState.copy(wifiOnlyLoading = false, wifiOnlyErrorString = null, wifiOnly = result.wifiOnly)
         is SettingsResult.ToggleWifiOnlyError -> previousState.copy(wifiOnlyLoading = false, wifiOnlyErrorString = result.error.localizedMessage, wifiOnly = null)
 
@@ -88,22 +88,24 @@ fun updateWifiOnlyProcessor(preferencesRepository: IPreferenceRepository) = Obse
     }
 }
 
-fun updateWorkingDirectoryProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer { actions: Observable<SettingsActions.ClearErrorsAndUpdateWorkingDirectory> ->
+fun updateWorkingDirectoryProcessor(preferencesRepository: IPreferenceRepository):
+        ObservableTransformer<SettingsActions.ClearErrorsAndUpdateWorkingDirectory, SettingsResult> = ObservableTransformer { actions: Observable<SettingsActions.ClearErrorsAndUpdateWorkingDirectory> ->
     actions.switchMap { action ->
         Observable.just(action.newDirectory.validateWorkingDirectoryCanBeChanged(action.previousDirectory))
                 .map { isValid ->
                     if (isValid is ValidateChangeWorkingDirectoryResult.Error) {
                         throw IllegalArgumentException(action.context.getString(isValid.messageRes))
                     }
-                }
-                .map { preferencesRepository.saveWorkingDirectoryPreference(action.context, action.newDirectory) }
-                .map {
+                    preferencesRepository.saveWorkingDirectoryPreference(action.context, action.newDirectory)
                     if (action.moveFiles) {
                         action.previousDirectory.copyRecursively(action.newDirectory, overwrite = true)
                         action.previousDirectory.deleteRecursively()
                     }
                 }
                 .map { SettingsResult.UpdateWorkingDirectorySuccess(action.newDirectory) as SettingsResult }
+                .onErrorReturn { SettingsResult.UpdateWorkingDirectoryError(it) }
+                .composeIo()
+                .startWith(SettingsResult.UpdateworkingDirectoryInFlight)
 
     }
 }

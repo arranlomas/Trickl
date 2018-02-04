@@ -44,7 +44,7 @@ open class BaseMviActivity<S : BaseMviContract.ViewState, E : BaseMviContract.In
         subscriptions.dispose()
     }
 
-    fun Disposable.addDisposable() {
+    private fun Disposable.addDisposable() {
         subscriptions.add(this)
     }
 
