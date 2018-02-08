@@ -16,6 +16,8 @@ Note: keystore.properties is in gitignore as it contains the private api key for
 
 * ```git clone https://github.com/arranlomas/Trickl.git```
 
+* ```git clone https://github.com/arranlomas/kontent.git``` - (Kontent is a library I have created which helps structure and reduce boilerplate for mvi implementation, for more info check the [readme](https://github.com/arranlomas/kontent/blob/master/README.md), it is a project dependency so is compiled from source code rather than maven or jcentre)
+
 * ```cd Trickl```
 
 * create a file here called keystore.properties
