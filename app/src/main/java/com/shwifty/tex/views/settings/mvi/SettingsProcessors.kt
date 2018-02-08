@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.settings.mvi
 
+import com.arranlomas.kontent.commons.functions.KontentPostProcessor
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.models.AppTheme
 import com.shwifty.tex.repository.preferences.IPreferenceRepository
@@ -136,4 +137,13 @@ fun resetSettingsProcessor(preferencesRepository: IPreferenceRepository) = Obser
 //                .composeIo()
 //                .startWith(SettingsResult.ToggleChangeThemeInFlight)
 //    }
+}
+
+
+fun postProcessor() = KontentPostProcessor<SettingsViewState> {
+    var settingsChanged = false
+    if (it.originalWifiOnly != it.wifiOnly) settingsChanged = true
+    if (it.originalTheme != it.theme) settingsChanged = true
+    if (it.originalWorkingDirectory != it.currentWorkingDirectory) settingsChanged = true
+    it.copy(settingsChanged = settingsChanged)
 }

@@ -1,7 +1,5 @@
 package com.shwifty.tex.views.base.mvp
 
-import android.content.Context
-import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.widget.Toast
@@ -12,35 +10,37 @@ import es.dmoral.toasty.Toasty
  */
 open class BaseFragment : Fragment(), BaseContract.MvpView {
 
-    fun getActivityContext(): Context = activity
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun showError(msg: String) {
-        Toasty.error(getActivityContext(), msg, Toast.LENGTH_SHORT, true).show()
-        Log.v("Error at ${this.javaClass.name}", msg)
+        context?.let {
+            Toasty.error(it, msg, Toast.LENGTH_SHORT, true).show()
+            Log.v("Error at ${this.javaClass.name}", msg)
+        }
     }
 
     override fun showError(stringId: Int) {
-        Toasty.error(getActivityContext() , getString(stringId), Toast.LENGTH_SHORT, true).show()
-        Log.v("Error at ${this.javaClass.name}", getString(stringId))
+        context?.let {
+            Toasty.error(it, getString(stringId), Toast.LENGTH_SHORT, true).show()
+            Log.v("Error at ${this.javaClass.name}", getString(stringId))
+        }
     }
 
 
     override fun showInfo(stringId: Int) {
-        Toasty.info(getActivityContext(), getString(stringId), Toast.LENGTH_SHORT, true).show()
-        Log.v("Info at ${this.javaClass.name}", getString(stringId))
+        context?.let {
+            Toasty.info(it, getString(stringId), Toast.LENGTH_SHORT, true).show()
+            Log.v("Info at ${this.javaClass.name}", getString(stringId))
+        }
     }
 
     override fun showSuccess(stringId: Int) {
-        Toasty.success(getActivityContext(), getString(stringId), Toast.LENGTH_SHORT, true).show()
-        Log.v("Success at ${this.javaClass.name}", getString(stringId))
+        context?.let {
+            Toasty.success(it, getString(stringId), Toast.LENGTH_SHORT, true).show()
+            Log.v("Success at ${this.javaClass.name}", getString(stringId))
+        }
     }
 
     override fun setLoading(loading: Boolean) {
- //do nothing, override in other activities if you want to use
+        //do nothing, override in other activities if you want to use
     }
 
 }

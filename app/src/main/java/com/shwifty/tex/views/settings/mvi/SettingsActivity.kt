@@ -16,6 +16,7 @@ import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.utils.validateOnActivityResult
 import com.shwifty.tex.views.base.mvi.BaseMviActivity
 import com.shwifty.tex.views.settings.di.DaggerSettingsComponent
+import es.dmoral.toasty.Toasty
 import io.reactivex.Emitter
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -23,7 +24,7 @@ import java.io.File
 import javax.inject.Inject
 
 
-class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
+class SettingsActivity : BaseMviActivity<SettingsIntents, SettingsViewState>() {
     private val RC_SELECT_FILE = 303
 
     @Inject
@@ -40,7 +41,9 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
 
     init {
         DaggerSettingsComponent.builder().repositoryComponent(Trickl.repositoryComponent).build().inject(this)
-        super.setup(interactor)
+        super.setup(interactor, {
+            Toasty.error(this, it.localizedMessage).show()
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,8 +105,8 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
             }
 
     private fun resetSettingsIntent(): Observable<SettingsIntents.ResetSettings> = Observable.create { subscriber ->
-        settingsToolbar.setNavigationOnClickListener{
-            subscriber.onNext(SettingsIntents.ResetSettings(this, interactor))
+        settingsToolbar.setNavigationOnClickListener {
+            subscriber.onNext(SettingsIntents.ResetSettings(this))
         }
     }
 

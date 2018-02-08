@@ -32,9 +32,11 @@ class AllFragment : BaseFragment(), AllContract.View {
 
     val onDeleteItem: (View, Int, Int) -> Unit = { _, position, _ ->
         val torrentFile = filesAdapter.torrentFiles[position]
-        Trickl.dialogManager.showDeleteTorrentDialog(context, torrentFile, {
-            showError(R.string.error_deleting_torrent)
-        })
+        context?.let {
+            Trickl.dialogManager.showDeleteTorrentDialog(it, torrentFile, {
+                showError(R.string.error_deleting_torrent)
+            })
+        }
     }
 
     val filesAdapter = AllTorrentsAdapter(itemOnClick, onDeleteItem)
@@ -53,12 +55,12 @@ class AllFragment : BaseFragment(), AllContract.View {
         presenter.detachView()
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         DaggerAllTorrentsComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         return inflater?.inflate(R.layout.frag_all, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.attachView(this)
         presenter.refresh()

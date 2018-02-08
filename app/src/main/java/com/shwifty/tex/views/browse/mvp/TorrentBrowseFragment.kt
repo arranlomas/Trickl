@@ -17,9 +17,9 @@ import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.utils.*
 import com.shwifty.tex.views.base.mvp.BaseFragment
 import com.shwifty.tex.views.browse.di.DaggerTorrentBrowseComponent
+import com.shwifty.tex.views.browse.state.BrowseReducer
 import com.shwifty.tex.views.browse.state.BrowseViewEvents
 import com.shwifty.tex.views.browse.state.BrowseViewState
-import com.shwifty.tex.views.browse.state.BrowseReducer
 import com.shwifty.tex.views.browse.torrentSearch.list.TorrentSearchAdapter
 import com.shwifty.tex.views.main.MainEventHandler
 import es.dmoral.toasty.Toasty
@@ -59,13 +59,13 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         presenter.attachView(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (inflater == null) throw IllegalStateException("Torrent Details Fragment layout inflater is null!")
         val view = inflater.inflate(R.layout.frag_torrent_browse, container, false)
         return view
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
@@ -74,10 +74,12 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
             reload()
         }
         fabFilter.setOnClickListener {
-            Trickl.dialogManager.showBrowseFilterDialog(context, browseReducer.getState().sortType, browseReducer.getState().category, { sortType, category ->
-                browseReducer.reduce(BrowseViewEvents.UpdateFilter(sortType, category))
-                reload()
-            })
+            context?.let {
+                Trickl.dialogManager.showBrowseFilterDialog(it, browseReducer.getState().sortType, browseReducer.getState().category, { sortType, category ->
+                    browseReducer.reduce(BrowseViewEvents.UpdateFilter(sortType, category))
+                    reload()
+                })
+            }
         }
         fabSearch.setOnClickListener {
             if (browseReducer.getState().isInSearchMode) {
@@ -113,7 +115,9 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
     }
 
     override fun showError(msg: String) {
-        Toasty.error(getActivityContext(), getString(R.string.error_search_server_unreachable), Toast.LENGTH_SHORT, true).show()
+        context?.let {
+            Toasty.error(it, getString(R.string.error_search_server_unreachable), Toast.LENGTH_SHORT, true).show()
+        }
     }
 
     private fun reload() {
@@ -128,15 +132,17 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
 
     private fun expandQueryInput() {
         val displayMetrics = DisplayMetrics()
-        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
         val screenWidth = displayMetrics.widthPixels
-        val fullWidthWithPadding = screenWidth - context.dpToPx(30)
+        val fullWidthWithPadding = screenWidth - (context?.dpToPx(30) ?: 0)
         searchQueryInput.animateWidthChange(fullWidthWithPadding)
     }
 
     private fun collapseQueryInput() {
         searchQueryInput.setText("")
-        searchQueryInput.animateWidthChange(context.resources.getDimensionPixelSize(R.dimen.fab_size_mini))
+        context?.resources?.getDimensionPixelSize(R.dimen.fab_size_mini)?.let {
+            searchQueryInput.animateWidthChange(it)
+        }
     }
 
     private fun getQueryFromInputAndSearch() {
@@ -153,7 +159,7 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         if (viewState.showingSearchBar) {
             expandQueryInput()
             searchQueryInput.requestFocus()
-            context.forceOpenKeyboard()
+            context?.forceOpenKeyboard()
             searchQueryInput.setVisible(true)
             fabSendSearch.show()
         } else {
@@ -165,13 +171,18 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         }
 
         if (viewState.isInSearchMode) {
-            fabSearch.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_close_white, null))
-            recyclerView.adapter = searchResultsAdapter
-            fabFilter.hide()
+            context?.resources?.let {
+                fabSearch.setImageDrawable(ResourcesCompat.getDrawable(it, R.drawable.ic_close_white, null))
+                recyclerView.adapter = searchResultsAdapter
+                fabFilter.hide()
+            }
+
         } else {
-            fabSearch.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_search_white, null))
-            recyclerView.adapter = browseResultsAdapter
-            fabFilter.show()
+            context?.resources?.let {
+                fabSearch.setImageDrawable(ResourcesCompat.getDrawable(it, R.drawable.ic_search_white, null))
+                recyclerView.adapter = browseResultsAdapter
+                fabFilter.show()
+            }
         }
         searchResultsAdapter.updateResults(viewState.searchResults)
         browseResultsAdapter.updateResults(viewState.browseResults)

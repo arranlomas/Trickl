@@ -56,14 +56,14 @@ class TorrentFilesFragment : BaseFragment(), TorrentFilesContract.View {
         presenter.detachView()
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (inflater == null) throw IllegalStateException("Torrent Files Fragment layout inflater is null!")
         val view = inflater.inflate(R.layout.frag_torrent_files, container, false)
         return view
     }
 
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         torrentFilesRecyclerView.adapter = filesAdapter
         torrentFilesRecyclerView.setHasFixedSize(true)
@@ -83,6 +83,6 @@ class TorrentFilesFragment : BaseFragment(), TorrentFilesContract.View {
     }
 
     override fun dismiss() {
-        activity.finish()
+        activity?.finish()
     }
 }

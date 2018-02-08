@@ -1,24 +1,16 @@
 package com.shwifty.tex.views.base.mvi
 
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import com.arranlomas.kontent.commons.objects.mvi.*
+import io.reactivex.ObservableTransformer
+import io.reactivex.functions.BiFunction
 
 /**
  * Created by arran on 8/11/2017.
  */
-open class BaseMviInteractor<S : BaseMviContract.ViewState, E : BaseMviContract.Intent> : BaseMviContract.Interactor<S, E> {
-
-    val intentsSubject: PublishSubject<E> = PublishSubject.create()
-    val stateSubject: PublishSubject<S> = PublishSubject.create()
-
-    lateinit var processStream: (E) -> Observable<S>
-    lateinit var processor: (Observable<E>) -> Observable<S>
-
-    override fun attachView(intents: Observable<E>): Observable<S> {
-        intents.subscribe(intentsSubject)
-        processor.invoke(intents)
-                .subscribe(stateSubject)
-        return stateSubject
-    }
-
-}
+abstract class BaseMviInteractor<I : KontentIntent, A : KontentAction, R : KontentResult, S : KontentViewState>(
+        intentToAction: (I) -> A,
+        actionProcessor: ObservableTransformer<A, R>,
+        defaultState: S,
+        reducer: BiFunction<S, R, S>,
+        postProcessor: (Function1<S, S>)? = null) :
+        KontentInteractor<I, A, R, S>(intentToAction, actionProcessor, defaultState, reducer, postProcessor)

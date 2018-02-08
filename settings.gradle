@@ -1,1 +1,3 @@
-include ':app', ':go-confluence', ':torrentwrapper', ':kotlinfilebrowser'
+include ':app', ':go-confluence', ':torrentwrapper', ':kotlinfilebrowser', ':kontent-core', ':kontent-dagger'
+project(':kontent-core').projectDir = new File(settingsDir, '../kontent/kontent-core')
+project(':kontent-dagger').projectDir = new File(settingsDir, '../kontent/kontent-dagger')

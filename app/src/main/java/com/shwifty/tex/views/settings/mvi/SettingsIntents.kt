@@ -1,14 +1,16 @@
 package com.shwifty.tex.views.settings.mvi
 
 import android.content.Context
+import com.arranlomas.kontent.commons.objects.mvi.KontentAction
+import com.arranlomas.kontent.commons.objects.mvi.KontentIntent
+import com.arranlomas.kontent.commons.objects.mvi.KontentResult
 import com.shwifty.tex.models.AppTheme
-import com.shwifty.tex.views.base.mvi.BaseMviContract
 import java.io.File
 
 /**
  * Created by arran on 11/11/2017.
  */
-sealed class SettingsIntents : BaseMviContract.Intent {
+sealed class SettingsIntents : KontentIntent() {
     data class InitialIntent(val context: Context) : SettingsIntents()
     data class NewWorkingDirectorySelected(val context: Context, val newDirectory: File, val moveFiles: Boolean) : SettingsIntents()
     data class ToggleWifiOnly(val context: Context, val selected: Boolean) : SettingsIntents()
@@ -16,7 +18,7 @@ sealed class SettingsIntents : BaseMviContract.Intent {
     data class ResetSettings(val context: Context) : SettingsIntents()
 }
 
-sealed class SettingsActions {
+sealed class SettingsActions : KontentAction() {
     data class ClearErrorsAndUpdateWorkingDirectory(val context: Context, val newDirectory: File, val moveFiles: Boolean) : SettingsActions()
     data class LoadPreferencesForFirstTime(val context: Context) : SettingsActions()
     data class UpdateWifiOnly(val context: Context, val selected: Boolean) : SettingsActions()
@@ -24,7 +26,7 @@ sealed class SettingsActions {
     data class ResetSettings(val context: Context) : SettingsActions()
 }
 
-sealed class SettingsResult {
+sealed class SettingsResult : KontentResult() {
     data class LoadSettingsSuccess(val workingDirectory: File, val wifiOnly: Boolean, val theme: AppTheme) : SettingsResult()
     data class LoadSettingsError(val error: Throwable) : SettingsResult()
     object LoadSettingsinFlight : SettingsResult()

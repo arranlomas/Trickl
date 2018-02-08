@@ -1,7 +1,7 @@
 package com.shwifty.tex.views.settings.mvi
 
+import com.arranlomas.kontent.commons.objects.mvi.KontentViewState
 import com.shwifty.tex.models.AppTheme
-import com.shwifty.tex.views.base.mvi.BaseMviContract
 import java.io.File
 
 /**
@@ -25,7 +25,7 @@ data class SettingsViewState(
         val theme: AppTheme? = null,
         val themeLoading: Boolean = false,
         val themeErrorString: String? = null
-) : BaseMviContract.ViewState {
+) : KontentViewState() {
     companion object Factory {
         fun default(): SettingsViewState {
             return SettingsViewState()
