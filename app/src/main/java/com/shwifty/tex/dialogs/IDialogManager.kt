@@ -25,4 +25,5 @@ interface IDialogManager {
                                defaultSortType: TorrentSearchSortType,
                                defaultCategory: TorrentSearchCategory,
                                onConfirm: (TorrentSearchSortType, TorrentSearchCategory) -> Unit)
+    fun showSettingExitDialog(context: Context, onRestart: () -> Unit, onExit: () -> Unit)
 }

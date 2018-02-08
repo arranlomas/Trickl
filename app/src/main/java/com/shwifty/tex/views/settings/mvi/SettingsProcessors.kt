@@ -52,19 +52,24 @@ fun actionFromIntent(intent: SettingsIntents): SettingsActions = when (intent) {
     is SettingsIntents.InitialIntent -> SettingsActions.LoadPreferencesForFirstTime(intent.context)
     is SettingsIntents.ToggleWifiOnly -> SettingsActions.UpdateWifiOnly(intent.context, intent.selected)
     is SettingsIntents.ChangeTheme -> SettingsActions.ChangeTheme(intent.context, intent.newTheme)
+    is SettingsIntents.ResetSettings -> SettingsActions.ResetSettings(intent.context)
 }
 
 fun settingsActionProcessor(preferencesRepository: IPreferenceRepository): ObservableTransformer<SettingsActions, SettingsResult> =
         ObservableTransformer { action: Observable<SettingsActions> ->
             action.publish { shared ->
-                Observable.merge(
-                        shared.ofType(SettingsActions.LoadPreferencesForFirstTime::class.java).compose(loadPreferencesProcessor(preferencesRepository)),
-                        shared.ofType(SettingsActions.ClearErrorsAndUpdateWorkingDirectory::class.java).compose(updateWorkingDirectoryProcessor(preferencesRepository)),
-                        shared.ofType(SettingsActions.UpdateWifiOnly::class.java).compose(updateWifiOnlyProcessor(preferencesRepository)),
-                        shared.ofType(SettingsActions.ChangeTheme::class.java).compose(changeThemeProcessor(preferencesRepository))
-                )
+                Observable.merge(observablesFun(shared, preferencesRepository))
             }
         }
+
+fun observablesFun(shared: Observable<SettingsActions>, preferencesRepository: IPreferenceRepository): List<Observable<SettingsResult>> {
+    return listOf<Observable<SettingsResult>>(
+            shared.ofType(SettingsActions.LoadPreferencesForFirstTime::class.java).compose(loadPreferencesProcessor(preferencesRepository)),
+            shared.ofType(SettingsActions.ClearErrorsAndUpdateWorkingDirectory::class.java).compose(updateWorkingDirectoryProcessor(preferencesRepository)),
+            shared.ofType(SettingsActions.UpdateWifiOnly::class.java).compose(updateWifiOnlyProcessor(preferencesRepository)),
+            shared.ofType(SettingsActions.ChangeTheme::class.java).compose(changeThemeProcessor(preferencesRepository)),
+            shared.ofType(SettingsActions.ResetSettings::class.java).compose(resetSettingsProcessor(preferencesRepository)))
+}
 
 fun loadPreferencesProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer { actions: Observable<SettingsActions.LoadPreferencesForFirstTime> ->
     actions.switchMap { (context) ->
@@ -120,4 +125,15 @@ fun changeThemeProcessor(preferencesRepository: IPreferenceRepository) = Observa
                 .composeIo()
                 .startWith(SettingsResult.ToggleChangeThemeInFlight)
     }
+}
+
+fun resetSettingsProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer { actions: Observable<SettingsActions.ResetSettings> ->
+    Observable.just(SettingsResult.UpdateworkingDirectoryInFlight)
+//    actions.switchMap { action ->
+//        preferencesRepository.saveThemePreference(action.context, action.theme)
+//                .map { SettingsResult.ToggleChangeThemeSuccess(action.theme) as SettingsResult }
+//                .onErrorReturn { SettingsResult.ToggleChangeThemeError(it) }
+//                .composeIo()
+//                .startWith(SettingsResult.ToggleChangeThemeInFlight)
+//    }
 }

@@ -237,4 +237,25 @@ class DialogManager : IDialogManager {
                 .show()
     }
 
+    override fun showSettingExitDialog(context: Context, onRestart: () -> Unit, onExit: () -> Unit) {
+        MaterialDialog.Builder(context)
+                .title(R.string.change_settings_exit_restart_title)
+                .content(R.string.change_settings_exit_restart_description)
+                .positiveText(R.string.change_settings_exit_restart_positive)
+                .onPositive { dialog, _ ->
+                    dialog.dismiss()
+                    onRestart.invoke()
+                }
+                .negativeText(R.string.change_settings_exit_restart_negative)
+                .onNegative { dialog, _ ->
+                    dialog.dismiss()
+                    onExit.invoke()
+                }
+                .neutralText(R.string.change_settings_exit_restart_neutral)
+                .onNeutral { dialog, which ->
+                    dialog.dismiss()
+                }
+                .show()
+    }
+
 }

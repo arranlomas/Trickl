@@ -115,6 +115,13 @@
     <string name="change_working_directory_warning_dialog_confirm">Continue</string>
     <string name="change_working_directory_warning_dialog_cancel">Cancel</string>
 
+    <!--Exit settings without restart-->
+    <string name="change_settings_exit_restart_title">Restart required</string>
+    <string name="change_settings_exit_restart_description">Settings will not be applied without restarting would you like to restart now?</string>
+    <string name="change_settings_exit_restart_neutral">Exit without saving</string>
+    <string name="change_settings_exit_restart_negative">Cancel</string>
+    <string name="change_settings_exit_restart_positive">Restart</string>
+
     <!--Chromecast Activity-->
     <string name="chromecast_toolbar_title">Chromecast</string>
 

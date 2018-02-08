@@ -50,14 +50,16 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
         supportActionBar?.title = getString(R.string.settings_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         settingsToolbar.setNavigationOnClickListener {
+            Trickl.dialogManager.showSettingExitDialog(this, onRestart = {
+
+            }, onExit = {
+
+            })
             onBackPressed()
         }
 
         workingDirectoryRootLayout.setOnClickListener {
             FileBrowserActivity.startActivity(this, RC_SELECT_FILE, true)
-//            Trickl.dialogManager.showChangeWorkingDirectoryRestartRequired(this, {
-//
-//            })
         }
 
         restartButton.setOnClickListener {
@@ -99,12 +101,19 @@ class SettingsActivity : BaseMviActivity<SettingsViewState, SettingsIntents>() {
                 }
             }
 
+    private fun resetSettingsIntent(): Observable<SettingsIntents.ResetSettings> = Observable.create { subscriber ->
+        settingsToolbar.setNavigationOnClickListener{
+            subscriber.onNext(SettingsIntents.ResetSettings(this, interactor))
+        }
+    }
+
     private fun intents(): Observable<SettingsIntents> = Observable.merge(intentList)
 
     private val intentList by lazy {
         listOf(
                 initialIntent(),
                 updateWorkingDirectoryIntent(),
+                resetSettingsIntent(),
 //            toggleWifiOnlyIntent(),  TODO
                 changeThemeIntent())
     }
