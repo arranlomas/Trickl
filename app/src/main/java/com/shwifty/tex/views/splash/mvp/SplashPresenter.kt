@@ -37,7 +37,6 @@ class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Pre
         Confluence.torrentRepository.isConnected()
                 .subscribe(object : BaseSubscriber<Boolean>() {
                     override fun onNext(started: Boolean) {
-                        mvpView.progressToMain()
                         mvpView.setLoading(false)
                         if (!started) Confluence.start(activity, R.drawable.trickl_notification, notificationChannelId, notificationChannelName, seed, stopActionInNotification, notificationIntent, {
                             mvpView.showError("Storage permissions is required to start the client")
