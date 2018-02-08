@@ -118,7 +118,6 @@
     <!--Exit settings without restart-->
     <string name="change_settings_exit_restart_title">Restart required</string>
     <string name="change_settings_exit_restart_description">Settings will not be applied without restarting would you like to restart now?</string>
-    <string name="change_settings_exit_restart_neutral">Exit without saving</string>
     <string name="change_settings_exit_restart_negative">Cancel</string>
     <string name="change_settings_exit_restart_positive">Restart</string>
 

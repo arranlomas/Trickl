@@ -52,15 +52,10 @@ class SettingsActivity : BaseMviActivity<SettingsIntents, SettingsViewState>() {
         setSupportActionBar(settingsToolbar)
         supportActionBar?.title = getString(R.string.settings_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         settingsToolbar.setNavigationOnClickListener {
-            Trickl.dialogManager.showSettingExitDialog(this, onRestart = {
-
-            }, onExit = {
-
-            })
             onBackPressed()
         }
-
         workingDirectoryRootLayout.setOnClickListener {
             FileBrowserActivity.startActivity(this, RC_SELECT_FILE, true)
         }
@@ -88,6 +83,7 @@ class SettingsActivity : BaseMviActivity<SettingsIntents, SettingsViewState>() {
 
     private fun updateWorkingDirectoryIntent(): Observable<SettingsIntents.NewWorkingDirectorySelected> = createObservableFrom { newWorkingDirecotyrEmiter = it }
 
+    //TODO
 //    private fun toggleWifiOnlyIntent(): Observable<SettingsIntents.ToggleWifiOnly> =
 //            RxCompoundButton.checkedChanges(wifiOnlySwich)
 //                    .map { isChecked: Boolean -> SettingsIntents.ToggleWifiOnly(this, isChecked) }
@@ -104,19 +100,12 @@ class SettingsActivity : BaseMviActivity<SettingsIntents, SettingsViewState>() {
                 }
             }
 
-    private fun resetSettingsIntent(): Observable<SettingsIntents.ResetSettings> = Observable.create { subscriber ->
-        settingsToolbar.setNavigationOnClickListener {
-            subscriber.onNext(SettingsIntents.ResetSettings(this))
-        }
-    }
-
     private fun intents(): Observable<SettingsIntents> = Observable.merge(intentList)
 
     private val intentList by lazy {
         listOf(
                 initialIntent(),
                 updateWorkingDirectoryIntent(),
-                resetSettingsIntent(),
 //            toggleWifiOnlyIntent(),  TODO
                 changeThemeIntent())
     }
@@ -138,5 +127,13 @@ class SettingsActivity : BaseMviActivity<SettingsIntents, SettingsViewState>() {
         }
 
         snackbarRestart.setVisible(state.settingsChanged)
+    }
+
+    override fun onBackPressed() {
+        if (interactor.getLastState().settingsChanged)
+            Trickl.dialogManager.showSettingExitDialog(this, onRestart = {
+                (application as MyApplication).restart()
+            })
+        else super.onBackPressed()
     }
 }

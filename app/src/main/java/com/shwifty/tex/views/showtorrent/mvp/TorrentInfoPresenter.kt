@@ -27,11 +27,11 @@ class TorrentInfoPresenter(val torrentRepository: ITorrentRepository) : BasePres
 
     override fun setup(arguments: Bundle?) {
         if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_HASH) == true) {
-            torrentHash = arguments?.getString(AddTorrentActivity.ARG_TORRENT_HASH) ?: ""
+            torrentHash = arguments.getString(AddTorrentActivity.ARG_TORRENT_HASH) ?: ""
         }
 
         if (arguments?.containsKey(AddTorrentActivity.ARG_TORRENT_MAGNET) == true) {
-            torrentMagnet = arguments?.getString(AddTorrentActivity.ARG_TORRENT_MAGNET) ?: ""
+            torrentMagnet = arguments.getString(AddTorrentActivity.ARG_TORRENT_MAGNET) ?: ""
             torrentMagnet?.findHashFromMagnet()?.let { torrentHash = it }
             torrentName = URLDecoder.decode(torrentMagnet?.findNameFromMagnet(), "UTF-8")
             torrentTrackers = torrentMagnet?.findTrackersFromMagnet()

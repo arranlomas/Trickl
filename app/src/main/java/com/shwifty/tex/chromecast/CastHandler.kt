@@ -2,6 +2,7 @@ package com.shwifty.tex.chromecast
 
 import android.content.Context
 import android.util.Log
+import com.google.android.gms.cast.MediaLoadOptions
 import com.google.android.gms.cast.MediaMetadata
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
@@ -129,7 +130,7 @@ class CastHandler : ICastHandler {
             return false
         }
         val remoteMediaClient = mCastSession?.remoteMediaClient ?: return false
-        remoteMediaClient.load(torrentFile.buildMediaInfo(torrentFile.getMimeType()), true)
+        remoteMediaClient.load(torrentFile.buildMediaInfo(torrentFile.getMimeType()), MediaLoadOptions.Builder().build())
         return true
     }
 

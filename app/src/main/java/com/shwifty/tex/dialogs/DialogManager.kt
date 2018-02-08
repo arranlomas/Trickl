@@ -82,8 +82,8 @@ class DialogManager : IDialogManager {
                 .onNeutral { dialog, _ -> dialog.dismiss() }
                 .negativeText(R.string.keep)
                 .onNegative { dialog, _ ->
-                    val torrentFile = torrentRepository.getTorrentFileFromPersistence(torrentHash, filePath) ?: throw NullPointerException("Cannot delete a null torrent file")
-                    torrentRepository.deleteTorrentFileFromPersistence(torrentFile)
+                    val persistentTorrentFile = torrentRepository.getTorrentFileFromPersistence(torrentHash, filePath) ?: throw NullPointerException("Cannot delete a null torrent file")
+                    torrentRepository.deleteTorrentFileFromPersistence(persistentTorrentFile)
                     dialog.dismiss()
                 }
                 .show()
@@ -237,7 +237,7 @@ class DialogManager : IDialogManager {
                 .show()
     }
 
-    override fun showSettingExitDialog(context: Context, onRestart: () -> Unit, onExit: () -> Unit) {
+    override fun showSettingExitDialog(context: Context, onRestart: () -> Unit) {
         MaterialDialog.Builder(context)
                 .title(R.string.change_settings_exit_restart_title)
                 .content(R.string.change_settings_exit_restart_description)
@@ -248,11 +248,6 @@ class DialogManager : IDialogManager {
                 }
                 .negativeText(R.string.change_settings_exit_restart_negative)
                 .onNegative { dialog, _ ->
-                    dialog.dismiss()
-                    onExit.invoke()
-                }
-                .neutralText(R.string.change_settings_exit_restart_neutral)
-                .onNeutral { dialog, which ->
                     dialog.dismiss()
                 }
                 .show()

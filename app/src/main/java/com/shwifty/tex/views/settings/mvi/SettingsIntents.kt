@@ -15,7 +15,6 @@ sealed class SettingsIntents : KontentIntent() {
     data class NewWorkingDirectorySelected(val context: Context, val newDirectory: File, val moveFiles: Boolean) : SettingsIntents()
     data class ToggleWifiOnly(val context: Context, val selected: Boolean) : SettingsIntents()
     data class ChangeTheme(val context: Context, val newTheme: AppTheme) : SettingsIntents()
-    data class ResetSettings(val context: Context) : SettingsIntents()
 }
 
 sealed class SettingsActions : KontentAction() {
@@ -23,7 +22,6 @@ sealed class SettingsActions : KontentAction() {
     data class LoadPreferencesForFirstTime(val context: Context) : SettingsActions()
     data class UpdateWifiOnly(val context: Context, val selected: Boolean) : SettingsActions()
     data class ChangeTheme(val context: Context, val theme: AppTheme) : SettingsActions()
-    data class ResetSettings(val context: Context) : SettingsActions()
 }
 
 sealed class SettingsResult : KontentResult() {

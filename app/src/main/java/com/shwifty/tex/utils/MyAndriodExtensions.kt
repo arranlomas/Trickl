@@ -133,6 +133,8 @@ fun Activity.oncreateSetThemeAndCallSuper(onLoaded: () -> Unit) = PreferencesRep
             when (it) {
                 AppTheme.LIGHT -> setTheme(R.style.AppTheme_Light)
                 AppTheme.DARK -> setTheme(R.style.AppTheme)
+                else -> {
+                }
             }
         }, {
             Crashlytics.logException(it)

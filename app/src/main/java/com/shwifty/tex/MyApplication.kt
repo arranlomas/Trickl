@@ -46,10 +46,10 @@ class MyApplication : MultiDexApplication() {
     //TODO this is SUPER HACKYYY!!!
     fun restart() {
         Confluence.stop()
-        val mStartActivity = Intent(this, SplashActivity::class.java)
-        val mPendingIntentId = 123456
-        val mPendingIntent = PendingIntent.getActivity(this, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT)
-        (this.getSystemService(Context.ALARM_SERVICE) as AlarmManager).set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
+        val splasshActivity = Intent(this, SplashActivity::class.java)
+        val pendingIntentId = 123456
+        val pendingIntent = PendingIntent.getActivity(this, pendingIntentId, splasshActivity, PendingIntent.FLAG_CANCEL_CURRENT)
+        (this.getSystemService(Context.ALARM_SERVICE) as AlarmManager).set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
         System.exit(0)
     }
 }
