@@ -6,7 +6,6 @@ import com.arranlomas.kontent.commons.functions.KontentReducer
 import com.shwifty.tex.models.AppTheme
 import com.shwifty.tex.repository.preferences.IPreferenceRepository
 import com.shwifty.tex.utils.ValidateChangeWorkingDirectoryResult
-import com.shwifty.tex.utils.composeIo
 import com.shwifty.tex.utils.validateWorkingDirectoryCanBeChanged
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -103,7 +102,10 @@ fun updateWifiOnlyProcessor(preferencesRepository: IPreferenceRepository) = Kont
         success = {
             SettingsResult.ToggleWifiOnlySuccess(it)
         },
-        
+        error = {
+            SettingsResult.ToggleWifiOnlyError(it)
+        },
+        loading = SettingsResult.ToggleWifiOnlyInFlight
 )
 
 fun updateWorkingDirectoryProcessor(preferencesRepository: IPreferenceRepository) = KontentActionProcessor<SettingsActions.ClearErrorsAndUpdateWorkingDirectory, SettingsResult, File>(
@@ -142,5 +144,4 @@ fun postProcessor() = KontentPostProcessor<SettingsViewState> {
     if (it.originalTheme != it.theme) settingsChanged = true
     if (it.originalWorkingDirectory != it.currentWorkingDirectory) settingsChanged = true
     it.copy(settingsChanged = settingsChanged)
-}
 }
