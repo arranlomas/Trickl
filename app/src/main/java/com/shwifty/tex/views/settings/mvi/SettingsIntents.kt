@@ -29,7 +29,7 @@ sealed class SettingsResult : KontentResult() {
     data class LoadSettingsError(val error: Throwable) : SettingsResult()
     object LoadSettingsinFlight : SettingsResult()
 
-    object UpdateworkingDirectoryInFlight : SettingsResult()
+    object UpdateWorkingDirectoryInFlight : SettingsResult()
     data class UpdateWorkingDirectorySuccess(val newFile: File) : SettingsResult()
     data class UpdateWorkingDirectoryError(val error: Throwable) : SettingsResult()
 

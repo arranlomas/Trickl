@@ -1,7 +1,8 @@
 package com.shwifty.tex.views.settings.mvi
 
+import com.arranlomas.kontent.commons.functions.KontentActionProcessor
 import com.arranlomas.kontent.commons.functions.KontentPostProcessor
-import com.shwifty.tex.Trickl
+import com.arranlomas.kontent.commons.functions.KontentReducer
 import com.shwifty.tex.models.AppTheme
 import com.shwifty.tex.repository.preferences.IPreferenceRepository
 import com.shwifty.tex.utils.ValidateChangeWorkingDirectoryResult
@@ -9,14 +10,13 @@ import com.shwifty.tex.utils.composeIo
 import com.shwifty.tex.utils.validateWorkingDirectoryCanBeChanged
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function3
 import java.io.File
 
 /**
  * Created by arran on 19/11/2017.
  */
-val settingsReducer = BiFunction { previousState: SettingsViewState, result: SettingsResult ->
+val settingsReducer = KontentReducer { result: SettingsResult, previousState: SettingsViewState ->
     when (result) {
         is SettingsResult.LoadSettingsSuccess -> previousState.copy(
                 originalTheme = result.theme, originalWifiOnly = result.wifiOnly, originalWorkingDirectory = result.workingDirectory,
@@ -34,7 +34,7 @@ val settingsReducer = BiFunction { previousState: SettingsViewState, result: Set
                 wifiOnlyLoading = false, wifiOnlyErrorString = result.error.localizedMessage, wifiOnly = false,
                 themeLoading = false, themeErrorString = result.error.localizedMessage, theme = null)
 
-        is SettingsResult.UpdateworkingDirectoryInFlight -> previousState.copy(workingDirectoryLoading = true, workingDirectoryErrorString = null, currentWorkingDirectory = null)
+        is SettingsResult.UpdateWorkingDirectoryInFlight -> previousState.copy(workingDirectoryLoading = true, workingDirectoryErrorString = null, currentWorkingDirectory = null)
         is SettingsResult.UpdateWorkingDirectorySuccess -> previousState.copy(workingDirectoryLoading = false, workingDirectoryErrorString = null, currentWorkingDirectory = result.newFile)
         is SettingsResult.UpdateWorkingDirectoryError -> previousState.copy(workingDirectoryLoading = false, workingDirectoryErrorString = result.error.localizedMessage, currentWorkingDirectory = null)
 
@@ -58,11 +58,11 @@ fun actionFromIntent(intent: SettingsIntents): SettingsActions = when (intent) {
 fun settingsActionProcessor(preferencesRepository: IPreferenceRepository): ObservableTransformer<SettingsActions, SettingsResult> =
         ObservableTransformer { action: Observable<SettingsActions> ->
             action.publish { shared ->
-                Observable.merge(observablesFun(shared, preferencesRepository))
+                Observable.merge(observables(shared, preferencesRepository))
             }
         }
 
-fun observablesFun(shared: Observable<SettingsActions>, preferencesRepository: IPreferenceRepository): List<Observable<SettingsResult>> {
+fun observables(shared: Observable<SettingsActions>, preferencesRepository: IPreferenceRepository): List<Observable<SettingsResult>> {
     return listOf<Observable<SettingsResult>>(
             shared.ofType(SettingsActions.LoadPreferencesForFirstTime::class.java).compose(loadPreferencesProcessor(preferencesRepository)),
             shared.ofType(SettingsActions.ClearErrorsAndUpdateWorkingDirectory::class.java).compose(updateWorkingDirectoryProcessor(preferencesRepository)),
@@ -70,61 +70,71 @@ fun observablesFun(shared: Observable<SettingsActions>, preferencesRepository: I
             shared.ofType(SettingsActions.ChangeTheme::class.java).compose(changeThemeProcessor(preferencesRepository)))
 }
 
-fun loadPreferencesProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer { actions: Observable<SettingsActions.LoadPreferencesForFirstTime> ->
-    actions.switchMap { (context) ->
-        Observable.zip(preferencesRepository.getWorkingDirectoryPreference(context),
-                preferencesRepository.getWifiOnlyPreference(context),
-                preferencesRepository.getThemPreference(context), Function3<File, Boolean, AppTheme, SettingsResult> { file, wifiOnly, theme ->
-            SettingsResult.LoadSettingsSuccess(file, wifiOnly, theme)
-        })
-                .onErrorReturn { SettingsResult.LoadSettingsError(it) }
-                .composeIo()
-                .startWith(SettingsResult.LoadSettingsinFlight)
-    }
-}
+fun loadPreferencesProcessor(preferencesRepository: IPreferenceRepository) = KontentActionProcessor<SettingsActions.LoadPreferencesForFirstTime, SettingsResult, Triple<File, Boolean, AppTheme>>(
+        action = { action ->
+            Observable.zip(preferencesRepository.getWorkingDirectoryPreference(action.context),
+                    preferencesRepository.getWifiOnlyPreference(action.context),
+                    preferencesRepository.getThemPreference(action.context), Function3<File, Boolean, AppTheme, Triple<File, Boolean, AppTheme>> { file, wifiOnly, theme ->
+                Triple(file, wifiOnly, theme)
+            })
+        },
+        success = { (workingDirectory, wifiOnly, theme) ->
+            SettingsResult.LoadSettingsSuccess(workingDirectory, wifiOnly, theme)
+        },
+        error = {
+            SettingsResult.LoadSettingsError(it)
+        },
+        loading = SettingsResult.LoadSettingsinFlight
+)
 
-fun updateWifiOnlyProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer { actions: Observable<SettingsActions.UpdateWifiOnly> ->
-    actions.switchMap { action ->
-        preferencesRepository.saveWifiOnlyPreference(action.context, action.selected)
-                .map { SettingsResult.ToggleWifiOnlySuccess(action.selected) as SettingsResult }
-                .onErrorReturn { SettingsResult.ToggleWifiOnlyError(it) }
-                .composeIo()
-                .startWith(SettingsResult.ToggleWifiOnlyInFlight)
-    }
-}
+//fun updateWifiOnlyProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer { actions: Observable<SettingsActions.UpdateWifiOnly> ->
+//    actions.switchMap { action ->
+//        preferencesRepository.saveWifiOnlyPreference(action.context, action.selected)
+//                .map { SettingsResult.ToggleWifiOnlySuccess(action.selected) as SettingsResult }
+//                .onErrorReturn { SettingsResult.ToggleWifiOnlyError(it) }
+//                .composeIo()
+//                .startWith(SettingsResult.ToggleWifiOnlyInFlight)
+//    }
+//}
+fun updateWifiOnlyProcessor(preferencesRepository: IPreferenceRepository) = KontentActionProcessor<SettingsActions.UpdateWifiOnly, SettingsResult, Boolean>(
+        action = { action ->
+            preferencesRepository.saveWifiOnlyPreference(action.context, action.selected)
+        },
+        success = {
+            SettingsResult.ToggleWifiOnlySuccess(it)
+        },
+        
+)
 
-fun updateWorkingDirectoryProcessor(preferencesRepository: IPreferenceRepository):
-        ObservableTransformer<SettingsActions.ClearErrorsAndUpdateWorkingDirectory, SettingsResult> = ObservableTransformer { actions: Observable<SettingsActions.ClearErrorsAndUpdateWorkingDirectory> ->
-    actions.switchMap { action ->
-        Trickl.repositoryComponent.getPreferencesRepository().getWorkingDirectoryPreference(action.context)
-                .map { previousDirectory -> Pair(previousDirectory, action.newDirectory.validateWorkingDirectoryCanBeChanged(previousDirectory)) }
-                .map { (previousDirectory, isValid) ->
-                    if (isValid is ValidateChangeWorkingDirectoryResult.Error) {
-                        throw IllegalArgumentException(action.context.getString(isValid.messageRes))
+fun updateWorkingDirectoryProcessor(preferencesRepository: IPreferenceRepository) = KontentActionProcessor<SettingsActions.ClearErrorsAndUpdateWorkingDirectory, SettingsResult, File>(
+        action = { action ->
+            preferencesRepository.getWorkingDirectoryPreference(action.context)
+                    .map { previousDirectory -> Pair(previousDirectory, action.newDirectory.validateWorkingDirectoryCanBeChanged(previousDirectory)) }
+                    .map { (previousDirectory, isValid) ->
+                        if (isValid is ValidateChangeWorkingDirectoryResult.Error) {
+                            throw IllegalArgumentException(action.context.getString(isValid.messageRes))
+                        }
+                        preferencesRepository.saveWorkingDirectoryPreference(action.context, action.newDirectory)
+                        if (action.moveFiles) {
+                            previousDirectory.copyRecursively(action.newDirectory, overwrite = true)
+                            previousDirectory.deleteRecursively()
+                        }
+                        action.newDirectory
                     }
-                    preferencesRepository.saveWorkingDirectoryPreference(action.context, action.newDirectory)
-                    if (action.moveFiles) {
-                        previousDirectory.copyRecursively(action.newDirectory, overwrite = true)
-                        previousDirectory.deleteRecursively()
-                    }
-                }
-                .map { SettingsResult.UpdateWorkingDirectorySuccess(action.newDirectory) as SettingsResult }
-                .onErrorReturn { SettingsResult.UpdateWorkingDirectoryError(it) }
-                .composeIo()
-                .startWith(SettingsResult.UpdateworkingDirectoryInFlight)
+        },
+        success = { SettingsResult.UpdateWorkingDirectorySuccess(it) },
+        error = { SettingsResult.UpdateWorkingDirectoryError(it) },
+        loading = SettingsResult.UpdateWorkingDirectoryInFlight
+)
 
-    }
-}
-
-fun changeThemeProcessor(preferencesRepository: IPreferenceRepository) = ObservableTransformer { actions: Observable<SettingsActions.ChangeTheme> ->
-    actions.switchMap { action ->
-        preferencesRepository.saveThemePreference(action.context, action.theme)
-                .map { SettingsResult.ToggleChangeThemeSuccess(action.theme) as SettingsResult }
-                .onErrorReturn { SettingsResult.ToggleChangeThemeError(it) }
-                .composeIo()
-                .startWith(SettingsResult.ToggleChangeThemeInFlight)
-    }
-}
+fun changeThemeProcessor(preferencesRepository: IPreferenceRepository) = KontentActionProcessor<SettingsActions.ChangeTheme, SettingsResult, AppTheme>(
+        action = { action ->
+            preferencesRepository.saveThemePreference(action.context, action.theme)
+        },
+        success = { SettingsResult.ToggleChangeThemeSuccess(it) },
+        error = { SettingsResult.ToggleChangeThemeError(it) },
+        loading = SettingsResult.ToggleChangeThemeInFlight
+)
 
 fun postProcessor() = KontentPostProcessor<SettingsViewState> {
     var settingsChanged = false
@@ -132,4 +142,5 @@ fun postProcessor() = KontentPostProcessor<SettingsViewState> {
     if (it.originalTheme != it.theme) settingsChanged = true
     if (it.originalWorkingDirectory != it.currentWorkingDirectory) settingsChanged = true
     it.copy(settingsChanged = settingsChanged)
+}
 }
