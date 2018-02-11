@@ -7,10 +7,10 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
+            <option value="$PROJECT_DIR$/../FileBrowser/kotlinfilebrowser" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/go-confluence" />
-            <option value="$PROJECT_DIR$/kotlinfilebrowser" />
             <option value="$PROJECT_DIR$/torrentwrapper" />
             <option value="$PROJECT_DIR$/../kontent/kontent-core" />
             <option value="$PROJECT_DIR$/../kontent/kontent-dagger" />

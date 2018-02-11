@@ -4,10 +4,10 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Trickl.iml" filepath="$PROJECT_DIR$/Trickl.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../FileBrowser/kotlinfilebrowser/file-browser.iml" filepath="$PROJECT_DIR$/../FileBrowser/kotlinfilebrowser/file-browser.iml" />
       <module fileurl="file://$PROJECT_DIR$/go-confluence/go-confluence.iml" filepath="$PROJECT_DIR$/go-confluence/go-confluence.iml" />
       <module fileurl="file://$PROJECT_DIR$/../kontent/kontent-core/kontent-core.iml" filepath="$PROJECT_DIR$/../kontent/kontent-core/kontent-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/../kontent/kontent-dagger/kontent-dagger.iml" filepath="$PROJECT_DIR$/../kontent/kontent-dagger/kontent-dagger.iml" />
-      <module fileurl="file://$PROJECT_DIR$/kotlinfilebrowser/kotlinfilebrowser.iml" filepath="$PROJECT_DIR$/kotlinfilebrowser/kotlinfilebrowser.iml" />
       <module fileurl="file://$PROJECT_DIR$/torrentwrapper/torrentwrapper.iml" filepath="$PROJECT_DIR$/torrentwrapper/torrentwrapper.iml" />
     </modules>
   </component>

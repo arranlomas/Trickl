@@ -49,9 +49,6 @@ dependencies {
     //Confluence
     compile project(':go-confluence')
 
-    //file browse
-    compile project(':kotlinfilebrowser')
-
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -154,6 +151,9 @@ dependencies {
     //Kontent
     compile project(':kontent-core')
     compile project(':kontent-dagger')
+
+    //File Browser
+    compile project(':file-browser')
 }
 repositories {
     mavenCentral()
