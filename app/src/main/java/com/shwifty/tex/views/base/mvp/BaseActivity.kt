@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
-import com.shwifty.tex.utils.oncreateSetThemeAndCallSuper
+import com.shwifty.tex.utils.onCreateSetThemeAndCallSuper
 import es.dmoral.toasty.Toasty
 
 /**
@@ -13,7 +13,8 @@ import es.dmoral.toasty.Toasty
 open class BaseActivity : AppCompatActivity(), BaseContract.MvpView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        oncreateSetThemeAndCallSuper { super.onCreate(savedInstanceState) }
+        onCreateSetThemeAndCallSuper { super.onCreate(savedInstanceState) }
+//                setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_‌​BAR);
     }
 
     override fun onDestroy() {

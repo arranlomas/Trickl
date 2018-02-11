@@ -5,6 +5,7 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.SearchView
 import android.text.Editable
@@ -128,16 +129,38 @@ fun Intent?.validateOnActivityResult(requestCode: Int, expectedRequestCode: Int,
     }
 }
 
-fun Activity.oncreateSetThemeAndCallSuper(onLoaded: () -> Unit) = PreferencesRepository().getThemPreference(this)
-        .subscribe({
-            when (it) {
-                AppTheme.LIGHT -> setTheme(R.style.AppTheme_Light)
-                AppTheme.DARK -> setTheme(R.style.AppTheme)
-                else -> {
+fun Activity.onCreateSetThemeAndCallSuper(onLoaded: () -> Unit) {
+    PreferencesRepository().getThemPreference(this)
+            .subscribe({
+                when (it) {
+                    AppTheme.LIGHT -> {
+                        setTheme(R.style.AppTheme_Light)
+                        window.decorView.setLightStatusBar()
+                    }
+                    AppTheme.DARK -> {
+                        setTheme(R.style.AppTheme)
+                        window.decorView.clearLightStatusBar()
+                    }
+                    else -> {
+                    }
                 }
-            }
-        }, {
-            Crashlytics.logException(it)
-        }, {
-            onLoaded.invoke()
-        })
+            }, {
+                Crashlytics.logException(it)
+            }, {
+                onLoaded.invoke()
+            })
+}
+
+private fun View.clearLightStatusBar() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        var flags = systemUiVisibility
+        flags = flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+        systemUiVisibility = flags
+    }
+}
+
+private fun View.setLightStatusBar() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        this.systemUiVisibility = this.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    }
+}
