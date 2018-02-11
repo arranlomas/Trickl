@@ -82,8 +82,10 @@ class DialogManager : IDialogManager {
                 .onNeutral { dialog, _ -> dialog.dismiss() }
                 .negativeText(R.string.keep)
                 .onNegative { dialog, _ ->
-                    val persistentTorrentFile = torrentRepository.getTorrentFileFromPersistence(torrentHash, filePath) ?: throw NullPointerException("Cannot delete a null torrent file")
-                    torrentRepository.deleteTorrentFileFromPersistence(persistentTorrentFile)
+                    val persistentTorrentFile = torrentRepository.getTorrentFileFromPersistence(torrentHash, filePath)
+                    persistentTorrentFile?.let {
+                        torrentRepository.deleteTorrentFileFromPersistence(persistentTorrentFile)
+                    }
                     dialog.dismiss()
                 }
                 .show()
