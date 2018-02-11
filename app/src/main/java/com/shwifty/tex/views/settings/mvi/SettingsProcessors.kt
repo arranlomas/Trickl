@@ -33,17 +33,17 @@ val settingsReducer = KontentReducer { result: SettingsResult, previousState: Se
                 wifiOnlyLoading = false, wifiOnlyErrorString = result.error.localizedMessage, wifiOnly = false,
                 themeLoading = false, themeErrorString = result.error.localizedMessage, theme = null)
 
-        is SettingsResult.UpdateWorkingDirectoryInFlight -> previousState.copy(workingDirectoryLoading = true, workingDirectoryErrorString = null, currentWorkingDirectory = null)
+        is SettingsResult.UpdateWorkingDirectoryInFlight -> previousState.copy(workingDirectoryLoading = true, workingDirectoryErrorString = null)
         is SettingsResult.UpdateWorkingDirectorySuccess -> previousState.copy(workingDirectoryLoading = false, workingDirectoryErrorString = null, currentWorkingDirectory = result.newFile)
-        is SettingsResult.UpdateWorkingDirectoryError -> previousState.copy(workingDirectoryLoading = false, workingDirectoryErrorString = result.error.localizedMessage, currentWorkingDirectory = null)
+        is SettingsResult.UpdateWorkingDirectoryError -> previousState.copy(workingDirectoryLoading = false, workingDirectoryErrorString = result.error.localizedMessage)
 
         is SettingsResult.ToggleWifiOnlyInFlight -> previousState.copy(wifiOnlyLoading = true, wifiOnlyErrorString = null, wifiOnly = false)
         is SettingsResult.ToggleWifiOnlySuccess -> previousState.copy(wifiOnlyLoading = false, wifiOnlyErrorString = null, wifiOnly = result.wifiOnly)
         is SettingsResult.ToggleWifiOnlyError -> previousState.copy(wifiOnlyLoading = false, wifiOnlyErrorString = result.error.localizedMessage, wifiOnly = null)
 
-        is SettingsResult.ToggleChangeThemeInFlight -> previousState.copy(themeLoading = true, themeErrorString = null, theme = null)
-        is SettingsResult.ToggleChangeThemeSuccess -> previousState.copy(themeLoading = false, themeErrorString = null, theme = result.theme)
-        is SettingsResult.ToggleChangeThemeError -> previousState.copy(themeLoading = false, themeErrorString = result.error.localizedMessage, theme = null)
+        is SettingsResult.ChangeThemeInFlight -> previousState.copy(themeLoading = true, themeErrorString = null, theme = null)
+        is SettingsResult.ChangeThemeSuccess -> previousState.copy(themeLoading = false, themeErrorString = null, theme = result.theme)
+        is SettingsResult.ChangeThemeError -> previousState.copy(themeLoading = false, themeErrorString = result.error.localizedMessage, theme = null)
     }
 }
 
@@ -133,9 +133,9 @@ fun changeThemeProcessor(preferencesRepository: IPreferenceRepository) = Kontent
         action = { action ->
             preferencesRepository.saveThemePreference(action.context, action.theme)
         },
-        success = { SettingsResult.ToggleChangeThemeSuccess(it) },
-        error = { SettingsResult.ToggleChangeThemeError(it) },
-        loading = SettingsResult.ToggleChangeThemeInFlight
+        success = { SettingsResult.ChangeThemeSuccess(it) },
+        error = { SettingsResult.ChangeThemeError(it) },
+        loading = SettingsResult.ChangeThemeInFlight
 )
 
 fun postProcessor() = KontentPostProcessor<SettingsViewState> {

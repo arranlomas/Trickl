@@ -37,7 +37,7 @@ sealed class SettingsResult : KontentResult() {
     data class ToggleWifiOnlySuccess(val wifiOnly: Boolean) : SettingsResult()
     data class ToggleWifiOnlyError(val error: Throwable) : SettingsResult()
 
-    object ToggleChangeThemeInFlight : SettingsResult()
-    data class ToggleChangeThemeSuccess(val theme: AppTheme) : SettingsResult()
-    data class ToggleChangeThemeError(val error: Throwable) : SettingsResult()
+    object ChangeThemeInFlight : SettingsResult()
+    data class ChangeThemeSuccess(val theme: AppTheme) : SettingsResult()
+    data class ChangeThemeError(val error: Throwable) : SettingsResult()
 }
