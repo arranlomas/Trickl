@@ -99,7 +99,9 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
             false
         })
         render(browseReducer.getState())
-        browseReducer.getViewStateChangeStream().subscribe { render(it) }
+        browseReducer.getViewStateChangeStream().subscribe(
+                { render(it) },
+                { showError(it.localizedMessage) })
         reload()
     }
 
