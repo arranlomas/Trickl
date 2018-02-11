@@ -15,14 +15,15 @@ class FileDownloadAdapter(val itemClickListener: (TorrentFile, ClickTypes) -> Un
 
     var torrentFiles: List<TorrentFile> = mutableListOf()
 
-    companion object{
-        enum class ClickTypes{
+    companion object {
+        enum class ClickTypes {
             OPEN,
             DOWNLOAD,
             CHROMECAST,
             DELETE
         }
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileDownloadCardHolder {
         val itemView = parent.context.inflateLayout(R.layout.list_item_file_download, parent, false)
         val holder = FileDownloadCardHolder(itemView)
@@ -30,13 +31,19 @@ class FileDownloadAdapter(val itemClickListener: (TorrentFile, ClickTypes) -> Un
             val popup = PopupMenu(itemView.context, itemView)
             popup.menuInflater.inflate(R.menu.popup_download_file, popup.menu)
             popup.setOnMenuItemClickListener {
-                when(it.itemId){
-                    R.id.menu_item_open -> itemClickListener(torrentFiles[position], ClickTypes.OPEN)
-                    R.id.menu_item_download -> itemClickListener(torrentFiles[position], ClickTypes.DOWNLOAD)
-                    R.id.menu_item_chromecast -> itemClickListener(torrentFiles[position], ClickTypes.CHROMECAST)
-                    R.id.menu_item_delete -> itemClickListener(torrentFiles[position], ClickTypes.DELETE)
+                val clickType = when (it.itemId) {
+                    R.id.menu_item_open -> ClickTypes.OPEN
+                    R.id.menu_item_download -> ClickTypes.DOWNLOAD
+                    R.id.menu_item_chromecast -> ClickTypes.CHROMECAST
+                    R.id.menu_item_delete -> ClickTypes.DELETE
+                    else -> null
                 }
-                true
+                val torrentFile = torrentFiles.getOrNull(position)
+                if (clickType != null && torrentFile != null) {
+                    itemClickListener(torrentFile, clickType)
+                    true
+                } else
+                    false
             }
             popup.show()
         }
