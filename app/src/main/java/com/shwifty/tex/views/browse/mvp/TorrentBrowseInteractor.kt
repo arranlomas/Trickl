@@ -10,6 +10,6 @@ class TorrentBrowseInteractor(torrentSearchRepository: ITorrentSearchRepository)
     : TorrentBrowseContract.Interactor, BaseMviInteractor<BrowseIntents, BrowseActions, BrowseResult, BrowseViewState>(
         intentToAction = { browseIntentToAction(it) },
         actionProcessor = browseActionProcessor(torrentSearchRepository),
-        reducer = browseResucer,
+        reducer = browseReducer,
         defaultState = BrowseViewState.default()
 )

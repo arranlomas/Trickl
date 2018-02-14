@@ -19,6 +19,7 @@ sealed class BrowseResult : KontentResult() {
     object SearchInFlight : BrowseResult()
 
     object ToggleSearchMode : BrowseResult()
+    data class SetSearchBarExpanded(val expanded: Boolean) : BrowseResult()
 
     data class UpdateSortAndCategory(val sortType: TorrentSearchSortType, val category: TorrentSearchCategory) : BrowseResult()
 }

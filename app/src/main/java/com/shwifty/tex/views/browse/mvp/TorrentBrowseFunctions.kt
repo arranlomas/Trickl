@@ -24,6 +24,7 @@ fun browseIntentToAction(intent: BrowseIntents): BrowseActions = when (intent) {
     }
     is BrowseIntents.ToggleSearchMode -> BrowseActions.ToggleSearchMode()
     is BrowseIntents.UpdateSortAndCategoryIntent -> BrowseActions.UpdateSortAndCategory(intent.sortType, intent.category)
+    is BrowseIntents.SetSearchBarExpanded -> BrowseActions.SetSearchBarExpanded(intent.expanded)
 }
 
 
@@ -36,6 +37,7 @@ private fun observables(shared: Observable<BrowseActions>, torrentSearchReposito
             shared.ofType(BrowseActions.LoadBrowse::class.java).compose(loadBrowseResults(torrentSearchRepository)),
             shared.ofType(BrowseActions.Search::class.java).compose(loadSearchResults(torrentSearchRepository)),
             shared.ofType(BrowseActions.ToggleSearchMode::class.java).compose(toggleSearchProcessor()),
+            shared.ofType(BrowseActions.SetSearchBarExpanded::class.java).compose(toggleSearchBarExpandedProcessor()),
             shared.ofType(BrowseActions.UpdateSortAndCategory::class.java).compose(updateSortAndCategoryProcessor()))
 }
 
@@ -53,9 +55,12 @@ fun loadBrowseResults(torrentSearchRepository: ITorrentSearchRepository) =
                 loading = BrowseResult.BrowseInFlight
         )
 
-
 fun toggleSearchProcessor() = KontentSimpleActionProcessor<BrowseActions.ToggleSearchMode, BrowseResult> {
     Observable.just(BrowseResult.ToggleSearchMode)
+}
+
+fun toggleSearchBarExpandedProcessor() = KontentSimpleActionProcessor<BrowseActions.SetSearchBarExpanded, BrowseResult> {
+    Observable.just(BrowseResult.SetSearchBarExpanded(it.expanded))
 }
 
 fun updateSortAndCategoryProcessor() = KontentSimpleActionProcessor<BrowseActions.UpdateSortAndCategory, BrowseResult> {
@@ -76,16 +81,17 @@ fun loadSearchResults(torrentSearchRepository: ITorrentSearchRepository) =
                 loading = BrowseResult.SearchInFlight
         )
 
-val browseResucer = KontentReducer { result: BrowseResult, previousState: BrowseViewState ->
+val browseReducer = KontentReducer { result: BrowseResult, previousState: BrowseViewState ->
     when (result) {
         is BrowseResult.BrowseSuccess -> previousState.copy(isLoading = false, error = null, browseResults = result.result)
         is BrowseResult.BrowseError -> previousState.copy(isLoading = false, error = result.error.localizedMessage)
         BrowseResult.BrowseInFlight -> previousState.copy(isLoading = true, error = null)
-        is BrowseResult.SearchSuccess -> previousState.copy(isLoading = true, searchResults = result.result, error = null)
+        is BrowseResult.SearchSuccess -> previousState.copy(isLoading = false, searchResults = result.result, error = null)
         is BrowseResult.SearchError -> previousState.copy(isLoading = false, error = result.error.localizedMessage)
         BrowseResult.SearchInFlight -> previousState.copy(isLoading = true, error = null)
         BrowseResult.ToggleSearchMode -> previousState.copy(isInSearchMode = !previousState.isInSearchMode)
         is BrowseResult.UpdateSortAndCategory -> previousState.copy(category = result.category, sortType = result.sortType)
+        is BrowseResult.SetSearchBarExpanded -> previousState.copy(isSearchBarExpanded = result.expanded)
     }
 }
 

@@ -13,6 +13,7 @@ data class BrowseViewState(
         val isLoading: Boolean = false,
         val error: String? = null,
         val isInSearchMode: Boolean = false,
+        val isSearchBarExpanded: Boolean = false,
         val lastQuery: String? = null,
         val sortType: TorrentSearchSortType = TorrentSearchSortType.SEEDS,
         val category: TorrentSearchCategory = TorrentSearchCategory.Movies,

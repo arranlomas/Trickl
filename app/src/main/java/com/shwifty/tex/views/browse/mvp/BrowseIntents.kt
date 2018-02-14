@@ -13,4 +13,5 @@ sealed class BrowseIntents : KontentIntent() {
     data class ReloadIntent(val isInSearchMode: Boolean, val query: String?, val sortType: TorrentSearchSortType?, val category: TorrentSearchCategory?) : BrowseIntents()
     data class SearchIntent(val query: String) : BrowseIntents()
     class ToggleSearchMode : BrowseIntents()
+    data class SetSearchBarExpanded(val expanded: Boolean) : BrowseIntents()
 }

@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
-import com.jakewharton.rxbinding2.view.RxView
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.models.TorrentSearchCategory
@@ -79,13 +78,22 @@ class TorrentBrowseFragment : BaseMviFragment<BrowseIntents, BrowseViewState>() 
 
     private fun initialIntent(): Observable<BrowseIntents.ReloadIntent> = Observable.just(getReloadIntent())
 
-    private fun searchIntent(): Observable<BrowseIntents.SearchIntent> = RxView.clicks(fabSendSearch)
-            .map { searchQueryInput.text.toString() }
-            .filter { it.isNotEmpty() }
-            .map { BrowseIntents.SearchIntent(it) }
+    private fun searchIntent(): Observable<BrowseIntents> = createObservable { emitter ->
+        fabSendSearch.setOnClickListener {
+            val text = searchQueryInput.text.toString()
+            if (text.isNotEmpty()) {
+                emitter.onNext(BrowseIntents.SearchIntent(text))
+                emitter.onNext(BrowseIntents.SetSearchBarExpanded(false))
+            }
+        }
+    }
 
-    private fun toggleSearchModeIntent(): Observable<BrowseIntents.ToggleSearchMode> = RxView.clicks(fabSearch)
-            .map { BrowseIntents.ToggleSearchMode() }
+    private fun toggleSearchModeIntent(): Observable<BrowseIntents> = createObservable { emitter ->
+        fabSearch.setOnClickListener {
+            emitter.onNext(BrowseIntents.ToggleSearchMode())
+            emitter.onNext(BrowseIntents.SetSearchBarExpanded(true))
+        }
+    }
 
     private fun refreshIntent(): Observable<BrowseIntents.ReloadIntent> = RxSwipeRefreshLayout.refreshes(torrentBrowseSwipeRefresh)
             .map { getReloadIntent() }
@@ -137,11 +145,18 @@ class TorrentBrowseFragment : BaseMviFragment<BrowseIntents, BrowseViewState>() 
         errorLayout.setVisible(state.error != null && !state.isLoading)
         state.error?.let { errorText.text = it }
 
-        if (state.isInSearchMode) {
+        if (state.isSearchBarExpanded) {
             expandQueryInput()
             searchQueryInput.requestFocus()
             context?.forceOpenKeyboard()
             searchQueryInput.setVisible(true)
+        } else {
+            searchQueryInput.clearFocus()
+            searchQueryInput.closeKeyboard()
+            collapseQueryInput()
+            searchQueryInput.setVisible(false)
+        }
+        if (state.isInSearchMode) {
             fabSendSearch.show()
             context?.resources?.let {
                 fabSearch.setImageDrawable(ResourcesCompat.getDrawable(it, R.drawable.ic_close_white, null))
@@ -149,10 +164,6 @@ class TorrentBrowseFragment : BaseMviFragment<BrowseIntents, BrowseViewState>() 
                 fabFilter.hide()
             }
         } else {
-            searchQueryInput.clearFocus()
-            searchQueryInput.closeKeyboard()
-            collapseQueryInput()
-            searchQueryInput.setVisible(false)
             fabSendSearch.hide()
             context?.resources?.let {
                 fabSearch.setImageDrawable(ResourcesCompat.getDrawable(it, R.drawable.ic_search_white, null))

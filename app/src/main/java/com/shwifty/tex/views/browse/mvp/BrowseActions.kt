@@ -12,4 +12,5 @@ sealed class BrowseActions : KontentAction() {
     data class UpdateSortAndCategory(val sortType: TorrentSearchSortType, val category: TorrentSearchCategory) : BrowseActions()
     data class Search(val query: String) : BrowseActions()
     class ToggleSearchMode : BrowseActions()
+    data class SetSearchBarExpanded(val expanded: Boolean) : BrowseActions()
 }

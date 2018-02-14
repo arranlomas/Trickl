@@ -23,6 +23,20 @@
 
     </LinearLayout>
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/torrentBrowseSwipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabSearch"
         android:layout_width="@dimen/fab_size_mini"
@@ -78,19 +92,5 @@
         android:scaleType="center"
         android:src="@drawable/ic_tick_white"
         app:fabSize="normal" />
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/torrentBrowseSwipeRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true" />
-
-    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>
