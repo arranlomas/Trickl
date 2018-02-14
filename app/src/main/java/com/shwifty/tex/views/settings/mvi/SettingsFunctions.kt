@@ -1,6 +1,7 @@
 package com.shwifty.tex.views.settings.mvi
 
 import com.arranlomas.kontent.commons.functions.KontentActionProcessor
+import com.arranlomas.kontent.commons.functions.KontentMasterProcessor
 import com.arranlomas.kontent.commons.functions.KontentPostProcessor
 import com.arranlomas.kontent.commons.functions.KontentReducer
 import com.shwifty.tex.models.AppTheme
@@ -8,7 +9,6 @@ import com.shwifty.tex.repository.preferences.IPreferenceRepository
 import com.shwifty.tex.utils.ValidateChangeWorkingDirectoryResult
 import com.shwifty.tex.utils.validateWorkingDirectoryCanBeChanged
 import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
 import io.reactivex.functions.Function3
 import java.io.File
 
@@ -47,21 +47,18 @@ val settingsReducer = KontentReducer { result: SettingsResult, previousState: Se
     }
 }
 
-fun actionFromIntent(intent: SettingsIntents): SettingsActions = when (intent) {
+fun settingsIntentToAction(intent: SettingsIntents): SettingsActions = when (intent) {
     is SettingsIntents.NewWorkingDirectorySelected -> SettingsActions.ClearErrorsAndUpdateWorkingDirectory(intent.context, intent.newDirectory, intent.moveFiles)
     is SettingsIntents.InitialIntent -> SettingsActions.LoadPreferencesForFirstTime(intent.context)
     is SettingsIntents.ToggleWifiOnly -> SettingsActions.UpdateWifiOnly(intent.context, intent.selected)
     is SettingsIntents.ChangeTheme -> SettingsActions.ChangeTheme(intent.context, intent.newTheme)
 }
 
-fun settingsActionProcessor(preferencesRepository: IPreferenceRepository): ObservableTransformer<SettingsActions, SettingsResult> =
-        ObservableTransformer { action: Observable<SettingsActions> ->
-            action.publish { shared ->
-                Observable.merge(observables(shared, preferencesRepository))
-            }
-        }
+fun settingsActionProcessor(preferencesRepository: IPreferenceRepository) = KontentMasterProcessor<SettingsActions, SettingsResult> { action: Observable<SettingsActions> ->
+    Observable.merge(observables(action, preferencesRepository))
+}
 
-fun observables(shared: Observable<SettingsActions>, preferencesRepository: IPreferenceRepository): List<Observable<SettingsResult>> {
+private fun observables(shared: Observable<SettingsActions>, preferencesRepository: IPreferenceRepository): List<Observable<SettingsResult>> {
     return listOf<Observable<SettingsResult>>(
             shared.ofType(SettingsActions.LoadPreferencesForFirstTime::class.java).compose(loadPreferencesProcessor(preferencesRepository)),
             shared.ofType(SettingsActions.ClearErrorsAndUpdateWorkingDirectory::class.java).compose(updateWorkingDirectoryProcessor(preferencesRepository)),

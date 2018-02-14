@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Trickl</string>
 
+    <!--General-->
+    <string name="error_unexpected">Oops! Something went wrong, sorry</string>
+
     <!--Splash-->
     <!--confluence-->
     <string name="splash_copy_confluence_error">error setting up </string>

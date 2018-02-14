@@ -3,8 +3,9 @@ package com.shwifty.tex.repository.network.torrentSearch
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
+import com.shwifty.tex.utils.composeIo
 import com.shwifty.tex.utils.composeIoWithRetryXTimes
-import rx.Observable
+import io.reactivex.Observable
 
 /**
  * Created by arran on 27/10/2017.
@@ -12,11 +13,11 @@ import rx.Observable
 internal class TorrentSearchRepository(private val torrentSearchApi: TorrentSearchApi) : ITorrentSearchRepository {
     override fun search(searchTerm: String, sortType: TorrentSearchSortType, pageNumber: Int, category: TorrentSearchCategory): Observable<List<TorrentSearchResult>> {
         return torrentSearchApi.search(searchTerm, sortType, pageNumber, category)
-                .composeIoWithRetryXTimes(3)
+                .composeIo()
     }
 
     override fun browse(sortType: TorrentSearchSortType, pageNumber: Int, category: TorrentSearchCategory): Observable<List<TorrentSearchResult>> {
         return torrentSearchApi.browse(sortType, pageNumber, category)
-                .composeIoWithRetryXTimes(3)
+                .composeIo()
     }
 }

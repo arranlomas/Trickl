@@ -8,7 +8,7 @@ import com.shwifty.tex.views.base.mvi.BaseMviInteractor
  */
 class SettingsInteractor(preferencesRepository: IPreferenceRepository)
     : SettingsContract.Interactor, BaseMviInteractor<SettingsIntents, SettingsActions, SettingsResult, SettingsViewState>(
-        intentToAction = { actionFromIntent(it) },
+        intentToAction = { settingsIntentToAction(it) },
         actionProcessor = settingsActionProcessor(preferencesRepository),
         reducer = settingsReducer,
         defaultState = SettingsViewState.default(),

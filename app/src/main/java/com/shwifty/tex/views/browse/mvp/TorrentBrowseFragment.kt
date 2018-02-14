@@ -9,42 +9,37 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.widget.Toast
+import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
+import com.jakewharton.rxbinding2.view.RxView
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
+import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
+import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.utils.*
-import com.shwifty.tex.views.base.mvp.BaseFragment
+import com.shwifty.tex.views.base.mvi.BaseMviFragment
 import com.shwifty.tex.views.browse.di.DaggerTorrentBrowseComponent
-import com.shwifty.tex.views.browse.state.BrowseReducer
-import com.shwifty.tex.views.browse.state.BrowseViewEvents
-import com.shwifty.tex.views.browse.state.BrowseViewState
 import com.shwifty.tex.views.browse.torrentSearch.list.TorrentSearchAdapter
 import com.shwifty.tex.views.main.MainEventHandler
 import es.dmoral.toasty.Toasty
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.frag_torrent_browse.*
 import javax.inject.Inject
 
 /**
  * Created by arran on 27/10/2017.
  */
-class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
-
-    override val browseReducer = BrowseReducer()
+class TorrentBrowseFragment : BaseMviFragment<BrowseIntents, BrowseViewState>() {
 
     val itemOnClick: (searchResult: TorrentSearchResult) -> Unit = { torrentSearchResult ->
-        if (torrentSearchResult.magnet != null) {
-            MainEventHandler.addMagnet(torrentSearchResult.magnet)
-        } else {
-            showError(R.string.error_cannot_open_torrent)
-        }
+        if (torrentSearchResult.magnet != null) MainEventHandler.addMagnet(torrentSearchResult.magnet)
+        else errorText.text = getString(R.string.error_cannot_open_torrent)
     }
     val searchResultsAdapter = TorrentSearchAdapter(itemOnClick)
     val browseResultsAdapter = TorrentSearchAdapter(itemOnClick)
 
     @Inject
-    lateinit var presenter: TorrentBrowseContract.Presenter
+    lateinit var interactor: TorrentBrowseContract.Interactor
 
     companion object {
         fun newInstance(): Fragment {
@@ -53,81 +48,67 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        DaggerTorrentBrowseComponent.builder().repositoryComponent(Trickl.repositoryComponent).build().inject(this)
-        presenter.attachView(this)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.frag_torrent_browse, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        DaggerTorrentBrowseComponent.builder().repositoryComponent(Trickl.repositoryComponent).build().inject(this)
+        setupRecyclerView()
+        super.setup(interactor, { error ->
+            context?.let {
+                Toasty.error(it, error.localizedMessage).show()
+            }
+        })
+        super.attachIntents(intents())
+    }
+
+    private fun setupRecyclerView() {
         recyclerView.setHasFixedSize(true)
-        val llm = LinearLayoutManager(context)
-        recyclerView.layoutManager = llm as RecyclerView.LayoutManager?
-        torrentBrowseSwipeRefresh.setOnRefreshListener {
-            reload()
-        }
+        val llm = LinearLayoutManager(context) as RecyclerView.LayoutManager
+        recyclerView.layoutManager = llm
+    }
+
+    private fun intents() = Observable.merge(listOf(
+            initialIntent(),
+            searchIntent(),
+            toggleSearchModeIntent(),
+            refreshIntent(),
+            updateSortAndCategoryIntent()))
+
+    private fun initialIntent(): Observable<BrowseIntents.ReloadIntent> = Observable.just(getReloadIntent())
+
+    private fun searchIntent(): Observable<BrowseIntents.SearchIntent> = RxView.clicks(fabSendSearch)
+            .map { searchQueryInput.text.toString() }
+            .filter { it.isNotEmpty() }
+            .map { BrowseIntents.SearchIntent(it) }
+
+    private fun toggleSearchModeIntent(): Observable<BrowseIntents.ToggleSearchMode> = RxView.clicks(fabSearch)
+            .map { BrowseIntents.ToggleSearchMode() }
+
+    private fun refreshIntent(): Observable<BrowseIntents.ReloadIntent> = RxSwipeRefreshLayout.refreshes(torrentBrowseSwipeRefresh)
+            .map { getReloadIntent() }
+
+    private fun updateSortAndCategoryIntent(): Observable<BrowseIntents> = createObservable { emitter ->
         fabFilter.setOnClickListener {
             context?.let {
-                Trickl.dialogManager.showBrowseFilterDialog(it, browseReducer.getState().sortType, browseReducer.getState().category, { sortType, category ->
-                    browseReducer.reduce(BrowseViewEvents.UpdateFilter(sortType, category))
-                    reload()
-                })
+                Trickl.dialogManager.showBrowseFilterDialog(it,
+                        interactor.getLastState()?.sortType ?: TorrentSearchSortType.SEEDS,
+                        interactor.getLastState()?.category ?: TorrentSearchCategory.Movies,
+                        { sortType, category ->
+                            emitter.onNext(BrowseIntents.UpdateSortAndCategoryIntent(sortType, category))
+                            emitter.onNext(getReloadIntent())
+                        })
             }
         }
-        fabSearch.setOnClickListener {
-            if (browseReducer.getState().isInSearchMode) {
-                browseReducer.reduce(BrowseViewEvents.UpdateSearchResults(emptyList()))
-                browseReducer.reduce(BrowseViewEvents.UpdateShowingSearchBar(false))
-                browseReducer.reduce(BrowseViewEvents.UpdateSearchMode(false))
-            } else {
-                browseReducer.reduce(BrowseViewEvents.UpdateShowingSearchBar(true))
-                browseReducer.reduce(BrowseViewEvents.UpdateSearchMode(true))
-            }
-        }
-        fabSendSearch.setOnClickListener {
-            getQueryFromInputAndSearch()
-        }
-        searchQueryInput.setOnEditorActionListener({ _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                getQueryFromInputAndSearch()
-            }
-            false
-        })
-        render(browseReducer.getState())
-        browseReducer.getViewStateChangeStream().subscribe(
-                { render(it) },
-                { showError(it.localizedMessage) })
-        reload()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.detachView()
-    }
-
-    override fun setLoading(loading: Boolean) {
-        torrentBrowseSwipeRefresh.isRefreshing = loading
-    }
-
-    override fun showError(msg: String) {
-        context?.let {
-            Toasty.error(it, getString(R.string.error_search_server_unreachable), Toast.LENGTH_SHORT, true).show()
-        }
-    }
-
-    private fun reload() {
-        if (browseReducer.getState().isInSearchMode) {
-            browseReducer.reduce(BrowseViewEvents.UpdateSearchResults(emptyList()))
-            browseReducer.getState().lastQuery?.let { if (it.isNotEmpty()) presenter.search(it) }
-        } else {
-            browseReducer.reduce(BrowseViewEvents.UpdateBrowseResults(emptyList()))
-            presenter.load(browseReducer.getState().sortType, browseReducer.getState().category)
-        }
+    private fun getReloadIntent(): BrowseIntents.ReloadIntent {
+        return BrowseIntents.ReloadIntent(interactor.getLastState()?.isInSearchMode ?: false,
+                interactor.getLastState()?.lastQuery,
+                interactor.getLastState()?.sortType,
+                interactor.getLastState()?.category)
     }
 
     private fun expandQueryInput() {
@@ -145,49 +126,40 @@ class TorrentBrowseFragment : BaseFragment(), TorrentBrowseContract.View {
         }
     }
 
-    private fun getQueryFromInputAndSearch() {
-        val query = searchQueryInput.text.toString()
-        if (query.isNotEmpty()) {
-            presenter.search(query)
-            browseReducer.reduce(BrowseViewEvents.UpdateLastQuery(query))
-            browseReducer.reduce(BrowseViewEvents.UpdateShowingSearchBar(false))
-        }
-    }
-
-    private fun render(viewState: BrowseViewState) {
+    override fun render(state: BrowseViewState) {
         if (!isAdded || !isVisible) return
-        if (viewState.showingSearchBar) {
+        searchResultsAdapter.updateResults(state.searchResults)
+        browseResultsAdapter.updateResults(state.browseResults)
+        searchResultsAdapter.notifyDataSetChanged()
+        browseResultsAdapter.notifyDataSetChanged()
+        torrentBrowseSwipeRefresh.isRefreshing = state.isLoading
+
+        errorLayout.setVisible(state.error != null && !state.isLoading)
+        state.error?.let { errorText.text = it }
+
+        if (state.isInSearchMode) {
             expandQueryInput()
             searchQueryInput.requestFocus()
             context?.forceOpenKeyboard()
             searchQueryInput.setVisible(true)
             fabSendSearch.show()
+            context?.resources?.let {
+                fabSearch.setImageDrawable(ResourcesCompat.getDrawable(it, R.drawable.ic_close_white, null))
+                recyclerView.adapter = searchResultsAdapter
+                fabFilter.hide()
+            }
         } else {
             searchQueryInput.clearFocus()
             searchQueryInput.closeKeyboard()
             collapseQueryInput()
             searchQueryInput.setVisible(false)
             fabSendSearch.hide()
-        }
-
-        if (viewState.isInSearchMode) {
-            context?.resources?.let {
-                fabSearch.setImageDrawable(ResourcesCompat.getDrawable(it, R.drawable.ic_close_white, null))
-                recyclerView.adapter = searchResultsAdapter
-                fabFilter.hide()
-            }
-
-        } else {
             context?.resources?.let {
                 fabSearch.setImageDrawable(ResourcesCompat.getDrawable(it, R.drawable.ic_search_white, null))
                 recyclerView.adapter = browseResultsAdapter
                 fabFilter.show()
             }
         }
-        searchResultsAdapter.updateResults(viewState.searchResults)
-        browseResultsAdapter.updateResults(viewState.browseResults)
-        searchResultsAdapter.notifyDataSetChanged()
-        browseResultsAdapter.notifyDataSetChanged()
     }
 
 }
