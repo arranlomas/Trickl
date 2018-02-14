@@ -9,6 +9,7 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
@@ -21,6 +22,7 @@ import com.shwifty.tex.views.browse.di.DaggerTorrentBrowseComponent
 import com.shwifty.tex.views.browse.torrentSearch.list.TorrentSearchAdapter
 import com.shwifty.tex.views.main.MainEventHandler
 import es.dmoral.toasty.Toasty
+import io.reactivex.Emitter
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.frag_torrent_browse.*
 import javax.inject.Inject
@@ -74,24 +76,43 @@ class TorrentBrowseFragment : BaseMviFragment<BrowseIntents, BrowseViewState>() 
             searchIntent(),
             toggleSearchModeIntent(),
             refreshIntent(),
-            updateSortAndCategoryIntent()))
+            updateSortAndCategoryIntent(),
+            searchQueryEnterPressed()))
 
     private fun initialIntent(): Observable<BrowseIntents.ReloadIntent> = Observable.just(getReloadIntent())
 
     private fun searchIntent(): Observable<BrowseIntents> = createObservable { emitter ->
         fabSendSearch.setOnClickListener {
-            val text = searchQueryInput.text.toString()
-            if (text.isNotEmpty()) {
-                emitter.onNext(BrowseIntents.SearchIntent(text))
-                emitter.onNext(BrowseIntents.SetSearchBarExpanded(false))
+            emitter.getSearchTextAndEmitIntents()
+        }
+    }
+
+    private fun searchQueryEnterPressed(): Observable<BrowseIntents> = createObservable { emitter ->
+        searchQueryInput.setOnEditorActionListener({ _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                emitter.getSearchTextAndEmitIntents()
             }
+            false
+        })
+    }
+
+    private fun Emitter<BrowseIntents>.getSearchTextAndEmitIntents(){
+        val text = searchQueryInput.text.toString()
+        if (text.isNotEmpty()) {
+            this.onNext(BrowseIntents.SearchIntent(text))
+            this.onNext(BrowseIntents.SetSearchBarExpanded(false))
         }
     }
 
     private fun toggleSearchModeIntent(): Observable<BrowseIntents> = createObservable { emitter ->
         fabSearch.setOnClickListener {
+            if (interactor.getLastState()?.isInSearchMode == true) {
+                emitter.onNext(BrowseIntents.ClearSearchResultsIntent())
+                emitter.onNext(BrowseIntents.SetSearchBarExpanded(false))
+            } else
+                emitter.onNext(BrowseIntents.SetSearchBarExpanded(true))
+
             emitter.onNext(BrowseIntents.ToggleSearchMode())
-            emitter.onNext(BrowseIntents.SetSearchBarExpanded(true))
         }
     }
 
@@ -145,26 +166,29 @@ class TorrentBrowseFragment : BaseMviFragment<BrowseIntents, BrowseViewState>() 
         errorLayout.setVisible(state.error != null && !state.isLoading)
         state.error?.let { errorText.text = it }
 
+
         if (state.isSearchBarExpanded) {
             expandQueryInput()
             searchQueryInput.requestFocus()
             context?.forceOpenKeyboard()
             searchQueryInput.setVisible(true)
+            fabSendSearch.show()
         } else {
             searchQueryInput.clearFocus()
             searchQueryInput.closeKeyboard()
             collapseQueryInput()
             searchQueryInput.setVisible(false)
+            fabSendSearch.hide()
         }
+
+
         if (state.isInSearchMode) {
-            fabSendSearch.show()
             context?.resources?.let {
                 fabSearch.setImageDrawable(ResourcesCompat.getDrawable(it, R.drawable.ic_close_white, null))
                 recyclerView.adapter = searchResultsAdapter
                 fabFilter.hide()
             }
         } else {
-            fabSendSearch.hide()
             context?.resources?.let {
                 fabSearch.setImageDrawable(ResourcesCompat.getDrawable(it, R.drawable.ic_search_white, null))
                 recyclerView.adapter = browseResultsAdapter

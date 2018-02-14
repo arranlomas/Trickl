@@ -12,14 +12,15 @@ import com.shwifty.tex.models.TorrentSearchSortType
 sealed class BrowseResult : KontentResult() {
     data class BrowseSuccess(val result: List<TorrentSearchResult>) : BrowseResult()
     data class BrowseError(val error: Throwable) : BrowseResult()
-    object BrowseInFlight : BrowseResult()
+    class BrowseInFlight : BrowseResult()
 
     data class SearchSuccess(val result: List<TorrentSearchResult>) : BrowseResult()
     data class SearchError(val error: Throwable) : BrowseResult()
-    object SearchInFlight : BrowseResult()
+    class SearchInFlight : BrowseResult()
 
-    object ToggleSearchMode : BrowseResult()
+    class ToggleSearchMode : BrowseResult()
     data class SetSearchBarExpanded(val expanded: Boolean) : BrowseResult()
 
     data class UpdateSortAndCategory(val sortType: TorrentSearchSortType, val category: TorrentSearchCategory) : BrowseResult()
+    class ClearSearchResults : BrowseResult()
 }

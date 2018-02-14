@@ -49,7 +49,8 @@
         android:clickable="true"
         android:scaleType="center"
         android:src="@drawable/ic_search_white"
-        app:fabSize="normal" />
+        app:fabSize="normal"
+        android:focusable="true" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabFilter"
@@ -62,7 +63,8 @@
         android:clickable="true"
         android:scaleType="center"
         android:src="@drawable/ic_filter_list_white"
-        app:fabSize="normal" />
+        app:fabSize="normal"
+        android:focusable="true" />
 
     <EditText
         android:id="@+id/searchQueryInput"
@@ -76,6 +78,7 @@
         android:focusable="true"
         android:imeOptions="actionDone"
         android:maxLines="1"
+        android:inputType="text"
         android:paddingEnd="@dimen/default_small_padding"
         android:paddingStart="@dimen/default_small_padding"
         android:textColor="?textColor" />

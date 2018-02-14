@@ -14,4 +14,5 @@ sealed class BrowseIntents : KontentIntent() {
     data class SearchIntent(val query: String) : BrowseIntents()
     class ToggleSearchMode : BrowseIntents()
     data class SetSearchBarExpanded(val expanded: Boolean) : BrowseIntents()
+    class ClearSearchResultsIntent: BrowseIntents()
 }
