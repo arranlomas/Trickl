@@ -4,8 +4,8 @@ import com.shwifty.tex.repository.network.di.RepositoryComponent
 import com.shwifty.tex.repository.network.torrentSearch.ITorrentSearchRepository
 import com.shwifty.tex.views.base.PresenterScope
 import com.shwifty.tex.views.browse.mvp.TorrentBrowseContract
-import com.shwifty.tex.views.browse.mvp.TorrentBrowsePresenter
 import com.shwifty.tex.views.browse.mvp.TorrentBrowseFragment
+import com.shwifty.tex.views.browse.mvp.TorrentBrowseInteractor
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -21,10 +21,9 @@ interface TorrentBrowseComponent {
 
 @Module
 class TorrentBrowseModule {
-
     @Provides
     @PresenterScope
-    internal fun providesTorrentSearchPresenter(torrentSearchRepository: ITorrentSearchRepository): TorrentBrowseContract.Presenter {
-        return TorrentBrowsePresenter(torrentSearchRepository)
+    internal fun providesTorrentBrowseInteractor(torrentSearchRepository: ITorrentSearchRepository): TorrentBrowseContract.Interactor {
+        return TorrentBrowseInteractor(torrentSearchRepository)
     }
 }

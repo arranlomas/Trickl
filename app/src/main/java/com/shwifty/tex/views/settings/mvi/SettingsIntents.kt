@@ -16,28 +16,3 @@ sealed class SettingsIntents : KontentIntent() {
     data class ToggleWifiOnly(val context: Context, val selected: Boolean) : SettingsIntents()
     data class ChangeTheme(val context: Context, val newTheme: AppTheme) : SettingsIntents()
 }
-
-sealed class SettingsActions : KontentAction() {
-    data class ClearErrorsAndUpdateWorkingDirectory(val context: Context, val newDirectory: File, val moveFiles: Boolean) : SettingsActions()
-    data class LoadPreferencesForFirstTime(val context: Context) : SettingsActions()
-    data class UpdateWifiOnly(val context: Context, val selected: Boolean) : SettingsActions()
-    data class ChangeTheme(val context: Context, val theme: AppTheme) : SettingsActions()
-}
-
-sealed class SettingsResult : KontentResult() {
-    data class LoadSettingsSuccess(val workingDirectory: File, val wifiOnly: Boolean, val theme: AppTheme) : SettingsResult()
-    data class LoadSettingsError(val error: Throwable) : SettingsResult()
-    object LoadSettingsinFlight : SettingsResult()
-
-    object UpdateWorkingDirectoryInFlight : SettingsResult()
-    data class UpdateWorkingDirectorySuccess(val newFile: File) : SettingsResult()
-    data class UpdateWorkingDirectoryError(val error: Throwable) : SettingsResult()
-
-    object ToggleWifiOnlyInFlight : SettingsResult()
-    data class ToggleWifiOnlySuccess(val wifiOnly: Boolean) : SettingsResult()
-    data class ToggleWifiOnlyError(val error: Throwable) : SettingsResult()
-
-    object ChangeThemeInFlight : SettingsResult()
-    data class ChangeThemeSuccess(val theme: AppTheme) : SettingsResult()
-    data class ChangeThemeError(val error: Throwable) : SettingsResult()
-}

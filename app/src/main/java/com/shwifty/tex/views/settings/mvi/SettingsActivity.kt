@@ -11,7 +11,7 @@ import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.models.AppTheme
-import com.shwifty.tex.utils.createObservableFrom
+import com.shwifty.tex.utils.createObservable
 import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.utils.validateOnActivityResult
 import com.shwifty.tex.views.base.mvi.BaseMviActivity
@@ -81,7 +81,7 @@ class SettingsActivity : BaseMviActivity<SettingsIntents, SettingsViewState>() {
         return Observable.just(SettingsIntents.InitialIntent(this))
     }
 
-    private fun updateWorkingDirectoryIntent(): Observable<SettingsIntents.NewWorkingDirectorySelected> = createObservableFrom { newWorkingDirecotyrEmiter = it }
+    private fun updateWorkingDirectoryIntent(): Observable<SettingsIntents.NewWorkingDirectorySelected> = createObservable { newWorkingDirecotyrEmiter = it }
 
     //TODO
 //    private fun toggleWifiOnlyIntent(): Observable<SettingsIntents.ToggleWifiOnly> =
@@ -100,15 +100,11 @@ class SettingsActivity : BaseMviActivity<SettingsIntents, SettingsViewState>() {
                 }
             }
 
-    private fun intents(): Observable<SettingsIntents> = Observable.merge(intentList)
-
-    private val intentList by lazy {
-        listOf(
-                initialIntent(),
-                updateWorkingDirectoryIntent(),
+    private fun intents() = Observable.merge(listOf(
+            initialIntent(),
+            updateWorkingDirectoryIntent(),
 //            toggleWifiOnlyIntent(),  TODO
-                changeThemeIntent())
-    }
+            changeThemeIntent()))
 
     override fun render(state: SettingsViewState) {
         state.currentWorkingDirectory?.absolutePath?.let { workingDirectoryField.text = it }
@@ -130,7 +126,7 @@ class SettingsActivity : BaseMviActivity<SettingsIntents, SettingsViewState>() {
     }
 
     override fun onBackPressed() {
-        if (interactor.getLastState().settingsChanged)
+        if (interactor.getLastState()?.settingsChanged == true)
             Trickl.dialogManager.showSettingExitDialog(this, onRestart = {
                 (application as MyApplication).restart()
             })

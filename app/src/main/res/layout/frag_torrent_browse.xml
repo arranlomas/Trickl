@@ -6,10 +6,34 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/errorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?fragmentBackground"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/errorText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/error_unexpected"
+            android:textColor="@color/error_red" />
+
+    </LinearLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/torrentBrowseSwipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -25,7 +49,8 @@
         android:clickable="true"
         android:scaleType="center"
         android:src="@drawable/ic_search_white"
-        app:fabSize="normal" />
+        app:fabSize="normal"
+        android:focusable="true" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabFilter"
@@ -38,7 +63,8 @@
         android:clickable="true"
         android:scaleType="center"
         android:src="@drawable/ic_filter_list_white"
-        app:fabSize="normal" />
+        app:fabSize="normal"
+        android:focusable="true" />
 
     <EditText
         android:id="@+id/searchQueryInput"
@@ -52,6 +78,7 @@
         android:focusable="true"
         android:imeOptions="actionDone"
         android:maxLines="1"
+        android:inputType="text"
         android:paddingEnd="@dimen/default_small_padding"
         android:paddingStart="@dimen/default_small_padding"
         android:textColor="?textColor" />
@@ -68,12 +95,5 @@
         android:scaleType="center"
         android:src="@drawable/ic_tick_white"
         app:fabSize="normal" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
 
 </RelativeLayout>

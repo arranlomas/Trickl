@@ -9,7 +9,7 @@
     <color name="primaryDark">#2e2e2e</color>
     <color name="accent">#51c8ae</color>
     <color name="accentPressed">#225954</color>
-    <color name="background">#d9393939</color>
+    <color name="background">#393939</color>
     <color name="chromecastBottomSheetBackground">#292929</color>
     <color name="iconColor">#ffffff</color>
     <color name="cardTextColor">#808080</color>
