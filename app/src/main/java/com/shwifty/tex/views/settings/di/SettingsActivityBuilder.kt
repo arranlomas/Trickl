@@ -14,7 +14,7 @@ import dagger.multibindings.IntoMap
  * Created by arran on 28/10/2017.
  */
 @Module(includes = arrayOf(ViewModelFactoryModule::class))
-abstract class SettingsActivityModule {
+abstract class SettingsActivityBuilder {
     @ContributesAndroidInjector
     internal abstract fun bindMainActivity(): SettingsActivity
 

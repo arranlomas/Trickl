@@ -45,7 +45,7 @@ class SettingsActivity : BaseMviActivity<SettingsIntents, SettingsViewState>(), 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val interactor = ViewModelProviders.of(this, viewModelFactory).get(SettingsInteractor::class.java)
+        interactor = ViewModelProviders.of(this, viewModelFactory).get(SettingsInteractor::class.java)
         super.setup(interactor, {
             Toasty.error(this, it.localizedMessage).show()
         })
