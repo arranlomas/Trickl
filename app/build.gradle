@@ -64,8 +64,12 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     //DAGGER2
-    compile 'com.google.dagger:dagger:2.9'
-    kapt 'com.google.dagger:dagger-compiler:2.9'
+    kapt "com.google.dagger:dagger-compiler:2.14.1"
+    kapt "com.google.dagger:dagger-android-processor:2.14.1"
+    compile "com.google.dagger:dagger:2.14.1"
+    compile "com.google.dagger:dagger-android:2.14.1"
+    compile "com.google.dagger:dagger-android-support:2.14.1"
+
 
     //RX
     compile 'io.reactivex:rxkotlin:1.0.0'
@@ -153,6 +157,7 @@ dependencies {
     //Kontent
     compile project(':kontent-core')
     compile project(':kontent-dagger')
+    compile project(':kontent-android-viewmodel')
 
     //File Browser
     compile project(':file-browser')
