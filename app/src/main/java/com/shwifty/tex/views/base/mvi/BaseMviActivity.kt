@@ -2,9 +2,9 @@ package com.shwifty.tex.views.base.mvi
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import com.arranlomas.kontent.commons.objects.android.KontentActivity
-import com.arranlomas.kontent.commons.objects.mvi.KontentIntent
-import com.arranlomas.kontent.commons.objects.mvi.KontentViewState
+import com.arranlomas.kontent.commons.objects.KontentActivity
+import com.arranlomas.kontent.commons.objects.KontentIntent
+import com.arranlomas.kontent.commons.objects.KontentViewState
 import com.shwifty.tex.utils.onCreateSetThemeAndCallSuper
 
 /**

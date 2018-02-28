@@ -1,6 +1,6 @@
 package com.shwifty.tex.views.browse.mvp
 
-import com.arranlomas.kontent.commons.objects.mvi.KontentAction
+import com.arranlomas.kontent.commons.objects.KontentAction
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchSortType
 

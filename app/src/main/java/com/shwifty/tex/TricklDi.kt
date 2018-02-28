@@ -1,6 +1,9 @@
 package com.shwifty.tex
 
+import android.arch.lifecycle.ViewModelProvider
+import com.arranlomas.daggerviewmodelhelper.ViewModelFactory
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import dagger.Binds
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -24,3 +27,11 @@ class TricklModule(val torrentRepository: ITorrentRepository) {
     }
 
 }
+
+@Module
+abstract class ViewModelModule {
+    @Binds
+    abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
+}
+
+

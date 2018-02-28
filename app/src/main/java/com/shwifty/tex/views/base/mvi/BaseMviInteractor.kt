@@ -1,6 +1,6 @@
 package com.shwifty.tex.views.base.mvi
 
-import com.arranlomas.kontent.commons.objects.mvi.*
+import com.arranlomas.kontent.commons.objects.*
 import io.reactivex.ObservableTransformer
 import io.reactivex.functions.BiFunction
 

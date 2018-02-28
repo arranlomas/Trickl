@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/go-confluence" />
             <option value="$PROJECT_DIR$/torrentwrapper" />
+            <option value="$PROJECT_DIR$/../kontent/kontent-android-viewmodel" />
             <option value="$PROJECT_DIR$/../kontent/kontent-core" />
             <option value="$PROJECT_DIR$/../kontent/kontent-dagger" />
           </set>

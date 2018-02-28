@@ -96,7 +96,7 @@ class TorrentBrowseFragment : BaseMviFragment<BrowseIntents, BrowseViewState>() 
         })
     }
 
-    private fun Emitter<BrowseIntents>.getSearchTextAndEmitIntents(){
+    private fun Emitter<BrowseIntents>.getSearchTextAndEmitIntents() {
         val text = searchQueryInput.text.toString()
         if (text.isNotEmpty()) {
             this.onNext(BrowseIntents.SearchIntent(text))

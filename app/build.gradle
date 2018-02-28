@@ -156,6 +156,9 @@ dependencies {
 
     //File Browser
     compile project(':file-browser')
+
+    //Dagger View Model Helper
+    compile 'com.github.arranlomas.daggerviewmodelhelper:daggerviewmodelhelper:0.1.0'
 }
 repositories {
     mavenCentral()
