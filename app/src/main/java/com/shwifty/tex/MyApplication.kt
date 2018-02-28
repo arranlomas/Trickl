@@ -4,24 +4,39 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.support.multidex.MultiDexApplication
+import android.support.multidex.MultiDex
 import android.util.Log
+import com.arranlomas.daggerviewmodelhelper.AppInjector
 import com.facebook.stetho.Stetho
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.shwifty.tex.chromecast.CastHandler
 import com.shwifty.tex.repository.preferences.PreferencesRepository
 import com.shwifty.tex.views.splash.mvp.SplashActivity
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
+import dagger.android.AndroidInjector
+import dagger.android.DaggerApplication
 import es.dmoral.toasty.Toasty
 
 
-/**
+/**x
  * Created by arran on 29/04/2017.
  */
-class MyApplication : MultiDexApplication() {
+class MyApplication : DaggerApplication() {
+
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        AppInjector.init(this)
+        val appComponent = DaggerAppComponent.create()
+        appComponent.inject(this)
+        return appComponent
+    }
 
     companion object {
         val castHandler = CastHandler()
+    }
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
     }
 
     override fun onCreate() {

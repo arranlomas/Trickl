@@ -30,3 +30,18 @@ class RepositoryModule {
 
     }
 }
+
+@Module
+class UnscopedRepositoryModule {
+    @Provides
+    internal fun provideTorrentRepository(torrentSearchApi: TorrentSearchApi): ITorrentSearchRepository {
+        return TorrentSearchRepository(torrentSearchApi)
+
+    }
+
+    @Provides
+    internal fun providePreferencesRepository(): IPreferenceRepository {
+        return PreferencesRepository()
+
+    }
+}

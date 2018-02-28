@@ -1,9 +1,7 @@
 package com.shwifty.tex.views.settings.mvi
 
 import android.content.Context
-import com.arranlomas.kontent.commons.objects.mvi.KontentAction
-import com.arranlomas.kontent.commons.objects.mvi.KontentIntent
-import com.arranlomas.kontent.commons.objects.mvi.KontentResult
+import com.arranlomas.kontent.commons.objects.KontentIntent
 import com.shwifty.tex.models.AppTheme
 import java.io.File
 

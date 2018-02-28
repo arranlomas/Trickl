@@ -1,10 +1,13 @@
 package com.shwifty.tex.views.settings.mvi
 
 import android.app.Activity
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import com.arranlomas.daggerviewmodelhelper.Injectable
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
 import com.shwifty.tex.MyApplication
@@ -15,7 +18,6 @@ import com.shwifty.tex.utils.createObservable
 import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.utils.validateOnActivityResult
 import com.shwifty.tex.views.base.mvi.BaseMviActivity
-import com.shwifty.tex.views.settings.di.DaggerSettingsComponent
 import es.dmoral.toasty.Toasty
 import io.reactivex.Emitter
 import io.reactivex.Observable
@@ -24,13 +26,15 @@ import java.io.File
 import javax.inject.Inject
 
 
-class SettingsActivity : BaseMviActivity<SettingsIntents, SettingsViewState>() {
+class SettingsActivity : BaseMviActivity<SettingsIntents, SettingsViewState>(), Injectable {
     private val RC_SELECT_FILE = 303
 
     @Inject
-    lateinit var interactor: SettingsContract.Interactor
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var newWorkingDirecotyrEmiter: Emitter<SettingsIntents.NewWorkingDirectorySelected>
+
+    private lateinit var interactor: SettingsInteractor
 
     companion object {
         fun startActivity(context: Context) {
@@ -39,15 +43,13 @@ class SettingsActivity : BaseMviActivity<SettingsIntents, SettingsViewState>() {
         }
     }
 
-    init {
-        DaggerSettingsComponent.builder().repositoryComponent(Trickl.repositoryComponent).build().inject(this)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        interactor = ViewModelProviders.of(this, viewModelFactory).get(SettingsInteractor::class.java)
         super.setup(interactor, {
             Toasty.error(this, it.localizedMessage).show()
         })
-    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         setSupportActionBar(settingsToolbar)
         supportActionBar?.title = getString(R.string.settings_title)

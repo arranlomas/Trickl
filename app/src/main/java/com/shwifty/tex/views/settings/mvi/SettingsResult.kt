@@ -1,6 +1,6 @@
 package com.shwifty.tex.views.settings.mvi
 
-import com.arranlomas.kontent.commons.objects.mvi.KontentResult
+import com.arranlomas.kontent.commons.objects.KontentResult
 import com.shwifty.tex.models.AppTheme
 import java.io.File
 

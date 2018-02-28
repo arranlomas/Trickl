@@ -1,6 +1,6 @@
 package com.shwifty.tex.views.browse.mvp
 
-import com.arranlomas.kontent.commons.objects.mvi.KontentIntent
+import com.arranlomas.kontent.commons.objects.KontentIntent
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchSortType
 
@@ -14,5 +14,5 @@ sealed class BrowseIntents : KontentIntent() {
     data class SearchIntent(val query: String) : BrowseIntents()
     class ToggleSearchMode : BrowseIntents()
     data class SetSearchBarExpanded(val expanded: Boolean) : BrowseIntents()
-    class ClearSearchResultsIntent: BrowseIntents()
+    class ClearSearchResultsIntent : BrowseIntents()
 }
