@@ -56,7 +56,7 @@ class AllFragment : BaseFragment(), AllContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        DaggerAllTorrentsComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
+//        DaggerAllTorrentsComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         return inflater.inflate(R.layout.frag_all, container, false)
     }
 

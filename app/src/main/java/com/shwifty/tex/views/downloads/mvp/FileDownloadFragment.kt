@@ -40,7 +40,7 @@ class FileDownloadFragment : BaseFragment(), FileDownloadContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerFileDownloadComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
+//        DaggerFileDownloadComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.attachView(this)
 
     }

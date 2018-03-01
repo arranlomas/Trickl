@@ -12,13 +12,11 @@ import com.shwifty.tex.repository.network.di.RepositoryComponent
  */
 object Trickl {
     val dialogManager = DialogManager()
-    lateinit var tricklComponent: TricklComponent
     lateinit var repositoryComponent: RepositoryComponent
     lateinit var clientPrefs: ClientPrefs
 
-    fun install(clientPrefs: ClientPrefs, torrentRepository: ITorrentRepository) {
+    fun install(clientPrefs: ClientPrefs) {
         this.clientPrefs = clientPrefs
-        tricklComponent = DaggerTricklComponent.builder().tricklModule(TricklModule(torrentRepository)).build()
         repositoryComponent = DaggerRepositoryComponent.create()
         dialogManager.torrentRepository = Confluence.torrentRepository
     }

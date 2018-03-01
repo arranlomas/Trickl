@@ -27,7 +27,7 @@ class TorrentInfoActivity : BaseActivity(), TorrentInfoContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_torrent)
-        DaggerTorrentInfoComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
+//        DaggerTorrentInfoComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.attachView(this)
         presenter.setup(intent.extras)
 

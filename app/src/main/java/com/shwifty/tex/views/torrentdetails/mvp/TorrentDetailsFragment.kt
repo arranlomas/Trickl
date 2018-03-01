@@ -38,7 +38,7 @@ class TorrentDetailsFragment : BaseFragment(), TorrentDetailsContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerTorrentDetailsComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
+//        DaggerTorrentDetailsComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.attachView(this)
         presenter.setup(arguments)
     }

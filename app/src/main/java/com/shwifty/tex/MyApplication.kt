@@ -44,7 +44,8 @@ class MyApplication : DaggerApplication() {
         PreferencesRepository().getWorkingDirectoryPreference(this)
                 .subscribe({
                     Confluence.install(this, it.absolutePath)
-                    Trickl.install(ClientPrefs(it, true, true), Confluence.torrentRepositoryComponent.getTorrentRepository())
+                    val torrentRepo = Confluence.torrentRepository
+                    Trickl.install(ClientPrefs(it, true, true))
                 }, {
                     Toasty.error(this, getString(R.string.error_loading_working_directory_prefs)).show()
                 })

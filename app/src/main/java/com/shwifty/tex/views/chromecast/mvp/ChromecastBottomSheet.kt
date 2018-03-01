@@ -35,7 +35,7 @@ class ChromecastBottomSheet : BaseNestedScrollView, ChromecastControllerContract
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        DaggerChromecastComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
+//        DaggerChromecastComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.attachView(this)
         chromecastFull = bottom_sheet_layout_full
         chromecastPeek = bottom_sheet_layout_peek

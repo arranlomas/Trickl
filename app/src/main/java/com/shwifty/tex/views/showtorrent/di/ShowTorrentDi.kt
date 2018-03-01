@@ -1,8 +1,8 @@
 package com.shwifty.tex.views.showtorrent.di
 
 
+import com.schiwfty.torrentwrapper.dagger.network.TorrentRepositoryComponent
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
-import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.views.base.PresenterScope
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoContract
@@ -15,7 +15,7 @@ import dagger.Provides
  * Created by arran on 15/02/2017.
  */
 @PresenterScope
-@Component(modules = arrayOf(TorrentInfoModule::class), dependencies = arrayOf(TricklComponent::class))
+@Component(modules = arrayOf(TorrentInfoModule::class), dependencies = arrayOf(TorrentRepositoryComponent::class))
 interface TorrentInfoComponent {
     fun inject(torrentInfoActivity: TorrentInfoActivity)
 }
@@ -23,7 +23,6 @@ interface TorrentInfoComponent {
 @Module
 class TorrentInfoModule {
     @Provides
-    @PresenterScope
     internal fun providesTorrentInfoPresenter(torrentRepository: ITorrentRepository): TorrentInfoContract.Presenter {
         return TorrentInfoPresenter(torrentRepository)
     }

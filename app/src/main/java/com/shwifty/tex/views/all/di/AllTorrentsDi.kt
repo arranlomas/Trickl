@@ -1,8 +1,8 @@
 package com.shwifty.tex.views.all.di
 
 
+import com.schiwfty.torrentwrapper.dagger.network.TorrentRepositoryComponent
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
-import com.shwifty.tex.TricklComponent
 import com.shwifty.tex.views.all.mvp.AllContract
 import com.shwifty.tex.views.all.mvp.AllFragment
 import com.shwifty.tex.views.all.mvp.AllPresenter
@@ -15,7 +15,7 @@ import dagger.Provides
  * Created by arran on 15/02/2017.
  */
 @PresenterScope
-@Component(modules = arrayOf(AllTorrentsModule::class), dependencies = arrayOf(TricklComponent::class))
+@Component(modules = arrayOf(AllTorrentsModule::class), dependencies = arrayOf(TorrentRepositoryComponent::class))
 interface AllTorrentsComponent {
     fun inject(allFragment: AllFragment)
 }
@@ -23,7 +23,6 @@ interface AllTorrentsComponent {
 @Module
 class AllTorrentsModule {
     @Provides
-    @PresenterScope
     internal fun providesAllTorrentsPresenter(torrentRepository: ITorrentRepository): AllContract.Presenter {
         return AllPresenter(torrentRepository)
     }

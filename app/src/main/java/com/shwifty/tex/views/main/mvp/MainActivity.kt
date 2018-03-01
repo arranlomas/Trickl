@@ -41,7 +41,7 @@ class MainActivity : BaseActivity(), MainContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
-        DaggerMainComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
+//        DaggerMainComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         setContentView(R.layout.activity_main)
         presenter.attachView(this)
         presenter.initializeCastContext(this)
