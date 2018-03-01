@@ -5,6 +5,7 @@ import com.arranlomas.daggerviewmodelhelper.ViewModelFactory
 import com.shwifty.tex.repository.network.di.ApiModule
 import com.shwifty.tex.repository.network.di.UnscopedRepositoryModule
 import com.shwifty.tex.views.addtorrent.di.AddTorrentActivityBuilder
+import com.shwifty.tex.views.main.di.MainActivityBuilder
 import com.shwifty.tex.views.settings.di.SettingsActivityBuilder
 import dagger.Binds
 import dagger.Component
@@ -23,7 +24,8 @@ import javax.inject.Singleton
         SettingsActivityBuilder::class,
         ApiModule::class,
         UnscopedRepositoryModule::class,
-        AddTorrentActivityBuilder::class))
+        AddTorrentActivityBuilder::class,
+        MainActivityBuilder::class))
 interface AppComponent : AndroidInjector<DaggerApplication> {
     fun inject(app: MyApplication)
 }
