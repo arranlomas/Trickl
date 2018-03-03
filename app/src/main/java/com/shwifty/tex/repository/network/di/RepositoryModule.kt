@@ -14,27 +14,8 @@ import javax.inject.Singleton
 /**
  * Created by arran on 27/10/2017.
  */
-
 @Module
 class RepositoryModule {
-
-    @Provides
-    @Singleton
-    internal fun provideTorrentRepository(torrentSearchApi: TorrentSearchApi): ITorrentSearchRepository {
-        return TorrentSearchRepository(torrentSearchApi)
-
-    }
-
-    @Provides
-    @Singleton
-    internal fun providePreferencesRepository(): IPreferenceRepository {
-        return PreferencesRepository()
-
-    }
-}
-
-@Module
-class UnscopedRepositoryModule {
     @Provides
     internal fun provideTorrentSearchRepository(torrentSearchApi: TorrentSearchApi): ITorrentSearchRepository {
         return TorrentSearchRepository(torrentSearchApi)

@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.browse.mvp
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
@@ -18,9 +19,9 @@ import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.utils.*
 import com.shwifty.tex.views.base.mvi.BaseMviFragment
-import com.shwifty.tex.views.browse.di.DaggerTorrentBrowseComponent
 import com.shwifty.tex.views.browse.torrentSearch.list.TorrentSearchAdapter
 import com.shwifty.tex.views.main.MainEventHandler
+import dagger.android.support.AndroidSupportInjection
 import es.dmoral.toasty.Toasty
 import io.reactivex.Emitter
 import io.reactivex.Observable
@@ -49,13 +50,17 @@ class TorrentBrowseFragment : BaseMviFragment<BrowseIntents, BrowseViewState>() 
         }
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.frag_torrent_browse, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        DaggerTorrentBrowseComponent.builder().repositoryComponent(Trickl.repositoryComponent).build().inject(this)
         setupRecyclerView()
         super.setup(interactor, { error ->
             context?.let {

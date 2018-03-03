@@ -3,9 +3,10 @@ package com.shwifty.tex
 import android.arch.lifecycle.ViewModelProvider
 import com.arranlomas.daggerviewmodelhelper.ViewModelFactory
 import com.shwifty.tex.repository.network.di.ApiModule
-import com.shwifty.tex.repository.network.di.UnscopedRepositoryModule
+import com.shwifty.tex.repository.network.di.RepositoryModule
 import com.shwifty.tex.views.addtorrent.di.AddTorrentActivityBuilder
 import com.shwifty.tex.views.all.di.AllTorrentsFragmentBuilder
+import com.shwifty.tex.views.browse.di.TorrentBroseFragmentBuilder
 import com.shwifty.tex.views.downloads.di.FileFownloadFragmentBuilder
 import com.shwifty.tex.views.main.di.MainActivityBuilder
 import com.shwifty.tex.views.settings.di.SettingsActivityBuilder
@@ -28,14 +29,15 @@ import javax.inject.Singleton
         AndroidSupportInjectionModule::class,
         SettingsActivityBuilder::class,
         ApiModule::class,
-        UnscopedRepositoryModule::class,
+        RepositoryModule::class,
         AddTorrentActivityBuilder::class,
         MainActivityBuilder::class,
         FileFownloadFragmentBuilder::class,
         AllTorrentsFragmentBuilder::class,
         TorrentInfoActivityBuilder::class,
         TorrentFileFragmentBuilder::class,
-        TorrentDetailsFragmentBuilder::class))
+        TorrentDetailsFragmentBuilder::class,
+        TorrentBroseFragmentBuilder::class))
 interface AppComponent : AndroidInjector<DaggerApplication> {
     fun inject(app: MyApplication)
 }
