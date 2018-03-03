@@ -10,9 +10,8 @@ import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
-import com.shwifty.tex.views.all.di.DaggerAllTorrentsComponent
 import com.shwifty.tex.views.all.list.AllTorrentsAdapter
-import com.shwifty.tex.views.base.mvp.BaseFragment
+import com.shwifty.tex.views.base.mvp.BaseDaggerFragment
 import com.shwifty.tex.views.main.MainEventHandler
 import kotlinx.android.synthetic.main.frag_all.*
 import javax.inject.Inject
@@ -20,7 +19,7 @@ import javax.inject.Inject
 /**
  * Created by arran on 17/04/2017.
  */
-class AllFragment : BaseFragment(), AllContract.View {
+class AllFragment : BaseDaggerFragment(), AllContract.View {
 
     @Inject
     lateinit var presenter: AllContract.Presenter
@@ -56,7 +55,6 @@ class AllFragment : BaseFragment(), AllContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        DaggerAllTorrentsComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         return inflater.inflate(R.layout.frag_all, container, false)
     }
 

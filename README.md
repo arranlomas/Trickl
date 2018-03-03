@@ -53,7 +53,7 @@ maven { url 'https://maven.fabric.io/public' }
 ```
 TorrentExtensions.kt
 
-BaseMviActivity.kt
+BaseDaggerMviActivity.kt
 
 BasePresenter.kt
 

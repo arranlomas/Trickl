@@ -10,9 +10,7 @@ import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.R
-import com.shwifty.tex.Trickl
-import com.shwifty.tex.views.base.mvp.BaseFragment
-import com.shwifty.tex.views.downloads.di.DaggerFileDownloadComponent
+import com.shwifty.tex.views.base.mvp.BaseDaggerFragment
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
 import com.shwifty.tex.views.main.MainEventHandler
 import kotlinx.android.synthetic.main.frag_file_downloads.*
@@ -22,7 +20,7 @@ import javax.inject.Inject
 /**
  * Created by arran on 7/05/2017.
  */
-class FileDownloadFragment : BaseFragment(), FileDownloadContract.View {
+class FileDownloadFragment : BaseDaggerFragment(), FileDownloadContract.View {
 
     @Inject
     lateinit var presenter: FileDownloadContract.Presenter
@@ -38,25 +36,17 @@ class FileDownloadFragment : BaseFragment(), FileDownloadContract.View {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        DaggerFileDownloadComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
-        presenter.attachView(this)
-
-    }
-
     override fun onResume() {
         super.onResume()
         presenter.refresh()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (inflater == null) throw IllegalStateException("Torrent Files Fragment layout inflater is null!")
-        val view = inflater.inflate(R.layout.frag_file_downloads, container, false)
-        return view
+        return inflater.inflate(R.layout.frag_file_downloads, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        presenter.attachView(this)
         presenter.setup(arguments)
         super.onViewCreated(view, savedInstanceState)
         fileDownloadsSwipeRefresh.isRefreshing = true

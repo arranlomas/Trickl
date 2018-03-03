@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import com.arranlomas.daggerviewmodelhelper.Injectable
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
 import com.shwifty.tex.MyApplication
@@ -17,7 +16,7 @@ import com.shwifty.tex.models.AppTheme
 import com.shwifty.tex.utils.createObservable
 import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.utils.validateOnActivityResult
-import com.shwifty.tex.views.base.mvi.BaseMviActivity
+import com.shwifty.tex.views.base.mvi.BaseDaggerMviActivity
 import es.dmoral.toasty.Toasty
 import io.reactivex.Emitter
 import io.reactivex.Observable
@@ -26,7 +25,7 @@ import java.io.File
 import javax.inject.Inject
 
 
-class SettingsActivity : BaseMviActivity<SettingsIntents, SettingsViewState>(), Injectable {
+class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsViewState>() {
     private val RC_SELECT_FILE = 303
 
     @Inject

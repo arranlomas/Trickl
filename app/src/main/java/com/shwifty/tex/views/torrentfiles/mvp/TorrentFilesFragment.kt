@@ -10,18 +10,15 @@ import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.shwifty.tex.R
-import com.shwifty.tex.Trickl
-import com.shwifty.tex.views.base.mvp.BaseFragment
-import com.shwifty.tex.views.torrentfiles.di.DaggerTorrentFilesComponent
+import com.shwifty.tex.views.base.mvp.BaseDaggerFragment
 import com.shwifty.tex.views.torrentfiles.list.TorrentFilesAdapter
 import kotlinx.android.synthetic.main.frag_torrent_files.*
 import javax.inject.Inject
 
-
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentFilesFragment : BaseFragment(), TorrentFilesContract.View {
+class TorrentFilesFragment : BaseDaggerFragment(), TorrentFilesContract.View {
 
     @Inject
     lateinit var presenter: TorrentFilesContract.Presenter
@@ -44,13 +41,6 @@ class TorrentFilesFragment : BaseFragment(), TorrentFilesContract.View {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        DaggerTorrentFilesComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
-        presenter.setup(arguments)
-        presenter.attachView(this)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
@@ -63,6 +53,8 @@ class TorrentFilesFragment : BaseFragment(), TorrentFilesContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.setup(arguments)
+        presenter.attachView(this)
         torrentFilesRecyclerView.adapter = filesAdapter
         torrentFilesRecyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)

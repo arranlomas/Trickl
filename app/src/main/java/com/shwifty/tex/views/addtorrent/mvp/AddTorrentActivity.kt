@@ -6,10 +6,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.shwifty.tex.R
-import com.shwifty.tex.Trickl
-import com.shwifty.tex.views.addtorrent.di.DaggerAddTorrentComponent
 import com.shwifty.tex.views.addtorrent.list.AddTorrentPagerAdapter
-import com.shwifty.tex.views.base.mvp.BaseActivity
+import com.shwifty.tex.views.base.mvp.BaseDaggerActivity
+import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_add_torrent.*
 import javax.inject.Inject
 
@@ -17,7 +16,7 @@ import javax.inject.Inject
 /**
  * Created by arran on 7/05/2017.
  */
-class AddTorrentActivity : BaseActivity(), AddTorrentContract.View {
+class AddTorrentActivity : BaseDaggerActivity(), AddTorrentContract.View {
 
     @Inject
     lateinit var presenter: AddTorrentContract.Presenter
@@ -40,7 +39,8 @@ class AddTorrentActivity : BaseActivity(), AddTorrentContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_torrent)
-        DaggerAddTorrentComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
+        AndroidInjection.inject(this)
+//        DaggerAddTorrentComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.attachView(this)
         presenter.setup(intent.extras)
 

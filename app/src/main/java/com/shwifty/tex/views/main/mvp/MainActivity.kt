@@ -19,9 +19,9 @@ import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.utils.*
 import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
-import com.shwifty.tex.views.base.mvp.BaseActivity
+import com.shwifty.tex.views.base.mvp.BaseDaggerActivity
+import com.shwifty.tex.views.chromecast.mvp.ChromecastControllerContract
 import com.shwifty.tex.views.main.MainPagerAdapter
-import com.shwifty.tex.views.main.di.DaggerMainComponent
 import com.shwifty.tex.views.settings.mvi.SettingsActivity
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
 import io.fabric.sdk.android.Fabric
@@ -30,18 +30,21 @@ import kotlinx.android.synthetic.main.bottom_sheet_main_activity.*
 import java.io.File
 import javax.inject.Inject
 
-class MainActivity : BaseActivity(), MainContract.View {
+class MainActivity : BaseDaggerActivity(), MainContract.View {
     private val RC_SELECT_FILE = 302
 
     @Inject
     lateinit var presenter: MainContract.Presenter
+
+    @Inject
+    lateinit var chromecastControllerPresenter: ChromecastControllerContract.Presenter
+
 
     private val fragAdapter = MainPagerAdapter(supportFragmentManager)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
-        DaggerMainComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         setContentView(R.layout.activity_main)
         presenter.attachView(this)
         presenter.initializeCastContext(this)
@@ -73,7 +76,7 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     override fun onResume() {
         presenter.addSessionListener()
-        chromecastBottomSheet.onResume()
+        chromecastBottomSheet.setup(chromecastControllerPresenter)
         super.onResume()
     }
 

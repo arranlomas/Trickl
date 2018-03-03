@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.torrentdetails.mvp
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -9,9 +10,7 @@ import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.utils.formatBytesAsSize
 import com.shwifty.tex.R
-import com.shwifty.tex.Trickl
-import com.shwifty.tex.views.base.mvp.BaseFragment
-import com.shwifty.tex.views.torrentdetails.di.DaggerTorrentDetailsComponent
+import com.shwifty.tex.views.base.mvp.BaseDaggerFragment
 import kotlinx.android.synthetic.main.frag_torrent_details.*
 import java.io.File
 import javax.inject.Inject
@@ -19,7 +18,7 @@ import javax.inject.Inject
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentDetailsFragment : BaseFragment(), TorrentDetailsContract.View {
+class TorrentDetailsFragment : BaseDaggerFragment(), TorrentDetailsContract.View {
 
     @Inject
     lateinit var presenter: TorrentDetailsContract.Presenter
@@ -36,13 +35,6 @@ class TorrentDetailsFragment : BaseFragment(), TorrentDetailsContract.View {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        DaggerTorrentDetailsComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
-        presenter.attachView(this)
-        presenter.setup(arguments)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.frag_torrent_details, container, false)
     }
@@ -50,6 +42,8 @@ class TorrentDetailsFragment : BaseFragment(), TorrentDetailsContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.attachView(this)
+        presenter.setup(arguments)
         presenter.loadTorrent(presenter.torrentHash)
     }
 

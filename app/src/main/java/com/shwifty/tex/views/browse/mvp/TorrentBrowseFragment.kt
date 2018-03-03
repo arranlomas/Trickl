@@ -17,8 +17,7 @@ import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.utils.*
-import com.shwifty.tex.views.base.mvi.BaseMviFragment
-import com.shwifty.tex.views.browse.di.DaggerTorrentBrowseComponent
+import com.shwifty.tex.views.base.mvi.BaseDaggerMviFragment
 import com.shwifty.tex.views.browse.torrentSearch.list.TorrentSearchAdapter
 import com.shwifty.tex.views.main.MainEventHandler
 import es.dmoral.toasty.Toasty
@@ -30,7 +29,7 @@ import javax.inject.Inject
 /**
  * Created by arran on 27/10/2017.
  */
-class TorrentBrowseFragment : BaseMviFragment<BrowseIntents, BrowseViewState>() {
+class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewState>() {
 
     val itemOnClick: (searchResult: TorrentSearchResult) -> Unit = { torrentSearchResult ->
         if (torrentSearchResult.magnet != null) MainEventHandler.addMagnet(torrentSearchResult.magnet)
@@ -55,7 +54,6 @@ class TorrentBrowseFragment : BaseMviFragment<BrowseIntents, BrowseViewState>() 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        DaggerTorrentBrowseComponent.builder().repositoryComponent(Trickl.repositoryComponent).build().inject(this)
         setupRecyclerView()
         super.setup(interactor, { error ->
             context?.let {
