@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.torrentdetails.mvp
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -9,9 +10,8 @@ import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.utils.formatBytesAsSize
 import com.shwifty.tex.R
-import com.shwifty.tex.Trickl
 import com.shwifty.tex.views.base.mvp.BaseFragment
-import com.shwifty.tex.views.torrentdetails.di.DaggerTorrentDetailsComponent
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.frag_torrent_details.*
 import java.io.File
 import javax.inject.Inject
@@ -36,9 +36,9 @@ class TorrentDetailsFragment : BaseFragment(), TorrentDetailsContract.View {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-//        DaggerTorrentDetailsComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
         presenter.attachView(this)
         presenter.setup(arguments)
     }

@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.view.View
 import com.shwifty.tex.R
 import com.shwifty.tex.views.addtorrent.list.AddTorrentPagerAdapter
-import com.shwifty.tex.views.base.mvp.BaseActivity
+import com.shwifty.tex.views.base.mvp.BaseDaggerActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_add_torrent.*
 import javax.inject.Inject
@@ -16,7 +16,7 @@ import javax.inject.Inject
 /**
  * Created by arran on 7/05/2017.
  */
-class AddTorrentActivity : BaseActivity(), AddTorrentContract.View {
+class AddTorrentActivity : BaseDaggerActivity(), AddTorrentContract.View {
 
     @Inject
     lateinit var presenter: AddTorrentContract.Presenter

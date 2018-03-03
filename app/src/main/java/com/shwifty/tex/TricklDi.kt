@@ -9,6 +9,9 @@ import com.shwifty.tex.views.all.di.AllTorrentsFragmentBuilder
 import com.shwifty.tex.views.downloads.di.FileFownloadFragmentBuilder
 import com.shwifty.tex.views.main.di.MainActivityBuilder
 import com.shwifty.tex.views.settings.di.SettingsActivityBuilder
+import com.shwifty.tex.views.showtorrent.di.TorrentInfoActivityBuilder
+import com.shwifty.tex.views.torrentdetails.di.TorrentDetailsFragmentBuilder
+import com.shwifty.tex.views.torrentfiles.di.TorrentFileFragmentBuilder
 import dagger.Binds
 import dagger.Component
 import dagger.Module
@@ -29,7 +32,10 @@ import javax.inject.Singleton
         AddTorrentActivityBuilder::class,
         MainActivityBuilder::class,
         FileFownloadFragmentBuilder::class,
-        AllTorrentsFragmentBuilder::class))
+        AllTorrentsFragmentBuilder::class,
+        TorrentInfoActivityBuilder::class,
+        TorrentFileFragmentBuilder::class,
+        TorrentDetailsFragmentBuilder::class))
 interface AppComponent : AndroidInjector<DaggerApplication> {
     fun inject(app: MyApplication)
 }

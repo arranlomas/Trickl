@@ -6,16 +6,16 @@ import android.view.MenuItem
 import android.view.View
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
-import com.shwifty.tex.views.base.mvp.BaseActivity
-import com.shwifty.tex.views.showtorrent.di.DaggerTorrentInfoComponent
+import com.shwifty.tex.views.base.mvp.BaseDaggerActivity
 import com.shwifty.tex.views.showtorrent.list.ShowTorrentPagerAdapter
+import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_show_torrent.*
 import javax.inject.Inject
 
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentInfoActivity : BaseActivity(), TorrentInfoContract.View {
+class TorrentInfoActivity : BaseDaggerActivity(), TorrentInfoContract.View {
 
     @Inject
     lateinit var presenter: TorrentInfoContract.Presenter
@@ -27,6 +27,7 @@ class TorrentInfoActivity : BaseActivity(), TorrentInfoContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_torrent)
+        AndroidInjection.inject(this)
 //        DaggerTorrentInfoComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.attachView(this)
         presenter.setup(intent.extras)
