@@ -20,7 +20,7 @@ class TorrentBrowseModule {
 }
 
 @Module
-abstract class TorrentBroseFragmentBuilder {
+abstract class TorrentBrowseFragmentBuilder {
     @ContributesAndroidInjector(modules = arrayOf(TorrentBrowseModule::class))
     internal abstract fun bindsTorrentBrowseFragment(): TorrentBrowseFragment
 }

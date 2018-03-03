@@ -1,6 +1,5 @@
 package com.shwifty.tex.views.browse.mvp
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
@@ -18,10 +17,9 @@ import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.utils.*
-import com.shwifty.tex.views.base.mvi.BaseMviFragment
+import com.shwifty.tex.views.base.mvi.BaseDaggerMviFragment
 import com.shwifty.tex.views.browse.torrentSearch.list.TorrentSearchAdapter
 import com.shwifty.tex.views.main.MainEventHandler
-import dagger.android.support.AndroidSupportInjection
 import es.dmoral.toasty.Toasty
 import io.reactivex.Emitter
 import io.reactivex.Observable
@@ -31,7 +29,7 @@ import javax.inject.Inject
 /**
  * Created by arran on 27/10/2017.
  */
-class TorrentBrowseFragment : BaseMviFragment<BrowseIntents, BrowseViewState>() {
+class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewState>() {
 
     val itemOnClick: (searchResult: TorrentSearchResult) -> Unit = { torrentSearchResult ->
         if (torrentSearchResult.magnet != null) MainEventHandler.addMagnet(torrentSearchResult.magnet)
@@ -48,11 +46,6 @@ class TorrentBrowseFragment : BaseMviFragment<BrowseIntents, BrowseViewState>() 
             val frag = TorrentBrowseFragment()
             return frag
         }
-    }
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        AndroidSupportInjection.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

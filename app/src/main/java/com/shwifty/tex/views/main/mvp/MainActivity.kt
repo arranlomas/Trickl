@@ -5,10 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.CoordinatorLayout
-import android.support.v4.app.Fragment
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.arranlomas.daggerviewmodelhelper.Injectable
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.cast.framework.CastButtonFactory
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
@@ -20,23 +20,19 @@ import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.utils.*
 import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
-import com.shwifty.tex.views.base.mvp.BaseActivity
 import com.shwifty.tex.views.base.mvp.BaseDaggerActivity
 import com.shwifty.tex.views.chromecast.mvp.ChromecastControllerContract
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.settings.mvi.SettingsActivity
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
 import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet_main_activity.*
 import java.io.File
 import javax.inject.Inject
 
-class MainActivity : BaseDaggerActivity(), MainContract.View {
+class MainActivity : BaseDaggerActivity(), MainContract.View, Injectable {
     private val RC_SELECT_FILE = 302
 
     @Inject
@@ -51,7 +47,6 @@ class MainActivity : BaseDaggerActivity(), MainContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
-        AndroidInjection.inject(this)
         setContentView(R.layout.activity_main)
         presenter.attachView(this)
         presenter.initializeCastContext(this)

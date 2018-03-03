@@ -1,6 +1,5 @@
 package com.shwifty.tex.views.all.mvp
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -12,16 +11,15 @@ import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.shwifty.tex.R
 import com.shwifty.tex.Trickl
 import com.shwifty.tex.views.all.list.AllTorrentsAdapter
-import com.shwifty.tex.views.base.mvp.BaseFragment
+import com.shwifty.tex.views.base.mvp.BaseDaggerFragment
 import com.shwifty.tex.views.main.MainEventHandler
-import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.frag_all.*
 import javax.inject.Inject
 
 /**
  * Created by arran on 17/04/2017.
  */
-class AllFragment : BaseFragment(), AllContract.View {
+class AllFragment : BaseDaggerFragment(), AllContract.View {
 
     @Inject
     lateinit var presenter: AllContract.Presenter
@@ -59,11 +57,6 @@ class AllFragment : BaseFragment(), AllContract.View {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 //        DaggerAllTorrentsComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         return inflater.inflate(R.layout.frag_all, container, false)
-    }
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        AndroidSupportInjection.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
