@@ -23,7 +23,7 @@ class AddTorrentModule {
 
 }
 
-@Module(includes = arrayOf(ViewModelFactoryModule::class))
+@Module()
 abstract class AddTorrentActivityBuilder {
     @ContributesAndroidInjector(modules = arrayOf(AddTorrentModule::class))
     internal abstract fun bindsAddTorrentActivity(): AddTorrentActivity

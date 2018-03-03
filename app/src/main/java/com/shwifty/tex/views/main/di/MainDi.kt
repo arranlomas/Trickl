@@ -29,7 +29,7 @@ class MainModule {
     }
 }
 
-@Module()
+@Module
 abstract class MainActivityBuilder {
     @ContributesAndroidInjector(modules = arrayOf(MainModule::class))
     internal abstract fun bindsMainActivity(): MainActivity

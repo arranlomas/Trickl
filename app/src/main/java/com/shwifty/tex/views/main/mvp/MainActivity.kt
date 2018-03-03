@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.CoordinatorLayout
+import android.support.v4.app.Fragment
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -25,13 +26,16 @@ import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.settings.mvi.SettingsActivity
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
 import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet_main_activity.*
 import java.io.File
 import javax.inject.Inject
 
-class MainActivity : BaseActivity(), MainContract.View {
+class MainActivity : BaseActivity(), MainContract.View, HasSupportFragmentInjector {
     private val RC_SELECT_FILE = 302
 
     @Inject
@@ -39,6 +43,15 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     @Inject
     lateinit var chromecastControllerPresenter: ChromecastControllerContract.Presenter
+
+
+    @Inject
+    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+        return fragmentDispatchingAndroidInjector
+    }
+
 
     private val fragAdapter = MainPagerAdapter(supportFragmentManager)
 
