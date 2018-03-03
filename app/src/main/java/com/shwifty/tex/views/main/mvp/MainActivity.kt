@@ -8,7 +8,6 @@ import android.support.design.widget.CoordinatorLayout
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import com.arranlomas.daggerviewmodelhelper.Injectable
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.cast.framework.CastButtonFactory
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
@@ -25,14 +24,13 @@ import com.shwifty.tex.views.chromecast.mvp.ChromecastControllerContract
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.settings.mvi.SettingsActivity
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
-import dagger.android.AndroidInjection
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet_main_activity.*
 import java.io.File
 import javax.inject.Inject
 
-class MainActivity : BaseDaggerActivity(), MainContract.View, Injectable {
+class MainActivity : BaseDaggerActivity(), MainContract.View {
     private val RC_SELECT_FILE = 302
 
     @Inject

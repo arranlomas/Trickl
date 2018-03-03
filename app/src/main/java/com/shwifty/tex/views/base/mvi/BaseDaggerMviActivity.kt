@@ -10,7 +10,7 @@ import com.shwifty.tex.utils.onCreateSetThemeAndCallSuper
 /**
  * Created by arran on 11/07/2017.
  */
-abstract class BaseMviActivity<I : KontentIntent, S : KontentViewState> : KontentActivity<I, S>() {
+abstract class BaseDaggerMviActivity<I : KontentIntent, S : KontentViewState> : KontentActivity<I, S>() {
     @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
         onCreateSetThemeAndCallSuper { super.onCreate(savedInstanceState) }
