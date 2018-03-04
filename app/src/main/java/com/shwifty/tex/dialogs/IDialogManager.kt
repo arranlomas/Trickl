@@ -12,9 +12,8 @@ import java.io.File
  * Created by arran on 10/05/2017.
  */
 interface IDialogManager {
-    var torrentRepository: ITorrentRepository
-    fun showAddMagnetDialog(context: Context)
-    fun showAddHashDialog(context: Context)
+    fun showAddMagnetDialog(context: Context, onAddMagnet: (String) -> Unit)
+    fun showAddHashDialog(context: Context, onAddHash: (String) -> Unit)
     fun showDeleteTorrentDialog(context: Context, torrentInfo: TorrentInfo, onError: () -> Unit)
     fun showDeleteFileDialog(context: Context, torrentFile: TorrentFile)
     fun showNoWifiDialog(context: Context, torrentFile: TorrentFile)

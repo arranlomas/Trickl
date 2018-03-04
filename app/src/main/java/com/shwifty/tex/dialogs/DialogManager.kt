@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import com.afollestad.materialdialogs.MaterialDialog
+import com.schiwfty.torrentwrapper.dagger.network.TorrentRepositoryComponent
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
@@ -12,16 +13,13 @@ import com.shwifty.tex.R
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.utils.logTorrentParseError
-import com.shwifty.tex.views.main.MainEventHandler
 import es.dmoral.toasty.Toasty
 import java.io.File
 
 /**
  * Created by arran on 10/05/2017.
  */
-class DialogManager : IDialogManager {
-
-    override lateinit var torrentRepository: ITorrentRepository
+class DialogManager(private val torrentRepository: ITorrentRepository) : IDialogManager {
 
     override fun showNoWifiDialog(context: Context, torrentFile: TorrentFile) {
         MaterialDialog.Builder(context)
@@ -35,27 +33,27 @@ class DialogManager : IDialogManager {
                 .show()
     }
 
-    override fun showAddMagnetDialog(context: Context) {
+    override fun showAddMagnetDialog(context: Context, onAddMagnet: (String) -> Unit) {
         MaterialDialog.Builder(context)
                 .title(R.string.dialog_add_magnet_title)
                 .customView(R.layout.dialog_frag_add_magnet, true)
                 .positiveText(android.R.string.ok)
                 .onPositive({ dialog, _ ->
                     val magnetText = dialog.customView?.findViewById<EditText>(R.id.addMagnetDialogEditText)?.text?.toString()
-                    magnetText?.let { MainEventHandler.addMagnet(it) }
+                    magnetText?.let { onAddMagnet.invoke(it) }
                 })
                 .negativeText(android.R.string.cancel)
                 .show()
     }
 
-    override fun showAddHashDialog(context: Context) {
+    override fun showAddHashDialog(context: Context, onAddHash: (String) -> Unit) {
         MaterialDialog.Builder(context)
                 .title(R.string.dialog_add_hash_title)
                 .customView(R.layout.dialog_frag_add_hash, true)
                 .positiveText(android.R.string.ok)
                 .onPositive({ dialog, _ ->
                     val hash = dialog.customView?.findViewById<EditText>(R.id.addHashDialogEditText)?.text?.toString()
-                    hash?.let { MainEventHandler.addHash(it) }
+                    hash?.let { onAddHash.invoke(it) }
                 })
                 .negativeText(android.R.string.cancel)
                 .show()
@@ -75,7 +73,8 @@ class DialogManager : IDialogManager {
                     foundTorrentFile?.let {
                         torrentRepository.deleteTorrentFileFromPersistence(torrentFile)
                         torrentRepository.deleteTorrentFileData(torrentFile)
-                    } ?: Toasty.error(context, context.getString(R.string.error_deleting_torrent), Toast.LENGTH_LONG).show()
+                    }
+                            ?: Toasty.error(context, context.getString(R.string.error_deleting_torrent), Toast.LENGTH_LONG).show()
                     dialog.dismiss()
                 })
                 .neutralText(android.R.string.cancel)

@@ -2,6 +2,7 @@ package com.shwifty.tex.views.torrentfiles.di
 
 
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.shwifty.tex.actions.IActionManager
 import com.shwifty.tex.views.torrentfiles.mvp.TorrentFilesContract
 import com.shwifty.tex.views.torrentfiles.mvp.TorrentFilesFragment
 import com.shwifty.tex.views.torrentfiles.mvp.TorrentFilesPresenter
@@ -16,8 +17,8 @@ import dagger.android.ContributesAndroidInjector
 @Module
 class TorrentFilesModule {
     @Provides
-    internal fun providesTorrentFilesPresenter(torrentRepository: ITorrentRepository): TorrentFilesContract.Presenter {
-        return TorrentFilesPresenter(torrentRepository)
+    internal fun providesTorrentFilesPresenter(torrentRepository: ITorrentRepository, actionManager: IActionManager): TorrentFilesContract.Presenter {
+        return TorrentFilesPresenter(torrentRepository, actionManager)
     }
 }
 

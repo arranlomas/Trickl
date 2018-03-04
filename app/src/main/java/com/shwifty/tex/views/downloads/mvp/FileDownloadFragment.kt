@@ -10,9 +10,11 @@ import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.R
+import com.shwifty.tex.actions.IActionManager
+import com.shwifty.tex.navigation.INavigation
 import com.shwifty.tex.views.base.mvp.BaseDaggerFragment
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
-import com.shwifty.tex.views.main.MainEventHandler
+import com.shwifty.tex.navigation.Navigation
 import kotlinx.android.synthetic.main.frag_file_downloads.*
 import javax.inject.Inject
 
@@ -26,7 +28,9 @@ class FileDownloadFragment : BaseDaggerFragment(), FileDownloadContract.View {
     lateinit var presenter: FileDownloadContract.Presenter
 
     val itemOnClick: (torrentFile: TorrentFile, type: FileDownloadAdapter.Companion.ClickTypes) -> Unit = { torrentFile, type ->
-        presenter.viewClicked(torrentFile, type)
+        context?.let {
+            presenter.viewClicked(it, torrentFile, type)
+        }
     }
     val filesAdapter = FileDownloadAdapter(itemOnClick)
 
@@ -72,14 +76,5 @@ class FileDownloadFragment : BaseDaggerFragment(), FileDownloadContract.View {
 
     override fun setLoading(loading: Boolean) {
         fileDownloadsSwipeRefresh.isRefreshing = loading
-    }
-
-    override fun torrentFileClicked(action: FileDownloadAdapter.Companion.ClickTypes, torrentFile: TorrentFile, torrentRepository: ITorrentRepository) {
-        when (action) {
-            FileDownloadAdapter.Companion.ClickTypes.DOWNLOAD -> MainEventHandler.downloadTorrent(torrentFile)
-            FileDownloadAdapter.Companion.ClickTypes.OPEN -> MainEventHandler.openTorrent(torrentFile)
-            FileDownloadAdapter.Companion.ClickTypes.DELETE -> MainEventHandler.deleteTorrent(torrentFile)
-            FileDownloadAdapter.Companion.ClickTypes.CHROMECAST -> MainEventHandler.chromecastTorrent(torrentFile)
-        }
     }
 }

@@ -25,7 +25,9 @@ class TorrentFilesFragment : BaseDaggerFragment(), TorrentFilesContract.View {
 
 
     val itemOnClick: (torrentFile: TorrentFile, type: TorrentFilesAdapter.Companion.ClickTypes) -> Unit = { torrentFile, type ->
-        presenter.viewClicked(torrentFile, type)
+        context?.let {
+            presenter.viewClicked(it, torrentFile, type)
+        }
     }
     val filesAdapter = TorrentFilesAdapter(itemOnClick)
 
@@ -59,7 +61,7 @@ class TorrentFilesFragment : BaseDaggerFragment(), TorrentFilesContract.View {
         torrentFilesRecyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         torrentFilesRecyclerView.layoutManager = llm as RecyclerView.LayoutManager?
-        presenter.loadTorrent(presenter.torrentHash)
+        presenter.loadTorrent()
     }
 
     override fun setupViewFromTorrentInfo(torrentInfo: TorrentInfo) {

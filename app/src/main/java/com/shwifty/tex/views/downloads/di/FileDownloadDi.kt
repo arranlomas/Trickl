@@ -2,6 +2,10 @@ package com.shwifty.tex.views.downloads.di
 
 
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.shwifty.tex.actions.IActionManager
+import com.shwifty.tex.chromecast.ICastHandler
+import com.shwifty.tex.dialogs.IDialogManager
+import com.shwifty.tex.navigation.INavigation
 import com.shwifty.tex.views.downloads.mvp.FileDownloadContract
 import com.shwifty.tex.views.downloads.mvp.FileDownloadFragment
 import com.shwifty.tex.views.downloads.mvp.FileDownloadPresenter
@@ -15,8 +19,12 @@ import dagger.android.ContributesAndroidInjector
 @Module
 class FileDownloadModule {
     @Provides
-    internal fun providesFileDownloadPresenter(torrentRepository: ITorrentRepository): FileDownloadContract.Presenter {
-        return FileDownloadPresenter(torrentRepository)
+    internal fun providesFileDownloadPresenter(torrentRepository: ITorrentRepository,
+                                               actionManager: IActionManager,
+                                               dialogManager: IDialogManager,
+                                               navigation: INavigation,
+                                               castHandler: ICastHandler): FileDownloadContract.Presenter {
+        return FileDownloadPresenter(torrentRepository, actionManager, dialogManager, navigation, castHandler)
     }
 }
 

@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.torrentfiles.mvp
 
+import android.content.Context
 import android.os.Bundle
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
@@ -18,8 +19,7 @@ interface TorrentFilesContract {
 
     interface Presenter: BaseContract.Presenter<View> {
         fun setup(arguments: Bundle?)
-        fun loadTorrent(torrentHash: String)
-        var torrentHash: String
-        fun viewClicked(torrentFile: TorrentFile, action: TorrentFilesAdapter.Companion.ClickTypes)
+        fun loadTorrent()
+        fun viewClicked(context: Context, torrentFile: TorrentFile, action: TorrentFilesAdapter.Companion.ClickTypes)
     }
 }
