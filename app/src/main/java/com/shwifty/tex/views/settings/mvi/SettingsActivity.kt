@@ -11,7 +11,7 @@ import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
 import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
-import com.shwifty.tex.Trickl
+import com.shwifty.tex.dialogs.IDialogManager
 import com.shwifty.tex.models.AppTheme
 import com.shwifty.tex.utils.createObservable
 import com.shwifty.tex.utils.setVisible
@@ -30,6 +30,9 @@ class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsViewStat
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var dialogManager: IDialogManager
 
     private lateinit var newWorkingDirecotyrEmiter: Emitter<SettingsIntents.NewWorkingDirectorySelected>
 
@@ -70,7 +73,7 @@ class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsViewStat
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         data.validateOnActivityResult(requestCode, RC_SELECT_FILE, resultCode, Activity.RESULT_OK, {
             val file = it.getSerializable(FileBrowserActivity.ARG_FILE_RESULT) as File
-            Trickl.dialogManager.showChangeWorkingDirectoryDialog(this, file, { newDirectory ->
+            dialogManager.showChangeWorkingDirectoryDialog(this, file, { newDirectory ->
                 newWorkingDirecotyrEmiter.onNext(SettingsIntents.NewWorkingDirectorySelected(this, newDirectory, true))
             }, { newDirectory ->
                 newWorkingDirecotyrEmiter.onNext(SettingsIntents.NewWorkingDirectorySelected(this, newDirectory, false))
@@ -128,7 +131,7 @@ class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsViewStat
 
     override fun onBackPressed() {
         if (interactor.getLastState()?.settingsChanged == true)
-            Trickl.dialogManager.showSettingExitDialog(this, onRestart = {
+            dialogManager.showSettingExitDialog(this, onRestart = {
                 (application as MyApplication).restart()
             })
         else super.onBackPressed()

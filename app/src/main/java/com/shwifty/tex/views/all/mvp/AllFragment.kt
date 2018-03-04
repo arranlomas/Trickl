@@ -9,10 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.shwifty.tex.R
-import com.shwifty.tex.Trickl
+import com.shwifty.tex.dialogs.IDialogManager
+import com.shwifty.tex.navigation.INavigation
 import com.shwifty.tex.views.all.list.AllTorrentsAdapter
 import com.shwifty.tex.views.base.mvp.BaseDaggerFragment
-import com.shwifty.tex.views.main.MainEventHandler
+import com.shwifty.tex.navigation.NavigationKey
 import kotlinx.android.synthetic.main.frag_all.*
 import javax.inject.Inject
 
@@ -24,15 +25,23 @@ class AllFragment : BaseDaggerFragment(), AllContract.View {
     @Inject
     lateinit var presenter: AllContract.Presenter
 
+    @Inject
+    lateinit var navigation: INavigation
+
+    @Inject
+    lateinit var dialogManager: IDialogManager
+
     val itemOnClick: (View, Int, Int) -> Unit = { _, position, _ ->
         val torrentFile = filesAdapter.torrentFiles[position]
-        MainEventHandler.showTorrentInfo(torrentFile)
+        context?.let {
+            navigation.goTo(NavigationKey.OpenTorrentInfo(it, torrentFile.info_hash))
+        }
     }
 
     val onDeleteItem: (View, Int, Int) -> Unit = { _, position, _ ->
         val torrentFile = filesAdapter.torrentFiles[position]
         context?.let {
-            Trickl.dialogManager.showDeleteTorrentDialog(it, torrentFile, {
+            dialogManager.showDeleteTorrentDialog(it, torrentFile, {
                 showError(R.string.error_deleting_torrent)
             })
         }

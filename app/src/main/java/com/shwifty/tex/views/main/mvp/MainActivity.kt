@@ -12,18 +12,16 @@ import com.crashlytics.android.Crashlytics
 import com.google.android.gms.cast.framework.CastButtonFactory
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
 import com.schiwfty.torrentwrapper.confluence.Confluence
-import com.schiwfty.torrentwrapper.models.TorrentFile
-import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
-import com.schiwfty.torrentwrapper.utils.openFile
 import com.shwifty.tex.R
-import com.shwifty.tex.Trickl
+import com.shwifty.tex.dialogs.IDialogManager
+import com.shwifty.tex.navigation.INavigation
+import com.shwifty.tex.navigation.NavigationKey
 import com.shwifty.tex.utils.*
-import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
 import com.shwifty.tex.views.base.mvp.BaseDaggerActivity
 import com.shwifty.tex.views.chromecast.mvp.ChromecastControllerContract
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.settings.mvi.SettingsActivity
-import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
+import com.shwifty.tex.views.splash.mvp.SplashActivity
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet_main_activity.*
@@ -39,6 +37,12 @@ class MainActivity : BaseDaggerActivity(), MainContract.View {
     @Inject
     lateinit var chromecastControllerPresenter: ChromecastControllerContract.Presenter
 
+    @Inject
+    lateinit var navigation: INavigation
+
+    @Inject
+    lateinit var dialogManager: IDialogManager
+
 
     private val fragAdapter = MainPagerAdapter(supportFragmentManager)
 
@@ -48,7 +52,6 @@ class MainActivity : BaseDaggerActivity(), MainContract.View {
         setContentView(R.layout.activity_main)
         presenter.attachView(this)
         presenter.initializeCastContext(this)
-        presenter.handleIntent(intent)
         setupBottomSheet()
 
         setSupportActionBar(mainToolbar)
@@ -58,14 +61,22 @@ class MainActivity : BaseDaggerActivity(), MainContract.View {
         mainSmartTab.setViewPager(mainViewPager)
 
         addMagnetFab.setOnClickListener {
-            Trickl.dialogManager.showAddMagnetDialog(this)
+            dialogManager.showAddMagnetDialog(this, {
+                navigation.goTo(NavigationKey.AddTorrent(this, magnet = it))
+            })
         }
 
         addHashFab.setOnClickListener {
-            Trickl.dialogManager.showAddHashDialog(this)
+            dialogManager.showAddHashDialog(this, {
+                navigation.goTo(NavigationKey.AddTorrent(this, hash = it))
+            })
         }
 
         mainViewPager.offscreenPageLimit = 2
+
+        if (intent.hasExtra(SplashActivity.TAG_MAGNET_FROM_INTENT)) {
+            navigation.goTo(NavigationKey.AddTorrent(this, magnet = intent.getStringExtra(SplashActivity.TAG_MAGNET_FROM_INTENT)))
+        }
     }
 
     override fun onDestroy() {
@@ -130,53 +141,21 @@ class MainActivity : BaseDaggerActivity(), MainContract.View {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+        return when (item?.itemId) {
             R.id.openDirectory -> {
                 FileBrowserActivity.startActivity(this, RC_SELECT_FILE, false, Confluence.workingDir)
-                return true
+                true
             }
             R.id.exit -> {
-                Trickl.dialogManager.showExitAppDialog(this, { exitApplication() })
-                return true
+                dialogManager.showExitAppDialog(this, { exitApplication() })
+                true
             }
             R.id.settings -> {
                 SettingsActivity.startActivity(this)
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun getConnectivityStatus(): CONNECTIVITY_STATUS {
-        return baseContext.getConnectivityStatus()
-    }
-
-    override fun showTorrentInfoActivity(infoHash: String) {
-        val intent = Intent(this, TorrentInfoActivity::class.java)
-        intent.putExtra(TorrentInfoActivity.ARG_TORRENT_HASH, infoHash)
-        startActivity(intent)
-    }
-
-    override fun showAddTorrentActivity(hash: String?, magnet: String?, torrentFilePath: String?) {
-        AddTorrentActivity.startActivity(this, hash, magnet, torrentFilePath)
-    }
-
-    override fun showNoWifiDialog(torrentFile: TorrentFile) {
-        Trickl.dialogManager.showNoWifiDialog(this, torrentFile)
-    }
-
-    override fun startFileDownloading(torrentFile: TorrentFile, torrentRepository: ITorrentRepository) {
-        torrentRepository.startFileDownloading(torrentFile, this, true)
-    }
-
-    override fun openTorrentFile(torrentFile: TorrentFile, torrentRepository: ITorrentRepository) {
-        torrentFile.openFile(this, torrentRepository, {
-            showError(R.string.error_no_activity)
-        })
-    }
-
-    override fun openDeleteTorrentDialog(torrentFile: TorrentFile) {
-        Trickl.dialogManager.showDeleteFileDialog(this, torrentFile)
     }
 
     private fun exitApplication() {

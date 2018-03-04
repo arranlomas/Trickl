@@ -12,14 +12,15 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
 import com.shwifty.tex.R
-import com.shwifty.tex.Trickl
+import com.shwifty.tex.dialogs.IDialogManager
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
+import com.shwifty.tex.navigation.INavigation
+import com.shwifty.tex.navigation.NavigationKey
 import com.shwifty.tex.utils.*
 import com.shwifty.tex.views.base.mvi.BaseDaggerMviFragment
 import com.shwifty.tex.views.browse.torrentSearch.list.TorrentSearchAdapter
-import com.shwifty.tex.views.main.MainEventHandler
 import es.dmoral.toasty.Toasty
 import io.reactivex.Emitter
 import io.reactivex.Observable
@@ -31,12 +32,20 @@ import javax.inject.Inject
  */
 class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewState>() {
 
-    val itemOnClick: (searchResult: TorrentSearchResult) -> Unit = { torrentSearchResult ->
-        if (torrentSearchResult.magnet != null) MainEventHandler.addMagnet(torrentSearchResult.magnet)
-        else errorText.text = getString(R.string.error_cannot_open_torrent)
+    @Inject
+    lateinit var navigation: INavigation
+
+    @Inject
+    lateinit var dialogManager: IDialogManager
+
+    private val itemOnClick: (searchResult: TorrentSearchResult) -> Unit = { torrentSearchResult ->
+        context?.let {
+            if (torrentSearchResult.magnet != null) navigation.goTo(NavigationKey.AddTorrent(context = it, magnet = torrentSearchResult.magnet))
+            else errorText.text = it.getString(R.string.error_cannot_open_torrent) ?: ""
+        }
     }
-    val searchResultsAdapter = TorrentSearchAdapter(itemOnClick)
-    val browseResultsAdapter = TorrentSearchAdapter(itemOnClick)
+    private val searchResultsAdapter = TorrentSearchAdapter(itemOnClick)
+    private val browseResultsAdapter = TorrentSearchAdapter(itemOnClick)
 
     @Inject
     lateinit var interactor: TorrentBrowseContract.Interactor
@@ -120,7 +129,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewSta
     private fun updateSortAndCategoryIntent(): Observable<BrowseIntents> = createObservable { emitter ->
         fabFilter.setOnClickListener {
             context?.let {
-                Trickl.dialogManager.showBrowseFilterDialog(it,
+                dialogManager.showBrowseFilterDialog(it,
                         interactor.getLastState()?.sortType ?: TorrentSearchSortType.SEEDS,
                         interactor.getLastState()?.category ?: TorrentSearchCategory.Movies,
                         { sortType, category ->

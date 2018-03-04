@@ -2,6 +2,10 @@ package com.shwifty.tex
 
 import android.arch.lifecycle.ViewModelProvider
 import com.arranlomas.daggerviewmodelhelper.ViewModelFactory
+import com.shwifty.tex.actions.ActionManagerModule
+import com.shwifty.tex.chromecast.CastHandlerModule
+import com.shwifty.tex.dialogs.DialogManagerModule
+import com.shwifty.tex.navigation.NavigationModule
 import com.shwifty.tex.repository.network.di.ApiModule
 import com.shwifty.tex.repository.network.di.RepositoryModule
 import com.shwifty.tex.views.addtorrent.di.AddTorrentActivityBuilder
@@ -30,6 +34,10 @@ import javax.inject.Singleton
         SettingsActivityBuilder::class,
         ApiModule::class,
         RepositoryModule::class,
+        NavigationModule::class,
+        DialogManagerModule::class,
+        CastHandlerModule::class,
+        ActionManagerModule::class,
         AddTorrentActivityBuilder::class,
         MainActivityBuilder::class,
         FileFownloadFragmentBuilder::class,

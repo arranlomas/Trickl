@@ -3,6 +3,7 @@ package com.shwifty.tex.views.main.di
 
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.MyApplication
+import com.shwifty.tex.navigation.INavigation
 import com.shwifty.tex.views.chromecast.mvp.ChromecastControllerContract
 import com.shwifty.tex.views.chromecast.mvp.ChromecastControllerPresenter
 import com.shwifty.tex.views.main.mvp.MainActivity
@@ -19,8 +20,8 @@ import dagger.android.ContributesAndroidInjector
 @Module
 class MainModule {
     @Provides
-    internal fun providesMainPresenter(torrentRepository: ITorrentRepository): MainContract.Presenter {
-        return MainPresenter(torrentRepository, MyApplication.castHandler)
+    internal fun providesMainPresenter(torrentRepository: ITorrentRepository, navigation: INavigation): MainContract.Presenter {
+        return MainPresenter(torrentRepository, MyApplication.castHandler, navigation)
     }
 
     @Provides

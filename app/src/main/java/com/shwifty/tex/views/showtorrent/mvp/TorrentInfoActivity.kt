@@ -1,11 +1,13 @@
 package com.shwifty.tex.views.showtorrent.mvp
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.shwifty.tex.R
-import com.shwifty.tex.Trickl
+import com.shwifty.tex.dialogs.IDialogManager
 import com.shwifty.tex.views.base.mvp.BaseDaggerActivity
 import com.shwifty.tex.views.showtorrent.list.ShowTorrentPagerAdapter
 import dagger.android.AndroidInjection
@@ -20,8 +22,17 @@ class TorrentInfoActivity : BaseDaggerActivity(), TorrentInfoContract.View {
     @Inject
     lateinit var presenter: TorrentInfoContract.Presenter
 
+    @Inject
+    lateinit var dialogManager: IDialogManager
+
     companion object {
         val ARG_TORRENT_HASH = "arg_torrent_hash"
+
+        fun open(context: Context, infoHash: String) {
+            val intent = Intent(context, TorrentInfoActivity::class.java)
+            intent.putExtra(TorrentInfoActivity.ARG_TORRENT_HASH, infoHash)
+            context.startActivity(intent)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +89,7 @@ class TorrentInfoActivity : BaseDaggerActivity(), TorrentInfoContract.View {
 
     override fun notifyTorrentDeleted() {
         presenter.torrentInfo?.let {
-            Trickl.dialogManager.showDeleteTorrentDialog(this, it, {
+            dialogManager.showDeleteTorrentDialog(this, it, {
                 showError(R.string.error_deleting_torrent)
             })
         }
