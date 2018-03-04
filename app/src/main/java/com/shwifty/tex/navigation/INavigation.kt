@@ -8,19 +8,6 @@ import com.schiwfty.torrentwrapper.models.TorrentFile
  */
 interface INavigation {
     fun goTo(navigationKey: NavigationKey)
-//    fun showTorrentInfo(torrentInfo: TorrentInfo)
-
-//    fun downloadTorrent(torrentFile: TorrentFile)
-
-//    fun openTorrent(torrentFile: TorrentFile)
-
-//    fun deleteTorrent(torrentFile: TorrentFile)
-
-//    fun chromecastTorrent(torrentFile: TorrentFile)
-
-//    fun addMagnet(magnet: String)
-
-//    fun addHash(hash: String)
 }
 
 sealed class NavigationKey {
