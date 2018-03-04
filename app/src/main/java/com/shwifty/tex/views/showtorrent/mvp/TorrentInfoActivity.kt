@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.shwifty.tex.R
-import com.shwifty.tex.Trickl
 import com.shwifty.tex.dialogs.IDialogManager
 import com.shwifty.tex.views.base.mvp.BaseDaggerActivity
 import com.shwifty.tex.views.showtorrent.list.ShowTorrentPagerAdapter

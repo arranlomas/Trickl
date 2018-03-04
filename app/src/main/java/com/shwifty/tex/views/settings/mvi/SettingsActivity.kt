@@ -11,7 +11,6 @@ import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
 import com.shwifty.tex.MyApplication
 import com.shwifty.tex.R
-import com.shwifty.tex.Trickl
 import com.shwifty.tex.dialogs.IDialogManager
 import com.shwifty.tex.models.AppTheme
 import com.shwifty.tex.utils.createObservable

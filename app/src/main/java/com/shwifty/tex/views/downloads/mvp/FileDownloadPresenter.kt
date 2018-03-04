@@ -16,10 +16,7 @@ import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
  * Created by arran on 7/05/2017.
  */
 class FileDownloadPresenter(val torrentRepository: ITorrentRepository,
-                            val actionManager: IActionManager,
-                            val dialogManager: IDialogManager,
-                            val navigation: INavigation,
-                            val castHandler: ICastHandler) : BasePresenter<FileDownloadContract.View>(), FileDownloadContract.Presenter {
+                            val actionManager: IActionManager) : BasePresenter<FileDownloadContract.View>(), FileDownloadContract.Presenter {
 
     override fun setup(arguments: Bundle?) {
         torrentRepository.torrentFileProgressSource
