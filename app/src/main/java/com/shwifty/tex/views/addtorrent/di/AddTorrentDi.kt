@@ -23,7 +23,7 @@ class AddTorrentModule {
 
 }
 
-@Module()
+@Module
 abstract class AddTorrentActivityBuilder {
     @ContributesAndroidInjector(modules = arrayOf(AddTorrentModule::class))
     internal abstract fun bindsAddTorrentActivity(): AddTorrentActivity
