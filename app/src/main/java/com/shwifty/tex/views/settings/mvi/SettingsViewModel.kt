@@ -7,8 +7,8 @@ import javax.inject.Inject
 /**
  * Created by arran on 7/05/2017.
  */
-class SettingsInteractor @Inject constructor(preferencesRepository: IPreferenceRepository)
-    : SettingsContract.Interactor, BaseMviViewModel<SettingsIntents, SettingsActions, SettingsResult, SettingsViewState>(
+class SettingsViewModel @Inject constructor(preferencesRepository: IPreferenceRepository)
+    : SettingsContract.ViewModel, BaseMviViewModel<SettingsIntents, SettingsActions, SettingsResult, SettingsViewState>(
         intentToAction = { settingsIntentToAction(it) },
         actionProcessor = settingsActionProcessor(preferencesRepository),
         reducer = settingsReducer,

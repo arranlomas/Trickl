@@ -39,8 +39,6 @@ class AddTorrentActivity : BaseDaggerActivity(), AddTorrentContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_torrent)
-        AndroidInjection.inject(this)
-//        DaggerAddTorrentComponent.builder().tricklComponent(Trickl.tricklComponent).build().inject(this)
         presenter.attachView(this)
         presenter.setup(intent.extras)
 

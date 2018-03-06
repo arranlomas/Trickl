@@ -1,9 +1,10 @@
 package com.shwifty.tex
 
 import android.test.mock.MockContext
+import com.shwifty.tex.models.AppTheme
 import com.shwifty.tex.repository.preferences.IPreferenceRepository
 import com.shwifty.tex.views.settings.mvi.SettingsIntents
-import com.shwifty.tex.views.settings.mvi.SettingsInteractor
+import com.shwifty.tex.views.settings.mvi.SettingsViewModel
 import com.shwifty.tex.views.settings.mvi.SettingsViewState
 import io.reactivex.Emitter
 import io.reactivex.Observable
@@ -20,12 +21,12 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 
 
-class SettingsInteractorTest {
+class SettingsViewModelTest {
 
     @Mock
     lateinit var mockPreferencesRepository: IPreferenceRepository
 
-    lateinit var interactor: SettingsInteractor
+    lateinit var viewModel: SettingsViewModel
 
     val observer: TestObserver<SettingsViewState> = TestObserver()
 
@@ -41,18 +42,18 @@ class SettingsInteractorTest {
         MockitoAnnotations.initMocks(this)
 
         mockIntents = Observable.create<SettingsIntents> { emitter = it }
-        interactor = SettingsInteractor(mockPreferencesRepository)
+        viewModel = SettingsViewModel(mockPreferencesRepository)
 
         Mockito.`when`(mockPreferencesRepository.getWorkingDirectoryPreference(context)).thenReturn(Observable.just(File("workingDirectory/")))
     }
 
     @Test
     fun testRestartAppIntent() {
-        val events = interactor.attachView(mockIntents)
+        val events = viewModel.attachView(mockIntents)
         events.subscribe(observer)
 
         emitter.onNext(SettingsIntents.InitialIntent(context))
-        emitter.onNext(SettingsIntents.RestartApp())
+        emitter.onNext(SettingsIntents.ChangeTheme(context, AppTheme.DARK))
 
         observer.await(2, TimeUnit.SECONDS)
         observer.assertNoErrors()
@@ -60,7 +61,7 @@ class SettingsInteractorTest {
 
         val initialState = observer.values().first()
         val finalState = observer.values().last()
-        Assert.assertFalse(initialState.restart)
-        Assert.assertTrue(finalState.restart)
+        Assert.assertFalse(initialState.settingsChanged)
+        Assert.assertTrue(finalState.settingsChanged)
     }
 }

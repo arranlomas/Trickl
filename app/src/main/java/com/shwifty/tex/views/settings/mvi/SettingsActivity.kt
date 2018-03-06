@@ -36,7 +36,7 @@ class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsViewStat
 
     private lateinit var newWorkingDirecotyrEmiter: Emitter<SettingsIntents.NewWorkingDirectorySelected>
 
-    private lateinit var interactor: SettingsInteractor
+    private lateinit var viewModel: SettingsViewModel
 
     companion object {
         fun startActivity(context: Context) {
@@ -47,8 +47,8 @@ class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsViewStat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        interactor = ViewModelProviders.of(this, viewModelFactory).get(SettingsInteractor::class.java)
-        super.setup(interactor, {
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SettingsViewModel::class.java)
+        super.setup(viewModel, {
             Toasty.error(this, it.localizedMessage).show()
         })
 
@@ -130,7 +130,7 @@ class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsViewStat
     }
 
     override fun onBackPressed() {
-        if (interactor.getLastState()?.settingsChanged == true)
+        if (viewModel.getLastState()?.settingsChanged == true)
             dialogManager.showSettingExitDialog(this, onRestart = {
                 (application as MyApplication).restart()
             })

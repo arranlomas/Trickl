@@ -48,7 +48,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewSta
     private val browseResultsAdapter = TorrentSearchAdapter(itemOnClick)
 
     @Inject
-    lateinit var interactor: TorrentBrowseContract.Interactor
+    lateinit var viewModel: TorrentBrowseContract.ViewModel
 
     companion object {
         fun newInstance(): Fragment {
@@ -64,7 +64,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewSta
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        super.setup(interactor, { error ->
+        super.setup(viewModel, { error ->
             context?.let {
                 Toasty.error(it, error.localizedMessage).show()
             }
@@ -113,7 +113,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewSta
 
     private fun toggleSearchModeIntent(): Observable<BrowseIntents> = createObservable { emitter ->
         fabSearch.setOnClickListener {
-            if (interactor.getLastState()?.isInSearchMode == true) {
+            if (viewModel.getLastState()?.isInSearchMode == true) {
                 emitter.onNext(BrowseIntents.ClearSearchResultsIntent())
                 emitter.onNext(BrowseIntents.SetSearchBarExpanded(false))
             } else
@@ -130,8 +130,8 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewSta
         fabFilter.setOnClickListener {
             context?.let {
                 dialogManager.showBrowseFilterDialog(it,
-                        interactor.getLastState()?.sortType ?: TorrentSearchSortType.SEEDS,
-                        interactor.getLastState()?.category ?: TorrentSearchCategory.Movies,
+                        viewModel.getLastState()?.sortType ?: TorrentSearchSortType.SEEDS,
+                        viewModel.getLastState()?.category ?: TorrentSearchCategory.Movies,
                         { sortType, category ->
                             emitter.onNext(BrowseIntents.UpdateSortAndCategoryIntent(sortType, category))
                             emitter.onNext(getReloadIntent())
@@ -141,10 +141,10 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewSta
     }
 
     private fun getReloadIntent(): BrowseIntents.ReloadIntent {
-        return BrowseIntents.ReloadIntent(interactor.getLastState()?.isInSearchMode ?: false,
-                interactor.getLastState()?.lastQuery,
-                interactor.getLastState()?.sortType,
-                interactor.getLastState()?.category)
+        return BrowseIntents.ReloadIntent(viewModel.getLastState()?.isInSearchMode ?: false,
+                viewModel.getLastState()?.lastQuery,
+                viewModel.getLastState()?.sortType,
+                viewModel.getLastState()?.category)
     }
 
     private fun expandQueryInput() {
