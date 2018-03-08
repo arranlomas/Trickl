@@ -90,7 +90,11 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewSta
             updateSortAndCategoryIntent(),
             searchQueryEnterPressed()))
 
-    private fun initialIntent(): Observable<BrowseIntents.ReloadIntent> = Observable.just(getReloadIntent())
+    private fun initialIntent(): Observable<BrowseIntents.InitialLoadIntent> = Observable.just(
+            BrowseIntents.InitialLoadIntent(
+                    TorrentSearchSortType.SEEDS,
+                    TorrentSearchCategory.Movies
+            ))
 
     private fun searchIntent(): Observable<BrowseIntents> = createObservable { emitter ->
         fabSendSearch.setOnClickListener {
@@ -167,7 +171,6 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewSta
     }
 
     override fun render(state: BrowseViewState) {
-        if (!isAdded || !isVisible) return
         searchResultsAdapter.updateResults(state.searchResults)
         browseResultsAdapter.updateResults(state.browseResults)
         searchResultsAdapter.notifyDataSetChanged()

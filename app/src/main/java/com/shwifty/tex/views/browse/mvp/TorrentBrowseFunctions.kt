@@ -16,7 +16,7 @@ import io.reactivex.Observable
 
 fun browseIntentToAction(intent: BrowseIntents): BrowseActions = when (intent) {
     is BrowseIntents.SearchIntent -> BrowseActions.Search(intent.query)
-    is BrowseIntents.LoadIntent -> BrowseActions.LoadBrowse(intent.sortType, intent.category)
+    is BrowseIntents.InitialLoadIntent -> BrowseActions.LoadBrowse(intent.sortType, intent.category)
     is BrowseIntents.ReloadIntent -> {
         if (intent.isInSearchMode && intent.query != null) BrowseActions.Search(intent.query)
         else if (intent.sortType != null && intent.category != null) BrowseActions.LoadBrowse(intent.sortType, intent.category)
