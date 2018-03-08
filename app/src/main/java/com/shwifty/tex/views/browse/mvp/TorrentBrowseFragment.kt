@@ -1,5 +1,7 @@
 package com.shwifty.tex.views.browse.mvp
 
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
@@ -47,13 +49,14 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewSta
     private val searchResultsAdapter = TorrentSearchAdapter(itemOnClick)
     private val browseResultsAdapter = TorrentSearchAdapter(itemOnClick)
 
+    private lateinit var viewModel: TorrentBrowseContract.ViewModel
+
     @Inject
-    lateinit var viewModel: TorrentBrowseContract.ViewModel
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     companion object {
         fun newInstance(): Fragment {
-            val frag = TorrentBrowseFragment()
-            return frag
+            return TorrentBrowseFragment()
         }
     }
 
@@ -63,6 +66,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewSta
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(TorrentBrowseViewModel::class.java)
         setupRecyclerView()
         super.setup(viewModel, { error ->
             context?.let {

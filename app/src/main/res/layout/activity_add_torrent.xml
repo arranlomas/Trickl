@@ -78,4 +78,21 @@
         android:layout_marginTop="@dimen/smart_tab_and_toolbar_height"
         android:visibility="gone"/>
 
+    <LinearLayout
+        android:id="@+id/errorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?fragmentBackground"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/errorText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/error_unexpected"
+            android:textColor="@color/error_red" />
+
+    </LinearLayout>
+
 </android.support.design.widget.CoordinatorLayout>

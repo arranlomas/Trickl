@@ -5,6 +5,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 apply plugin: 'io.fabric'
 
+def globalConf = rootProject.ext
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
@@ -43,127 +44,79 @@ kapt {
 }
 
 dependencies {
-    //Confluence Wrapper
-    compile project(':torrentwrapper')
-
-    //Confluence
-    compile project(':go-confluence')
-
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    Map<String, String> dependencies = globalConf.commonDependencies
+    androidTestCompile (dependencies.espressoCore, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    compile 'com.android.support:appcompat-v7:27.0.2'
-//    api 'com.android.support:support-v4:26.1.0'
-//    api 'com.android.support:support-v13:26.1.0'
-    compile 'com.android.support:design:27.0.2'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:cardview-v7:27.0.2'
-    compile 'com.android.support:recyclerview-v7:27.0.2'
-    testCompile 'junit:junit:4.12'
+    androidTestImplementation dependencies.testRunner
+    testCompile dependencies.jUnit
 
-    //DAGGER2
-    kapt "com.google.dagger:dagger-compiler:2.14.1"
-    kapt "com.google.dagger:dagger-android-processor:2.14.1"
-    compile "com.google.dagger:dagger:2.14.1"
-    compile "com.google.dagger:dagger-android:2.14.1"
-    compile "com.google.dagger:dagger-android-support:2.14.1"
+    implementation dependencies.kotlinStdLib
 
+    implementation dependencies.appCompat
+    compile dependencies.supportDesign
+    compile dependencies.carcview
+    compile dependencies.recyclerview
+    compile dependencies.constraintLayout
 
-    //RX
-    compile 'io.reactivex:rxkotlin:1.0.0'
-    compile 'io.reactivex:rxandroid:1.2.1'
+    kapt dependencies.daggerCompiler
+    kapt dependencies.daggerAnnotationProcessor
+    compile dependencies.dagger
+    compile dependencies.daggerAndroidSupport
 
-    //RxJava 2
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.6'
+    compile dependencies.rxKotlin
+    compile dependencies.rxAndroid
+    compile dependencies.rxAndroid2
+    compile dependencies.rxJava2
+    compile dependencies.rxPermissions
 
-    //RXPERMISSIONS
-    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.3@aar'
+    compile dependencies.toasty
 
-    //TOASTY
-    compile 'com.github.GrenderG:Toasty:1.2.5'
+    compile dependencies.retrofit
+    compile dependencies.retrofitRxAdapter
+    compile dependencies.retrofitLogging
+    compile dependencies.retrofitGson
+    compile dependencies.retrofitRx2Adapter
 
-    //RETROFIT
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    debugCompile dependencies.chuckDebug
+    releaseCompile dependencies.chuckRelease
 
-    //CHUCK
-    debugCompile 'com.readystatesoftware.chuck:library:1.0.3'
-    releaseCompile 'com.readystatesoftware.chuck:library-no-op:1.0.3'
-
-    //Number progress bar
-    compile 'com.daimajia.numberprogressbar:library:1.4@aar'
-
-    // IO UTILS
+    compile dependencies.numberProgress
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    compile dependencies.smartTabLayout
+    compile dependencies.getBaseFAB
+    compile dependencies.kandroid
 
-    //Start Tab - https://github.com/ogaclejapan/SmartTabLayout
-    compile 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
-
-    //FAB
-    compile 'com.getbase:floatingactionbutton:1.10.1'
-
-    //KAndroid
-    compile 'com.pawegio.kandroid:kandroid:0.8.1@aar'
-
-    //Number Progress bar
-    compile 'com.daimajia.numberprogressbar:library:1.2@aar'
-
-    //STETHO
-    compile 'com.facebook.stetho:stetho:1.4.2'
-    compile 'com.uphyca:stetho_realm:2.0.1'
-
-    //chromecast
-    compile 'com.android.support:mediarouter-v7:27.0.2'
-    compile 'com.google.android.gms:play-services-cast-framework:11.8.0'
-
-    //material dialog
-    compile 'com.afollestad.material-dialogs:core:0.9.6.0'
-
-    //fabric
+    compile dependencies.mediaRouter
+    compile dependencies.castFramework
+    compile dependencies.materialDialog
     compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
-        transitive = true;
+        transitive = true
     }
+    compile dependencies.glide
+    annotationProcessor dependencies.glideAnnotations
 
-    //Glide
-    compile 'com.github.bumptech.glide:glide:4.2.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
+    compile dependencies.stetho
+    compile dependencies.stethoRealm
 
-    //multidex
-    compile 'com.android.support:multidex:1.0.1'
+    compile dependencies.multidex
 
-    //https://mvnrepository.com/artifact/commons-codec/commons-codec
-    compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
+    testCompile dependencies.mockito
+    testCompile dependencies.powerMockito
+    testCompile dependencies.powerMockitoJunit
 
+    compile dependencies.rxBinding
+    compile dependencies.rxBindingAppCompat
+    compile dependencies.rxBindingSupport
 
-    //TEST DEPENDENCIES
-    //mockito
-    testCompile "org.mockito:mockito-core:1.10.19"
+    compile dependencies.daggerHelper
 
-    //PowerMockito
-    testCompile 'org.powermock:powermock-api-mockito:1.6.6'
-    testCompile 'org.powermock:powermock-module-junit4:1.6.6'
-
-    //RxBinding
-    compile 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
-    compile 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.1.1'
-    compile 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.1.1'
-
-    //Kontent
     compile project(':kontent-core')
-    compile project(':kontent-dagger')
+    compile project(':kontent-dagger-support')
     compile project(':kontent-android-viewmodel')
-
-    //File Browser
     compile project(':file-browser')
-
-    //Dagger View Model Helper
-    compile 'com.github.arranlomas.daggerviewmodelhelper:daggerviewmodelhelper:0.1.0'
+    compile project(':torrentwrapper')
+    compile project(':go-confluence')
 }
 repositories {
     mavenCentral()

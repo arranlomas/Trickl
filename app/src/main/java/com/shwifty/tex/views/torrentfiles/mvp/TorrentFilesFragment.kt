@@ -23,7 +23,6 @@ class TorrentFilesFragment : BaseDaggerFragment(), TorrentFilesContract.View {
     @Inject
     lateinit var presenter: TorrentFilesContract.Presenter
 
-
     val itemOnClick: (torrentFile: TorrentFile, type: TorrentFilesAdapter.Companion.ClickTypes) -> Unit = { torrentFile, type ->
         context?.let {
             presenter.viewClicked(it, torrentFile, type)

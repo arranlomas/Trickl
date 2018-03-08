@@ -1,30 +1,25 @@
 package com.shwifty.tex.views.addtorrent.di
 
-import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
-import com.shwifty.tex.ViewModelFactoryModule
-import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
-import com.shwifty.tex.views.addtorrent.mvp.AddTorrentContract
-import com.shwifty.tex.views.addtorrent.mvp.AddTorrentPresenter
-import com.shwifty.tex.views.settings.mvi.SettingsActivity
+import android.arch.lifecycle.ViewModel
+import com.arranlomas.daggerviewmodelhelper.ViewModelKey
+import com.shwifty.tex.di.ViewModelFactoryModule
+import com.shwifty.tex.views.addtorrent.mvi.AddTorrentActivity
+import com.shwifty.tex.views.addtorrent.mvi.AddTorrentViewModel
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntoMap
 
 /**
  * Created by arran on 15/02/2017.
  */
-
-@Module
-class AddTorrentModule {
-    @Provides
-    internal fun providesAddTorrentPresenter(torrentRepository: ITorrentRepository): AddTorrentContract.Presenter {
-        return AddTorrentPresenter(torrentRepository)
-    }
-
-}
-
-@Module
+@Module(includes = arrayOf(ViewModelFactoryModule::class))
 abstract class AddTorrentActivityBuilder {
-    @ContributesAndroidInjector(modules = arrayOf(AddTorrentModule::class))
+    @ContributesAndroidInjector
     internal abstract fun bindsAddTorrentActivity(): AddTorrentActivity
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AddTorrentViewModel::class)
+    abstract fun bindAddTorrentViewModel(viewModel: AddTorrentViewModel): ViewModel
 }

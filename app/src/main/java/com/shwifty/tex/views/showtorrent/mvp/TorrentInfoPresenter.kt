@@ -10,7 +10,7 @@ import com.schiwfty.torrentwrapper.utils.findNameFromMagnet
 import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
 import com.shwifty.tex.R
 import com.shwifty.tex.utils.logTorrentParseError
-import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
+import com.shwifty.tex.views.addtorrent.mvi.AddTorrentActivity
 import com.shwifty.tex.views.base.mvp.BasePresenter
 import java.net.URLDecoder
 

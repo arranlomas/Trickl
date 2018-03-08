@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".views.main.mvp.MainActivity" />
-        <activity android:name=".views.addtorrent.mvp.AddTorrentActivity" />
+        <activity android:name=".views.addtorrent.mvi.AddTorrentActivity" />
         <activity android:name=".views.showtorrent.mvp.TorrentInfoActivity" />
         <activity android:name=".views.splash.mvp.SplashActivity">
             <intent-filter>

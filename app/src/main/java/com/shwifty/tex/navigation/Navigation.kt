@@ -1,6 +1,6 @@
 package com.shwifty.tex.navigation
 
-import com.shwifty.tex.views.addtorrent.mvp.AddTorrentActivity
+import com.shwifty.tex.views.addtorrent.mvi.AddTorrentActivity
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
 
 /**

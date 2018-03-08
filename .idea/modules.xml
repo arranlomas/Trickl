@@ -8,7 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/go-confluence/go-confluence.iml" filepath="$PROJECT_DIR$/go-confluence/go-confluence.iml" />
       <module fileurl="file://$PROJECT_DIR$/../kontent/kontent-android-viewmodel/kontent-android-viewmodel.iml" filepath="$PROJECT_DIR$/../kontent/kontent-android-viewmodel/kontent-android-viewmodel.iml" />
       <module fileurl="file://$PROJECT_DIR$/../kontent/kontent-core/kontent-core.iml" filepath="$PROJECT_DIR$/../kontent/kontent-core/kontent-core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../kontent/kontent-dagger/kontent-dagger.iml" filepath="$PROJECT_DIR$/../kontent/kontent-dagger/kontent-dagger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../kontent/kontent-dagger-support/kontent-dagger-support.iml" filepath="$PROJECT_DIR$/../kontent/kontent-dagger-support/kontent-dagger-support.iml" />
       <module fileurl="file://$PROJECT_DIR$/torrentwrapper/torrentwrapper.iml" filepath="$PROJECT_DIR$/torrentwrapper/torrentwrapper.iml" />
     </modules>
   </component>

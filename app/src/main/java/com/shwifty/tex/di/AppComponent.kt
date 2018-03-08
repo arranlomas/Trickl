@@ -1,7 +1,6 @@
-package com.shwifty.tex
+package com.shwifty.tex.di
 
-import android.arch.lifecycle.ViewModelProvider
-import com.arranlomas.daggerviewmodelhelper.ViewModelFactory
+import com.shwifty.tex.MyApplication
 import com.shwifty.tex.actions.ActionManagerModule
 import com.shwifty.tex.chromecast.CastHandlerModule
 import com.shwifty.tex.dialogs.DialogManagerModule
@@ -17,9 +16,7 @@ import com.shwifty.tex.views.settings.di.SettingsActivityBuilder
 import com.shwifty.tex.views.showtorrent.di.TorrentInfoActivityBuilder
 import com.shwifty.tex.views.torrentdetails.di.TorrentDetailsFragmentBuilder
 import com.shwifty.tex.views.torrentfiles.di.TorrentFileFragmentBuilder
-import dagger.Binds
 import dagger.Component
-import dagger.Module
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import dagger.android.support.AndroidSupportInjectionModule
@@ -31,13 +28,14 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = arrayOf(
         AndroidSupportInjectionModule::class,
-        SettingsActivityBuilder::class,
         ApiModule::class,
         RepositoryModule::class,
         NavigationModule::class,
         DialogManagerModule::class,
         CastHandlerModule::class,
         ActionManagerModule::class,
+
+        //Views
         AddTorrentActivityBuilder::class,
         MainActivityBuilder::class,
         FileFownloadFragmentBuilder::class,
@@ -45,16 +43,8 @@ import javax.inject.Singleton
         TorrentInfoActivityBuilder::class,
         TorrentFileFragmentBuilder::class,
         TorrentDetailsFragmentBuilder::class,
+        SettingsActivityBuilder::class,
         TorrentBrowseFragmentBuilder::class))
 interface AppComponent : AndroidInjector<DaggerApplication> {
     fun inject(app: MyApplication)
 }
-
-@Module
-abstract class ViewModelFactoryModule {
-
-    @Binds
-    abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
-}
-
-

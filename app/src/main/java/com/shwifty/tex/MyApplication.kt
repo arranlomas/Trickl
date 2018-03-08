@@ -7,12 +7,11 @@ import android.content.Intent
 import android.support.multidex.MultiDex
 import android.util.Log
 import com.arranlomas.daggerviewmodelhelper.AppInjector
-import com.facebook.stetho.Stetho
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.shwifty.tex.chromecast.CastHandler
+import com.shwifty.tex.di.DaggerAppComponent
 import com.shwifty.tex.repository.preferences.PreferencesRepository
 import com.shwifty.tex.views.splash.mvp.SplashActivity
-import com.uphyca.stetho_realm.RealmInspectorModulesProvider
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import es.dmoral.toasty.Toasty
@@ -47,11 +46,6 @@ class MyApplication : DaggerApplication() {
                 }, {
                     Toasty.error(this, getString(R.string.error_loading_working_directory_prefs)).show()
                 })
-        Stetho.initialize(
-                Stetho.newInitializerBuilder(this)
-                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-                        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
-                        .build())
 
         val arch = System.getProperty("os.arch")
         Log.v("architecture", arch)
@@ -60,9 +54,9 @@ class MyApplication : DaggerApplication() {
     //TODO this is SUPER HACKYYY!!!
     fun restart() {
         Confluence.stop()
-        val splasshActivity = Intent(this, SplashActivity::class.java)
+        val splashActivity = Intent(this, SplashActivity::class.java)
         val pendingIntentId = 123456
-        val pendingIntent = PendingIntent.getActivity(this, pendingIntentId, splasshActivity, PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(this, pendingIntentId, splashActivity, PendingIntent.FLAG_CANCEL_CURRENT)
         (this.getSystemService(Context.ALARM_SERVICE) as AlarmManager).set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
         System.exit(0)
     }

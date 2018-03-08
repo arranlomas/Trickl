@@ -2,7 +2,7 @@ package com.shwifty.tex.views.settings.di
 
 import android.arch.lifecycle.ViewModel
 import com.arranlomas.daggerviewmodelhelper.ViewModelKey
-import com.shwifty.tex.ViewModelFactoryModule
+import com.shwifty.tex.di.ViewModelFactoryModule
 import com.shwifty.tex.views.settings.mvi.SettingsActivity
 import com.shwifty.tex.views.settings.mvi.SettingsViewModel
 import dagger.Binds
