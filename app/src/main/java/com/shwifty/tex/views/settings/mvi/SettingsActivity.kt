@@ -67,7 +67,7 @@ class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsViewStat
         restartButton.setOnClickListener {
             (application as MyApplication).restart()
         }
-        super.attachIntents(intents())
+        super.attachIntents(intents(), SettingsIntents.InitialIntent::class.java)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

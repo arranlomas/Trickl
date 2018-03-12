@@ -52,7 +52,7 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentVie
         super.setup(viewModel, { error ->
             Toasty.error(this, error.localizedMessage).show()
         })
-        super.attachIntents(intents())
+        super.attachIntents(intents(), AddTorrentIntent.LoadIntent::class.java)
 
 //        addTorrentFab.setOnClickListener {
 //            val returnIntent = Intent()

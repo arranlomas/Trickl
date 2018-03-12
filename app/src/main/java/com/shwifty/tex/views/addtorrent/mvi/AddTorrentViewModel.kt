@@ -18,8 +18,7 @@ class AddTorrentViewModel @Inject constructor(torrentRepository: ITorrentReposit
         intentToAction = { addTorrentIntentToAction(it) },
         actionProcessor = addTorrentActionProcessor(torrentRepository),
         reducer = addTorrentReducer,
-        defaultState = AddTorrentViewState.default(),
-        initialIntent = AddTorrentIntent.LoadIntent("")
+        defaultState = AddTorrentViewState.default()
 
 )
 

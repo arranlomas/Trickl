@@ -14,6 +14,5 @@ class TorrentBrowseViewModel @Inject constructor(torrentSearchRepository: ITorre
         intentToAction = { browseIntentToAction(it) },
         actionProcessor = browseActionProcessor(torrentSearchRepository),
         reducer = browseReducer,
-        defaultState = BrowseViewState.default(),
-        initialIntent = BrowseIntents.InitialLoadIntent(TorrentSearchSortType.TYPE, TorrentSearchCategory.All)
+        defaultState = BrowseViewState.default()
 )
