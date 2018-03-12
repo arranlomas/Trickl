@@ -1,5 +1,7 @@
 package com.shwifty.tex.views.browse.mvp
 
+import com.shwifty.tex.models.TorrentSearchCategory
+import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.repository.network.torrentSearch.ITorrentSearchRepository
 import com.shwifty.tex.views.base.mvi.BaseMviViewModel
 import javax.inject.Inject
@@ -13,5 +15,5 @@ class TorrentBrowseViewModel @Inject constructor(torrentSearchRepository: ITorre
         actionProcessor = browseActionProcessor(torrentSearchRepository),
         reducer = browseReducer,
         defaultState = BrowseViewState.default(),
-        initialIntentPredicate = { it is BrowseIntents.InitialLoadIntent }
+        initialIntent = BrowseIntents.InitialLoadIntent(TorrentSearchSortType.TYPE, TorrentSearchCategory.All)
 )

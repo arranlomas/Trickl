@@ -17,5 +17,5 @@ abstract class BaseMviViewModel<I : KontentIntent, A : KontentAction, R : Konten
         defaultState: S,
         reducer: BiFunction<S, R, S>,
         postProcessor: (Function1<S, S>)? = null,
-        initialIntentPredicate: ((I) -> Boolean)? = null) :
-        KontentAndroidViewModel<I, A, R, S>(intentToAction, actionProcessor, defaultState, reducer, postProcessor, initialIntentPredicate)
+        private val initialIntent: I? = null) :
+        KontentAndroidViewModel<I, A, R, S>(intentToAction, actionProcessor, defaultState, reducer, postProcessor, initialIntent)
