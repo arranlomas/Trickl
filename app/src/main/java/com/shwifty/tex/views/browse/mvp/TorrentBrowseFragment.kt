@@ -73,7 +73,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewSta
                 Toasty.error(it, error.localizedMessage).show()
             }
         })
-        super.attachIntents(intents())
+        super.attachIntents(intents(), BrowseIntents.InitialLoadIntent::class.java)
     }
 
     private fun setupRecyclerView() {
