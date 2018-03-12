@@ -18,6 +18,9 @@ Note: keystore.properties is in gitignore as it contains the private api key for
 
 * ```git clone https://github.com/arranlomas/Kotlin-File-Browser.git``` - (Kotlin-file-browser is a library I have created that allows the selection and creation of files and folders, I use it to allow users to view the downloads folder and change the working directory in settings) it is a project dependency so is compiled from source code rather than maven or jcentre)
 
+* ```git clone  https://github.com/arranlomas/Android-Confluence-Wrapper.git ConfluenceWrapper``` - (ConfluenceWrapper is a library I have created which wraps the go torrent client to make using it on android easy)
+
+
 * ```git clone https://github.com/arranlomas/kontent.git``` - (Kontent is a library I have created which helps structure and reduce boilerplate for mvi implementation, for more info check the [readme](https://github.com/arranlomas/kontent/blob/master/README.md), it is a project dependency so is compiled from source code rather than maven or jcentre)
 
 * ```cd Trickl```
