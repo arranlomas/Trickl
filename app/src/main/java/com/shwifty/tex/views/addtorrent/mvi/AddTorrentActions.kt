@@ -9,4 +9,6 @@ import com.shwifty.tex.models.TorrentSearchSortType
  */
 sealed class AddTorrentActions : KontentAction() {
     data class Load(val torrentHash: String) : AddTorrentActions()
+    data class RemoveTorrent(val torrentHash: String) : AddTorrentActions()
+
 }

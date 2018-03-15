@@ -7,4 +7,5 @@ import com.arranlomas.kontent.commons.objects.KontentIntent
  */
 sealed class AddTorrentIntent : KontentIntent() {
     data class LoadIntent(val torrentHash: String) : AddTorrentIntent()
+    data class RemoveTorrent(val torrentHash: String) : AddTorrentIntent()
 }

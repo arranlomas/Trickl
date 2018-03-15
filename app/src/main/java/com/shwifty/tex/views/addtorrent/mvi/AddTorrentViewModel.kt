@@ -1,11 +1,11 @@
 package com.shwifty.tex.views.addtorrent.mvi
 
+import android.util.Log
 import com.arranlomas.kontent.commons.functions.KontentActionProcessor
 import com.arranlomas.kontent.commons.functions.KontentMasterProcessor
 import com.arranlomas.kontent.commons.functions.KontentReducer
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
-import com.shwifty.tex.utils.ObservableV1ToObservableV2
 import com.shwifty.tex.views.base.mvi.BaseMviViewModel
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -24,6 +24,7 @@ class AddTorrentViewModel @Inject constructor(torrentRepository: ITorrentReposit
 
 fun addTorrentIntentToAction(intent: AddTorrentIntent): AddTorrentActions = when (intent) {
     is AddTorrentIntent.LoadIntent -> AddTorrentActions.Load(intent.torrentHash)
+    is AddTorrentIntent.RemoveTorrent -> AddTorrentActions.RemoveTorrent(intent.torrentHash)
 }
 
 
@@ -33,14 +34,13 @@ fun addTorrentActionProcessor(torrentRepository: ITorrentRepository) = KontentMa
 
 private fun observables(shared: Observable<AddTorrentActions>, torrentRepository: ITorrentRepository): List<Observable<AddTorrentResult>> {
     return listOf<Observable<AddTorrentResult>>(
-            shared.ofType(AddTorrentActions.Load::class.java).compose(loadTorrent(torrentRepository)))
+            shared.ofType(AddTorrentActions.Load::class.java).compose(loadTorrent(torrentRepository)),
+            shared.ofType(AddTorrentActions.RemoveTorrent::class.java).compose(removeTorrent(torrentRepository)))
 }
 
 fun loadTorrent(torrentRepository: ITorrentRepository) =
         KontentActionProcessor<AddTorrentActions.Load, AddTorrentResult, TorrentInfo>(
-                action = { action ->
-                    ObservableV1ToObservableV2(torrentRepository.getAllTorrentsFromStorage())
-                            .flatMap { ObservableV1ToObservableV2(torrentRepository.downloadTorrentInfo(action.torrentHash)) }
+                action = { action -> torrentRepository.downloadTorrentInfo(action.torrentHash)
                             .map {
                                 it.unwrapIfSuccess { it }
                                         ?: throw IllegalStateException("Torrent not found")
@@ -55,11 +55,42 @@ fun loadTorrent(torrentRepository: ITorrentRepository) =
                 loading = AddTorrentResult.LoadInFlight()
         )
 
+fun removeTorrent(torrentRepository: ITorrentRepository) =
+        KontentActionProcessor<AddTorrentActions.RemoveTorrent, AddTorrentResult, Boolean>(
+                action = { action ->
+                    torrentRepository.getAllTorrentsFromStorage()
+                            .map {
+                                val successList = mutableListOf<TorrentInfo>()
+                                it.forEach { it.unwrapIfSuccess { successList.add(it) } }
+                                successList.toList()
+                            }
+                            .map {
+                                it.filter { it.info_hash == action.torrentHash }.firstOrNull()
+                                        ?: throw IllegalArgumentException()
+                            }
+                            .map { torrentRepository.deleteTorrentInfoFromStorage(it) }
+                            .doOnComplete {
+                                Log.v("OnComplete", "remove torrent")
+                            }
+                },
+                success = {
+                    AddTorrentResult.RemoveSuccess()
+                },
+                error = {
+                    AddTorrentResult.RemoveError(it)
+                },
+                loading = AddTorrentResult.RemoveInFlight()
+        )
+
+
 val addTorrentReducer = KontentReducer { result: AddTorrentResult, previousState: AddTorrentViewState ->
     when (result) {
-        is AddTorrentResult.LoadSuccess -> previousState.copy(isLoading = false, error = null, result = result.result)
+        is AddTorrentResult.LoadSuccess -> previousState.copy(isLoading = false, error = null, result = result.torrentInfo, torrentHash = result.torrentInfo.info_hash)
         is AddTorrentResult.LoadError -> previousState.copy(isLoading = false, error = result.error.localizedMessage)
         is AddTorrentResult.LoadInFlight -> previousState.copy(isLoading = true, error = null)
+        is AddTorrentResult.RemoveSuccess -> previousState.copy(torrentRemovedAndShouldRestart = true, isLoading = false, error = null)
+        is AddTorrentResult.RemoveError -> previousState.copy(isLoading = false, error = result.error.localizedMessage)
+        is AddTorrentResult.RemoveInFlight -> previousState.copy(torrentRemovedAndShouldRestart = false, isLoading = true, error = null)
     }
 }
 

@@ -1,5 +1,6 @@
 package com.shwifty.tex.views.addtorrent.mvi
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -15,6 +16,7 @@ import com.shwifty.tex.views.addtorrent.list.AddTorrentPagerAdapter
 import com.shwifty.tex.views.base.mvi.BaseDaggerMviActivity
 import es.dmoral.toasty.Toasty
 import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_add_torrent.*
 import java.net.URLDecoder
 import javax.inject.Inject
@@ -29,6 +31,8 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentVie
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val removeTorrentIntentPublisher = PublishSubject.create<AddTorrentIntent.RemoveTorrent>()
 
     companion object {
         const val ARG_ADD_TORRENT_RESULT = "arg_torrent_hash_result"
@@ -54,12 +58,14 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentVie
         })
         super.attachIntents(intents(), AddTorrentIntent.LoadIntent::class.java)
 
-//        addTorrentFab.setOnClickListener {
-//            val returnIntent = Intent()
-//            if (presenter.torrentHash != null) returnIntent.putExtra(ARG_ADD_TORRENT_RESULT, presenter.torrentHash)
-//            setResult(Activity.RESULT_OK, returnIntent)
-//            finish()
-//        }
+        addTorrentFab.setOnClickListener {
+            val returnIntent = Intent()
+            viewModel.getLastState()?.torrentHash?.let { torrentHash ->
+                returnIntent.putExtra(ARG_ADD_TORRENT_RESULT, torrentHash)
+                setResult(Activity.RESULT_OK, returnIntent)
+                finish()
+            }
+        }
 
         setSupportActionBar(addTorrentToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -102,18 +108,10 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentVie
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         if (viewModel.getLastState()?.torrentAlreadyExisted != true) {
-//            torrentRepository.getAllTorrentsFromStorage()
-//                    .subscribe(object : BaseSubscriber<List<ParseTorrentResult>>() {
-//                        override fun onNext(torrents: List<ParseTorrentResult>) {
-//                            torrents.forEach { result ->
-//                                result.unwrapIfSuccess {
-//                                    if (it.info_hash == torrentHash) torrentRepository.deleteTorrentInfoFromStorage(it)
-//                                } ?: let { result.logTorrentParseError() }
-//                            }
-//                        }
-//                    })
+            viewModel.getLastState()?.torrentHash?.let {
+                removeTorrentIntentPublisher.onNext(AddTorrentIntent.RemoveTorrent(it))
+            }
         }
     }
 
@@ -125,6 +123,8 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentVie
 
         errorLayout.setVisible(state.error != null && !state.isLoading)
         state.error?.let { errorText.text = it }
+
+        if (state.torrentRemovedAndShouldRestart) super.onBackPressed()
     }
 
     private fun notifyTorrentAdded(torrentHash: String) {

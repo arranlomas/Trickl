@@ -35,7 +35,7 @@ class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Pre
         val notificationChannelId = "trickl_daemon_notif"
         val notificationChannelName = "Trick Client Daemon"
         Confluence.torrentRepository.isConnected()
-                .subscribe(object : BaseSubscriber<Boolean>() {
+                .subscribeWith(object : BaseObserver<Boolean>() {
                     override fun onNext(started: Boolean) {
                         mvpView.setLoading(false)
                         if (!started) Confluence.start(activity, R.drawable.trickl_notification, notificationChannelId, notificationChannelName, seed, stopActionInNotification, notificationIntent, {
@@ -43,23 +43,22 @@ class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Pre
                         })
                     }
                 })
-                .addSubscription()
+                .addObserver()
         listenForDaemon()
     }
 
     private fun listenForDaemon() {
         torrentRepository.getStatus()
                 .retry()
-                .subscribe(object : BaseSubscriber<String>() {
-                    override fun onNext(result: String?) {
+                .subscribeWith(object : BaseObserver<String>() {
+                    override fun onNext(result: String) {
                         mvpView.setLoading(false)
-                        result?.let {
-                            subscriptions.unsubscribe()
-                            mvpView.showSuccess(R.string.splash_start_confluence_success)
-                            mvpView.progressToMain()
-                        }
+                        subscriptions.unsubscribe()
+                        disposables.dispose()
+                        mvpView.showSuccess(R.string.splash_start_confluence_success)
+                        mvpView.progressToMain()
                     }
                 })
-                .addSubscription()
+                .addObserver()
     }
 }

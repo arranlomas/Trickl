@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.shwifty.tex.R
 import com.shwifty.tex.views.base.mvp.BaseActivity
 import com.shwifty.tex.views.main.mvp.MainActivity
-import com.tbruyelle.rxpermissions.RxPermissions
+import com.tbruyelle.rxpermissions2.RxPermissions
 import es.dmoral.toasty.Toasty
 
 

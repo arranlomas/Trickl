@@ -28,14 +28,14 @@ class TorrentFilesPresenter(val torrentRepository: ITorrentRepository,
 
     override fun loadTorrent() {
         torrentRepository.downloadTorrentInfo(torrentHash)
-                .subscribe(object : BaseSubscriber<ParseTorrentResult>() {
+                .subscribeWith(object : BaseObserver<ParseTorrentResult>() {
                     override fun onNext(result: ParseTorrentResult) {
                         mvpView.setLoading(false)
                         result.unwrapIfSuccess { mvpView.setupViewFromTorrentInfo(it) }
                                 ?: let { result.logTorrentParseError() }
                     }
                 })
-                .addSubscription()
+                .addObserver()
     }
 
     override fun viewClicked(context: Context, torrentFile: TorrentFile, action: TorrentFilesAdapter.Companion.ClickTypes) {

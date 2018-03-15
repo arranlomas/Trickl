@@ -14,7 +14,9 @@ data class AddTorrentViewState(
         val isLoading: Boolean = false,
         val error: String? = null,
         val result: TorrentInfo? = null,
-        val torrentAlreadyExisted: Boolean = false
+        val torrentAlreadyExisted: Boolean = false,
+        val torrentHash: String? = null,
+        val torrentRemovedAndShouldRestart: Boolean = false
 ) : KontentViewState() {
     companion object Factory {
         fun default(): AddTorrentViewState {

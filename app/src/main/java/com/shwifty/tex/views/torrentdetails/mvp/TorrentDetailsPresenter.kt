@@ -22,7 +22,7 @@ class TorrentDetailsPresenter(val torrentRepository: ITorrentRepository) : BaseP
 
     override fun loadTorrent(torrentHash: String) {
         torrentRepository.downloadTorrentInfo(torrentHash)
-                .subscribe(object : BaseSubscriber<ParseTorrentResult>() {
+                .subscribeWith(object : BaseObserver<ParseTorrentResult>() {
                     override fun onNext(result: ParseTorrentResult) {
                         mvpView.setLoading(false)
                         result.unwrapIfSuccess {
@@ -30,6 +30,6 @@ class TorrentDetailsPresenter(val torrentRepository: ITorrentRepository) : BaseP
                         } ?: let { result.logTorrentParseError() }
                     }
                 })
-                .addSubscription()
+                .addObserver()
     }
 }

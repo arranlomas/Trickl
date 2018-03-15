@@ -1,4 +1,4 @@
-include ':app', ':go-confluence', ':torrentwrapper', ':kontent-core', ':kontent-dagger-support', ':kontent-android-viewmodel', ':file-browser'
+include ':app', ':go-confluence', ':kontent-core', ':kontent-dagger-support', ':kontent-android-viewmodel', ':file-browser', ':confluencewrapper', ':torrentwrapper'
 project(':kontent-core').projectDir = new File(settingsDir, '../kontent/kontent-core')
 project(':kontent-dagger-support').projectDir = new File(settingsDir, '../kontent/kontent-dagger-support')
 project(':kontent-android-viewmodel').projectDir = new File(settingsDir, '../kontent/kontent-android-viewmodel')

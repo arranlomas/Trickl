@@ -17,18 +17,17 @@ class AllPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<Al
     override fun attachView(mvpView: AllContract.View) {
         super.attachView(mvpView)
         torrentRepository.torrentInfoDeleteListener
-                .subscribe(object : BaseSubscriber<TorrentInfo>() {
-                    override fun onNext(result: TorrentInfo?) {
+                .subscribeWith(object : BaseObserver<TorrentInfo>() {
+                    override fun onNext(result: TorrentInfo) {
                         mvpView.setLoading(false)
                         refresh()
                     }
-                })
-                .addSubscription()
+                }).addObserver()
     }
 
     override fun refresh() {
         torrentRepository.getAllTorrentsFromStorage(deleteErroneousTorrents = true)
-                .subscribe(object : BaseSubscriber<List<ParseTorrentResult>>() {
+                .subscribe(object : BaseObserver<List<ParseTorrentResult>>() {
                     override fun onNext(results: List<ParseTorrentResult>) {
                         val success = results.filter { it is ParseTorrentResult.Success }
                         val error = results.filter { it is ParseTorrentResult.Error }
@@ -39,7 +38,8 @@ class AllPresenter(val torrentRepository: ITorrentRepository) : BasePresenter<Al
                         mvpView.setLoading(false)
                         val torrentInfos = mutableListOf<TorrentInfo>()
                         success.forEach { result ->
-                            result.unwrapIfSuccess { torrentInfos.add(it) } ?: let { result.logTorrentParseError() }
+                            result.unwrapIfSuccess { torrentInfos.add(it) }
+                                    ?: let { result.logTorrentParseError() }
                         }
                         mvpView.showAllTorrents(torrentInfos.toList())
                     }

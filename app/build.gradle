@@ -68,7 +68,7 @@ dependencies {
     compile dependencies.rxAndroid
     compile dependencies.rxAndroid2
     compile dependencies.rxJava2
-    compile dependencies.rxPermissions
+    compile dependencies.rxPermissions2
 
     compile dependencies.toasty
 

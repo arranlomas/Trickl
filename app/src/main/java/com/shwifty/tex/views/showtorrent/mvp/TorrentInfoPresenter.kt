@@ -38,19 +38,19 @@ class TorrentInfoPresenter(val torrentRepository: ITorrentRepository) : BasePres
         }
 
         torrentRepository.torrentInfoDeleteListener
-                .subscribe(object : BaseSubscriber<TorrentInfo>() {
-                    override fun onNext(result: TorrentInfo?) {
+                .subscribeWith(object : BaseObserver<TorrentInfo>() {
+                    override fun onNext(result: TorrentInfo) {
                         mvpView.setLoading(false)
                         mvpView.dismiss()
                     }
                 })
-                .addSubscription()
+                .addObserver()
     }
 
     override fun fetchTorrent() {
         val hash = torrentHash
         torrentRepository.downloadTorrentInfo(hash)
-                .subscribe(object : BaseSubscriber<ParseTorrentResult>() {
+                .subscribeWith(object : BaseObserver<ParseTorrentResult>() {
                     override fun onNext(result: ParseTorrentResult) {
                         result.unwrapIfSuccess {
                             torrentInfo = it
@@ -62,7 +62,7 @@ class TorrentInfoPresenter(val torrentRepository: ITorrentRepository) : BasePres
                         mvpView.notifyTorrentAdded()
                     }
                 })
-                .addSubscription()
+                .addObserver()
     }
 
     override fun optionsItemSelected(item: MenuItem) {

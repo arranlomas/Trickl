@@ -22,31 +22,31 @@ class FileDownloadPresenter(val torrentRepository: ITorrentRepository,
         torrentRepository.torrentFileProgressSource
                 .flatMap { torrentRepository.getDownloadingFilesFromPersistence() }
                 .composeIo()
-                .subscribe(object : BaseSubscriber<List<TorrentFile>>(false) {
+                .subscribeWith(object : BaseObserver<List<TorrentFile>>(false) {
                     override fun onNext(torrentFiles: List<TorrentFile>) {
                         mvpView.setupViewFromTorrentInfo(torrentFiles)
                     }
                 })
-                .addSubscription()
+                .addObserver()
 
         torrentRepository.torrentFileDeleteListener
-                .subscribe(object : BaseSubscriber<TorrentFile>() {
-                    override fun onNext(result: TorrentFile?) {
+                .subscribeWith(object : BaseObserver<TorrentFile>() {
+                    override fun onNext(result: TorrentFile) {
                         mvpView.setLoading(false)
                         refresh()
                     }
                 })
-                .addSubscription()
+                .addObserver()
     }
 
     override fun refresh() {
         torrentRepository.getDownloadingFilesFromPersistence()
-                .subscribe(object : BaseSubscriber<List<TorrentFile>>() {
+                .subscribeWith(object : BaseObserver<List<TorrentFile>>() {
                     override fun onNext(torrentFiles: List<TorrentFile>) {
                         mvpView.setupViewFromTorrentInfo(torrentFiles)
                     }
                 })
-                .addSubscription()
+                .addObserver()
     }
 
     override fun viewClicked(context: Context, torrentFile: TorrentFile, action: FileDownloadAdapter.Companion.ClickTypes) {
