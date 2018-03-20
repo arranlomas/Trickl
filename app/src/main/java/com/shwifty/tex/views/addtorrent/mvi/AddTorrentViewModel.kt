@@ -6,8 +6,10 @@ import com.arranlomas.kontent.commons.functions.KontentMasterProcessor
 import com.arranlomas.kontent.commons.functions.KontentReducer
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.shwifty.tex.utils.logTorrentParseError
 import com.shwifty.tex.views.base.mvi.BaseMviViewModel
 import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import javax.inject.Inject
 
 /**
@@ -39,15 +41,32 @@ private fun observables(shared: Observable<AddTorrentActions>, torrentRepository
 }
 
 fun loadTorrent(torrentRepository: ITorrentRepository) =
-        KontentActionProcessor<AddTorrentActions.Load, AddTorrentResult, TorrentInfo>(
-                action = { action -> torrentRepository.downloadTorrentInfo(action.torrentHash)
+        KontentActionProcessor<AddTorrentActions.Load, AddTorrentResult, Pair<Boolean, TorrentInfo>>(
+                action = { action ->
+                    val alreadyExistedObs = torrentRepository.getAllTorrentsFromStorage()
+                            .map { results ->
+                                var alreadyExists = false
+                                results.forEach { result ->
+                                    result.unwrapIfSuccess {
+                                        if (it.info_hash == action.torrentHash) alreadyExists = true
+                                    } ?: result.logTorrentParseError()
+                                }
+                                alreadyExists
+                            }
+
+                    val downloadInfoObs = torrentRepository.downloadTorrentInfo(action.torrentHash)
                             .map {
                                 it.unwrapIfSuccess { it }
                                         ?: throw IllegalStateException("Torrent not found")
                             }
+
+                    Observable.zip(alreadyExistedObs, downloadInfoObs, BiFunction { alreadyExisted, torrentInfo ->
+                        alreadyExisted to torrentInfo
+                    })
                 },
-                success = { result ->
-                    AddTorrentResult.LoadSuccess(result)
+                success = {
+                    val (alreadyAdded, torrentInfo) = it
+                    AddTorrentResult.LoadSuccess(torrentInfo, alreadyAdded)
                 },
                 error = {
                     AddTorrentResult.LoadError(it)
@@ -58,20 +77,21 @@ fun loadTorrent(torrentRepository: ITorrentRepository) =
 fun removeTorrent(torrentRepository: ITorrentRepository) =
         KontentActionProcessor<AddTorrentActions.RemoveTorrent, AddTorrentResult, Boolean>(
                 action = { action ->
-                    torrentRepository.getAllTorrentsFromStorage()
-                            .map {
-                                val successList = mutableListOf<TorrentInfo>()
-                                it.forEach { it.unwrapIfSuccess { successList.add(it) } }
-                                successList.toList()
+                    torrentRepository.downloadTorrentInfo(action.torrentHash)
+                            .map { result ->
+                                result.unwrapIfSuccess {
+                                    val deleted = torrentRepository.deleteTorrentInfoFromStorage(it)
+                                    if (deleted) {
+                                        it.fileList.forEach {
+                                            torrentRepository.deleteTorrentFileFromPersistence(it)
+                                        }
+                                        torrentRepository.deleteTorrentData(it)
+                                    } else {
+                                        throw Error("Error deleting torrent")
+                                    }
+                                }?.let { result.logTorrentParseError() }
                             }
-                            .map {
-                                it.filter { it.info_hash == action.torrentHash }.firstOrNull()
-                                        ?: throw IllegalArgumentException()
-                            }
-                            .map { torrentRepository.deleteTorrentInfoFromStorage(it) }
-                            .doOnComplete {
-                                Log.v("OnComplete", "remove torrent")
-                            }
+                            .map { true }
                 },
                 success = {
                     AddTorrentResult.RemoveSuccess()
@@ -84,73 +104,13 @@ fun removeTorrent(torrentRepository: ITorrentRepository) =
 
 
 val addTorrentReducer = KontentReducer { result: AddTorrentResult, previousState: AddTorrentViewState ->
+    Log.v("Add reducer result", result.toString())
     when (result) {
-        is AddTorrentResult.LoadSuccess -> previousState.copy(isLoading = false, error = null, result = result.torrentInfo, torrentHash = result.torrentInfo.info_hash)
+        is AddTorrentResult.LoadSuccess -> previousState.copy(isLoading = false, error = null, result = result.torrentInfo, torrentHash = result.torrentInfo.info_hash, torrentAlreadyExisted = result.torrentAlreadyExisted)
         is AddTorrentResult.LoadError -> previousState.copy(isLoading = false, error = result.error.localizedMessage)
         is AddTorrentResult.LoadInFlight -> previousState.copy(isLoading = true, error = null)
-        is AddTorrentResult.RemoveSuccess -> previousState.copy(torrentRemovedAndShouldRestart = true, isLoading = false, error = null)
-        is AddTorrentResult.RemoveError -> previousState.copy(isLoading = false, error = result.error.localizedMessage)
-        is AddTorrentResult.RemoveInFlight -> previousState.copy(torrentRemovedAndShouldRestart = false, isLoading = true, error = null)
+        is AddTorrentResult.RemoveSuccess -> previousState.copy(torrentRemovedAndShouldRestart = true, isLoading = false, error = null, torrentHash = null, result = null)
+        is AddTorrentResult.RemoveError -> previousState.copy(isLoading = false, error = result.error.localizedMessage, torrentRemovedAndShouldRestart = false)
+        is AddTorrentResult.RemoveInFlight -> previousState.copy(torrentRemovedAndShouldRestart = false, isLoading = false, error = null)
     }
 }
-
-
-//
-//(val torrentRepository: ITorrentRepository) : BaseMviViewModel<> {
-//
-//    private var alreadyExisted = false
-//
-//    override var torrentHash: String? = null
-//    override var torrentMagnet: String? = null
-//    override var torrentName: String? = null
-//    override var torrentTrackers: List<String>? = null
-//
-//    override fun setup(arguments: Bundle?) {
-//        if (arguments?.containsKey(AddTorrentActivity.Companion.ARG_TORRENT_HASH) == true) {
-//            torrentHash = arguments?.getString(AddTorrentActivity.Companion.ARG_TORRENT_HASH) ?: ""
-//        }
-//
-//        if (arguments?.containsKey(AddTorrentActivity.Companion.ARG_TORRENT_MAGNET) == true) {
-//            torrentMagnet = arguments?.getString(AddTorrentActivity.Companion.ARG_TORRENT_MAGNET) ?: ""
-//            torrentHash = torrentMagnet?.findHashFromMagnet()
-//            torrentMagnet?.findNameFromMagnet()?.let {
-//                torrentName = URLDecoder.decode(it, "UTF-8")
-//            }
-//            torrentTrackers = torrentMagnet?.findTrackersFromMagnet()
-//        }
-//
-//        torrentRepository.getAllTorrentsFromStorage()
-//                .subscribe(object : BaseSubscriber<List<ParseTorrentResult>>() {
-//                    override fun onCompleted() {
-//                    }
-//
-//                    override fun onStart() {
-//                    }
-//
-//                    override fun onNext(results: List<ParseTorrentResult>) {
-//                        var alreadyExists = false
-//                        results.forEach { result ->
-//                            result.unwrapIfSuccess {
-//                                if (it.info_hash == torrentHash) alreadyExists = true
-//                            } ?: let { result.logTorrentParseError() }
-//                        }
-//                        this@AddTorrentViewModel.alreadyExisted = alreadyExists
-//                        fetchTorrent()
-//                    }
-//                })
-//    }
-//
-//    private fun fetchTorrent() {
-//        val hash = torrentHash ?: return
-//        torrentRepository.downloadTorrentInfo(hash)
-//                .subscribe(object : BaseSubscriber<ParseTorrentResult>() {
-//                    override fun onNext(result: ParseTorrentResult) {
-//                        mvpView.setLoading(false)
-//                        mvpView.notifyTorrentAdded()
-//                        if (result is ParseTorrentResult.Error) super.onError(result.exception)
-//                    }
-//                })
-//                .addSubscription()
-//    }
-//
-//}

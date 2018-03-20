@@ -25,7 +25,7 @@ import java.io.File
 import javax.inject.Inject
 
 
-class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsViewState>() {
+class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsActions, SettingsResult, SettingsViewState>() {
     private val RC_SELECT_FILE = 303
 
     @Inject
@@ -35,8 +35,6 @@ class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsViewStat
     lateinit var dialogManager: IDialogManager
 
     private lateinit var newWorkingDirecotyrEmiter: Emitter<SettingsIntents.NewWorkingDirectorySelected>
-
-    private lateinit var viewModel: SettingsViewModel
 
     companion object {
         fun startActivity(context: Context) {
@@ -130,7 +128,7 @@ class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsViewStat
     }
 
     override fun onBackPressed() {
-        if (viewModel.getLastState()?.settingsChanged == true)
+        if (viewModel.getLastState().settingsChanged)
             dialogManager.showSettingExitDialog(this, onRestart = {
                 (application as MyApplication).restart()
             })

@@ -32,7 +32,7 @@ import javax.inject.Inject
 /**
  * Created by arran on 27/10/2017.
  */
-class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewState>() {
+class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseActions, BrowseResult, BrowseViewState>() {
 
     @Inject
     lateinit var navigation: INavigation
@@ -48,8 +48,6 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewSta
     }
     private val searchResultsAdapter = TorrentSearchAdapter(itemOnClick)
     private val browseResultsAdapter = TorrentSearchAdapter(itemOnClick)
-
-    private lateinit var viewModel: TorrentBrowseContract.ViewModel
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -138,8 +136,8 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewSta
         fabFilter.setOnClickListener {
             context?.let {
                 dialogManager.showBrowseFilterDialog(it,
-                        viewModel.getLastState()?.sortType ?: TorrentSearchSortType.SEEDS,
-                        viewModel.getLastState()?.category ?: TorrentSearchCategory.Movies,
+                        viewModel.getLastState().sortType,
+                        viewModel.getLastState().category,
                         { sortType, category ->
                             emitter.onNext(BrowseIntents.UpdateSortAndCategoryIntent(sortType, category))
                             emitter.onNext(getReloadIntent())
@@ -149,10 +147,10 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseViewSta
     }
 
     private fun getReloadIntent(): BrowseIntents.ReloadIntent {
-        return BrowseIntents.ReloadIntent(viewModel.getLastState()?.isInSearchMode ?: false,
-                viewModel.getLastState()?.lastQuery,
-                viewModel.getLastState()?.sortType,
-                viewModel.getLastState()?.category)
+        return BrowseIntents.ReloadIntent(viewModel.getLastState().isInSearchMode,
+                viewModel.getLastState().lastQuery,
+                viewModel.getLastState().sortType,
+                viewModel.getLastState().category)
     }
 
     private fun expandQueryInput() {

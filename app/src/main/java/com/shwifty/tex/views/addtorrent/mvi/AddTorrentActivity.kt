@@ -25,14 +25,12 @@ import javax.inject.Inject
 /**
  * Created by arran on 7/05/2017.
  */
-class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentViewState>() {
-
-    lateinit var viewModel: AddTorrentContract.ViewModel
+class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentActions, AddTorrentResult, AddTorrentViewState>() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val removeTorrentIntentPublisher = PublishSubject.create<AddTorrentIntent.RemoveTorrent>()
+    private val removeTorrentIntentPublisher = PublishSubject.create<AddTorrentIntent>()
 
     companion object {
         const val ARG_ADD_TORRENT_RESULT = "arg_torrent_hash_result"
@@ -60,11 +58,9 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentVie
 
         addTorrentFab.setOnClickListener {
             val returnIntent = Intent()
-            viewModel.getLastState()?.torrentHash?.let { torrentHash ->
-                returnIntent.putExtra(ARG_ADD_TORRENT_RESULT, torrentHash)
-                setResult(Activity.RESULT_OK, returnIntent)
-                finish()
-            }
+            returnIntent.putExtra(ARG_ADD_TORRENT_RESULT, viewModel.getLastState().torrentHash)
+            setResult(Activity.RESULT_OK, returnIntent)
+            finish()
         }
 
         setSupportActionBar(addTorrentToolbar)
@@ -81,12 +77,18 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentVie
         }
     }
 
-    private fun intents() = Observable.just(initialIntent())
+    private fun intents() = Observable.merge(observables())
 
-    private fun initialIntent(): AddTorrentIntent {
+    private fun observables(): List<Observable<AddTorrentIntent>> = listOf(initialIntent(), deleteIntent())
+
+    private fun deleteIntent(): Observable<AddTorrentIntent> {
+        return removeTorrentIntentPublisher
+    }
+
+    private fun initialIntent(): Observable<AddTorrentIntent> {
         val hash = getHashFromIntent() ?: getMagnetFromIntent()?.findHashFromMagnet()
         ?: throw IllegalArgumentException("Must provide hash or magnet")
-        return AddTorrentIntent.LoadIntent(hash)
+        return Observable.just(AddTorrentIntent.LoadIntent(hash))
     }
 
     private fun getTorrentNameFromMagnet(): String? = getMagnetFromIntent()?.findNameFromMagnet()
@@ -108,14 +110,16 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentVie
     }
 
     override fun onBackPressed() {
-        if (viewModel.getLastState()?.torrentAlreadyExisted != true) {
-            viewModel.getLastState()?.torrentHash?.let {
+        if (!viewModel.getLastState().torrentAlreadyExisted) {
+            viewModel.getLastState().torrentHash?.let {
                 removeTorrentIntentPublisher.onNext(AddTorrentIntent.RemoveTorrent(it))
             }
-        }
+        } else super.onBackPressed()
     }
 
     override fun render(state: AddTorrentViewState) {
+        addTorrentFab.setVisible(!state.torrentAlreadyExisted && !state.isLoading)
+        if (state.torrentRemovedAndShouldRestart) super.onBackPressed()
         setLoading(state.isLoading)
         state.result?.info_hash?.let {
             notifyTorrentAdded(it)
@@ -123,8 +127,6 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentVie
 
         errorLayout.setVisible(state.error != null && !state.isLoading)
         state.error?.let { errorText.text = it }
-
-        if (state.torrentRemovedAndShouldRestart) super.onBackPressed()
     }
 
     private fun notifyTorrentAdded(torrentHash: String) {
@@ -139,13 +141,11 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentVie
             addTorrentLoadingText.visibility = View.VISIBLE
             addTorrentViewPager.visibility = View.GONE
             addTorrentSmartTab.visibility = View.GONE
-            addTorrentFab.visibility = View.GONE
         } else {
             addTorrentProgressBar.visibility = View.GONE
             addTorrentLoadingText.visibility = View.GONE
             addTorrentViewPager.visibility = View.VISIBLE
             addTorrentSmartTab.visibility = View.VISIBLE
-            addTorrentFab.visibility = View.VISIBLE
         }
     }
 }

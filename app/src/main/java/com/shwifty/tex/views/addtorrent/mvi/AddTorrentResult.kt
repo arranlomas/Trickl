@@ -11,7 +11,7 @@ import com.shwifty.tex.models.TorrentSearchSortType
  */
 
 sealed class AddTorrentResult : KontentResult() {
-    data class LoadSuccess(val torrentInfo: TorrentInfo) : AddTorrentResult()
+    data class LoadSuccess(val torrentInfo: TorrentInfo, val torrentAlreadyExisted: Boolean) : AddTorrentResult()
     data class LoadError(val error: Throwable) : AddTorrentResult()
     class LoadInFlight : AddTorrentResult()
     class RemoveSuccess : AddTorrentResult()

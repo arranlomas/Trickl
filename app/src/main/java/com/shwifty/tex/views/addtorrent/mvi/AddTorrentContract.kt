@@ -6,5 +6,5 @@ import com.arranlomas.kontent.commons.objects.KontentContract
  * Created by arran on 16/04/2017.
  */
 interface AddTorrentContract {
-    interface ViewModel : KontentContract.ViewModel<AddTorrentIntent, AddTorrentViewState>
+    interface ViewModel : KontentContract.ViewModel<AddTorrentIntent,AddTorrentActions, AddTorrentResult, AddTorrentViewState>
 }

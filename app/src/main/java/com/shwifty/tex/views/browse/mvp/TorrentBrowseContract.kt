@@ -6,5 +6,5 @@ import com.arranlomas.kontent.commons.objects.KontentContract
  * Created by arran on 7/05/2017.
  */
 interface TorrentBrowseContract {
-    interface ViewModel : KontentContract.ViewModel<BrowseIntents, BrowseViewState>
+    interface ViewModel : KontentContract.ViewModel<BrowseIntents, BrowseActions, BrowseResult, BrowseViewState>
 }
