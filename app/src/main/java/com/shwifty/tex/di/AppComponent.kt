@@ -14,7 +14,7 @@ import com.shwifty.tex.views.downloads.di.FileFownloadFragmentBuilder
 import com.shwifty.tex.views.main.di.MainActivityBuilder
 import com.shwifty.tex.views.settings.di.SettingsActivityBuilder
 import com.shwifty.tex.views.showtorrent.di.TorrentInfoActivityBuilder
-import com.shwifty.tex.views.torrentdetails.di.TorrentDetailsFragmentBuilder
+import com.shwifty.tex.views.torrentdetails.TorrentDetailsFragmentBuilder
 import com.shwifty.tex.views.torrentfiles.di.TorrentFileFragmentBuilder
 import dagger.Component
 import dagger.android.AndroidInjector

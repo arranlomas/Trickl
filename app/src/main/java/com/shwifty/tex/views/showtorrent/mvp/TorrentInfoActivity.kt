@@ -66,7 +66,6 @@ class TorrentInfoActivity : BaseDaggerMviActivity<TorrentInfoIntent, TorrentInfo
 
     private fun observables(): List<Observable<TorrentInfoIntent>> = listOf(initialIntent())
 
-
     private fun initialIntent(): Observable<TorrentInfoIntent> {
         val hash = getHashFromIntent() ?: getMagnetFromIntent()?.findHashFromMagnet()
         ?: throw IllegalArgumentException("Must provide hash or magnet")

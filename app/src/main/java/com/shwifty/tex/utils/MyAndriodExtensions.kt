@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.SearchView
 import android.text.Editable
 import android.text.TextWatcher
@@ -20,7 +21,6 @@ import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
 import com.shwifty.tex.R
 import com.shwifty.tex.models.AppTheme
 import com.shwifty.tex.repository.preferences.PreferencesRepository
-import com.shwifty.tex.views.addtorrent.mvi.AddTorrentActivity
 
 
 /**
@@ -192,3 +192,13 @@ fun Activity.getMagnetFromIntent(): String? {
         arguments.getString(ARG_TORRENT_MAGNET)
     } else null
 }
+
+fun Fragment.getTorrentNameFromMagnet(): String? = getMagnetFromIntent()?.findNameFromMagnet()
+
+fun Fragment.getTrackersFromMagnet(): List<String>? = getMagnetFromIntent()?.findTrackersFromMagnet()
+
+
+fun Fragment.getHashFromIntent(): String? = arguments?.getString(ARG_TORRENT_HASH)
+
+fun Fragment.getMagnetFromIntent(): String? = arguments?.getString(ARG_TORRENT_MAGNET)
+
