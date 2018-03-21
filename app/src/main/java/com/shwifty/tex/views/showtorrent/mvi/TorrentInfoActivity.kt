@@ -1,4 +1,4 @@
-package com.shwifty.tex.views.showtorrent.mvp
+package com.shwifty.tex.views.showtorrent.mvi
 
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -13,7 +13,6 @@ import com.shwifty.tex.dialogs.IDialogManager
 import com.shwifty.tex.utils.*
 import com.shwifty.tex.views.base.mvi.BaseDaggerMviActivity
 import com.shwifty.tex.views.showtorrent.list.ShowTorrentPagerAdapter
-import com.shwifty.tex.views.showtorrent.mvi.*
 import es.dmoral.toasty.Toasty
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_show_torrent.*

@@ -1,4 +1,4 @@
-package com.shwifty.tex.views.showtorrent.mvp
+package com.shwifty.tex.views.showtorrent.mvi
 
 import com.arranlomas.kontent.commons.objects.KontentContract
 import com.shwifty.tex.views.showtorrent.mvi.TorrentInfoActions

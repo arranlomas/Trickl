@@ -6,7 +6,6 @@ import com.arranlomas.kontent.commons.functions.KontentReducer
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.views.base.mvi.BaseMviViewModel
-import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoContract
 import io.reactivex.Observable
 import javax.inject.Inject
 
