@@ -10,6 +10,7 @@ import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.utils.formatBytesAsSize
 import com.shwifty.tex.R
+import com.shwifty.tex.utils.ARG_TORRENT_HASH
 import com.shwifty.tex.views.base.mvp.BaseDaggerFragment
 import kotlinx.android.synthetic.main.frag_torrent_details.*
 import java.io.File
@@ -24,8 +25,6 @@ class TorrentDetailsFragment : BaseDaggerFragment(), TorrentDetailsContract.View
     lateinit var presenter: TorrentDetailsContract.Presenter
 
     companion object {
-        val ARG_TORRENT_HASH = "arg_torrent_hash"
-
         fun newInstance(torrentHash: String?): Fragment {
             val frag = TorrentDetailsFragment()
             val args = Bundle()

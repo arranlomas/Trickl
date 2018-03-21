@@ -15,9 +15,12 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import com.crashlytics.android.Crashlytics
+import com.schiwfty.torrentwrapper.utils.findNameFromMagnet
+import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
 import com.shwifty.tex.R
 import com.shwifty.tex.models.AppTheme
 import com.shwifty.tex.repository.preferences.PreferencesRepository
+import com.shwifty.tex.views.addtorrent.mvi.AddTorrentActivity
 
 
 /**
@@ -163,4 +166,29 @@ private fun View.setLightStatusBar() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         this.systemUiVisibility = this.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
+}
+
+
+const val ARG_ADD_TORRENT_RESULT = "arg_torrent_hash_result"
+const val ARG_TORRENT_HASH = "arg_torrent_hash"
+const val ARG_TORRENT_MAGNET = "arg_torrent_magnet"
+const val ARG_TORRENT_FILE_PATH = "arg_torrent_file_path"
+
+fun Activity.getTorrentNameFromMagnet(): String? = getMagnetFromIntent()?.findNameFromMagnet()
+
+fun Activity.getTrackersFromMagnet(): List<String>? = getMagnetFromIntent()?.findTrackersFromMagnet()
+
+
+fun Activity.getHashFromIntent(): String? {
+    val arguments = intent.extras
+    return if (arguments.containsKey(ARG_TORRENT_HASH)) {
+        arguments.getString(ARG_TORRENT_HASH)
+    } else null
+}
+
+fun Activity.getMagnetFromIntent(): String? {
+    val arguments = intent.extras
+    return if (arguments.containsKey(ARG_TORRENT_MAGNET)) {
+        arguments.getString(ARG_TORRENT_MAGNET)
+    } else null
 }

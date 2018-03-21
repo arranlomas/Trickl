@@ -3,6 +3,7 @@ package com.shwifty.tex.views.torrentdetails.mvp
 import android.os.Bundle
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.schiwfty.torrentwrapper.utils.ParseTorrentResult
+import com.shwifty.tex.utils.ARG_TORRENT_HASH
 import com.shwifty.tex.utils.logTorrentParseError
 import com.shwifty.tex.views.base.mvp.BasePresenter
 
@@ -14,8 +15,8 @@ class TorrentDetailsPresenter(val torrentRepository: ITorrentRepository) : BaseP
     lateinit override var torrentHash: String
 
     override fun setup(arguments: Bundle?) {
-        if (arguments?.containsKey(TorrentDetailsFragment.ARG_TORRENT_HASH) ?: false) {
-            torrentHash = arguments?.getString(TorrentDetailsFragment.ARG_TORRENT_HASH) ?: ""
+        if (arguments?.containsKey(ARG_TORRENT_HASH) == true) {
+            torrentHash = arguments.getString(ARG_TORRENT_HASH) ?: ""
         }
 
     }

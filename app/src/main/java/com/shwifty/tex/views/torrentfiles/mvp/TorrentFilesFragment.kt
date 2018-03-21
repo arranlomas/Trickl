@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.shwifty.tex.R
+import com.shwifty.tex.utils.ARG_TORRENT_HASH
 import com.shwifty.tex.views.base.mvp.BaseDaggerFragment
 import com.shwifty.tex.views.torrentfiles.list.TorrentFilesAdapter
 import kotlinx.android.synthetic.main.frag_torrent_files.*
@@ -31,8 +32,6 @@ class TorrentFilesFragment : BaseDaggerFragment(), TorrentFilesContract.View {
     val filesAdapter = TorrentFilesAdapter(itemOnClick)
 
     companion object {
-        val ARG_TORRENT_HASH = "arg_torrent_hash"
-
         fun newInstance(torrentFilePath: String?): Fragment {
             val frag = TorrentFilesFragment()
             val args = Bundle()

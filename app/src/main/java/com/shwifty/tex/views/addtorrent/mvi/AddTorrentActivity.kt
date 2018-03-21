@@ -11,7 +11,7 @@ import com.schiwfty.torrentwrapper.utils.findHashFromMagnet
 import com.schiwfty.torrentwrapper.utils.findNameFromMagnet
 import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
 import com.shwifty.tex.R
-import com.shwifty.tex.utils.setVisible
+import com.shwifty.tex.utils.*
 import com.shwifty.tex.views.addtorrent.list.AddTorrentPagerAdapter
 import com.shwifty.tex.views.base.mvi.BaseDaggerMviActivity
 import es.dmoral.toasty.Toasty
@@ -33,11 +33,6 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentAct
     private val removeTorrentIntentPublisher = PublishSubject.create<AddTorrentIntent>()
 
     companion object {
-        const val ARG_ADD_TORRENT_RESULT = "arg_torrent_hash_result"
-        const val ARG_TORRENT_HASH = "arg_torrent_hash"
-        const val ARG_TORRENT_MAGNET = "arg_torrent_magnet"
-        const val ARG_TORRENT_FILE_PATH = "arg_torrent_file_path"
-
         fun startActivity(context: Context, hash: String?, magnet: String?, torrentFilePath: String?) {
             val addTorrentIntent = Intent(context, AddTorrentActivity::class.java)
             if (hash != null) addTorrentIntent.putExtra(ARG_TORRENT_HASH, hash)
@@ -89,24 +84,6 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentAct
         val hash = getHashFromIntent() ?: getMagnetFromIntent()?.findHashFromMagnet()
         ?: throw IllegalArgumentException("Must provide hash or magnet")
         return Observable.just(AddTorrentIntent.LoadIntent(hash))
-    }
-
-    private fun getTorrentNameFromMagnet(): String? = getMagnetFromIntent()?.findNameFromMagnet()
-
-    private fun getTrackersFromMagnet(): List<String>? = getMagnetFromIntent()?.findTrackersFromMagnet()
-
-    private fun getHashFromIntent(): String? {
-        val arguments = intent.extras
-        return if (arguments.containsKey(AddTorrentActivity.Companion.ARG_TORRENT_HASH)) {
-            arguments.getString(AddTorrentActivity.Companion.ARG_TORRENT_HASH)
-        } else null
-    }
-
-    private fun getMagnetFromIntent(): String? {
-        val arguments = intent.extras
-        return if (arguments.containsKey(AddTorrentActivity.Companion.ARG_TORRENT_MAGNET)) {
-            arguments.getString(AddTorrentActivity.Companion.ARG_TORRENT_MAGNET)
-        } else null
     }
 
     override fun onBackPressed() {

@@ -68,4 +68,11 @@
         android:layout_marginTop="@dimen/smart_tab_and_toolbar_height"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:textColor="@color/error_red"/>
+
 </android.support.design.widget.CoordinatorLayout>

@@ -1,30 +1,28 @@
 package com.shwifty.tex.views.showtorrent.di
 
 
-import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import android.arch.lifecycle.ViewModel
+import com.arranlomas.daggerviewmodelhelper.ViewModelKey
+import com.shwifty.tex.views.showtorrent.mvi.TorrentInfoViewModel
 import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoActivity
-import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoContract
-import com.shwifty.tex.views.showtorrent.mvp.TorrentInfoPresenter
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntoMap
 
 /**
  * Created by arran on 15/02/2017.
  */
 @Module
-class TorrentInfoModule {
-    @Provides
-    internal fun providesTorrentInfoPresenter(torrentRepository: ITorrentRepository): TorrentInfoContract.Presenter {
-        return TorrentInfoPresenter(torrentRepository)
-    }
-
-}
-
-@Module
 abstract class TorrentInfoActivityBuilder {
-    @ContributesAndroidInjector(modules = arrayOf(TorrentInfoModule::class))
+    @ContributesAndroidInjector
     internal abstract fun bindsTorrentInfoActivity(): TorrentInfoActivity
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TorrentInfoViewModel::class)
+    abstract fun bindTorrentInfoViewModel(viewModel: TorrentInfoViewModel): ViewModel
 }
 
 

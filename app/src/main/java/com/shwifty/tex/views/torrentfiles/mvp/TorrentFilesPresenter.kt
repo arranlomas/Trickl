@@ -8,6 +8,7 @@ import com.schiwfty.torrentwrapper.utils.ParseTorrentResult
 import com.shwifty.tex.actions.IActionManager
 import com.shwifty.tex.chromecast.ICastHandler
 import com.shwifty.tex.dialogs.IDialogManager
+import com.shwifty.tex.utils.ARG_TORRENT_HASH
 import com.shwifty.tex.utils.logTorrentParseError
 import com.shwifty.tex.views.base.mvp.BasePresenter
 import com.shwifty.tex.views.torrentfiles.list.TorrentFilesAdapter
@@ -21,8 +22,8 @@ class TorrentFilesPresenter(val torrentRepository: ITorrentRepository,
     private lateinit var torrentHash: String
 
     override fun setup(arguments: Bundle?) {
-        if (arguments?.containsKey(TorrentFilesFragment.ARG_TORRENT_HASH) == true) {
-            torrentHash = arguments?.getString(TorrentFilesFragment.ARG_TORRENT_HASH) ?: ""
+        if (arguments?.containsKey(ARG_TORRENT_HASH) == true) {
+            torrentHash = arguments.getString(ARG_TORRENT_HASH) ?: ""
         }
     }
 
