@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import com.shwifty.tex.views.torrentdetails.TorrentDetailsFragment
-import com.shwifty.tex.views.torrentfiles.mvp.TorrentFilesFragment
+import com.shwifty.tex.views.torrentfiles.TorrentFilesFragment
 
 /**
  * Created by arran on 9/05/2017.
