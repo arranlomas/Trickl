@@ -14,7 +14,7 @@ sealed class BrowseResult : KontentResult() {
     data class BrowseError(val error: Throwable) : BrowseResult()
     class BrowseInFlight : BrowseResult()
 
-    data class SearchSuccess(val result: List<TorrentSearchResult>) : BrowseResult()
+    data class SearchSuccess(val result: List<TorrentSearchResult>, val query: String) : BrowseResult()
     data class SearchError(val error: Throwable) : BrowseResult()
     class SearchInFlight : BrowseResult()
 

@@ -47,13 +47,6 @@ val settingsReducer = KontentReducer { result: SettingsResult, previousState: Se
     }
 }
 
-fun settingsIntentToAction(intent: SettingsIntents): SettingsActions = when (intent) {
-    is SettingsIntents.NewWorkingDirectorySelected -> SettingsActions.ClearErrorsAndUpdateWorkingDirectory(intent.context, intent.newDirectory, intent.moveFiles)
-    is SettingsIntents.InitialIntent -> SettingsActions.LoadPreferencesForFirstTime(intent.context)
-    is SettingsIntents.ToggleWifiOnly -> SettingsActions.UpdateWifiOnly(intent.context, intent.selected)
-    is SettingsIntents.ChangeTheme -> SettingsActions.ChangeTheme(intent.context, intent.newTheme)
-}
-
 fun settingsActionProcessor(preferencesRepository: IPreferenceRepository) = KontentMasterProcessor<SettingsActions, SettingsResult> { action: Observable<SettingsActions> ->
     Observable.merge(observables(action, preferencesRepository))
 }
@@ -61,7 +54,7 @@ fun settingsActionProcessor(preferencesRepository: IPreferenceRepository) = Kont
 private fun observables(shared: Observable<SettingsActions>, preferencesRepository: IPreferenceRepository): List<Observable<SettingsResult>> {
     return listOf<Observable<SettingsResult>>(
             shared.ofType(SettingsActions.LoadPreferencesForFirstTime::class.java).compose(loadPreferencesProcessor(preferencesRepository)),
-            shared.ofType(SettingsActions.ClearErrorsAndUpdateWorkingDirectory::class.java).compose(updateWorkingDirectoryProcessor(preferencesRepository)),
+            shared.ofType(SettingsActions.UpdateWorkingDirectory::class.java).compose(updateWorkingDirectoryProcessor(preferencesRepository)),
             shared.ofType(SettingsActions.UpdateWifiOnly::class.java).compose(updateWifiOnlyProcessor(preferencesRepository)),
             shared.ofType(SettingsActions.ChangeTheme::class.java).compose(changeThemeProcessor(preferencesRepository)))
 }
@@ -105,7 +98,7 @@ fun updateWifiOnlyProcessor(preferencesRepository: IPreferenceRepository) = Kont
         loading = SettingsResult.ToggleWifiOnlyInFlight
 )
 
-fun updateWorkingDirectoryProcessor(preferencesRepository: IPreferenceRepository) = KontentActionProcessor<SettingsActions.ClearErrorsAndUpdateWorkingDirectory, SettingsResult, File>(
+fun updateWorkingDirectoryProcessor(preferencesRepository: IPreferenceRepository) = KontentActionProcessor<SettingsActions.UpdateWorkingDirectory, SettingsResult, File>(
         action = { action ->
             preferencesRepository.getWorkingDirectoryPreference(action.context)
                     .map { previousDirectory -> Pair(previousDirectory, action.newDirectory.validateWorkingDirectoryCanBeChanged(previousDirectory)) }

@@ -16,19 +16,12 @@ import javax.inject.Inject
  * Created by arran on 7/05/2017.
  */
 class AddTorrentViewModel @Inject constructor(torrentRepository: ITorrentRepository)
-    : AddTorrentContract.ViewModel, BaseMviViewModel<AddTorrentIntent, AddTorrentActions, AddTorrentResult, AddTorrentViewState>(
-        intentToAction = { addTorrentIntentToAction(it) },
+    : AddTorrentContract.ViewModel, BaseMviViewModel<AddTorrentActions, AddTorrentResult, AddTorrentViewState>(
         actionProcessor = addTorrentActionProcessor(torrentRepository),
         reducer = addTorrentReducer,
         defaultState = AddTorrentViewState.default()
 
 )
-
-fun addTorrentIntentToAction(intent: AddTorrentIntent): AddTorrentActions = when (intent) {
-    is AddTorrentIntent.LoadIntent -> AddTorrentActions.Load(intent.torrentHash)
-    is AddTorrentIntent.RemoveTorrent -> AddTorrentActions.RemoveTorrent(intent.torrentHash)
-}
-
 
 fun addTorrentActionProcessor(torrentRepository: ITorrentRepository) = KontentMasterProcessor<AddTorrentActions, AddTorrentResult> { action ->
     Observable.merge(observables(action, torrentRepository))
@@ -101,7 +94,6 @@ fun removeTorrent(torrentRepository: ITorrentRepository) =
                 },
                 loading = AddTorrentResult.RemoveInFlight()
         )
-
 
 val addTorrentReducer = KontentReducer { result: AddTorrentResult, previousState: AddTorrentViewState ->
     Log.v("Add reducer result", result.toString())

@@ -6,5 +6,5 @@ import com.arranlomas.kontent.commons.objects.KontentContract
  * Created by arran on 16/04/2017.
  */
 interface SettingsContract {
-    interface ViewModel : KontentContract.ViewModel<SettingsIntents, SettingsActions, SettingsResult, SettingsViewState>
+    interface ViewModel : KontentContract.ViewModel<SettingsActions, SettingsResult, SettingsViewState>
 }

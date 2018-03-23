@@ -32,7 +32,7 @@ import javax.inject.Inject
 /**
  * Created by arran on 27/10/2017.
  */
-class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseActions, BrowseResult, BrowseViewState>() {
+class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult, BrowseViewState>() {
 
     @Inject
     lateinit var navigation: INavigation
@@ -71,7 +71,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseActions
                 Toasty.error(it, error.localizedMessage).show()
             }
         })
-        super.attachIntents(intents(), BrowseIntents.InitialLoadIntent::class.java)
+        super.attachActions(actions(), BrowseActions.InitialLoad::class.java)
     }
 
     private fun setupRecyclerView() {
@@ -80,74 +80,74 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseIntents, BrowseActions
         recyclerView.layoutManager = llm
     }
 
-    private fun intents() = Observable.merge(listOf(
-            initialIntent(),
-            searchIntent(),
-            toggleSearchModeIntent(),
+    private fun actions() = Observable.merge(listOf(
+            initialAction(),
+            searchAction(),
+            toggleSearchModeAction(),
             refreshIntent(),
-            updateSortAndCategoryIntent(),
+            updateSortAndCategoryAction(),
             searchQueryEnterPressed()))
 
-    private fun initialIntent(): Observable<BrowseIntents.InitialLoadIntent> = Observable.just(
-            BrowseIntents.InitialLoadIntent(
+    private fun initialAction(): Observable<BrowseActions.InitialLoad> = Observable.just(
+            BrowseActions.InitialLoad(
                     TorrentSearchSortType.SEEDS,
                     TorrentSearchCategory.Movies
             ))
 
-    private fun searchIntent(): Observable<BrowseIntents> = createObservable { emitter ->
+    private fun searchAction(): Observable<BrowseActions> = createObservable { emitter ->
         fabSendSearch.setOnClickListener {
-            emitter.getSearchTextAndEmitIntents()
+            emitter.getSearchTextAndEmitAction()
         }
     }
 
-    private fun searchQueryEnterPressed(): Observable<BrowseIntents> = createObservable { emitter ->
+    private fun searchQueryEnterPressed(): Observable<BrowseActions> = createObservable { emitter ->
         searchQueryInput.setOnEditorActionListener({ _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                emitter.getSearchTextAndEmitIntents()
+                emitter.getSearchTextAndEmitAction()
             }
             false
         })
     }
 
-    private fun Emitter<BrowseIntents>.getSearchTextAndEmitIntents() {
+    private fun Emitter<BrowseActions>.getSearchTextAndEmitAction() {
         val text = searchQueryInput.text.toString()
         if (text.isNotEmpty()) {
-            this.onNext(BrowseIntents.SearchIntent(text))
-            this.onNext(BrowseIntents.SetSearchBarExpanded(false))
+            this.onNext(BrowseActions.Search(text))
+            this.onNext(BrowseActions.SetSearchBarExpanded(false))
         }
     }
 
-    private fun toggleSearchModeIntent(): Observable<BrowseIntents> = createObservable { emitter ->
+    private fun toggleSearchModeAction(): Observable<BrowseActions> = createObservable { emitter ->
         fabSearch.setOnClickListener {
-            if (viewModel.getLastState()?.isInSearchMode == true) {
-                emitter.onNext(BrowseIntents.ClearSearchResultsIntent())
-                emitter.onNext(BrowseIntents.SetSearchBarExpanded(false))
+            if (viewModel.getLastState().isInSearchMode) {
+                emitter.onNext(BrowseActions.ClearSearchResults())
+                emitter.onNext(BrowseActions.SetSearchBarExpanded(false))
             } else
-                emitter.onNext(BrowseIntents.SetSearchBarExpanded(true))
+                emitter.onNext(BrowseActions.SetSearchBarExpanded(true))
 
-            emitter.onNext(BrowseIntents.ToggleSearchMode())
+            emitter.onNext(BrowseActions.ToggleSearchMode())
         }
     }
 
-    private fun refreshIntent(): Observable<BrowseIntents.ReloadIntent> = RxSwipeRefreshLayout.refreshes(torrentBrowseSwipeRefresh)
+    private fun refreshIntent(): Observable<BrowseActions.Reload> = RxSwipeRefreshLayout.refreshes(torrentBrowseSwipeRefresh)
             .map { getReloadIntent() }
 
-    private fun updateSortAndCategoryIntent(): Observable<BrowseIntents> = createObservable { emitter ->
+    private fun updateSortAndCategoryAction(): Observable<BrowseActions> = createObservable { emitter ->
         fabFilter.setOnClickListener {
             context?.let {
                 dialogManager.showBrowseFilterDialog(it,
                         viewModel.getLastState().sortType,
                         viewModel.getLastState().category,
                         { sortType, category ->
-                            emitter.onNext(BrowseIntents.UpdateSortAndCategoryIntent(sortType, category))
+                            emitter.onNext(BrowseActions.UpdateSortAndCategory(sortType, category))
                             emitter.onNext(getReloadIntent())
                         })
             }
         }
     }
 
-    private fun getReloadIntent(): BrowseIntents.ReloadIntent {
-        return BrowseIntents.ReloadIntent(viewModel.getLastState().isInSearchMode,
+    private fun getReloadIntent(): BrowseActions.Reload {
+        return BrowseActions.Reload(viewModel.getLastState().isInSearchMode,
                 viewModel.getLastState().lastQuery,
                 viewModel.getLastState().sortType,
                 viewModel.getLastState().category)

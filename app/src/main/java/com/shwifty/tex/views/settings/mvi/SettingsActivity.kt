@@ -25,7 +25,7 @@ import java.io.File
 import javax.inject.Inject
 
 
-class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsActions, SettingsResult, SettingsViewState>() {
+class SettingsActivity : BaseDaggerMviActivity<SettingsActions, SettingsResult, SettingsViewState>() {
     private val RC_SELECT_FILE = 303
 
     @Inject
@@ -34,7 +34,7 @@ class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsActions,
     @Inject
     lateinit var dialogManager: IDialogManager
 
-    private lateinit var newWorkingDirecotyrEmiter: Emitter<SettingsIntents.NewWorkingDirectorySelected>
+    private lateinit var newWorkingDirecotyrEmiter: Emitter<SettingsActions.UpdateWorkingDirectory>
 
     companion object {
         fun startActivity(context: Context) {
@@ -65,48 +65,48 @@ class SettingsActivity : BaseDaggerMviActivity<SettingsIntents, SettingsActions,
         restartButton.setOnClickListener {
             (application as MyApplication).restart()
         }
-        super.attachIntents(intents(), SettingsIntents.InitialIntent::class.java)
+        super.attachActions(actions(), SettingsActions.LoadPreferencesForFirstTime::class.java)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         data.validateOnActivityResult(requestCode, RC_SELECT_FILE, resultCode, Activity.RESULT_OK, {
             val file = it.getSerializable(FileBrowserActivity.ARG_FILE_RESULT) as File
             dialogManager.showChangeWorkingDirectoryDialog(this, file, { newDirectory ->
-                newWorkingDirecotyrEmiter.onNext(SettingsIntents.NewWorkingDirectorySelected(this, newDirectory, true))
+                newWorkingDirecotyrEmiter.onNext(SettingsActions.UpdateWorkingDirectory(this, newDirectory, true))
             }, { newDirectory ->
-                newWorkingDirecotyrEmiter.onNext(SettingsIntents.NewWorkingDirectorySelected(this, newDirectory, false))
+                newWorkingDirecotyrEmiter.onNext(SettingsActions.UpdateWorkingDirectory(this, newDirectory, false))
             })
         })
     }
 
-    private fun initialIntent(): Observable<SettingsIntents.InitialIntent> {
-        return Observable.just(SettingsIntents.InitialIntent(this))
+    private fun initialAction(): Observable<SettingsActions.LoadPreferencesForFirstTime> {
+        return Observable.just(SettingsActions.LoadPreferencesForFirstTime(this))
     }
 
-    private fun updateWorkingDirectoryIntent(): Observable<SettingsIntents.NewWorkingDirectorySelected> = createObservable { newWorkingDirecotyrEmiter = it }
+    private fun updateWorkingDirectoryAction(): Observable<SettingsActions.UpdateWorkingDirectory> = createObservable { newWorkingDirecotyrEmiter = it }
 
     //TODO
 //    private fun toggleWifiOnlyIntent(): Observable<SettingsIntents.ToggleWifiOnly> =
 //            RxCompoundButton.checkedChanges(wifiOnlySwich)
 //                    .map { isChecked: Boolean -> SettingsIntents.ToggleWifiOnly(this, isChecked) }
 
-    private fun changeThemeIntent(): Observable<SettingsIntents.ChangeTheme> = RxRadioGroup.checkedChanges(themeRadioGroup)
+    private fun changeThemeAction(): Observable<SettingsActions.ChangeTheme> = RxRadioGroup.checkedChanges(themeRadioGroup)
             .map {
                 when (it) {
-                    R.id.radioThemeDark -> SettingsIntents.ChangeTheme(this, AppTheme.DARK)
-                    R.id.radioThemeLight -> SettingsIntents.ChangeTheme(this, AppTheme.LIGHT)
+                    R.id.radioThemeDark -> SettingsActions.ChangeTheme(this, AppTheme.DARK)
+                    R.id.radioThemeLight -> SettingsActions.ChangeTheme(this, AppTheme.LIGHT)
                     else -> {
                         Log.v("Error", "Error changing theme")
-                        SettingsIntents.ChangeTheme(this, AppTheme.DARK)
+                        SettingsActions.ChangeTheme(this, AppTheme.DARK)
                     }
                 }
             }
 
-    private fun intents() = Observable.merge(listOf(
-            initialIntent(),
-            updateWorkingDirectoryIntent(),
+    private fun actions() = Observable.merge(listOf(
+            initialAction(),
+            updateWorkingDirectoryAction(),
 //            toggleWifiOnlyIntent(),  TODO
-            changeThemeIntent()))
+            changeThemeAction()))
 
     override fun render(state: SettingsViewState) {
         state.currentWorkingDirectory?.absolutePath?.let { workingDirectoryField.text = it }

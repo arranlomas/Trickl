@@ -1,33 +1,16 @@
 package com.shwifty.tex.views.browse.mvp
 
-import com.arranlomas.kontent.commons.functions.KontentActionProcessor
-import com.arranlomas.kontent.commons.functions.KontentMasterProcessor
-import com.arranlomas.kontent.commons.functions.KontentReducer
-import com.arranlomas.kontent.commons.functions.KontentSimpleActionProcessor
+import com.arranlomas.kontent.commons.functions.*
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.repository.network.torrentSearch.ITorrentSearchRepository
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 
 /**
  * Created by arran on 14/02/2018.
  */
-
-fun browseIntentToAction(intent: BrowseIntents): BrowseActions = when (intent) {
-    is BrowseIntents.SearchIntent -> BrowseActions.Search(intent.query)
-    is BrowseIntents.InitialLoadIntent -> BrowseActions.LoadBrowse(intent.sortType, intent.category)
-    is BrowseIntents.ReloadIntent -> {
-        if (intent.isInSearchMode && intent.query != null) BrowseActions.Search(intent.query)
-        else if (intent.sortType != null && intent.category != null) BrowseActions.LoadBrowse(intent.sortType, intent.category)
-        else BrowseActions.LoadBrowse(TorrentSearchSortType.SEEDS, TorrentSearchCategory.Movies)
-    }
-    is BrowseIntents.ToggleSearchMode -> BrowseActions.ToggleSearchMode()
-    is BrowseIntents.UpdateSortAndCategoryIntent -> BrowseActions.UpdateSortAndCategory(intent.sortType, intent.category)
-    is BrowseIntents.SetSearchBarExpanded -> BrowseActions.SetSearchBarExpanded(intent.expanded)
-    is BrowseIntents.ClearSearchResultsIntent -> BrowseActions.ClearSearchResults()
-}
-
 
 fun browseActionProcessor(torrentSearchRepository: ITorrentSearchRepository) = KontentMasterProcessor<BrowseActions, BrowseResult> { action ->
     Observable.merge(observables(action, torrentSearchRepository))
@@ -35,7 +18,8 @@ fun browseActionProcessor(torrentSearchRepository: ITorrentSearchRepository) = K
 
 private fun observables(shared: Observable<BrowseActions>, torrentSearchRepository: ITorrentSearchRepository): List<Observable<BrowseResult>> {
     return listOf<Observable<BrowseResult>>(
-            shared.ofType(BrowseActions.LoadBrowse::class.java).compose(loadBrowseResults(torrentSearchRepository)),
+            shared.ofType(BrowseActions.InitialLoad::class.java).compose(initialLoad(torrentSearchRepository)),
+            shared.ofType(BrowseActions.Reload::class.java).compose(reload(torrentSearchRepository)),
             shared.ofType(BrowseActions.Search::class.java).compose(loadSearchResults(torrentSearchRepository)),
             shared.ofType(BrowseActions.ToggleSearchMode::class.java).compose(toggleSearchProcessor()),
             shared.ofType(BrowseActions.SetSearchBarExpanded::class.java).compose(toggleSearchBarExpandedProcessor()),
@@ -43,8 +27,8 @@ private fun observables(shared: Observable<BrowseActions>, torrentSearchReposito
             shared.ofType(BrowseActions.ClearSearchResults::class.java).compose(clearSearchResultsProcessor()))
 }
 
-fun loadBrowseResults(torrentSearchRepository: ITorrentSearchRepository) =
-        KontentActionProcessor<BrowseActions.LoadBrowse, BrowseResult, List<TorrentSearchResult>>(
+fun initialLoad(torrentSearchRepository: ITorrentSearchRepository) =
+        KontentActionProcessor<BrowseActions.InitialLoad, BrowseResult, List<TorrentSearchResult>>(
                 action = { action ->
                     torrentSearchRepository.browse(action.sortType, 0, action.category)
                 },
@@ -56,6 +40,24 @@ fun loadBrowseResults(torrentSearchRepository: ITorrentSearchRepository) =
                 },
                 loading = BrowseResult.BrowseInFlight()
         )
+
+fun reload(torrentSearchRepository: ITorrentSearchRepository) = ObservableTransformer<BrowseActions.Reload, BrowseResult> {
+    it.flatMap { action ->
+        if (action.isInSearchMode) torrentSearchRepository.search(action.query!!, action.sortType!!, 0, action.category!!)
+                .networkMapper(
+                        error = { BrowseResult.SearchError(it) },
+                        loading = BrowseResult.SearchInFlight(),
+                        success = { BrowseResult.SearchSuccess(it, action.query) }
+                )
+        else torrentSearchRepository.browse(action.sortType!!, 0, action.category!!)
+                .networkMapper(
+                        error = { BrowseResult.BrowseError(it) },
+                        loading = BrowseResult.BrowseInFlight(),
+                        success = { BrowseResult.BrowseSuccess(it) }
+                )
+    }
+}
+
 
 fun toggleSearchProcessor() = KontentSimpleActionProcessor<BrowseActions.ToggleSearchMode, BrowseResult> {
     Observable.just(BrowseResult.ToggleSearchMode())
@@ -74,12 +76,13 @@ fun clearSearchResultsProcessor() = KontentSimpleActionProcessor<BrowseActions.C
 }
 
 fun loadSearchResults(torrentSearchRepository: ITorrentSearchRepository) =
-        KontentActionProcessor<BrowseActions.Search, BrowseResult, List<TorrentSearchResult>>(
+        KontentActionProcessor<BrowseActions.Search, BrowseResult, Pair<List<TorrentSearchResult>, String>>(
                 action = { action ->
                     torrentSearchRepository.search(action.query, TorrentSearchSortType.DEFAULT, 0, TorrentSearchCategory.All)
+                            .map { it to action.query }
                 },
                 success = { results ->
-                    BrowseResult.SearchSuccess(results)
+                    BrowseResult.SearchSuccess(results.first, results.second)
                 },
                 error = {
                     BrowseResult.SearchError(it)
@@ -92,7 +95,7 @@ val browseReducer = KontentReducer { result: BrowseResult, previousState: Browse
         is BrowseResult.BrowseSuccess -> previousState.copy(isLoading = false, error = null, browseResults = result.result)
         is BrowseResult.BrowseError -> previousState.copy(isLoading = false, error = result.error.localizedMessage)
         is BrowseResult.BrowseInFlight -> previousState.copy(isLoading = true, error = null)
-        is BrowseResult.SearchSuccess -> previousState.copy(isLoading = false, searchResults = result.result, error = null)
+        is BrowseResult.SearchSuccess -> previousState.copy(isLoading = false, searchResults = result.result, error = null, lastQuery = result.query)
         is BrowseResult.SearchError -> previousState.copy(isLoading = false, error = result.error.localizedMessage)
         is BrowseResult.SearchInFlight -> previousState.copy(isLoading = true, error = null)
         is BrowseResult.ToggleSearchMode -> previousState.copy(isInSearchMode = !previousState.isInSearchMode)

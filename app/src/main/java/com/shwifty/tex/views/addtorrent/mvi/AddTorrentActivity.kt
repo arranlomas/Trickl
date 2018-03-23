@@ -8,8 +8,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.schiwfty.torrentwrapper.utils.findHashFromMagnet
-import com.schiwfty.torrentwrapper.utils.findNameFromMagnet
-import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
 import com.shwifty.tex.R
 import com.shwifty.tex.utils.*
 import com.shwifty.tex.views.addtorrent.list.AddTorrentPagerAdapter
@@ -25,12 +23,12 @@ import javax.inject.Inject
 /**
  * Created by arran on 7/05/2017.
  */
-class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentActions, AddTorrentResult, AddTorrentViewState>() {
+class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentActions, AddTorrentResult, AddTorrentViewState>() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val removeTorrentIntentPublisher = PublishSubject.create<AddTorrentIntent>()
+    private val removeTorrentActionPublisher = PublishSubject.create<AddTorrentActions>()
 
     companion object {
         fun startActivity(context: Context, hash: String?, magnet: String?, torrentFilePath: String?) {
@@ -49,7 +47,7 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentAct
         super.setup(viewModel, { error ->
             Toasty.error(this, error.localizedMessage).show()
         })
-        super.attachIntents(intents(), AddTorrentIntent.LoadIntent::class.java)
+        super.attachActions(actions(), AddTorrentActions.Load::class.java)
 
         addTorrentFab.setOnClickListener {
             val returnIntent = Intent()
@@ -72,24 +70,24 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentIntent, AddTorrentAct
         }
     }
 
-    private fun intents() = Observable.merge(observables())
+    private fun actions() = Observable.merge(observables())
 
-    private fun observables(): List<Observable<AddTorrentIntent>> = listOf(initialIntent(), deleteIntent())
+    private fun observables(): List<Observable<AddTorrentActions>> = listOf(initialAction(), deleteAction())
 
-    private fun deleteIntent(): Observable<AddTorrentIntent> {
-        return removeTorrentIntentPublisher
+    private fun deleteAction(): Observable<AddTorrentActions> {
+        return removeTorrentActionPublisher
     }
 
-    private fun initialIntent(): Observable<AddTorrentIntent> {
+    private fun initialAction(): Observable<AddTorrentActions> {
         val hash = getHashFromIntent() ?: getMagnetFromIntent()?.findHashFromMagnet()
         ?: throw IllegalArgumentException("Must provide hash or magnet")
-        return Observable.just(AddTorrentIntent.LoadIntent(hash))
+        return Observable.just(AddTorrentActions.Load(hash))
     }
 
     override fun onBackPressed() {
         if (!viewModel.getLastState().torrentAlreadyExisted) {
             viewModel.getLastState().torrentHash?.let {
-                removeTorrentIntentPublisher.onNext(AddTorrentIntent.RemoveTorrent(it))
+                removeTorrentActionPublisher.onNext(AddTorrentActions.RemoveTorrent(it))
             }
         } else super.onBackPressed()
     }

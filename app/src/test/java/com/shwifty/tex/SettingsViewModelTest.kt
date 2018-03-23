@@ -3,7 +3,6 @@ package com.shwifty.tex
 import android.test.mock.MockContext
 import com.shwifty.tex.models.AppTheme
 import com.shwifty.tex.repository.preferences.IPreferenceRepository
-import com.shwifty.tex.views.settings.mvi.SettingsIntents
 import com.shwifty.tex.views.settings.mvi.SettingsViewModel
 import com.shwifty.tex.views.settings.mvi.SettingsViewState
 import io.reactivex.Emitter

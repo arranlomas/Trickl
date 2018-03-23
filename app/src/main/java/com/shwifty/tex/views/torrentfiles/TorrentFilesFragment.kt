@@ -27,7 +27,7 @@ import javax.inject.Inject
 /**
  * Created by arran on 7/05/2017.
  */
-class TorrentFilesFragment : BaseDaggerMviFragment<TorrentInfoIntent, TorrentInfoActions, TorrentInfoResult, TorrentInfoViewState>() {
+class TorrentFilesFragment : BaseDaggerMviFragment<TorrentInfoActions, TorrentInfoResult, TorrentInfoViewState>() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -77,17 +77,17 @@ class TorrentFilesFragment : BaseDaggerMviFragment<TorrentInfoIntent, TorrentInf
         super.setup(viewModel, { error ->
             Toasty.error(context!!, error.localizedMessage).show()
         })
-        super.attachIntents(intents(), TorrentInfoIntent.LoadInfoIntent::class.java)
+        super.attachActions(actions(), TorrentInfoActions.Load::class.java)
     }
 
-    private fun intents() = Observable.merge(observables())
+    private fun actions() = Observable.merge(observables())
 
-    private fun observables(): List<Observable<TorrentInfoIntent>> = listOf(initialIntent())
+    private fun observables(): List<Observable<TorrentInfoActions>> = listOf(initialAction())
 
-    private fun initialIntent(): Observable<TorrentInfoIntent> {
+    private fun initialAction(): Observable<TorrentInfoActions> {
         val hash = getHashFromIntent() ?: getMagnetFromIntent()?.findHashFromMagnet()
         ?: throw IllegalArgumentException("Must provide hash or magnet")
-        return Observable.just(TorrentInfoIntent.LoadInfoIntent(hash))
+        return Observable.just(TorrentInfoActions.Load(hash))
     }
 
     override fun render(state: TorrentInfoViewState) {

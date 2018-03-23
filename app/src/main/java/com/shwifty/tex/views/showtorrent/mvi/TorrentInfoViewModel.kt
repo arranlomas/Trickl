@@ -10,18 +10,12 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 class TorrentInfoViewModel @Inject constructor(torrentRepository: ITorrentRepository)
-    : TorrentInfoContract.ViewModel, BaseMviViewModel<TorrentInfoIntent, TorrentInfoActions, TorrentInfoResult, TorrentInfoViewState>(
-        intentToAction = { torrentInfoIntentToAction(it) },
+    : TorrentInfoContract.ViewModel, BaseMviViewModel<TorrentInfoActions, TorrentInfoResult, TorrentInfoViewState>(
         actionProcessor = torrentInfoActionProcessor(torrentRepository),
         reducer = torrentInfoReducer,
         defaultState = TorrentInfoViewState.default()
 
 )
-
-fun torrentInfoIntentToAction(intent: TorrentInfoIntent): TorrentInfoActions = when (intent) {
-    is TorrentInfoIntent.LoadInfoIntent -> TorrentInfoActions.Load(intent.torrentHash)
-}
-
 
 fun torrentInfoActionProcessor(torrentRepository: ITorrentRepository) = KontentMasterProcessor<TorrentInfoActions, TorrentInfoResult> { action ->
     Observable.merge(observables(action, torrentRepository))
@@ -49,7 +43,6 @@ fun loadTorrent(torrentRepository: ITorrentRepository) =
                 },
                 loading = TorrentInfoResult.LoadInFlight()
         )
-
 
 val torrentInfoReducer = KontentReducer { result: TorrentInfoResult, previousState: TorrentInfoViewState ->
     when (result) {
