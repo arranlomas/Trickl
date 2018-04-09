@@ -47,7 +47,8 @@ fun loadTorrent(torrentRepository: ITorrentRepository) =
                                 alreadyExists
                             }
 
-                    val downloadInfoObs = torrentRepository.downloadTorrentInfo(action.torrentHash)
+                    val trackerList = action.trackers ?: emptyList()
+                    val downloadInfoObs = torrentRepository.downloadTorrentInfo(action.torrentHash, trackers = trackerList)
                             .map {
                                 it.unwrapIfSuccess { it }
                                         ?: throw IllegalStateException("Torrent not found")
@@ -82,9 +83,11 @@ fun removeTorrent(torrentRepository: ITorrentRepository) =
                                     } else {
                                         throw Error("Error deleting torrent")
                                     }
-                                }?.let { result.logTorrentParseError() }
+                                }?.let {
+                                    result.logTorrentParseError()
+                                }
+                                true
                             }
-                            .map { true }
                 },
                 success = {
                     AddTorrentResult.RemoveSuccess()

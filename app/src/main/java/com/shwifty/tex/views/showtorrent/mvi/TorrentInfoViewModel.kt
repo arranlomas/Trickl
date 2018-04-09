@@ -29,7 +29,7 @@ private fun observables(shared: Observable<TorrentInfoActions>, torrentRepositor
 fun loadTorrent(torrentRepository: ITorrentRepository) =
         KontentActionProcessor<TorrentInfoActions.Load, TorrentInfoResult, TorrentInfo>(
                 action = { action ->
-                    torrentRepository.downloadTorrentInfo(action.torrentHash)
+                    torrentRepository.downloadTorrentInfo(action.torrentHash, trackers = action.trackers ?: emptyList())
                             .map {
                                 it.unwrapIfSuccess { it }
                                         ?: throw IllegalStateException("couldn't parse torrent result")

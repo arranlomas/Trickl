@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Trickl.iml" filepath="$PROJECT_DIR$/Trickl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/torrentwrapper/Trickl-torrentwrapper.iml" filepath="$PROJECT_DIR$/torrentwrapper/Trickl-torrentwrapper.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/confluencewrapper/confluencewrapper.iml" filepath="$PROJECT_DIR$/confluencewrapper/confluencewrapper.iml" />
       <module fileurl="file://$PROJECT_DIR$/../FileBrowser/kotlinfilebrowser/file-browser.iml" filepath="$PROJECT_DIR$/../FileBrowser/kotlinfilebrowser/file-browser.iml" />
@@ -10,7 +11,6 @@
       <module fileurl="file://$PROJECT_DIR$/../kontent/kontent-android-viewmodel/kontent-android-viewmodel.iml" filepath="$PROJECT_DIR$/../kontent/kontent-android-viewmodel/kontent-android-viewmodel.iml" />
       <module fileurl="file://$PROJECT_DIR$/../kontent/kontent-core/kontent-core.iml" filepath="$PROJECT_DIR$/../kontent/kontent-core/kontent-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/../kontent/kontent-dagger-support/kontent-dagger-support.iml" filepath="$PROJECT_DIR$/../kontent/kontent-dagger-support/kontent-dagger-support.iml" />
-      <module fileurl="file://$PROJECT_DIR$/torrentwrapper/torrentwrapper.iml" filepath="$PROJECT_DIR$/torrentwrapper/torrentwrapper.iml" />
     </modules>
   </component>
 </project>

@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.schiwfty.torrentwrapper.utils.findHashFromMagnet
+import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
 import com.shwifty.tex.R
 import com.shwifty.tex.dialogs.IDialogManager
 import com.shwifty.tex.utils.*
@@ -68,7 +69,8 @@ class TorrentInfoActivity : BaseDaggerMviActivity<TorrentInfoActions, TorrentInf
     private fun initialAction(): Observable<TorrentInfoActions> {
         val hash = getHashFromIntent() ?: getMagnetFromIntent()?.findHashFromMagnet()
         ?: throw IllegalArgumentException("Must provide hash or magnet")
-        return Observable.just(TorrentInfoActions.Load(hash))
+        val trackers = getMagnetFromIntent()?.findTrackersFromMagnet()
+        return Observable.just(TorrentInfoActions.Load(hash, trackers))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

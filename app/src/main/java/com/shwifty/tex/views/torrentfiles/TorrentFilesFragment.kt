@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.utils.findHashFromMagnet
+import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
 import com.shwifty.tex.R
 import com.shwifty.tex.actions.IActionManager
 import com.shwifty.tex.utils.ARG_TORRENT_HASH
@@ -87,7 +88,8 @@ class TorrentFilesFragment : BaseDaggerMviFragment<TorrentInfoActions, TorrentIn
     private fun initialAction(): Observable<TorrentInfoActions> {
         val hash = getHashFromIntent() ?: getMagnetFromIntent()?.findHashFromMagnet()
         ?: throw IllegalArgumentException("Must provide hash or magnet")
-        return Observable.just(TorrentInfoActions.Load(hash))
+        val trackers = getMagnetFromIntent()?.findTrackersFromMagnet()
+        return Observable.just(TorrentInfoActions.Load(hash, trackers))
     }
 
     override fun render(state: TorrentInfoViewState) {

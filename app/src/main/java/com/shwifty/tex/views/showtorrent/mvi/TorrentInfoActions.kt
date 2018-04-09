@@ -8,5 +8,5 @@ import com.shwifty.tex.models.TorrentSearchSortType
  * Created by arran on 14/02/2018.
  */
 sealed class TorrentInfoActions : KontentAction() {
-    data class Load(val torrentHash: String) : TorrentInfoActions()
+    data class Load(val torrentHash: String, val trackers: List<String>?) : TorrentInfoActions()
 }

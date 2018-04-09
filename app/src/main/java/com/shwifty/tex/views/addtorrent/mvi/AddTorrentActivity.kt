@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.schiwfty.torrentwrapper.utils.findHashFromMagnet
+import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
 import com.shwifty.tex.R
 import com.shwifty.tex.utils.*
 import com.shwifty.tex.views.addtorrent.list.AddTorrentPagerAdapter
@@ -81,7 +82,8 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentActions, AddTorrentRe
     private fun initialAction(): Observable<AddTorrentActions> {
         val hash = getHashFromIntent() ?: getMagnetFromIntent()?.findHashFromMagnet()
         ?: throw IllegalArgumentException("Must provide hash or magnet")
-        return Observable.just(AddTorrentActions.Load(hash))
+        val trackers = getMagnetFromIntent()?.findTrackersFromMagnet()
+        return Observable.just(AddTorrentActions.Load(hash, trackers))
     }
 
     override fun onBackPressed() {

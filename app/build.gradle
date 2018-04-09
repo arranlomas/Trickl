@@ -114,9 +114,9 @@ dependencies {
     compile project(':kontent-core')
     compile project(':kontent-dagger-support')
     compile project(':kontent-android-viewmodel')
+    compile project(':go-confluence')
     compile project(':file-browser')
     compile project(':torrentwrapper')
-    compile project(':go-confluence')
 }
 repositories {
     mavenCentral()
