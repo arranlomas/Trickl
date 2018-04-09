@@ -27,6 +27,7 @@ import es.dmoral.toasty.Toasty
 import io.reactivex.Emitter
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.frag_torrent_browse.*
+import java.net.ConnectException
 import javax.inject.Inject
 
 /**
@@ -176,7 +177,10 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
         torrentBrowseSwipeRefresh.isRefreshing = state.isLoading
 
         errorLayout.setVisible(state.error != null && !state.isLoading)
-        state.error?.let { errorText.text = it }
+        state.error?.let {
+            if (it is ConnectException) errorText.text = getString(R.string.error_connecting_to_search_server)
+            else errorText.text = it.localizedMessage
+        }
 
 
         if (state.isSearchBarExpanded) {

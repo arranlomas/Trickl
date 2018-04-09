@@ -2,7 +2,8 @@
     <string name="app_name">Trickl</string>
 
     <!--General-->
-    <string name="error_unexpected">Oops! Something went wrong, sorry</string>
+    <string name="error_unexpected">Oops! Something went wrong, Sorry</string>
+    <string name="error_connecting_to_search_server">Oops! Looks like our search is down.\nPlease try again later, Sorry</string>
 
     <!--Splash-->
     <!--confluence-->

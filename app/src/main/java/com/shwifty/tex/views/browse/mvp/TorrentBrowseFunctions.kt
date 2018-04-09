@@ -93,10 +93,10 @@ fun loadSearchResults(torrentSearchRepository: ITorrentSearchRepository) =
 val browseReducer = KontentReducer { result: BrowseResult, previousState: BrowseViewState ->
     when (result) {
         is BrowseResult.BrowseSuccess -> previousState.copy(isLoading = false, error = null, browseResults = result.result)
-        is BrowseResult.BrowseError -> previousState.copy(isLoading = false, error = result.error.localizedMessage)
+        is BrowseResult.BrowseError -> previousState.copy(isLoading = false, error = result.error)
         is BrowseResult.BrowseInFlight -> previousState.copy(isLoading = true, error = null)
         is BrowseResult.SearchSuccess -> previousState.copy(isLoading = false, searchResults = result.result, error = null, lastQuery = result.query)
-        is BrowseResult.SearchError -> previousState.copy(isLoading = false, error = result.error.localizedMessage)
+        is BrowseResult.SearchError -> previousState.copy(isLoading = false, error = result.error)
         is BrowseResult.SearchInFlight -> previousState.copy(isLoading = true, error = null)
         is BrowseResult.ToggleSearchMode -> previousState.copy(isInSearchMode = !previousState.isInSearchMode)
         is BrowseResult.UpdateSortAndCategory -> previousState.copy(category = result.category, sortType = result.sortType)
