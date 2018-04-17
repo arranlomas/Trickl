@@ -1,5 +1,5 @@
-include ':app', ':go-confluence', ':kontent-core', ':kontent-dagger-support', ':kontent-android-viewmodel', ':file-browser', ':confluencewrapper', ':torrentwrapper'
+include ':app', ':go-confluence', ':kontent-core', ':kontent-dagger-support', ':kontent-android-viewmodel', ':kotlinfilebrowser', ':confluencewrapper', ':torrentwrapper'
 project(':kontent-core').projectDir = new File(settingsDir, '../kontent/kontent-core')
 project(':kontent-dagger-support').projectDir = new File(settingsDir, '../kontent/kontent-dagger-support')
 project(':kontent-android-viewmodel').projectDir = new File(settingsDir, '../kontent/kontent-android-viewmodel')
-project(':file-browser').projectDir = new File(settingsDir, '../FileBrowser/kotlinfilebrowser')
+project(':kotlinfilebrowser').projectDir = new File(settingsDir, '../Kotlin-File-Browser/kotlinfilebrowser')
