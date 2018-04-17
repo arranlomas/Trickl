@@ -111,11 +111,14 @@ dependencies {
 
     compile dependencies.daggerHelper
 
+    compile 'com.droidninja:filepicker:2.1.4'
+
+
     compile project(':kontent-core')
     compile project(':kontent-dagger-support')
     compile project(':kontent-android-viewmodel')
     compile project(':go-confluence')
-    compile project(':file-browser')
+    compile project(':kotlinfilebrowser')
     compile project(':torrentwrapper')
 }
 repositories {

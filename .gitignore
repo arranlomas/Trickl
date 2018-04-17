@@ -9,3 +9,4 @@
 .externalNativeBuild
 app/fabric.properties
 /keystore.properties
+.idea/caches/
