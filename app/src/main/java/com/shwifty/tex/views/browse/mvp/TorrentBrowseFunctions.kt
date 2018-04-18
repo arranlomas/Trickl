@@ -29,7 +29,7 @@ private fun observables(shared: Observable<BrowseActions>, torrentSearchReposito
         shared.ofType(BrowseActions.ToggleSearchMode::class.java).compose(toggleSearchProcessor()),
         shared.ofType(BrowseActions.SetSearchBarExpanded::class.java).compose(toggleSearchBarExpandedProcessor()),
         shared.ofType(BrowseActions.UpdateSortAndCategory::class.java).compose(updateSortAndCategoryProcessor()),
-        shared.ofType(BrowseActions.ClearSearchResults::class.java).compose(clearSearchResultsProcessor()))
+        shared.ofType(BrowseActions.ClearResults::class.java).compose(clearResultsProcessor()))
 }
 
 fun initialLoad(torrentSearchRepository: ITorrentSearchRepository) =
@@ -89,8 +89,8 @@ fun updateSortAndCategoryProcessor() = KontentSimpleActionProcessor<BrowseAction
     Observable.just(BrowseResult.UpdateSortAndCategory(it.sortType, it.category))
 }
 
-fun clearSearchResultsProcessor() = KontentSimpleActionProcessor<BrowseActions.ClearSearchResults, BrowseResult> {
-    Observable.just(BrowseResult.ClearSearchResults())
+fun clearResultsProcessor() = KontentSimpleActionProcessor<BrowseActions.ClearResults, BrowseResult> {
+    Observable.just(BrowseResult.ClearResults(it.isInSearchMode))
 }
 
 fun loadSearchResults(torrentSearchRepository: ITorrentSearchRepository) =
@@ -132,7 +132,10 @@ val browseReducer = KontentReducer { result: BrowseResult, previousState: Browse
         is BrowseResult.ToggleSearchMode -> previousState.copy(isInSearchMode = !previousState.isInSearchMode)
         is BrowseResult.UpdateSortAndCategory -> previousState.copy(category = result.category, sortType = result.sortType)
         is BrowseResult.SetSearchBarExpanded -> previousState.copy(isSearchBarExpanded = result.expanded)
-        is BrowseResult.ClearSearchResults -> previousState.copy(searchResults = emptyList())
+        is BrowseResult.ClearResults -> {
+            if (result.isInSearchMode) previousState.copy(searchResults = emptyList())
+            else previousState.copy(browseResults = emptyList())
+        }
     }
 }
 

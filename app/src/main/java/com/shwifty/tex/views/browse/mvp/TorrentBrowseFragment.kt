@@ -63,6 +63,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val loadMoreResultsSubject = PublishSubject.create<BrowseActions.LoadMoreBrowseResults>()
+    private val clearResultsSubject = PublishSubject.create<BrowseActions.ClearResults>()
 
     companion object {
         fun newInstance(): Fragment {
@@ -112,7 +113,8 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
         refreshIntent(),
         updateSortAndCategoryAction(),
         searchQueryEnterPressed(),
-        loadMoreResultsSubject))
+        loadMoreResultsSubject,
+        clearResultsSubject))
 
     private fun initialAction(): Observable<BrowseActions.InitialLoad> = Observable.just(
         BrowseActions.InitialLoad(
@@ -147,7 +149,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
         fabSearch.setOnClickListener {
             if (viewModel.getLastState().isInSearchMode) {
                 recyclerView.adapter = browseResultsAdapter
-                emitter.onNext(BrowseActions.ClearSearchResults())
+                clearResultsSubject.onNext(BrowseActions.ClearResults(viewModel.getLastState().isInSearchMode))
                 emitter.onNext(BrowseActions.SetSearchBarExpanded(false))
             } else {
                 recyclerView.adapter = searchResultsAdapter
@@ -159,6 +161,9 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
     }
 
     private fun refreshIntent(): Observable<BrowseActions.Reload> = RxSwipeRefreshLayout.refreshes(torrentBrowseSwipeRefresh)
+        .map {
+            clearResultsSubject.onNext(BrowseActions.ClearResults(viewModel.getLastState().isInSearchMode))
+        }
         .map { getReloadIntent() }
 
     private fun updateSortAndCategoryAction(): Observable<BrowseActions> = createObservable { emitter ->
@@ -198,6 +203,9 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
     }
 
     override fun render(state: BrowseViewState) {
+        if (state.isInSearchMode && state.searchResults.isEmpty()) endlessScrollListener.resetState()
+        else if (!state.isInSearchMode && state.browseResults.isEmpty()) endlessScrollListener.resetState()
+
         searchResultsAdapter.setResults(state.searchResults)
         browseResultsAdapter.setResults(state.browseResults)
         torrentBrowseSwipeRefresh.isRefreshing = state.isLoading
@@ -207,7 +215,6 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
             if (it is ConnectException) errorText.text = getString(R.string.error_connecting_to_search_server)
             else errorText.text = it.localizedMessage
         }
-
 
         if (state.isSearchBarExpanded) {
             expandQueryInput()
@@ -222,7 +229,6 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
             searchQueryInput.setVisible(false)
             fabSendSearch.hide()
         }
-
 
         if (state.isInSearchMode) {
             context?.resources?.let {

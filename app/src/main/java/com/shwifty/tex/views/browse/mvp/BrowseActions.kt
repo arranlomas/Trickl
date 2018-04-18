@@ -14,6 +14,6 @@ sealed class BrowseActions : KontentAction() {
     data class Search(val query: String) : BrowseActions()
     class ToggleSearchMode : BrowseActions()
     data class SetSearchBarExpanded(val expanded: Boolean) : BrowseActions()
-    class ClearSearchResults : BrowseActions()
+    data class ClearResults(val isInSearchMode: Boolean) : BrowseActions()
     data class Reload(val isInSearchMode: Boolean, val query: String?, val sortType: TorrentSearchSortType?, val category: TorrentSearchCategory?) : BrowseActions()
 }
