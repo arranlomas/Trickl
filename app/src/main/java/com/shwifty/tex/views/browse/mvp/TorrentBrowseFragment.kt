@@ -20,12 +20,19 @@ import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.navigation.INavigation
 import com.shwifty.tex.navigation.NavigationKey
-import com.shwifty.tex.utils.*
+import com.shwifty.tex.utils.animateWidthChange
+import com.shwifty.tex.utils.closeKeyboard
+import com.shwifty.tex.utils.createObservable
+import com.shwifty.tex.utils.dpToPx
+import com.shwifty.tex.utils.forceOpenKeyboard
+import com.shwifty.tex.utils.setVisible
+import com.shwifty.tex.views.EndlessScrollListener
 import com.shwifty.tex.views.base.mvi.BaseDaggerMviFragment
 import com.shwifty.tex.views.browse.torrentSearch.list.TorrentSearchAdapter
 import es.dmoral.toasty.Toasty
 import io.reactivex.Emitter
 import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.frag_torrent_browse.*
 import java.net.ConnectException
 import javax.inject.Inject
@@ -41,6 +48,8 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
     @Inject
     lateinit var dialogManager: IDialogManager
 
+    lateinit var endlessScrollListener: EndlessScrollListener
+
     private val itemOnClick: (searchResult: TorrentSearchResult) -> Unit = { torrentSearchResult ->
         context?.let {
             if (torrentSearchResult.magnet != null) navigation.goTo(NavigationKey.AddTorrent(context = it, magnet = torrentSearchResult.magnet))
@@ -52,6 +61,8 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val loadMoreResultsSubject = PublishSubject.create<BrowseActions.LoadMoreBrowseResults>()
 
     companion object {
         fun newInstance(): Fragment {
@@ -77,23 +88,37 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
 
     private fun setupRecyclerView() {
         recyclerView.setHasFixedSize(true)
-        val llm = LinearLayoutManager(context) as RecyclerView.LayoutManager
+        val llm = LinearLayoutManager(context)
         recyclerView.layoutManager = llm
+        endlessScrollListener = object : EndlessScrollListener(llm) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+                loadMoreResultsSubject.onNext(
+                    BrowseActions.LoadMoreBrowseResults(
+                        viewModel.getLastState().sortType,
+                        viewModel.getLastState().category,
+                        page
+                    )
+                )
+            }
+        }
+        recyclerView.addOnScrollListener(endlessScrollListener)
+        recyclerView.adapter = browseResultsAdapter
     }
 
     private fun actions() = Observable.merge(listOf(
-            initialAction(),
-            searchAction(),
-            toggleSearchModeAction(),
-            refreshIntent(),
-            updateSortAndCategoryAction(),
-            searchQueryEnterPressed()))
+        initialAction(),
+        searchAction(),
+        toggleSearchModeAction(),
+        refreshIntent(),
+        updateSortAndCategoryAction(),
+        searchQueryEnterPressed(),
+        loadMoreResultsSubject))
 
     private fun initialAction(): Observable<BrowseActions.InitialLoad> = Observable.just(
-            BrowseActions.InitialLoad(
-                    TorrentSearchSortType.SEEDS,
-                    TorrentSearchCategory.Movies
-            ))
+        BrowseActions.InitialLoad(
+            TorrentSearchSortType.SEEDS,
+            TorrentSearchCategory.Movies
+        ))
 
     private fun searchAction(): Observable<BrowseActions> = createObservable { emitter ->
         fabSendSearch.setOnClickListener {
@@ -121,37 +146,40 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
     private fun toggleSearchModeAction(): Observable<BrowseActions> = createObservable { emitter ->
         fabSearch.setOnClickListener {
             if (viewModel.getLastState().isInSearchMode) {
+                recyclerView.adapter = browseResultsAdapter
                 emitter.onNext(BrowseActions.ClearSearchResults())
                 emitter.onNext(BrowseActions.SetSearchBarExpanded(false))
-            } else
+            } else {
+                recyclerView.adapter = searchResultsAdapter
                 emitter.onNext(BrowseActions.SetSearchBarExpanded(true))
+            }
 
             emitter.onNext(BrowseActions.ToggleSearchMode())
         }
     }
 
     private fun refreshIntent(): Observable<BrowseActions.Reload> = RxSwipeRefreshLayout.refreshes(torrentBrowseSwipeRefresh)
-            .map { getReloadIntent() }
+        .map { getReloadIntent() }
 
     private fun updateSortAndCategoryAction(): Observable<BrowseActions> = createObservable { emitter ->
         fabFilter.setOnClickListener {
             context?.let {
                 dialogManager.showBrowseFilterDialog(it,
-                        viewModel.getLastState().sortType,
-                        viewModel.getLastState().category,
-                        { sortType, category ->
-                            emitter.onNext(BrowseActions.UpdateSortAndCategory(sortType, category))
-                            emitter.onNext(getReloadIntent())
-                        })
+                    viewModel.getLastState().sortType,
+                    viewModel.getLastState().category,
+                    { sortType, category ->
+                        emitter.onNext(BrowseActions.UpdateSortAndCategory(sortType, category))
+                        emitter.onNext(getReloadIntent())
+                    })
             }
         }
     }
 
     private fun getReloadIntent(): BrowseActions.Reload {
         return BrowseActions.Reload(viewModel.getLastState().isInSearchMode,
-                viewModel.getLastState().lastQuery,
-                viewModel.getLastState().sortType,
-                viewModel.getLastState().category)
+            viewModel.getLastState().lastQuery,
+            viewModel.getLastState().sortType,
+            viewModel.getLastState().category)
     }
 
     private fun expandQueryInput() {
@@ -170,10 +198,8 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
     }
 
     override fun render(state: BrowseViewState) {
-        searchResultsAdapter.updateResults(state.searchResults)
-        browseResultsAdapter.updateResults(state.browseResults)
-        searchResultsAdapter.notifyDataSetChanged()
-        browseResultsAdapter.notifyDataSetChanged()
+        searchResultsAdapter.setResults(state.searchResults)
+        browseResultsAdapter.setResults(state.browseResults)
         torrentBrowseSwipeRefresh.isRefreshing = state.isLoading
 
         errorLayout.setVisible(state.error != null && !state.isLoading)
@@ -201,16 +227,13 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
         if (state.isInSearchMode) {
             context?.resources?.let {
                 fabSearch.setImageDrawable(ResourcesCompat.getDrawable(it, R.drawable.ic_close_white, null))
-                recyclerView.adapter = searchResultsAdapter
                 fabFilter.hide()
             }
         } else {
             context?.resources?.let {
                 fabSearch.setImageDrawable(ResourcesCompat.getDrawable(it, R.drawable.ic_search_white, null))
-                recyclerView.adapter = browseResultsAdapter
                 fabFilter.show()
             }
         }
     }
-
 }

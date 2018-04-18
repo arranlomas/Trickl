@@ -11,9 +11,9 @@ import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.shwifty.tex.R
 import com.shwifty.tex.dialogs.IDialogManager
 import com.shwifty.tex.navigation.INavigation
+import com.shwifty.tex.navigation.NavigationKey
 import com.shwifty.tex.views.all.list.AllTorrentsAdapter
 import com.shwifty.tex.views.base.mvp.BaseDaggerFragment
-import com.shwifty.tex.navigation.NavigationKey
 import kotlinx.android.synthetic.main.frag_all.*
 import javax.inject.Inject
 

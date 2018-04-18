@@ -1,6 +1,10 @@
 ## Trickl
 trickl torrent client
 
+TODO: fix being able to go back from add torrent before the torrent file is loaded
+	add pagination for search
+	migrate to use file picker
+
 
 This is the repository for the trickl torrent client for android
 

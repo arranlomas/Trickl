@@ -9,6 +9,7 @@ import com.shwifty.tex.models.TorrentSearchSortType
  */
 sealed class BrowseActions : KontentAction() {
     data class InitialLoad(val sortType: TorrentSearchSortType, val category: TorrentSearchCategory) : BrowseActions()
+    data class LoadMoreBrowseResults(val sortType: TorrentSearchSortType, val category: TorrentSearchCategory, val page: Int) : BrowseActions()
     data class UpdateSortAndCategory(val sortType: TorrentSearchSortType, val category: TorrentSearchCategory) : BrowseActions()
     data class Search(val query: String) : BrowseActions()
     class ToggleSearchMode : BrowseActions()

@@ -8,13 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.schiwfty.torrentwrapper.models.TorrentFile
-import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.R
-import com.shwifty.tex.actions.IActionManager
-import com.shwifty.tex.navigation.INavigation
 import com.shwifty.tex.views.base.mvp.BaseDaggerFragment
 import com.shwifty.tex.views.downloads.list.FileDownloadAdapter
-import com.shwifty.tex.navigation.Navigation
 import kotlinx.android.synthetic.main.frag_file_downloads.*
 import javax.inject.Inject
 
