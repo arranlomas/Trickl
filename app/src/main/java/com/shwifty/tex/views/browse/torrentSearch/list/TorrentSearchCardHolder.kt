@@ -15,7 +15,7 @@ class TorrentSearchCardHolder(itemView: View) : RecyclerView.ViewHolder(itemView
         this.torrentSearchResult = torrentSearchResult
         itemView.torrentName.text = torrentSearchResult.name
         itemView.uploader.text = torrentSearchResult.uled
-        itemView.category.text = torrentSearchResult.category ?: torrentSearchResult.categoryParent
+        itemView.category.text = torrentSearchResult.category?.toHumanFriendlyString() ?: torrentSearchResult.categoryParent
         itemView.seeders.text = "Seeders: ${torrentSearchResult.seeds}"
         itemView.leechers.text = "Leechers: ${torrentSearchResult.leechers}"
         itemView.size.text = torrentSearchResult.size
