@@ -63,7 +63,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val loadMoreResultsSubject = PublishSubject.create<BrowseActions.LoadMoreBrowseResults>()
+    private val loadMoreResultsSubject = PublishSubject.create<BrowseActions.LoadMoreResults>()
     private val clearResultsSubject = PublishSubject.create<BrowseActions.ClearResults>()
 
     companion object {
@@ -95,7 +95,9 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
         endlessScrollListener = object : EndlessScrollListener(llm, BROWSE_FIRST_PAGE) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
                 loadMoreResultsSubject.onNext(
-                    BrowseActions.LoadMoreBrowseResults(
+                    BrowseActions.LoadMoreResults(
+                        viewModel.getLastState().isInSearchMode,
+                        viewModel.getLastState().lastQuery,
                         viewModel.getLastState().sortType,
                         viewModel.getLastState().category,
                         page
@@ -204,8 +206,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
     }
 
     override fun render(state: BrowseViewState) {
-        if (state.isInSearchMode && state.searchResults.isEmpty()) endlessScrollListener.resetState()
-        else if (!state.isInSearchMode && state.browseResults.isEmpty()) endlessScrollListener.resetState()
+        if (state.isInSearchMode && recyclerView.adapter.itemCount == 0) endlessScrollListener.resetState()
 
         searchResultsAdapter.setResults(state.searchResults)
         browseResultsAdapter.setResults(state.browseResults)

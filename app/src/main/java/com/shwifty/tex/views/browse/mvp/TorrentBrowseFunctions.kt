@@ -24,7 +24,7 @@ fun browseActionProcessor(torrentSearchRepository: ITorrentSearchRepository) = K
 private fun observables(shared: Observable<BrowseActions>, torrentSearchRepository: ITorrentSearchRepository): List<Observable<BrowseResult>> {
     return listOf<Observable<BrowseResult>>(
         shared.ofType(BrowseActions.InitialLoad::class.java).compose(initialLoad(torrentSearchRepository)),
-        shared.ofType(BrowseActions.LoadMoreBrowseResults::class.java).compose(loadMore(torrentSearchRepository)),
+        shared.ofType(BrowseActions.LoadMoreResults::class.java).compose(loadMore(torrentSearchRepository)),
         shared.ofType(BrowseActions.Reload::class.java).compose(reload(torrentSearchRepository)),
         shared.ofType(BrowseActions.Search::class.java).compose(loadSearchResults(torrentSearchRepository)),
         shared.ofType(BrowseActions.ToggleSearchMode::class.java).compose(toggleSearchProcessor()),
@@ -47,19 +47,24 @@ fun initialLoad(torrentSearchRepository: ITorrentSearchRepository) =
         loading = BrowseResult.BrowseInFlight()
     )
 
-fun loadMore(torrentSearchRepository: ITorrentSearchRepository) =
-    KontentActionProcessor<BrowseActions.LoadMoreBrowseResults, BrowseResult, List<TorrentSearchResult>>(
-        action = { action ->
-            torrentSearchRepository.browse(action.sortType, action.page, action.category)
-        },
-        success = { results ->
-            BrowseResult.BrowseSuccess(results)
-        },
-        error = {
-            BrowseResult.BrowseError(it)
-        },
-        loading = BrowseResult.BrowseInFlight()
-    )
+
+fun loadMore(torrentSearchRepository: ITorrentSearchRepository) = ObservableTransformer<BrowseActions.LoadMoreResults, BrowseResult> {
+    it.flatMap { action ->
+        if (action.isInSearchMode) torrentSearchRepository.search(action.query!!, action.sortType!!, action.page, action.category!!)
+            .networkMapper(
+                error = { BrowseResult.SearchError(it) },
+                loading = BrowseResult.SearchInFlight(),
+                success = { BrowseResult.SearchSuccess(it, action.query) }
+            )
+        else torrentSearchRepository.browse(action.sortType!!, BROWSE_FIRST_PAGE, action.category!!)
+            .networkMapper(
+                error = { BrowseResult.BrowseError(it) },
+                loading = BrowseResult.BrowseInFlight(),
+                success = { BrowseResult.BrowseSuccess(it) }
+            )
+    }
+}
+
 
 fun reload(torrentSearchRepository: ITorrentSearchRepository) = ObservableTransformer<BrowseActions.Reload, BrowseResult> {
     it.flatMap { action ->

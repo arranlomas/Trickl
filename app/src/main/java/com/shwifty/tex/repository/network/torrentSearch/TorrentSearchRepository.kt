@@ -39,6 +39,7 @@ internal class TorrentSearchRepository(private val torrentSearchApi: TorrentSear
 //        return Observable.just(results)
 //            .delay(2, TimeUnit.SECONDS)
         return torrentSearchApi.browse(sortType, pageNumber, category)
+            .map { it.filter { it.category != null } }
             .composeIo()
     }
 }
