@@ -56,7 +56,7 @@ fun loadMore(torrentSearchRepository: ITorrentSearchRepository) = ObservableTran
                 loading = BrowseResult.SearchInFlight(),
                 success = { BrowseResult.SearchSuccess(it, action.query) }
             )
-        else torrentSearchRepository.browse(action.sortType!!, BROWSE_FIRST_PAGE, action.category!!)
+        else torrentSearchRepository.browse(action.sortType!!, action.page, action.category!!)
             .networkMapper(
                 error = { BrowseResult.BrowseError(it) },
                 loading = BrowseResult.BrowseInFlight(),

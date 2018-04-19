@@ -206,7 +206,8 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
     }
 
     override fun render(state: BrowseViewState) {
-        if (state.isInSearchMode && recyclerView.adapter.itemCount == 0) endlessScrollListener.resetState()
+        if (state.isInSearchMode && state.searchResults.isEmpty()) endlessScrollListener.resetState()
+        else if (!state.isInSearchMode && state.browseResults.isEmpty()) endlessScrollListener.resetState()
 
         searchResultsAdapter.setResults(state.searchResults)
         browseResultsAdapter.setResults(state.browseResults)
