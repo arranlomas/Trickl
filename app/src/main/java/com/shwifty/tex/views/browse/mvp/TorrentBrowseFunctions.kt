@@ -8,6 +8,7 @@ import com.arranlomas.kontent.commons.functions.networkMapper
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
+import com.shwifty.tex.repository.network.torrentSearch.BROWSE_FIRST_PAGE
 import com.shwifty.tex.repository.network.torrentSearch.ITorrentSearchRepository
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -35,7 +36,7 @@ private fun observables(shared: Observable<BrowseActions>, torrentSearchReposito
 fun initialLoad(torrentSearchRepository: ITorrentSearchRepository) =
     KontentActionProcessor<BrowseActions.InitialLoad, BrowseResult, List<TorrentSearchResult>>(
         action = { action ->
-            torrentSearchRepository.browse(action.sortType, 0, action.category)
+            torrentSearchRepository.browse(action.sortType, BROWSE_FIRST_PAGE, action.category)
         },
         success = { results ->
             BrowseResult.BrowseSuccess(results)
@@ -68,7 +69,7 @@ fun reload(torrentSearchRepository: ITorrentSearchRepository) = ObservableTransf
                 loading = BrowseResult.SearchInFlight(),
                 success = { BrowseResult.SearchSuccess(it, action.query) }
             )
-        else torrentSearchRepository.browse(action.sortType!!, 0, action.category!!)
+        else torrentSearchRepository.browse(action.sortType!!, BROWSE_FIRST_PAGE, action.category!!)
             .networkMapper(
                 error = { BrowseResult.BrowseError(it) },
                 loading = BrowseResult.BrowseInFlight(),

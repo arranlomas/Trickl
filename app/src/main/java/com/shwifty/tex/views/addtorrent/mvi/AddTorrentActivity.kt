@@ -10,7 +10,14 @@ import android.view.View
 import com.schiwfty.torrentwrapper.utils.findHashFromMagnet
 import com.schiwfty.torrentwrapper.utils.findTrackersFromMagnet
 import com.shwifty.tex.R
-import com.shwifty.tex.utils.*
+import com.shwifty.tex.utils.ARG_ADD_TORRENT_RESULT
+import com.shwifty.tex.utils.ARG_TORRENT_FILE_PATH
+import com.shwifty.tex.utils.ARG_TORRENT_HASH
+import com.shwifty.tex.utils.ARG_TORRENT_MAGNET
+import com.shwifty.tex.utils.getHashFromIntent
+import com.shwifty.tex.utils.getMagnetFromIntent
+import com.shwifty.tex.utils.getTorrentNameFromMagnet
+import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.views.addtorrent.list.AddTorrentPagerAdapter
 import com.shwifty.tex.views.base.mvi.BaseDaggerMviActivity
 import es.dmoral.toasty.Toasty
@@ -90,7 +97,7 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentActions, AddTorrentRe
         if (!viewModel.getLastState().torrentAlreadyExisted) {
             viewModel.getLastState().torrentHash?.let {
                 removeTorrentActionPublisher.onNext(AddTorrentActions.RemoveTorrent(it))
-            }
+            } ?: super.onBackPressed()
         } else super.onBackPressed()
     }
 

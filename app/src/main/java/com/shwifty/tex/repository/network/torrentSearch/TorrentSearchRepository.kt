@@ -5,7 +5,6 @@ import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.utils.composeIo
 import io.reactivex.Observable
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by arran on 27/10/2017.
@@ -36,9 +35,9 @@ internal class TorrentSearchRepository(private val torrentSearchApi: TorrentSear
             4 -> results.subList(40, 50)
             else -> emptyList()
         }
-        return Observable.just(results)
-            .delay(2, TimeUnit.SECONDS)
-//        return torrentSearchApi.browse(sortType, pageNumber, category)
-//                .composeIo()
+//        return Observable.just(results)
+//            .delay(2, TimeUnit.SECONDS)
+        return torrentSearchApi.browse(sortType, pageNumber, category)
+                .composeIo()
     }
 }

@@ -4,13 +4,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 
 abstract class EndlessScrollListener(
-    private val layoutManager: LinearLayoutManager
+    private val layoutManager: LinearLayoutManager,
+    private val startPage: Int
 ) : RecyclerView.OnScrollListener() {
     private var visibleThreshold = 2
-    private var currentPage = 0
+    private var currentPage = startPage
     private var previousTotalItemCount = 0
     private var loading = true
-    private val startingPageIndex = 0
+    private val startingPageIndex = startPage
 
     fun getLastVisibleItem(lastVisibleItemPositions: IntArray): Int {
         var maxSize = 0

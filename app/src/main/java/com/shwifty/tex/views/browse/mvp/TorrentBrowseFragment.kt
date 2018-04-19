@@ -20,6 +20,7 @@ import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.navigation.INavigation
 import com.shwifty.tex.navigation.NavigationKey
+import com.shwifty.tex.repository.network.torrentSearch.BROWSE_FIRST_PAGE
 import com.shwifty.tex.utils.animateWidthChange
 import com.shwifty.tex.utils.closeKeyboard
 import com.shwifty.tex.utils.createObservable
@@ -91,7 +92,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
         recyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         recyclerView.layoutManager = llm
-        endlessScrollListener = object : EndlessScrollListener(llm) {
+        endlessScrollListener = object : EndlessScrollListener(llm, BROWSE_FIRST_PAGE) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
                 loadMoreResultsSubject.onNext(
                     BrowseActions.LoadMoreBrowseResults(
