@@ -25,5 +25,5 @@ data class TorrentSearchResult(
         @SerializedName("CategoryParent")
         val categoryParent: String? = null,
         @SerializedName("Category")
-        val category: String? = null
+        val category: TorrentSearchCategory? = null
 )

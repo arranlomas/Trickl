@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,10 @@ import com.shwifty.tex.utils.ARG_TORRENT_HASH
 import com.shwifty.tex.utils.getHashFromIntent
 import com.shwifty.tex.utils.getMagnetFromIntent
 import com.shwifty.tex.views.base.mvi.BaseDaggerMviFragment
-import com.shwifty.tex.views.showtorrent.mvi.*
+import com.shwifty.tex.views.showtorrent.mvi.TorrentInfoActions
+import com.shwifty.tex.views.showtorrent.mvi.TorrentInfoResult
+import com.shwifty.tex.views.showtorrent.mvi.TorrentInfoViewModel
+import com.shwifty.tex.views.showtorrent.mvi.TorrentInfoViewState
 import com.shwifty.tex.views.torrentfiles.list.TorrentFilesAdapter
 import es.dmoral.toasty.Toasty
 import io.reactivex.Observable
@@ -74,7 +76,7 @@ class TorrentFilesFragment : BaseDaggerMviFragment<TorrentInfoActions, TorrentIn
         torrentFilesRecyclerView.adapter = filesAdapter
         torrentFilesRecyclerView.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
-        torrentFilesRecyclerView.layoutManager = llm as RecyclerView.LayoutManager?
+        torrentFilesRecyclerView.layoutManager = llm
         super.setup(viewModel, { error ->
             Toasty.error(context!!, error.localizedMessage).show()
         })

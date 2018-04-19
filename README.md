@@ -1,7 +1,6 @@
 ## Trickl
 trickl torrent client
 
-
 This is the repository for the trickl torrent client for android
 
 [![Android app on Google Play](http://ligi.de/img/play_badge.png)](https://play.google.com/store/apps/details?id=com.shwifty.tex)
