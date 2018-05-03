@@ -16,8 +16,8 @@
                 android:hint="@string/search_query_input_hint"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
+                android:layout_weight="1"
+                android:textColor="?textColor"/>
 
         <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabFilter"

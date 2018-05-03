@@ -6,13 +6,11 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.shwifty.tex.R
 import com.shwifty.tex.dialogs.IDialogManager
 import com.shwifty.tex.models.TorrentSearchResult
@@ -25,11 +23,11 @@ import com.shwifty.tex.views.EndlessScrollListener
 import com.shwifty.tex.views.base.mvi.BaseDaggerMviFragment
 import com.shwifty.tex.views.browse.torrentSearch.list.TorrentSearchAdapter
 import es.dmoral.toasty.Toasty
-import io.reactivex.Emitter
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.frag_torrent_search.*
 import java.net.ConnectException
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -105,39 +103,15 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
         searchAction(),
         refreshIntent(),
         updateSortAndCategoryAction(),
-        searchQueryEnterPressed(),
         loadMoreResultsSubject,
         clearResultsSubject))
 
-    private fun searchAction(): Observable<SearchActions> = createObservable { emitter ->
-        searchQueryInput.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                emitter.getSearchTextAndEmitAction()
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-        })
-    }
-
-    private fun searchQueryEnterPressed(): Observable<SearchActions> = createObservable { emitter ->
-        searchQueryInput.setOnEditorActionListener({ _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                emitter.getSearchTextAndEmitAction()
-            }
-            false
-        })
-    }
-
-    private fun Emitter<SearchActions>.getSearchTextAndEmitAction() {
-        val text = searchQueryInput.text.toString()
-        if (text.isNotEmpty()) {
-            this.onNext(SearchActions.Search(text))
-        }
-    }
+    private fun searchAction(): Observable<SearchActions> = RxTextView.afterTextChangeEvents(searchQueryInput)
+        .map { searchQueryInput.text.toString() }
+        .doOnNext { if (it.isEmpty()) clearResultsSubject.onNext(SearchActions.ClearResults()) }
+        .debounce(1, TimeUnit.SECONDS)
+        .filter { it.isNotEmpty() }
+        .map { SearchActions.Search(it) }
 
     private fun refreshIntent(): Observable<SearchActions.Reload> = RxSwipeRefreshLayout.refreshes(torrentSearchSwipeRefresh)
         .map {
