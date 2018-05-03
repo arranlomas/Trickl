@@ -9,7 +9,7 @@ import javax.inject.Inject
  */
 class TorrentSearchViewModel @Inject constructor(torrentSearchRepository: ITorrentSearchRepository)
     : TorrentSearchContract.ViewModel, BaseMviViewModel<SearchActions, SearchResult, SearchViewState>(
-        actionProcessor = searchActionProcessor(torrentSearchRepository),
-        reducer = searchReducer,
-        defaultState = SearchViewState.default()
+    actionProcessor = searchActionProcessor(torrentSearchRepository),
+    reducer = searchReducer,
+    defaultState = SearchViewState.default()
 )

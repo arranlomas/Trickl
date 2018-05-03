@@ -4,7 +4,6 @@ import com.arranlomas.kontent.commons.objects.KontentViewState
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
-import com.shwifty.tex.views.search.mvi.SearchViewState
 
 /**
  * Created by arran on 11/11/2017.
@@ -22,8 +21,8 @@ data class BrowseViewState(
     val searchResults: List<TorrentSearchResult> = emptyList()
 ) : KontentViewState() {
     companion object Factory {
-        fun default(): SearchViewState {
-            return SearchViewState()
+        fun default(): BrowseViewState {
+            return BrowseViewState()
         }
     }
 }

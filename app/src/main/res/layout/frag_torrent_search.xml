@@ -1,20 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?fragmentBackground"
-    android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/rootBrowseLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/torrentSearchSwipeRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <LinearLayout
+            android:id="@+id/errorLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?fragmentBackground"
+            android:visibility="gone">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <TextView
+                android:id="@+id/errorText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/error_unexpected"
+                android:textColor="@color/error_red" />
+
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/torrentBrowseSwipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-</LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabSearch"
+            android:layout_width="@dimen/fab_size_mini"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end"
+            android:layout_marginBottom="@dimen/default_small_padding"
+            android:layout_marginEnd="@dimen/default_medium_padding"
+            android:layout_marginTop="@dimen/default_small_padding"
+            android:clickable="true"
+            android:scaleType="center"
+            android:src="@drawable/ic_search_white"
+            app:fabSize="normal"
+            android:focusable="true" />
+
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabFilter"
+            android:layout_width="@dimen/fab_size_mini"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/fabSearch"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/default_medium_padding"
+            android:clickable="true"
+            android:scaleType="center"
+            android:src="@drawable/ic_filter_list_white"
+            app:fabSize="normal"
+            android:focusable="true" />
+
+    <EditText
+            android:id="@+id/searchQueryInput"
+            android:layout_width="@dimen/fab_size_mini"
+            android:layout_height="@dimen/fab_size_mini"
+            android:layout_marginEnd="@dimen/default_small_padding"
+            android:layout_marginTop="@dimen/default_small_padding"
+            android:layout_toStartOf="@+id/fabSearch"
+            android:background="@drawable/bg_edit_text_rounded_corners"
+            android:clickable="true"
+            android:focusable="true"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:inputType="text"
+            android:paddingEnd="@dimen/default_small_padding"
+            android:paddingStart="@dimen/default_small_padding"
+            android:textColor="?textColor" />
+
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabSendSearch"
+            android:layout_width="@dimen/fab_size_mini"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/default_small_padding"
+            android:layout_marginTop="@dimen/default_small_padding"
+            android:layout_toStartOf="@+id/fabSearch"
+            android:clickable="true"
+            android:scaleType="center"
+            android:src="@drawable/ic_tick_white"
+            app:fabSize="normal" />
+
+</RelativeLayout>
