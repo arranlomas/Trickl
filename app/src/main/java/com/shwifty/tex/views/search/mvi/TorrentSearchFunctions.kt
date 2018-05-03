@@ -1,4 +1,4 @@
-package com.shwifty.tex.views.browse.mvp
+package com.shwifty.tex.views.search.mvi
 
 import com.arranlomas.kontent.commons.functions.KontentActionProcessor
 import com.arranlomas.kontent.commons.functions.KontentMasterProcessor
@@ -10,9 +10,6 @@ import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.repository.network.torrentSearch.BROWSE_FIRST_PAGE
 import com.shwifty.tex.repository.network.torrentSearch.ITorrentSearchRepository
-import com.shwifty.tex.views.search.mvi.SearchViewState
-import com.shwifty.tex.views.search.mvi.SearchResult
-import com.shwifty.tex.views.search.mvi.SearchActions
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 
@@ -20,20 +17,20 @@ import io.reactivex.ObservableTransformer
  * Created by arran on 14/02/2018.
  */
 
-fun browseActionProcessor(torrentSearchRepository: ITorrentSearchRepository) = KontentMasterProcessor<SearchActions, SearchResult> { action ->
+fun searchActionProcessor(torrentSearchRepository: ITorrentSearchRepository) = KontentMasterProcessor<SearchActions, SearchResult> { action ->
     Observable.merge(observables(action, torrentSearchRepository))
 }
 
 private fun observables(shared: Observable<SearchActions>, torrentSearchRepository: ITorrentSearchRepository): List<Observable<SearchResult>> {
     return listOf<Observable<SearchResult>>(
-        shared.ofType(SearchActions.InitialLoad::class.java).compose(com.shwifty.tex.views.search.mvi.initialLoad(torrentSearchRepository)),
-        shared.ofType(SearchActions.LoadMoreResults::class.java).compose(com.shwifty.tex.views.search.mvi.loadMore(torrentSearchRepository)),
-        shared.ofType(SearchActions.Reload::class.java).compose(com.shwifty.tex.views.search.mvi.reload(torrentSearchRepository)),
-        shared.ofType(SearchActions.Search::class.java).compose(com.shwifty.tex.views.search.mvi.loadSearchResults(torrentSearchRepository)),
-        shared.ofType(SearchActions.ToggleSearchMode::class.java).compose(com.shwifty.tex.views.search.mvi.toggleSearchProcessor()),
-        shared.ofType(SearchActions.SetSearchBarExpanded::class.java).compose(com.shwifty.tex.views.search.mvi.toggleSearchBarExpandedProcessor()),
-        shared.ofType(SearchActions.UpdateSortAndCategory::class.java).compose(com.shwifty.tex.views.search.mvi.updateSortAndCategoryProcessor()),
-        shared.ofType(SearchActions.ClearResults::class.java).compose(com.shwifty.tex.views.search.mvi.clearResultsProcessor()))
+        shared.ofType(SearchActions.InitialLoad::class.java).compose(initialLoad(torrentSearchRepository)),
+        shared.ofType(SearchActions.LoadMoreResults::class.java).compose(loadMore(torrentSearchRepository)),
+        shared.ofType(SearchActions.Reload::class.java).compose(reload(torrentSearchRepository)),
+        shared.ofType(SearchActions.Search::class.java).compose(loadSearchResults(torrentSearchRepository)),
+        shared.ofType(SearchActions.ToggleSearchMode::class.java).compose(toggleSearchProcessor()),
+        shared.ofType(SearchActions.SetSearchBarExpanded::class.java).compose(toggleSearchBarExpandedProcessor()),
+        shared.ofType(SearchActions.UpdateSortAndCategory::class.java).compose(updateSortAndCategoryProcessor()),
+        shared.ofType(SearchActions.ClearResults::class.java).compose(clearResultsProcessor()))
 }
 
 fun initialLoad(torrentSearchRepository: ITorrentSearchRepository) =
@@ -117,7 +114,7 @@ fun loadSearchResults(torrentSearchRepository: ITorrentSearchRepository) =
         loading = SearchResult.SearchInFlight()
     )
 
-val browseReducer = KontentReducer { result: SearchResult, previousState: SearchViewState ->
+val searchReducer = KontentReducer { result: SearchResult, previousState: SearchViewState ->
     when (result) {
         is SearchResult.BrowseSuccess -> {
             val results = previousState.browseResults.toMutableList()

@@ -1,4 +1,4 @@
-package com.shwifty.tex.views.browse.mvp
+package com.shwifty.tex.views.search.mvi
 
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -29,10 +29,8 @@ import com.shwifty.tex.utils.forceOpenKeyboard
 import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.views.EndlessScrollListener
 import com.shwifty.tex.views.base.mvi.BaseDaggerMviFragment
+import com.shwifty.tex.views.browse.mvp.TorrentBrowseViewModel
 import com.shwifty.tex.views.browse.torrentSearch.list.TorrentSearchAdapter
-import com.shwifty.tex.views.search.mvi.SearchActions
-import com.shwifty.tex.views.search.mvi.SearchResult
-import com.shwifty.tex.views.search.mvi.SearchViewState
 import es.dmoral.toasty.Toasty
 import io.reactivex.Emitter
 import io.reactivex.Observable
@@ -44,7 +42,7 @@ import javax.inject.Inject
 /**
  * Created by arran on 27/10/2017.
  */
-class TorrentBrowseFragment : BaseDaggerMviFragment<SearchActions, SearchResult, SearchViewState>() {
+class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult, SearchViewState>() {
 
     @Inject
     lateinit var navigation: INavigation
@@ -71,7 +69,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
 
     companion object {
         fun newInstance(): Fragment {
-            return TorrentBrowseFragment()
+            return TorrentSearchFragment()
         }
     }
 
