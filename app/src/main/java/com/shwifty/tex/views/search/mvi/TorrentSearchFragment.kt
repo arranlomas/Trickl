@@ -4,10 +4,10 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.DisplayMetrics
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,17 +15,11 @@ import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
 import com.shwifty.tex.R
 import com.shwifty.tex.dialogs.IDialogManager
-import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
-import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.navigation.INavigation
 import com.shwifty.tex.navigation.NavigationKey
 import com.shwifty.tex.repository.network.torrentSearch.BROWSE_FIRST_PAGE
-import com.shwifty.tex.utils.animateWidthChange
-import com.shwifty.tex.utils.closeKeyboard
 import com.shwifty.tex.utils.createObservable
-import com.shwifty.tex.utils.dpToPx
-import com.shwifty.tex.utils.forceOpenKeyboard
 import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.views.EndlessScrollListener
 import com.shwifty.tex.views.base.mvi.BaseDaggerMviFragment
@@ -58,7 +52,6 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
         }
     }
     private val searchResultsAdapter = TorrentSearchAdapter(itemOnClick)
-    private val browseResultsAdapter = TorrentSearchAdapter(itemOnClick)
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -85,7 +78,7 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
                 Toasty.error(it, error.localizedMessage).show()
             }
         })
-        super.attachActions(actions(), SearchActions.InitialLoad::class.java)
+        super.attachActions(actions())
     }
 
     private fun setupRecyclerView() {
@@ -96,7 +89,6 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
                 loadMoreResultsSubject.onNext(
                     SearchActions.LoadMoreResults(
-                        viewModel.getLastState().isInSearchMode,
                         viewModel.getLastState().lastQuery,
                         viewModel.getLastState().sortType,
                         viewModel.getLastState().category,
@@ -106,29 +98,29 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
             }
         }
         recyclerView.addOnScrollListener(endlessScrollListener)
-        recyclerView.adapter = browseResultsAdapter
+        recyclerView.adapter = searchResultsAdapter
     }
 
     private fun actions() = Observable.merge(listOf(
-        initialAction(),
         searchAction(),
-        toggleSearchModeAction(),
         refreshIntent(),
         updateSortAndCategoryAction(),
         searchQueryEnterPressed(),
         loadMoreResultsSubject,
         clearResultsSubject))
 
-    private fun initialAction(): Observable<SearchActions.InitialLoad> = Observable.just(
-        SearchActions.InitialLoad(
-            TorrentSearchSortType.SEEDS,
-            TorrentSearchCategory.Movies
-        ))
-
     private fun searchAction(): Observable<SearchActions> = createObservable { emitter ->
-        fabSendSearch.setOnClickListener {
-            emitter.getSearchTextAndEmitAction()
-        }
+        searchQueryInput.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                emitter.getSearchTextAndEmitAction()
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
     }
 
     private fun searchQueryEnterPressed(): Observable<SearchActions> = createObservable { emitter ->
@@ -144,28 +136,12 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
         val text = searchQueryInput.text.toString()
         if (text.isNotEmpty()) {
             this.onNext(SearchActions.Search(text))
-            this.onNext(SearchActions.SetSearchBarExpanded(false))
         }
     }
 
-    private fun toggleSearchModeAction(): Observable<SearchActions> = createObservable { emitter ->
-        fabSearch.setOnClickListener {
-            if (viewModel.getLastState().isInSearchMode) {
-                recyclerView.adapter = browseResultsAdapter
-                clearResultsSubject.onNext(SearchActions.ClearResults(viewModel.getLastState().isInSearchMode))
-                emitter.onNext(SearchActions.SetSearchBarExpanded(false))
-            } else {
-                recyclerView.adapter = searchResultsAdapter
-                emitter.onNext(SearchActions.SetSearchBarExpanded(true))
-            }
-
-            emitter.onNext(SearchActions.ToggleSearchMode())
-        }
-    }
-
-    private fun refreshIntent(): Observable<SearchActions.Reload> = RxSwipeRefreshLayout.refreshes(torrentBrowseSwipeRefresh)
+    private fun refreshIntent(): Observable<SearchActions.Reload> = RxSwipeRefreshLayout.refreshes(torrentSearchSwipeRefresh)
         .map {
-            clearResultsSubject.onNext(SearchActions.ClearResults(viewModel.getLastState().isInSearchMode))
+            clearResultsSubject.onNext(SearchActions.ClearResults())
         }
         .map { getReloadIntent() }
 
@@ -184,65 +160,22 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
     }
 
     private fun getReloadIntent(): SearchActions.Reload {
-        return SearchActions.Reload(viewModel.getLastState().isInSearchMode,
+        return SearchActions.Reload(
             viewModel.getLastState().lastQuery,
             viewModel.getLastState().sortType,
             viewModel.getLastState().category)
     }
 
-    private fun expandQueryInput() {
-        val displayMetrics = DisplayMetrics()
-        activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
-        val screenWidth = displayMetrics.widthPixels
-        val fullWidthWithPadding = screenWidth - (context?.dpToPx(30) ?: 0)
-        searchQueryInput.animateWidthChange(fullWidthWithPadding)
-    }
-
-    private fun collapseQueryInput() {
-        searchQueryInput.setText("")
-        context?.resources?.getDimensionPixelSize(R.dimen.fab_size_mini)?.let {
-            searchQueryInput.animateWidthChange(it)
-        }
-    }
-
     override fun render(state: SearchViewState) {
-        if (state.isInSearchMode && state.searchResults.isEmpty()) endlessScrollListener.resetState()
-        else if (!state.isInSearchMode && state.browseResults.isEmpty()) endlessScrollListener.resetState()
+        if (state.searchResults.isEmpty()) endlessScrollListener.resetState()
 
         searchResultsAdapter.setResults(state.searchResults)
-        browseResultsAdapter.setResults(state.browseResults)
-        torrentBrowseSwipeRefresh.isRefreshing = state.isLoading
+        torrentSearchSwipeRefresh.isRefreshing = state.isLoading
 
         errorLayout.setVisible(state.error != null && !state.isLoading)
         state.error?.let {
             if (it is ConnectException) errorText.text = getString(R.string.error_connecting_to_search_server)
             else errorText.text = it.localizedMessage
-        }
-
-        if (state.isSearchBarExpanded) {
-            expandQueryInput()
-            searchQueryInput.requestFocus()
-            context?.forceOpenKeyboard()
-            searchQueryInput.setVisible(true)
-            fabSendSearch.show()
-        } else {
-            searchQueryInput.clearFocus()
-            searchQueryInput.closeKeyboard()
-            collapseQueryInput()
-            searchQueryInput.setVisible(false)
-            fabSendSearch.hide()
-        }
-
-        if (state.isInSearchMode) {
-            context?.resources?.let {
-                fabSearch.setImageDrawable(ResourcesCompat.getDrawable(it, R.drawable.ic_close_white, null))
-                fabFilter.hide()
-            }
-        } else {
-            context?.resources?.let {
-                fabSearch.setImageDrawable(ResourcesCompat.getDrawable(it, R.drawable.ic_search_white, null))
-                fabFilter.show()
-            }
         }
     }
 }

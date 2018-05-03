@@ -11,6 +11,6 @@ sealed class BrowseActions : KontentAction() {
     data class InitialLoad(val sortType: TorrentSearchSortType, val category: TorrentSearchCategory) : BrowseActions()
     data class LoadMoreResults(val sortType: TorrentSearchSortType, val category: TorrentSearchCategory, val page: Int) : BrowseActions()
     data class UpdateSortAndCategory(val sortType: TorrentSearchSortType, val category: TorrentSearchCategory) : BrowseActions()
-    data class ClearResults(val isInSearchMode: Boolean) : BrowseActions()
-    data class Reload(val isInSearchMode: Boolean, val query: String?, val sortType: TorrentSearchSortType?, val category: TorrentSearchCategory?) : BrowseActions()
+    class ClearResults : BrowseActions()
+    data class Reload(val sortType: TorrentSearchSortType?, val category: TorrentSearchCategory?) : BrowseActions()
 }

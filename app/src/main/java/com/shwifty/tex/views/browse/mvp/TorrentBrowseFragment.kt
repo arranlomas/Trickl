@@ -113,7 +113,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
 
     private fun refreshIntent(): Observable<BrowseActions.Reload> = RxSwipeRefreshLayout.refreshes(torrentBrowseSwipeRefresh)
         .map {
-            clearResultsSubject.onNext(BrowseActions.ClearResults(viewModel.getLastState().isInSearchMode))
+            clearResultsSubject.onNext(BrowseActions.ClearResults())
         }
         .map { getReloadIntent() }
 
@@ -132,15 +132,13 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
     }
 
     private fun getReloadIntent(): BrowseActions.Reload {
-        return BrowseActions.Reload(viewModel.getLastState().isInSearchMode,
-            viewModel.getLastState().lastQuery,
+        return BrowseActions.Reload(
             viewModel.getLastState().sortType,
             viewModel.getLastState().category)
     }
 
     override fun render(state: BrowseViewState) {
-        if (state.isInSearchMode && state.searchResults.isEmpty()) endlessScrollListener.resetState()
-        else if (!state.isInSearchMode && state.browseResults.isEmpty()) endlessScrollListener.resetState()
+        if (state.browseResults.isEmpty()) endlessScrollListener.resetState()
 
         browseResultsAdapter.setResults(state.browseResults)
         torrentBrowseSwipeRefresh.isRefreshing = state.isLoading

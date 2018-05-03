@@ -69,7 +69,7 @@ fun updateSortAndCategoryProcessor() = KontentSimpleActionProcessor<BrowseAction
 }
 
 fun clearResultsProcessor() = KontentSimpleActionProcessor<BrowseActions.ClearResults, BrowseResult> {
-    Observable.just(BrowseResult.ClearResults(it.isInSearchMode))
+    Observable.just(BrowseResult.ClearResults())
 }
 
 val browseReducer = KontentReducer { result: BrowseResult, previousState: BrowseViewState ->

@@ -14,5 +14,5 @@ sealed class BrowseResult : KontentResult() {
     data class BrowseError(val error: Throwable) : BrowseResult()
     class BrowseInFlight : BrowseResult()
     data class UpdateSortAndCategory(val sortType: TorrentSearchSortType, val category: TorrentSearchCategory) : BrowseResult()
-    data class ClearResults(val isInSearchMode: Boolean) : BrowseResult()
+    class ClearResults : BrowseResult()
 }

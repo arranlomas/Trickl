@@ -12,12 +12,9 @@ import com.shwifty.tex.models.TorrentSearchSortType
 data class SearchViewState(
     val isLoading: Boolean = false,
     val error: Throwable? = null,
-    val isInSearchMode: Boolean = false,
-    val isSearchBarExpanded: Boolean = false,
-    val lastQuery: String? = null,
+    val lastQuery: String = "",
     val sortType: TorrentSearchSortType = TorrentSearchSortType.SEEDS,
     val category: TorrentSearchCategory = TorrentSearchCategory.Movies,
-    val browseResults: List<TorrentSearchResult> = emptyList(),
     val searchResults: List<TorrentSearchResult> = emptyList()
 ) : KontentViewState() {
     companion object Factory {
