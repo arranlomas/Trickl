@@ -6,33 +6,37 @@ import com.shwifty.tex.views.all.mvp.AllFragment
 import com.shwifty.tex.views.base.mvp.BaseFragmentStatePagerAdapter
 import com.shwifty.tex.views.browse.mvp.TorrentBrowseFragment
 import com.shwifty.tex.views.downloads.mvp.FileDownloadFragment
+import com.shwifty.tex.views.search.mvi.TorrentSearchFragment
 
 /**
  * Created by arran on 9/05/2017.
  */
 class MainPagerAdapter(fragmentManager: FragmentManager) : BaseFragmentStatePagerAdapter(fragmentManager) {
-    val browseFragment = TorrentBrowseFragment.newInstance()
-    val allTorrentsFragment = AllFragment.newInstance()
-    val fileDownloadFragment = FileDownloadFragment.newInstance()
+    private val browseFragment = TorrentBrowseFragment.newInstance()
+    private val searchFragment = TorrentSearchFragment.newInstance()
+    private val allTorrentsFragment = AllFragment.newInstance()
+    private val fileDownloadFragment = FileDownloadFragment.newInstance()
 
     override fun getItem(position: Int): Fragment {
-        when (position) {
-            0 -> return browseFragment
-            1 -> return allTorrentsFragment
-            2 -> return fileDownloadFragment
+        return when (position) {
+            0 -> browseFragment
+            1 -> searchFragment
+            2 -> allTorrentsFragment
+            3 -> fileDownloadFragment
             else -> throw IllegalStateException("No more that 2 fregments required")
         }
     }
 
     override fun getCount(): Int {
-        return 3
+        return 4
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        when (position) {
-            0 -> return "Browse"
-            1 -> return "My torrents"
-            2 -> return "Downloads"
+        return when (position) {
+            0 -> "Browse"
+            1 -> "Search"
+            2 -> "My torrents"
+            3 -> "Downloads"
             else -> throw IllegalStateException("No more that 2 fregments required")
         }
     }

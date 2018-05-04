@@ -64,7 +64,6 @@
     <string name="keep">Keep</string>
     <string name="cancel">cancel</string>
 
-
     <!--delete file-->
     <string name="torrent_deleted">Torrent Deleted</string>
     <string name="file_deleted">File Deleted</string>
@@ -137,6 +136,7 @@
     <!--Browse Fragment-->
     <string name="filter_description_category">Category: %1$s</string>
     <string name="filter_description_sorted_by">Sorted By: %1$s</string>
+    <string name="search_query_input_hint">Enter search query hint here...</string>
 
     <!--Settings-->
     <string name="settings_title">Settings</string>

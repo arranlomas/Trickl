@@ -9,11 +9,8 @@ import com.shwifty.tex.models.TorrentSearchSortType
  */
 sealed class BrowseActions : KontentAction() {
     data class InitialLoad(val sortType: TorrentSearchSortType, val category: TorrentSearchCategory) : BrowseActions()
-    data class LoadMoreResults(val isInSearchMode: Boolean, val query: String?, val sortType: TorrentSearchSortType?, val category: TorrentSearchCategory?, val page: Int) : BrowseActions()
+    data class LoadMoreResults(val sortType: TorrentSearchSortType, val category: TorrentSearchCategory, val page: Int) : BrowseActions()
     data class UpdateSortAndCategory(val sortType: TorrentSearchSortType, val category: TorrentSearchCategory) : BrowseActions()
-    data class Search(val query: String) : BrowseActions()
-    class ToggleSearchMode : BrowseActions()
-    data class SetSearchBarExpanded(val expanded: Boolean) : BrowseActions()
-    data class ClearResults(val isInSearchMode: Boolean) : BrowseActions()
-    data class Reload(val isInSearchMode: Boolean, val query: String?, val sortType: TorrentSearchSortType?, val category: TorrentSearchCategory?) : BrowseActions()
+    class ClearResults : BrowseActions()
+    data class Reload(val sortType: TorrentSearchSortType?, val category: TorrentSearchCategory?) : BrowseActions()
 }

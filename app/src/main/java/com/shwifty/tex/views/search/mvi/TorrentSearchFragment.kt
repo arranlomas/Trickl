@@ -1,4 +1,4 @@
-package com.shwifty.tex.views.browse.mvp
+package com.shwifty.tex.views.search.mvi
 
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -10,14 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
-import com.shwifty.tex.Const
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.shwifty.tex.R
 import com.shwifty.tex.dialogs.IDialogManager
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.navigation.INavigation
 import com.shwifty.tex.navigation.NavigationKey
 import com.shwifty.tex.repository.network.torrentSearch.BROWSE_FIRST_PAGE
-import com.shwifty.tex.utils.createObservable
 import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.views.EndlessScrollListener
 import com.shwifty.tex.views.base.mvi.BaseDaggerMviFragment
@@ -25,14 +24,15 @@ import com.shwifty.tex.views.browse.torrentSearch.list.TorrentSearchAdapter
 import es.dmoral.toasty.Toasty
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.frag_torrent_browse.*
+import kotlinx.android.synthetic.main.frag_torrent_search.*
 import java.net.ConnectException
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
  * Created by arran on 27/10/2017.
  */
-class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult, BrowseViewState>() {
+class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult, SearchViewState>() {
 
     @Inject
     lateinit var navigation: INavigation
@@ -40,7 +40,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
     @Inject
     lateinit var dialogManager: IDialogManager
 
-    lateinit var endlessScrollListener: EndlessScrollListener
+    private lateinit var endlessScrollListener: EndlessScrollListener
 
     private val itemOnClick: (searchResult: TorrentSearchResult) -> Unit = { torrentSearchResult ->
         context?.let {
@@ -48,34 +48,34 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
             else errorText.text = it.getString(R.string.error_cannot_open_torrent) ?: ""
         }
     }
-    private val browseResultsAdapter = TorrentSearchAdapter(itemOnClick)
+    private val searchResultsAdapter = TorrentSearchAdapter(itemOnClick)
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val loadMoreResultsSubject = PublishSubject.create<BrowseActions.LoadMoreResults>()
-    private val clearResultsSubject = PublishSubject.create<BrowseActions.ClearResults>()
+    private val loadMoreResultsSubject = PublishSubject.create<SearchActions.LoadMoreResults>()
+    private val clearResultsSubject = PublishSubject.create<SearchActions.ClearResults>()
 
     companion object {
         fun newInstance(): Fragment {
-            return TorrentBrowseFragment()
+            return TorrentSearchFragment()
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.frag_torrent_browse, container, false)
+        return inflater.inflate(R.layout.frag_torrent_search, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(TorrentBrowseViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(TorrentSearchViewModel::class.java)
         setupRecyclerView()
         super.setup(viewModel, { error ->
             context?.let {
                 Toasty.error(it, error.localizedMessage).show()
             }
         })
-        super.attachActions(actions(), BrowseActions.InitialLoad::class.java)
+        super.attachActions(actions())
     }
 
     private fun setupRecyclerView() {
@@ -85,62 +85,46 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
         endlessScrollListener = object : EndlessScrollListener(llm, BROWSE_FIRST_PAGE) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
                 loadMoreResultsSubject.onNext(
-                    BrowseActions.LoadMoreResults(
-                        viewModel.getLastState().sortType,
-                        viewModel.getLastState().category,
+                    SearchActions.LoadMoreResults(
+                        viewModel.getLastState().lastQuery,
                         page
                     )
                 )
             }
         }
         recyclerView.addOnScrollListener(endlessScrollListener)
-        recyclerView.adapter = browseResultsAdapter
+        recyclerView.adapter = searchResultsAdapter
     }
 
     private fun actions() = Observable.merge(listOf(
-        initialAction(),
+        searchAction(),
         refreshIntent(),
-        updateSortAndCategoryAction(),
         loadMoreResultsSubject,
         clearResultsSubject))
 
-    private fun initialAction(): Observable<BrowseActions.InitialLoad> = Observable.just(
-        BrowseActions.InitialLoad(
-            Const.DEFAULT_SORT_TYPE,
-            Const.DEFAULT_CATEGORY
-        ))
+    private fun searchAction(): Observable<SearchActions> = RxTextView.afterTextChangeEvents(searchQueryInput)
+        .map { searchQueryInput.text.toString() }
+        .doOnNext { if (it.isEmpty()) clearResultsSubject.onNext(SearchActions.ClearResults()) }
+        .debounce(500, TimeUnit.MILLISECONDS)
+        .filter { it.isNotEmpty() }
+        .map { SearchActions.Search(it) }
 
-    private fun refreshIntent(): Observable<BrowseActions.Reload> = RxSwipeRefreshLayout.refreshes(torrentBrowseSwipeRefresh)
+    private fun refreshIntent(): Observable<SearchActions.Reload> = RxSwipeRefreshLayout.refreshes(torrentSearchSwipeRefresh)
         .map {
-            clearResultsSubject.onNext(BrowseActions.ClearResults())
+            clearResultsSubject.onNext(SearchActions.ClearResults())
         }
         .map { getReloadIntent() }
 
-    private fun updateSortAndCategoryAction(): Observable<BrowseActions> = createObservable { emitter ->
-        fabFilter.setOnClickListener {
-            context?.let {
-                dialogManager.showBrowseFilterDialog(it,
-                    viewModel.getLastState().sortType,
-                    viewModel.getLastState().category,
-                    { sortType, category ->
-                        emitter.onNext(BrowseActions.UpdateSortAndCategory(sortType, category))
-                        emitter.onNext(getReloadIntent())
-                    })
-            }
-        }
+    private fun getReloadIntent(): SearchActions.Reload {
+        return SearchActions.Reload(
+            viewModel.getLastState().lastQuery)
     }
 
-    private fun getReloadIntent(): BrowseActions.Reload {
-        return BrowseActions.Reload(
-            viewModel.getLastState().sortType,
-            viewModel.getLastState().category)
-    }
+    override fun render(state: SearchViewState) {
+        if (state.searchResults.isEmpty()) endlessScrollListener.resetState()
 
-    override fun render(state: BrowseViewState) {
-        if (state.browseResults.isEmpty()) endlessScrollListener.resetState()
-
-        browseResultsAdapter.setResults(state.browseResults)
-        torrentBrowseSwipeRefresh.isRefreshing = state.isLoading
+        searchResultsAdapter.setResults(state.searchResults)
+        torrentSearchSwipeRefresh.isRefreshing = state.isLoading
 
         errorLayout.setVisible(state.error != null && !state.isLoading)
         state.error?.let {

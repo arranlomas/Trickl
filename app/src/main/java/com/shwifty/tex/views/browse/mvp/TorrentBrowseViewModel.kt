@@ -9,7 +9,7 @@ import javax.inject.Inject
  */
 class TorrentBrowseViewModel @Inject constructor(torrentSearchRepository: ITorrentSearchRepository)
     : TorrentBrowseContract.ViewModel, BaseMviViewModel<BrowseActions, BrowseResult, BrowseViewState>(
-        actionProcessor = browseActionProcessor(torrentSearchRepository),
-        reducer = browseReducer,
-        defaultState = BrowseViewState.default()
+    actionProcessor = browseActionProcessor(torrentSearchRepository),
+    reducer = browseReducer,
+    defaultState = BrowseViewState.default()
 )
