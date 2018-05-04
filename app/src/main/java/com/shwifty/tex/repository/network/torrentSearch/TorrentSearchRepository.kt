@@ -12,14 +12,14 @@ import java.util.concurrent.TimeUnit
 internal class TorrentSearchRepository(private val torrentSearchApi: TorrentSearchApi) : ITorrentSearchRepository {
 
     override fun search(searchTerm: String, sortType: TorrentSearchSortType, pageNumber: Int, category: TorrentSearchCategory): Observable<List<TorrentSearchResult>> {
-        return mockResults("search $searchTerm", pageNumber)
+        return mockResults("search $searchTerm $sortType $category $pageNumber", pageNumber)
 //        return torrentSearchApi.search(searchTerm, sortType, pageNumber, category)
 //            .map { it.filter { it.category != null } }
 //            .composeIo()
     }
 
     override fun browse(sortType: TorrentSearchSortType, pageNumber: Int, category: TorrentSearchCategory): Observable<List<TorrentSearchResult>> {
-        return mockResults("browse", pageNumber)
+        return mockResults("browse $sortType $category $pageNumber", pageNumber)
 //        return torrentSearchApi.browse(sortType, pageNumber, category)
 //            .map { it.filter { it.category != null } }
 //            .composeIo()

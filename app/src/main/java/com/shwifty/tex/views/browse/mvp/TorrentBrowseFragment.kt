@@ -10,11 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
+import com.shwifty.tex.Const
 import com.shwifty.tex.R
 import com.shwifty.tex.dialogs.IDialogManager
-import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
-import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.navigation.INavigation
 import com.shwifty.tex.navigation.NavigationKey
 import com.shwifty.tex.repository.network.torrentSearch.BROWSE_FIRST_PAGE
@@ -107,8 +106,8 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
 
     private fun initialAction(): Observable<BrowseActions.InitialLoad> = Observable.just(
         BrowseActions.InitialLoad(
-            TorrentSearchSortType.SEEDS,
-            TorrentSearchCategory.Movies
+            Const.DEFAULT_SORT_TYPE,
+            Const.DEFAULT_CATEGORY
         ))
 
     private fun refreshIntent(): Observable<BrowseActions.Reload> = RxSwipeRefreshLayout.refreshes(torrentBrowseSwipeRefresh)

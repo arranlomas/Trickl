@@ -5,9 +5,8 @@ import com.arranlomas.kontent.commons.functions.KontentMasterProcessor
 import com.arranlomas.kontent.commons.functions.KontentReducer
 import com.arranlomas.kontent.commons.functions.KontentSimpleActionProcessor
 import com.arranlomas.kontent.commons.functions.networkMapper
-import com.shwifty.tex.models.TorrentSearchCategory
+import com.shwifty.tex.Const
 import com.shwifty.tex.models.TorrentSearchResult
-import com.shwifty.tex.models.TorrentSearchSortType
 import com.shwifty.tex.repository.network.torrentSearch.ITorrentSearchRepository
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -25,13 +24,12 @@ private fun observables(shared: Observable<SearchActions>, torrentSearchReposito
         shared.ofType(SearchActions.LoadMoreResults::class.java).compose(loadMore(torrentSearchRepository)),
         shared.ofType(SearchActions.Reload::class.java).compose(reload(torrentSearchRepository)),
         shared.ofType(SearchActions.Search::class.java).compose(loadSearchResults(torrentSearchRepository)),
-        shared.ofType(SearchActions.UpdateSortAndCategory::class.java).compose(updateSortAndCategoryProcessor()),
         shared.ofType(SearchActions.ClearResults::class.java).compose(clearResultsProcessor()))
 }
 
 fun loadMore(torrentSearchRepository: ITorrentSearchRepository) = ObservableTransformer<SearchActions.LoadMoreResults, SearchResult> {
     it.flatMap { action ->
-        torrentSearchRepository.search(action.query!!, action.sortType!!, action.page, action.category!!)
+        torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, action.page, Const.DEFAULT_CATEGORY)
             .networkMapper(
                 error = { SearchResult.SearchError(it) },
                 loading = SearchResult.SearchInFlight(),
@@ -42,17 +40,13 @@ fun loadMore(torrentSearchRepository: ITorrentSearchRepository) = ObservableTran
 
 fun reload(torrentSearchRepository: ITorrentSearchRepository) = ObservableTransformer<SearchActions.Reload, SearchResult> {
     it.flatMap { action ->
-        torrentSearchRepository.search(action.query, action.sortType, 0, action.category)
+        torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, 0, Const.DEFAULT_CATEGORY)
             .networkMapper(
                 error = { SearchResult.SearchError(it) },
                 loading = SearchResult.SearchInFlight(),
                 success = { SearchResult.SearchSuccess(it, action.query) }
             )
     }
-}
-
-fun updateSortAndCategoryProcessor() = KontentSimpleActionProcessor<SearchActions.UpdateSortAndCategory, SearchResult> {
-    Observable.just(SearchResult.UpdateSortAndCategory(it.sortType, it.category))
 }
 
 fun clearResultsProcessor() = KontentSimpleActionProcessor<SearchActions.ClearResults, SearchResult> {
@@ -62,7 +56,7 @@ fun clearResultsProcessor() = KontentSimpleActionProcessor<SearchActions.ClearRe
 fun loadSearchResults(torrentSearchRepository: ITorrentSearchRepository) =
     KontentActionProcessor<SearchActions.Search, SearchResult, Pair<List<TorrentSearchResult>, String>>(
         action = { action ->
-            torrentSearchRepository.search(action.query, TorrentSearchSortType.DEFAULT, 0, TorrentSearchCategory.All)
+            torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, 0, Const.DEFAULT_CATEGORY)
                 .map { it to action.query }
         },
         success = { results ->
@@ -84,7 +78,6 @@ val searchReducer = KontentReducer { result: SearchResult, previousState: Search
         )
         is SearchResult.SearchError -> previousState.copy(isLoading = false, error = result.error)
         is SearchResult.SearchInFlight -> previousState.copy(isLoading = true, error = null)
-        is SearchResult.UpdateSortAndCategory -> previousState.copy(category = result.category, sortType = result.sortType)
         is SearchResult.ClearResults -> previousState.copy(searchResults = emptyList())
     }
 }

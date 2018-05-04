@@ -17,7 +17,6 @@ import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.navigation.INavigation
 import com.shwifty.tex.navigation.NavigationKey
 import com.shwifty.tex.repository.network.torrentSearch.BROWSE_FIRST_PAGE
-import com.shwifty.tex.utils.createObservable
 import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.views.EndlessScrollListener
 import com.shwifty.tex.views.base.mvi.BaseDaggerMviFragment
@@ -88,8 +87,6 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
                 loadMoreResultsSubject.onNext(
                     SearchActions.LoadMoreResults(
                         viewModel.getLastState().lastQuery,
-                        viewModel.getLastState().sortType,
-                        viewModel.getLastState().category,
                         page
                     )
                 )
@@ -102,14 +99,13 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
     private fun actions() = Observable.merge(listOf(
         searchAction(),
         refreshIntent(),
-        updateSortAndCategoryAction(),
         loadMoreResultsSubject,
         clearResultsSubject))
 
     private fun searchAction(): Observable<SearchActions> = RxTextView.afterTextChangeEvents(searchQueryInput)
         .map { searchQueryInput.text.toString() }
         .doOnNext { if (it.isEmpty()) clearResultsSubject.onNext(SearchActions.ClearResults()) }
-        .debounce(1, TimeUnit.SECONDS)
+        .debounce(500, TimeUnit.MILLISECONDS)
         .filter { it.isNotEmpty() }
         .map { SearchActions.Search(it) }
 
@@ -119,25 +115,9 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
         }
         .map { getReloadIntent() }
 
-    private fun updateSortAndCategoryAction(): Observable<SearchActions> = createObservable { emitter ->
-        fabFilter.setOnClickListener {
-            context?.let {
-                dialogManager.showBrowseFilterDialog(it,
-                    viewModel.getLastState().sortType,
-                    viewModel.getLastState().category,
-                    { sortType, category ->
-                        emitter.onNext(SearchActions.UpdateSortAndCategory(sortType, category))
-                        emitter.onNext(getReloadIntent())
-                    })
-            }
-        }
-    }
-
     private fun getReloadIntent(): SearchActions.Reload {
         return SearchActions.Reload(
-            viewModel.getLastState().lastQuery,
-            viewModel.getLastState().sortType,
-            viewModel.getLastState().category)
+            viewModel.getLastState().lastQuery)
     }
 
     override fun render(state: SearchViewState) {
