@@ -14,7 +14,6 @@ internal class TorrentSearchRepository(private val torrentSearchApi: TorrentSear
 
     override fun search(searchTerm: String, sortType: TorrentSearchSortType, pageNumber: Int, category: TorrentSearchCategory): Observable<List<TorrentSearchResult>> {
         return torrentSearchApi.search(searchTerm, sortType, pageNumber, category)
-            .map { it.filter { it.category != null } }
             .composeIo()
     }
 

@@ -7,6 +7,7 @@ import com.arranlomas.kontent.commons.functions.KontentSimpleActionProcessor
 import com.arranlomas.kontent.commons.functions.networkMapper
 import com.shwifty.tex.Const
 import com.shwifty.tex.models.TorrentSearchResult
+import com.shwifty.tex.repository.network.torrentSearch.BROWSE_FIRST_PAGE
 import com.shwifty.tex.repository.network.torrentSearch.ITorrentSearchRepository
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -40,7 +41,7 @@ fun loadMore(torrentSearchRepository: ITorrentSearchRepository) = ObservableTran
 
 fun reload(torrentSearchRepository: ITorrentSearchRepository) = ObservableTransformer<SearchActions.Reload, SearchResult> {
     it.flatMap { action ->
-        torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, 0, Const.DEFAULT_SEARCH_CATEGORY)
+        torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, BROWSE_FIRST_PAGE, Const.DEFAULT_SEARCH_CATEGORY)
             .networkMapper(
                 error = { SearchResult.SearchError(it) },
                 loading = SearchResult.SearchInFlight(),
@@ -56,7 +57,7 @@ fun clearResultsProcessor() = KontentSimpleActionProcessor<SearchActions.ClearRe
 fun loadSearchResults(torrentSearchRepository: ITorrentSearchRepository) =
     KontentActionProcessor<SearchActions.Search, SearchResult, Pair<List<TorrentSearchResult>, String>>(
         action = { action ->
-            torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, 0, Const.DEFAULT_SEARCH_CATEGORY)
+            torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, BROWSE_FIRST_PAGE, Const.DEFAULT_SEARCH_CATEGORY)
                 .map { it to action.query }
         },
         success = { results ->
@@ -70,12 +71,16 @@ fun loadSearchResults(torrentSearchRepository: ITorrentSearchRepository) =
 
 val searchReducer = KontentReducer { result: SearchResult, previousState: SearchViewState ->
     when (result) {
-        is SearchResult.SearchSuccess -> previousState.copy(
-            isLoading = false,
-            searchResults = result.result,
-            error = null,
-            lastQuery = result.query
-        )
+        is SearchResult.SearchSuccess -> {
+            val results = previousState.searchResults.toMutableList()
+            results.addAll(result.result)
+            previousState.copy(
+                    isLoading = false,
+                    error = null,
+                    searchResults = results,
+                    lastQuery = result.query
+            )
+        }
         is SearchResult.SearchError -> previousState.copy(isLoading = false, error = result.error)
         is SearchResult.SearchInFlight -> previousState.copy(isLoading = true, error = null)
         is SearchResult.ClearResults -> previousState.copy(searchResults = emptyList())
