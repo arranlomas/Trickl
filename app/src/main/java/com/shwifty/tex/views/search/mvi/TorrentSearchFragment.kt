@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -99,12 +100,13 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
 
     private fun actions() = Observable.merge(listOf(
             searchAction(),
+            searchTextChange(),
             refreshIntent(),
             loadMoreResultsSubject,
             clearResultsSubject,
             clearTextAction()))
 
-    private fun searchAction(): Observable<SearchActions> = RxTextView.afterTextChangeEvents(searchQueryInput)
+    private fun searchTextChange(): Observable<SearchActions> = RxTextView.afterTextChangeEvents(searchQueryInput)
             .map { searchQueryInput.text.toString() }
             .doOnNext {
                 if (it.isEmpty()) clearResultsSubject.onNext(SearchActions.ClearResults())
@@ -112,6 +114,15 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
             .debounce(500, TimeUnit.MILLISECONDS)
             .filter { it.isNotEmpty() }
             .map { SearchActions.Search(it) }
+
+    private fun searchAction(): Observable<SearchActions> = Observable.create { emitter ->
+        searchQueryInput.setOnEditorActionListener({ _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                emitter.onNext(SearchActions.Search(searchQueryInput.text.toString()))
+            }
+            false
+        })
+    }
 
     private fun clearTextAction(): Observable<SearchActions> = RxView.clicks(clearText)
             .map { searchQueryInput.setText("") }
