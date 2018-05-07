@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
+import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.shwifty.tex.R
 import com.shwifty.tex.dialogs.IDialogManager
@@ -85,10 +86,10 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
         endlessScrollListener = object : EndlessScrollListener(llm, BROWSE_FIRST_PAGE) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
                 loadMoreResultsSubject.onNext(
-                    SearchActions.LoadMoreResults(
-                        viewModel.getLastState().lastQuery,
-                        page
-                    )
+                        SearchActions.LoadMoreResults(
+                                viewModel.getLastState().lastQuery,
+                                page
+                        )
                 )
             }
         }
@@ -97,27 +98,34 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
     }
 
     private fun actions() = Observable.merge(listOf(
-        searchAction(),
-        refreshIntent(),
-        loadMoreResultsSubject,
-        clearResultsSubject))
+            searchAction(),
+            refreshIntent(),
+            loadMoreResultsSubject,
+            clearResultsSubject,
+            clearTextAction()))
 
     private fun searchAction(): Observable<SearchActions> = RxTextView.afterTextChangeEvents(searchQueryInput)
-        .map { searchQueryInput.text.toString() }
-        .doOnNext { if (it.isEmpty()) clearResultsSubject.onNext(SearchActions.ClearResults()) }
-        .debounce(500, TimeUnit.MILLISECONDS)
-        .filter { it.isNotEmpty() }
-        .map { SearchActions.Search(it) }
+            .map { searchQueryInput.text.toString() }
+            .doOnNext {
+                if (it.isEmpty()) clearResultsSubject.onNext(SearchActions.ClearResults())
+            }
+            .debounce(500, TimeUnit.MILLISECONDS)
+            .filter { it.isNotEmpty() }
+            .map { SearchActions.Search(it) }
+
+    private fun clearTextAction(): Observable<SearchActions> = RxView.clicks(clearText)
+            .map { searchQueryInput.setText("") }
+            .map { SearchActions.ClearResults() }
 
     private fun refreshIntent(): Observable<SearchActions.Reload> = RxSwipeRefreshLayout.refreshes(torrentSearchSwipeRefresh)
-        .map {
-            clearResultsSubject.onNext(SearchActions.ClearResults())
-        }
-        .map { getReloadIntent() }
+            .map {
+                clearResultsSubject.onNext(SearchActions.ClearResults())
+            }
+            .map { getReloadIntent() }
 
     private fun getReloadIntent(): SearchActions.Reload {
         return SearchActions.Reload(
-            viewModel.getLastState().lastQuery)
+                viewModel.getLastState().lastQuery)
     }
 
     override fun render(state: SearchViewState) {
