@@ -10,16 +10,21 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by arran on 27/10/2017.
  */
+
+private const val PARENT_CATEGORY_XXX = "Porn"
+
 internal class TorrentSearchRepository(private val torrentSearchApi: TorrentSearchApi) : ITorrentSearchRepository {
 
     override fun search(searchTerm: String, sortType: TorrentSearchSortType, pageNumber: Int, category: TorrentSearchCategory): Observable<List<TorrentSearchResult>> {
         return torrentSearchApi.search(searchTerm, sortType, pageNumber, category)
-            .composeIo()
+                .map { it.filter { it.categoryParent != PARENT_CATEGORY_XXX } }
+                .composeIo()
     }
 
     override fun browse(sortType: TorrentSearchSortType, pageNumber: Int, category: TorrentSearchCategory): Observable<List<TorrentSearchResult>> {
         return torrentSearchApi.browse(sortType, pageNumber, category)
-            .composeIo()
+                .map { it.filter { it.categoryParent != PARENT_CATEGORY_XXX } }
+                .composeIo()
     }
 
     private fun mockResults(names: String, pageNumber: Int): Observable<List<TorrentSearchResult>> {
@@ -27,9 +32,9 @@ internal class TorrentSearchRepository(private val torrentSearchApi: TorrentSear
 
         val mutable = mutableListOf<TorrentSearchResult>()
         (0..100)
-            .map {
-                mutable.add(TorrentSearchResult(name = "$names $it"))
-            }
+                .map {
+                    mutable.add(TorrentSearchResult(name = "$names $it"))
+                }
         results = mutable.toList()
 
         val pageResults = when (pageNumber) {
@@ -41,6 +46,6 @@ internal class TorrentSearchRepository(private val torrentSearchApi: TorrentSear
             else -> emptyList()
         }
         return Observable.just(pageResults)
-            .delay(2, TimeUnit.SECONDS)
+                .delay(2, TimeUnit.SECONDS)
     }
 }
