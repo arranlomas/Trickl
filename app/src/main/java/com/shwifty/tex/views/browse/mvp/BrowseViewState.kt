@@ -11,11 +11,11 @@ import com.shwifty.tex.models.TorrentSearchSortType
  */
 
 data class BrowseViewState(
-    val isLoading: Boolean = false,
-    val error: Throwable? = null,
-    val sortType: TorrentSearchSortType = Const.DEFAULT_SORT_TYPE,
-    val category: TorrentSearchCategory = Const.DEFAULT_CATEGORY,
-    val browseResults: List<TorrentSearchResult> = emptyList()
+        val isLoading: Boolean = false,
+        val error: Throwable? = null,
+        val sortType: TorrentSearchSortType = Const.DEFAULT_SORT_TYPE,
+        val category: TorrentSearchCategory = Const.DEFAULT_BROWSE_CATEGORY,
+        val browseResults: List<TorrentSearchResult> = emptyList()
 ) : KontentViewState() {
     companion object Factory {
         fun default(): BrowseViewState {

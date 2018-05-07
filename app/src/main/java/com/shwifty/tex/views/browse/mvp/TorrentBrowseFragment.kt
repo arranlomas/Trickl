@@ -107,7 +107,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
     private fun initialAction(): Observable<BrowseActions.InitialLoad> = Observable.just(
         BrowseActions.InitialLoad(
             Const.DEFAULT_SORT_TYPE,
-            Const.DEFAULT_CATEGORY
+            Const.DEFAULT_BROWSE_CATEGORY
         ))
 
     private fun refreshIntent(): Observable<BrowseActions.Reload> = RxSwipeRefreshLayout.refreshes(torrentBrowseSwipeRefresh)

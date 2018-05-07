@@ -29,7 +29,7 @@ private fun observables(shared: Observable<SearchActions>, torrentSearchReposito
 
 fun loadMore(torrentSearchRepository: ITorrentSearchRepository) = ObservableTransformer<SearchActions.LoadMoreResults, SearchResult> {
     it.flatMap { action ->
-        torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, action.page, Const.DEFAULT_CATEGORY)
+        torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, action.page, Const.DEFAULT_SEARCH_CATEGORY)
             .networkMapper(
                 error = { SearchResult.SearchError(it) },
                 loading = SearchResult.SearchInFlight(),
@@ -40,7 +40,7 @@ fun loadMore(torrentSearchRepository: ITorrentSearchRepository) = ObservableTran
 
 fun reload(torrentSearchRepository: ITorrentSearchRepository) = ObservableTransformer<SearchActions.Reload, SearchResult> {
     it.flatMap { action ->
-        torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, 0, Const.DEFAULT_CATEGORY)
+        torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, 0, Const.DEFAULT_SEARCH_CATEGORY)
             .networkMapper(
                 error = { SearchResult.SearchError(it) },
                 loading = SearchResult.SearchInFlight(),
@@ -56,7 +56,7 @@ fun clearResultsProcessor() = KontentSimpleActionProcessor<SearchActions.ClearRe
 fun loadSearchResults(torrentSearchRepository: ITorrentSearchRepository) =
     KontentActionProcessor<SearchActions.Search, SearchResult, Pair<List<TorrentSearchResult>, String>>(
         action = { action ->
-            torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, 0, Const.DEFAULT_CATEGORY)
+            torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, 0, Const.DEFAULT_SEARCH_CATEGORY)
                 .map { it to action.query }
         },
         success = { results ->

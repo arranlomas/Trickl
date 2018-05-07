@@ -3,6 +3,7 @@ package com.shwifty.tex.repository.network.torrentSearch
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
+import com.shwifty.tex.utils.composeIo
 import io.reactivex.Observable
 import java.util.concurrent.TimeUnit
 
@@ -12,17 +13,15 @@ import java.util.concurrent.TimeUnit
 internal class TorrentSearchRepository(private val torrentSearchApi: TorrentSearchApi) : ITorrentSearchRepository {
 
     override fun search(searchTerm: String, sortType: TorrentSearchSortType, pageNumber: Int, category: TorrentSearchCategory): Observable<List<TorrentSearchResult>> {
-        return mockResults("search $searchTerm $sortType $category $pageNumber", pageNumber)
-//        return torrentSearchApi.search(searchTerm, sortType, pageNumber, category)
-//            .map { it.filter { it.category != null } }
-//            .composeIo()
+        return torrentSearchApi.search(searchTerm, sortType, pageNumber, category)
+            .map { it.filter { it.category != null } }
+            .composeIo()
     }
 
     override fun browse(sortType: TorrentSearchSortType, pageNumber: Int, category: TorrentSearchCategory): Observable<List<TorrentSearchResult>> {
-        return mockResults("browse $sortType $category $pageNumber", pageNumber)
-//        return torrentSearchApi.browse(sortType, pageNumber, category)
-//            .map { it.filter { it.category != null } }
-//            .composeIo()
+        return torrentSearchApi.browse(sortType, pageNumber, category)
+            .map { it.filter { it.category != null } }
+            .composeIo()
     }
 
     private fun mockResults(names: String, pageNumber: Int): Observable<List<TorrentSearchResult>> {
