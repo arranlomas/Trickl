@@ -123,6 +123,7 @@ class TorrentBrowseFragment : BaseDaggerMviFragment<BrowseActions, BrowseResult,
                     viewModel.getLastState().sortType,
                     viewModel.getLastState().category,
                     { sortType, category ->
+                        emitter.onNext(BrowseActions.ClearResults())
                         emitter.onNext(BrowseActions.UpdateSortAndCategory(sortType, category))
                         emitter.onNext(getReloadIntent())
                     })
