@@ -9,6 +9,7 @@ import com.shwifty.tex.Const
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.repository.network.torrentSearch.BROWSE_FIRST_PAGE
 import com.shwifty.tex.repository.network.torrentSearch.ITorrentSearchRepository
+import com.shwifty.tex.repository.searchhistory.ISearchHistoryRepository
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 
@@ -16,16 +17,35 @@ import io.reactivex.ObservableTransformer
  * Created by arran on 14/02/2018.
  */
 
-fun searchActionProcessor(torrentSearchRepository: ITorrentSearchRepository) = KontentMasterProcessor<SearchActions, SearchResult> { action ->
-    Observable.merge(observables(action, torrentSearchRepository))
+fun searchActionProcessor(
+    torrentSearchRepository: ITorrentSearchRepository,
+    searchHistoryRepository: ISearchHistoryRepository
+) = KontentMasterProcessor<SearchActions, SearchResult> { action ->
+    Observable.merge(observables(action, torrentSearchRepository, searchHistoryRepository  ))
 }
 
-private fun observables(shared: Observable<SearchActions>, torrentSearchRepository: ITorrentSearchRepository): List<Observable<SearchResult>> {
+private fun observables(
+    shared: Observable<SearchActions>,
+    torrentSearchRepository: ITorrentSearchRepository,
+    searchHistoryRepository: ISearchHistoryRepository
+): List<Observable<SearchResult>> {
     return listOf<Observable<SearchResult>>(
+        shared.ofType(SearchActions.LoadSearchHistory::class.java).compose(loadSearchHistory(searchHistoryRepository)),
         shared.ofType(SearchActions.LoadMoreResults::class.java).compose(loadMore(torrentSearchRepository)),
         shared.ofType(SearchActions.Reload::class.java).compose(reload(torrentSearchRepository)),
         shared.ofType(SearchActions.Search::class.java).compose(loadSearchResults(torrentSearchRepository)),
         shared.ofType(SearchActions.ClearResults::class.java).compose(clearResultsProcessor()))
+}
+
+fun loadSearchHistory(searchHistoryRepository: ISearchHistoryRepository) = ObservableTransformer<SearchActions.LoadSearchHistory, SearchResult> {
+    it.flatMap { action ->
+        searchHistoryRepository.getItems()
+            .networkMapper(
+                error = { SearchResult.SearchHistoryError(it) },
+                loading = SearchResult.SearchHistoryInFlight(),
+                success = { SearchResult.SearchHistorySuccess(it) }
+            )
+    }
 }
 
 fun loadMore(torrentSearchRepository: ITorrentSearchRepository) = ObservableTransformer<SearchActions.LoadMoreResults, SearchResult> {
@@ -84,6 +104,9 @@ val searchReducer = KontentReducer { result: SearchResult, previousState: Search
         is SearchResult.SearchError -> previousState.copy(isLoading = false, error = result.error)
         is SearchResult.SearchInFlight -> previousState.copy(isLoading = true, error = null)
         is SearchResult.ClearResults -> previousState.copy(searchResults = emptyList())
+        is SearchResult.SearchHistoryInFlight -> previousState.copy(isLoading = true)
+        is SearchResult.SearchHistorySuccess -> previousState.copy(isLoading = false, error = null, searchHistoryItems = result.result)
+        is SearchResult.SearchHistoryError -> previousState.copy(isLoading = false, error = result.error)
     }
 }
 

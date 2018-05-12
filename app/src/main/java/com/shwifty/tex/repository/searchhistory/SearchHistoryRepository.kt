@@ -1,6 +1,7 @@
 package com.shwifty.tex.repository.searchhistory
 
 import com.shwifty.tex.models.SearchHistoryItem
+import io.reactivex.Observable
 import io.realm.Realm
 
 class SearchHistoryRepository : ISearchHistoryRepository {
@@ -12,7 +13,7 @@ class SearchHistoryRepository : ISearchHistoryRepository {
         }
     }
 
-    override fun getItems(): List<SearchHistoryItem> {
+    override fun getItems(): Observable<List<SearchHistoryItem>> {
         val realm = Realm.getDefaultInstance()
         val torrentFileList = mutableListOf<SearchHistoryItem>()
         try {
@@ -27,6 +28,9 @@ class SearchHistoryRepository : ISearchHistoryRepository {
             realm.close()
         }
 
-        return torrentFileList.toList().sortedBy { it.time }
+//        return Observable.just(torrentFileList.toList().sortedBy { it.time })
+
+        val mockList = (0..10).map { SearchHistoryItem("$it", it.toLong()) }
+        return Observable.just(mockList)
     }
 }

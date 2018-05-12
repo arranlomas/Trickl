@@ -22,6 +22,7 @@ import com.shwifty.tex.repository.network.torrentSearch.BROWSE_FIRST_PAGE
 import com.shwifty.tex.utils.setVisible
 import com.shwifty.tex.views.EndlessScrollListener
 import com.shwifty.tex.views.base.mvi.BaseDaggerMviFragment
+import com.shwifty.tex.views.browse.searchHistory.SearchHistoryAdapter
 import com.shwifty.tex.views.browse.torrentSearch.list.TorrentSearchAdapter
 import es.dmoral.toasty.Toasty
 import io.reactivex.Observable
@@ -51,6 +52,9 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
         }
     }
     private val searchResultsAdapter = TorrentSearchAdapter(itemOnClick)
+    private val searchHistoryAdapter = SearchHistoryAdapter({
+
+    })
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -77,7 +81,7 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
                 Toasty.error(it, error.localizedMessage).show()
             }
         })
-        super.attachActions(actions())
+        super.attachActions(actions(), SearchActions.LoadSearchHistory::class.java)
     }
 
     private fun setupRecyclerView() {
@@ -87,10 +91,10 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
         endlessScrollListener = object : EndlessScrollListener(llm, BROWSE_FIRST_PAGE) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
                 loadMoreResultsSubject.onNext(
-                        SearchActions.LoadMoreResults(
-                                viewModel.getLastState().lastQuery,
-                                page
-                        )
+                    SearchActions.LoadMoreResults(
+                        viewModel.getLastState().lastQuery,
+                        page
+                    )
                 )
             }
         }
@@ -99,21 +103,22 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
     }
 
     private fun actions() = Observable.merge(listOf(
-            searchAction(),
-            searchTextChange(),
-            refreshIntent(),
-            loadMoreResultsSubject,
-            clearResultsSubject,
-            clearTextAction()))
+        loadSearchHistoryAction(),
+        searchAction(),
+        searchTextChange(),
+        refreshIntent(),
+        loadMoreResultsSubject,
+        clearResultsSubject,
+        clearTextAction()))
 
     private fun searchTextChange(): Observable<SearchActions> = RxTextView.afterTextChangeEvents(searchQueryInput)
-            .map { searchQueryInput.text.toString() }
-            .doOnNext {
-                if (it.isEmpty()) clearResultsSubject.onNext(SearchActions.ClearResults())
-            }
-            .debounce(500, TimeUnit.MILLISECONDS)
-            .filter { it.isNotEmpty() }
-            .map { SearchActions.Search(it) }
+        .map { searchQueryInput.text.toString() }
+        .doOnNext {
+            if (it.isEmpty()) clearResultsSubject.onNext(SearchActions.ClearResults())
+        }
+        .debounce(500, TimeUnit.MILLISECONDS)
+        .filter { it.isNotEmpty() }
+        .map { SearchActions.Search(it) }
 
     private fun searchAction(): Observable<SearchActions> = Observable.create { emitter ->
         searchQueryInput.setOnEditorActionListener({ _, actionId, _ ->
@@ -124,19 +129,21 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
         })
     }
 
+    private fun loadSearchHistoryAction(): Observable<SearchActions> = Observable.just(SearchActions.LoadSearchHistory())
+
     private fun clearTextAction(): Observable<SearchActions> = RxView.clicks(clearText)
-            .map { searchQueryInput.setText("") }
-            .map { SearchActions.ClearResults() }
+        .map { searchQueryInput.setText("") }
+        .map { SearchActions.ClearResults() }
 
     private fun refreshIntent(): Observable<SearchActions.Reload> = RxSwipeRefreshLayout.refreshes(torrentSearchSwipeRefresh)
-            .map {
-                clearResultsSubject.onNext(SearchActions.ClearResults())
-            }
-            .map { getReloadIntent() }
+        .map {
+            clearResultsSubject.onNext(SearchActions.ClearResults())
+        }
+        .map { getReloadIntent() }
 
     private fun getReloadIntent(): SearchActions.Reload {
         return SearchActions.Reload(
-                viewModel.getLastState().lastQuery)
+            viewModel.getLastState().lastQuery)
     }
 
     override fun render(state: SearchViewState) {
@@ -150,5 +157,8 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
             if (it is ConnectException) errorText.text = getString(R.string.error_connecting_to_search_server)
             else errorText.text = it.localizedMessage
         }
+
+        searchHistoryAdapter.setResults(state.searchHistoryItems)
+        searchHistoryRecyclerView.adapter = searchHistoryAdapter
     }
 }
