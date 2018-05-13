@@ -45,7 +45,6 @@ class TorrentFilesFragment : BaseDaggerMviFragment<TorrentInfoActions, TorrentIn
         when (type) {
             TorrentFilesAdapter.Companion.ClickTypes.DOWNLOAD -> {
                 actionManager.startDownload(context!!, torrentFile, onError)
-                activity?.finish()
             }
             TorrentFilesAdapter.Companion.ClickTypes.OPEN ->
                 actionManager.openTorrentFile(context!!, torrentFile, onError)
