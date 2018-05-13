@@ -14,7 +14,7 @@ class SearchHistoryAdapter(val itemClickListener: (SearchHistoryItem) -> Unit) :
     private var searchHistoryList: MutableList<SearchHistoryItem> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHistoryCardHolder {
-        val itemView = parent.context.inflateLayout(R.layout.list_item_torrent_search_result, parent, false)
+        val itemView = parent.context.inflateLayout(R.layout.list_item_search_history, parent, false)
         val holder = SearchHistoryCardHolder(itemView)
         holder.onClick { _, position, _ ->
             itemClickListener.invoke(searchHistoryList[position])

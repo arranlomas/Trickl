@@ -86,9 +86,10 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
 
     private fun setupRecyclerView() {
         recyclerView.setHasFixedSize(true)
-        val llm = LinearLayoutManager(context)
-        recyclerView.layoutManager = llm
-        endlessScrollListener = object : EndlessScrollListener(llm, BROWSE_FIRST_PAGE) {
+        val searchResultsLLM = LinearLayoutManager(context)
+        recyclerView.layoutManager = searchResultsLLM
+        searchHistoryRecyclerView.layoutManager = LinearLayoutManager(context)
+        endlessScrollListener = object : EndlessScrollListener(searchResultsLLM, BROWSE_FIRST_PAGE) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
                 loadMoreResultsSubject.onNext(
                     SearchActions.LoadMoreResults(
@@ -100,6 +101,7 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
         }
         recyclerView.addOnScrollListener(endlessScrollListener)
         recyclerView.adapter = searchResultsAdapter
+        searchHistoryRecyclerView.adapter = searchHistoryAdapter
     }
 
     private fun actions() = Observable.merge(listOf(
@@ -149,16 +151,18 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
     override fun render(state: SearchViewState) {
         if (state.searchResults.isEmpty()) endlessScrollListener.resetState()
 
+        searchHistoryRecyclerView.setVisible(state.searchResults.isEmpty())
+        torrentSearchSwipeRefresh.setVisible(state.searchResults.isNotEmpty())
+
         searchResultsAdapter.setResults(state.searchResults)
         torrentSearchSwipeRefresh.isRefreshing = state.isLoading
+
+        searchHistoryAdapter.setResults(state.searchHistoryItems)
 
         errorLayout.setVisible(state.error != null && !state.isLoading)
         state.error?.let {
             if (it is ConnectException) errorText.text = getString(R.string.error_connecting_to_search_server)
             else errorText.text = it.localizedMessage
         }
-
-        searchHistoryAdapter.setResults(state.searchHistoryItems)
-        searchHistoryRecyclerView.adapter = searchHistoryAdapter
     }
 }
