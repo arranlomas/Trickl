@@ -6,6 +6,7 @@ import com.arranlomas.kontent.commons.functions.KontentReducer
 import com.arranlomas.kontent.commons.functions.KontentSimpleActionProcessor
 import com.arranlomas.kontent.commons.functions.networkMapper
 import com.shwifty.tex.Const
+import com.shwifty.tex.models.SearchHistoryItem
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.repository.network.torrentSearch.BROWSE_FIRST_PAGE
 import com.shwifty.tex.repository.network.torrentSearch.ITorrentSearchRepository
@@ -21,7 +22,7 @@ fun searchActionProcessor(
     torrentSearchRepository: ITorrentSearchRepository,
     searchHistoryRepository: ISearchHistoryRepository
 ) = KontentMasterProcessor<SearchActions, SearchResult> { action ->
-    Observable.merge(observables(action, torrentSearchRepository, searchHistoryRepository  ))
+    Observable.merge(observables(action, torrentSearchRepository, searchHistoryRepository))
 }
 
 private fun observables(
@@ -33,7 +34,7 @@ private fun observables(
         shared.ofType(SearchActions.LoadSearchHistory::class.java).compose(loadSearchHistory(searchHistoryRepository)),
         shared.ofType(SearchActions.LoadMoreResults::class.java).compose(loadMore(torrentSearchRepository)),
         shared.ofType(SearchActions.Reload::class.java).compose(reload(torrentSearchRepository)),
-        shared.ofType(SearchActions.Search::class.java).compose(loadSearchResults(torrentSearchRepository)),
+        shared.ofType(SearchActions.Search::class.java).compose(loadSearchResults(torrentSearchRepository, searchHistoryRepository)),
         shared.ofType(SearchActions.ClearResults::class.java).compose(clearResultsProcessor()))
 }
 
@@ -74,10 +75,11 @@ fun clearResultsProcessor() = KontentSimpleActionProcessor<SearchActions.ClearRe
     Observable.just(SearchResult.ClearResults())
 }
 
-fun loadSearchResults(torrentSearchRepository: ITorrentSearchRepository) =
+fun loadSearchResults(torrentSearchRepository: ITorrentSearchRepository, searchHistoryRepository: ISearchHistoryRepository) =
     KontentActionProcessor<SearchActions.Search, SearchResult, Pair<List<TorrentSearchResult>, String>>(
         action = { action ->
             torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, BROWSE_FIRST_PAGE, Const.DEFAULT_SEARCH_CATEGORY)
+                .doOnNext { searchHistoryRepository.saveItem(SearchHistoryItem(action.query)) }
                 .map { it to action.query }
         },
         success = { results ->
@@ -95,10 +97,10 @@ val searchReducer = KontentReducer { result: SearchResult, previousState: Search
             val results = previousState.searchResults.toMutableList()
             results.addAll(result.result)
             previousState.copy(
-                    isLoading = false,
-                    error = null,
-                    searchResults = results,
-                    lastQuery = result.query
+                isLoading = false,
+                error = null,
+                searchResults = results,
+                lastQuery = result.query
             )
         }
         is SearchResult.SearchError -> previousState.copy(isLoading = false, error = result.error)

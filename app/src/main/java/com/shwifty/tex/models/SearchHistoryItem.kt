@@ -1,3 +1,3 @@
 package com.shwifty.tex.models
 
-data class SearchHistoryItem(val searchTearm: String, val time: Long)
+data class SearchHistoryItem(val searchTerm: String, val time: Long = System.currentTimeMillis())
