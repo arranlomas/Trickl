@@ -18,8 +18,8 @@ import dagger.Provides
 @Module
 class RepositoryModule {
     @Provides
-    internal fun provideTorrentSearchRepository(torrentSearchApi: TorrentSearchApi): ITorrentSearchRepository {
-        return TorrentSearchRepository(torrentSearchApi)
+    internal fun provideTorrentSearchRepository(torrentSearchApi: TorrentSearchApi, searchHistoryRepository: ISearchHistoryRepository): ITorrentSearchRepository {
+        return TorrentSearchRepository(torrentSearchApi, searchHistoryRepository)
 
     }
 

@@ -10,6 +10,7 @@
       <module fileurl="file://$PROJECT_DIR$/../kontent/kontent-core/kontent-core.iml" filepath="$PROJECT_DIR$/../kontent/kontent-core/kontent-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/../kontent/kontent-dagger-support/kontent-dagger-support.iml" filepath="$PROJECT_DIR$/../kontent/kontent-dagger-support/kontent-dagger-support.iml" />
       <module fileurl="file://$PROJECT_DIR$/../Kotlin-File-Browser/kotlinfilebrowser/kotlinfilebrowser.iml" filepath="$PROJECT_DIR$/../Kotlin-File-Browser/kotlinfilebrowser/kotlinfilebrowser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/torrentwrapper/torrentwrapper.iml" filepath="$PROJECT_DIR$/torrentwrapper/torrentwrapper.iml" />
     </modules>
   </component>
 </project>

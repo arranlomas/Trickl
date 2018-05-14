@@ -3,6 +3,7 @@ package com.shwifty.tex.repository.network.torrentSearch
 import com.shwifty.tex.models.TorrentSearchCategory
 import com.shwifty.tex.models.TorrentSearchResult
 import com.shwifty.tex.models.TorrentSearchSortType
+import com.shwifty.tex.repository.searchhistory.ISearchHistoryRepository
 import com.shwifty.tex.utils.composeIo
 import io.reactivex.Observable
 import java.util.concurrent.TimeUnit
@@ -13,10 +14,14 @@ import java.util.concurrent.TimeUnit
 
 private const val PARENT_CATEGORY_XXX = "Porn"
 
-internal class TorrentSearchRepository(private val torrentSearchApi: TorrentSearchApi) : ITorrentSearchRepository {
+internal class TorrentSearchRepository(
+        private val torrentSearchApi: TorrentSearchApi,
+        private val searchHistoryRepository: ISearchHistoryRepository
+) : ITorrentSearchRepository {
 
     override fun search(searchTerm: String, sortType: TorrentSearchSortType, pageNumber: Int, category: TorrentSearchCategory): Observable<List<TorrentSearchResult>> {
         return torrentSearchApi.search(searchTerm, sortType, pageNumber, category)
+                .doOnNext { searchHistoryRepository.saveItem(searchTerm) }
                 .map { it.filter { it.categoryParent != PARENT_CATEGORY_XXX } }
                 .composeIo()
     }

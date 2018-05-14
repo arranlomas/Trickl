@@ -34,7 +34,7 @@ private fun observables(
         shared.ofType(SearchActions.LoadSearchHistory::class.java).compose(loadSearchHistory(searchHistoryRepository)),
         shared.ofType(SearchActions.LoadMoreResults::class.java).compose(loadMore(torrentSearchRepository)),
         shared.ofType(SearchActions.Reload::class.java).compose(reload(torrentSearchRepository)),
-        shared.ofType(SearchActions.Search::class.java).compose(loadSearchResults(torrentSearchRepository, searchHistoryRepository)),
+        shared.ofType(SearchActions.Search::class.java).compose(loadSearchResults(torrentSearchRepository)),
         shared.ofType(SearchActions.ClearResults::class.java).compose(clearResultsProcessor()))
 }
 
@@ -75,11 +75,10 @@ fun clearResultsProcessor() = KontentSimpleActionProcessor<SearchActions.ClearRe
     Observable.just(SearchResult.ClearResults())
 }
 
-fun loadSearchResults(torrentSearchRepository: ITorrentSearchRepository, searchHistoryRepository: ISearchHistoryRepository) =
+fun loadSearchResults(torrentSearchRepository: ITorrentSearchRepository) =
     KontentActionProcessor<SearchActions.Search, SearchResult, Pair<List<TorrentSearchResult>, String>>(
         action = { action ->
             torrentSearchRepository.search(action.query, Const.DEFAULT_SORT_TYPE, BROWSE_FIRST_PAGE, Const.DEFAULT_SEARCH_CATEGORY)
-                .doOnNext { searchHistoryRepository.saveItem(SearchHistoryItem(action.query)) }
                 .map { it to action.query }
         },
         success = { results ->
