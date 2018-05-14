@@ -181,14 +181,14 @@ fun Activity.getTrackersFromMagnet(): List<String>? = getMagnetFromIntent()?.fin
 
 fun Activity.getHashFromIntent(): String? {
     val arguments = intent.extras
-    return if (arguments.containsKey(ARG_TORRENT_HASH)) {
+    return if (arguments != null && arguments.containsKey(ARG_TORRENT_HASH)) {
         arguments.getString(ARG_TORRENT_HASH)
     } else null
 }
 
 fun Activity.getMagnetFromIntent(): String? {
     val arguments = intent.extras
-    return if (arguments.containsKey(ARG_TORRENT_MAGNET)) {
+    return if (arguments != null && arguments.containsKey(ARG_TORRENT_MAGNET)) {
         arguments.getString(ARG_TORRENT_MAGNET)
     } else null
 }

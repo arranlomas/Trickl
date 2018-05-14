@@ -156,4 +156,6 @@
     <string name="working_directory_error_is_not_empty">Error, Cannot use a folder that is not empty</string>
     <string name="settings_error_cannot_get_working_directory">Error, Cannot load current working directory</string>
 
+    <string name="error_could_not_get_torrent_hash">Error, Could not get hash or magnet</string>
+
 </resources>

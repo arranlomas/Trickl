@@ -52,6 +52,7 @@ class MainActivity : BaseDaggerActivity(), MainContract.View {
         setContentView(R.layout.activity_main)
         presenter.attachView(this)
         presenter.initializeCastContext(this)
+        chromecastBottomSheet.setup(chromecastControllerPresenter)
         setupBottomSheet()
 
         setSupportActionBar(mainToolbar)
@@ -87,7 +88,6 @@ class MainActivity : BaseDaggerActivity(), MainContract.View {
 
     override fun onResume() {
         presenter.addSessionListener()
-        chromecastBottomSheet.setup(chromecastControllerPresenter)
         super.onResume()
     }
 

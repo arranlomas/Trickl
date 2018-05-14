@@ -55,7 +55,12 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentActions, AddTorrentRe
         super.setup(viewModel, { error ->
             Toasty.error(this, error.localizedMessage).show()
         })
-        super.attachActions(actions(), AddTorrentActions.Load::class.java)
+        (getHashFromIntent() ?: getMagnetFromIntent()?.findHashFromMagnet())?.let {
+            super.attachActions(actions(), AddTorrentActions.Load::class.java)
+        } ?: let {
+            errorLayout.setVisible(true)
+            errorText.text = getString(R.string.error_could_not_get_torrent_hash)
+        }
 
         addTorrentFab.setOnClickListener {
             val returnIntent = Intent()
@@ -70,12 +75,6 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentActions, AddTorrentRe
         addTorrentToolbar.setNavigationOnClickListener {
             onBackPressed()
         }
-
-        getTorrentNameFromMagnet()?.let {
-            URLDecoder.decode(it, "UTF-8")?.let {
-                addTorrentLoadingText.text = getString(R.string.loading_torrent_info_for, it)
-            }
-        }
     }
 
     private fun actions() = Observable.merge(observables())
@@ -87,6 +86,12 @@ class AddTorrentActivity : BaseDaggerMviActivity<AddTorrentActions, AddTorrentRe
     }
 
     private fun initialAction(): Observable<AddTorrentActions> {
+        getTorrentNameFromMagnet()?.let {
+            URLDecoder.decode(it, "UTF-8")?.let {
+                addTorrentLoadingText.text = getString(R.string.loading_torrent_info_for, it)
+            }
+        }
+
         val hash = getHashFromIntent() ?: getMagnetFromIntent()?.findHashFromMagnet()
         ?: throw IllegalArgumentException("Must provide hash or magnet")
         val trackers = getMagnetFromIntent()?.findTrackersFromMagnet()
