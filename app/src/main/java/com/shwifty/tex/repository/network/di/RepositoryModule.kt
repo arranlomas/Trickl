@@ -7,9 +7,10 @@ import com.shwifty.tex.repository.network.torrentSearch.TorrentSearchApi
 import com.shwifty.tex.repository.network.torrentSearch.TorrentSearchRepository
 import com.shwifty.tex.repository.preferences.IPreferenceRepository
 import com.shwifty.tex.repository.preferences.PreferencesRepository
+import com.shwifty.tex.repository.searchhistory.ISearchHistoryRepository
+import com.shwifty.tex.repository.searchhistory.SearchHistoryRepository
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 /**
  * Created by arran on 27/10/2017.
@@ -28,7 +29,13 @@ class RepositoryModule {
 
     }
 
-    @Provides fun provideTorrentRepository(): ITorrentRepository{
+    @Provides
+    fun provideTorrentRepository(): ITorrentRepository{
         return Confluence.torrentRepository
+    }
+
+    @Provides
+    fun providesSearchHistoryRepository(): ISearchHistoryRepository {
+        return SearchHistoryRepository()
     }
 }
