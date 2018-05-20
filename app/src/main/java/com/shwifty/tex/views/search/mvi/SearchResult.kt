@@ -15,5 +15,5 @@ sealed class SearchResult : KontentResult() {
     data class SearchHistorySuccess(val result: List<SearchHistoryItem>) : SearchResult()
     data class SearchHistoryError(val error: Throwable) : SearchResult()
     class SearchInFlight : SearchResult()
-    class ClearResults : SearchResult()
+    class ClearResults(val searchHistory: List<SearchHistoryItem>) : SearchResult()
 }

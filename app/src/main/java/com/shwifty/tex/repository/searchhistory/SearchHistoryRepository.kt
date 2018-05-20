@@ -12,7 +12,9 @@ class SearchHistoryRepository(
     }
 
     override fun getItems(): Observable<List<SearchHistoryItem>> {
-        return searchHistoryDao.getAll().map { it.map { it.mapToModel() } }.toObservable()
+        return searchHistoryDao.getAll().map {
+            it.map { it.mapToModel() }.sortedByDescending { it.time }
+        }.toObservable()
     }
 
     override fun deleteAll() {
