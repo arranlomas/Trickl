@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
 import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
 import com.shwifty.tex.R
 import com.shwifty.tex.dialogs.IDialogManager
 import com.shwifty.tex.models.TorrentSearchResult
@@ -29,7 +28,6 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.frag_torrent_search.*
 import java.net.ConnectException
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -53,7 +51,7 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
     }
     private val searchResultsAdapter = TorrentSearchAdapter(itemOnClick)
     private val searchHistoryAdapter = SearchHistoryAdapter({
-
+        searchSubject.onNext(SearchActions.Search(it.searchTerm))
     })
 
     @Inject
@@ -61,6 +59,7 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
 
     private val loadMoreResultsSubject = PublishSubject.create<SearchActions.LoadMoreResults>()
     private val clearResultsSubject = PublishSubject.create<SearchActions.ClearResults>()
+    private val searchSubject = PublishSubject.create<SearchActions.Search>()
 
     companion object {
         fun newInstance(): Fragment {
@@ -82,6 +81,13 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
             }
         })
         super.attachActions(actions(), SearchActions.LoadSearchHistory::class.java)
+
+        searchQueryInput.setOnEditorActionListener({ _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                searchSubject.onNext(SearchActions.Search(searchQueryInput.text.toString()))
+            }
+            false
+        })
     }
 
     private fun setupRecyclerView() {
@@ -106,31 +112,12 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
 
     private fun actions() = Observable.merge(listOf(
             loadSearchHistoryAction(),
-            searchAction(),
-            searchTextChange(),
             refreshIntent(),
             loadMoreResultsSubject,
             clearResultsSubject,
             clearTextAction(),
-            clearSearchHistoryAction()))
-
-    private fun searchTextChange(): Observable<SearchActions> = RxTextView.afterTextChangeEvents(searchQueryInput)
-            .map { searchQueryInput.text.toString() }
-            .doOnNext {
-                if (it.isEmpty()) clearResultsSubject.onNext(SearchActions.ClearResults())
-            }
-            .debounce(500, TimeUnit.MILLISECONDS)
-            .filter { it.isNotEmpty() }
-            .map { SearchActions.Search(it) }
-
-    private fun searchAction(): Observable<SearchActions> = Observable.create { emitter ->
-        searchQueryInput.setOnEditorActionListener({ _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                emitter.onNext(SearchActions.Search(searchQueryInput.text.toString()))
-            }
-            false
-        })
-    }
+            clearSearchHistoryAction(),
+            searchSubject))
 
     private fun clearSearchHistoryAction(): Observable<SearchActions> = RxView.clicks(clearHistoryBtn)
             .map { SearchActions.ClearSearchHistory() }
@@ -157,7 +144,7 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
 
         clearHistoryBtn.setVisible(state.searchResults.isEmpty() && state.searchHistoryItems.isNotEmpty())
         searchHistoryRecyclerView.setVisible(state.searchResults.isEmpty())
-        torrentSearchSwipeRefresh.setVisible(state.searchResults.isNotEmpty())
+        torrentSearchSwipeRefresh.setVisible(state.searchResults.isNotEmpty() || state.isLoading)
 
         searchResultsAdapter.setResults(state.searchResults)
         torrentSearchSwipeRefresh.isRefreshing = state.isLoading

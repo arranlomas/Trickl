@@ -119,7 +119,7 @@ val searchReducer = KontentReducer { result: SearchResult, previousState: Search
         }
         is SearchResult.SearchError -> previousState.copy(isLoading = false, error = result.error)
         is SearchResult.SearchInFlight -> previousState.copy(isLoading = true, error = null)
-        is SearchResult.ClearResults -> previousState.copy(searchResults = emptyList(), searchHistoryItems = result.searchHistory)
+        is SearchResult.ClearResults -> previousState.copy(searchResults = emptyList(), searchHistoryItems = result.searchHistory, isLoading = false)
         is SearchResult.SearchHistoryInFlight -> previousState.copy(isLoading = true)
         is SearchResult.SearchHistorySuccess -> previousState.copy(isLoading = false, error = null, searchHistoryItems = result.result)
         is SearchResult.SearchHistoryError -> previousState.copy(isLoading = false, error = result.error)
