@@ -11,4 +11,5 @@ sealed class SearchActions : KontentAction() {
     data class Search(val query: String) : SearchActions()
     class ClearResults : SearchActions()
     data class Reload(val query: String) : SearchActions()
+    class ClearSearchHistory: SearchActions()
 }

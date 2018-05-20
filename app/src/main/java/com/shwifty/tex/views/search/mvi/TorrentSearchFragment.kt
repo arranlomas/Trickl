@@ -111,7 +111,8 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
             refreshIntent(),
             loadMoreResultsSubject,
             clearResultsSubject,
-            clearTextAction()))
+            clearTextAction(),
+            clearSearchHistoryAction()))
 
     private fun searchTextChange(): Observable<SearchActions> = RxTextView.afterTextChangeEvents(searchQueryInput)
             .map { searchQueryInput.text.toString() }
@@ -130,6 +131,9 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
             false
         })
     }
+
+    private fun clearSearchHistoryAction(): Observable<SearchActions> = RxView.clicks(clearHistoryBtn)
+            .map { SearchActions.ClearSearchHistory() }
 
     private fun loadSearchHistoryAction(): Observable<SearchActions> = Observable.just(SearchActions.LoadSearchHistory())
 
@@ -151,6 +155,7 @@ class TorrentSearchFragment : BaseDaggerMviFragment<SearchActions, SearchResult,
     override fun render(state: SearchViewState) {
         if (state.searchResults.isEmpty()) endlessScrollListener.resetState()
 
+        clearHistoryBtn.setVisible(state.searchResults.isEmpty() && state.searchHistoryItems.isNotEmpty())
         searchHistoryRecyclerView.setVisible(state.searchResults.isEmpty())
         torrentSearchSwipeRefresh.setVisible(state.searchResults.isNotEmpty())
 

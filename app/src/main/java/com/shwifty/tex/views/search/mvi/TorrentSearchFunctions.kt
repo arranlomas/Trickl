@@ -29,6 +29,7 @@ private fun observables(
             shared.ofType(SearchActions.LoadSearchHistory::class.java).compose(loadSearchHistory(searchHistoryRepository)),
             shared.ofType(SearchActions.LoadMoreResults::class.java).compose(loadMore(torrentSearchRepository)),
             shared.ofType(SearchActions.Reload::class.java).compose(reload(torrentSearchRepository)),
+            shared.ofType(SearchActions.ClearSearchHistory::class.java).compose(clearSearchHistoryProcessor(searchHistoryRepository)),
             shared.ofType(SearchActions.Search::class.java).compose(loadSearchResults(torrentSearchRepository)),
             shared.ofType(SearchActions.ClearResults::class.java).compose(clearResultsProcessor(searchHistoryRepository)))
 }
@@ -72,6 +73,20 @@ fun clearResultsProcessor(searchHistoryRepository: ISearchHistoryRepository) = K
                     error = { SearchResult.SearchHistoryError(it) },
                     loading = SearchResult.SearchHistoryInFlight(),
                     success = { SearchResult.ClearResults(it) }
+            )
+}
+
+
+fun clearSearchHistoryProcessor(searchHistoryRepository: ISearchHistoryRepository) = KontentSimpleActionProcessor<SearchActions.ClearSearchHistory, SearchResult> {
+    Observable.just(0)
+            .map {
+                searchHistoryRepository.deleteAll()
+            }
+            .flatMap { searchHistoryRepository.getItems() }
+            .networkMapper(
+                    error = { SearchResult.SearchHistoryError(it) },
+                    loading = SearchResult.SearchHistoryInFlight(),
+                    success = { SearchResult.SearchHistorySuccess(it) }
             )
 }
 
