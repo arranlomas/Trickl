@@ -6,6 +6,7 @@ import com.shwifty.tex.chromecast.CastHandlerModule
 import com.shwifty.tex.dialogs.DialogManagerModule
 import com.shwifty.tex.navigation.NavigationModule
 import com.shwifty.tex.repository.network.di.ApiModule
+import com.shwifty.tex.repository.network.di.PersistenceModule
 import com.shwifty.tex.repository.network.di.RepositoryModule
 import com.shwifty.tex.views.addtorrent.di.AddTorrentActivityBuilder
 import com.shwifty.tex.views.all.di.AllTorrentsFragmentBuilder
@@ -27,26 +28,29 @@ import javax.inject.Singleton
  * Created by arran on 8/10/2017.
  */
 @Singleton
-@Component(modules = [
-    AndroidSupportInjectionModule::class,
-    ApiModule::class,
-    RepositoryModule::class,
-    NavigationModule::class,
-    DialogManagerModule::class,
-    CastHandlerModule::class,
-    ActionManagerModule::class,
+@Component(
+        modules = [
+            AndroidSupportInjectionModule::class,
+            ApiModule::class,
+            RepositoryModule::class,
+            PersistenceModule::class,
+            NavigationModule::class,
+            DialogManagerModule::class,
+            CastHandlerModule::class,
+            ActionManagerModule::class,
 
-    //Views
-    AddTorrentActivityBuilder::class,
-    MainActivityBuilder::class,
-    FileFownloadFragmentBuilder::class,
-    AllTorrentsFragmentBuilder::class,
-    TorrentInfoActivityBuilder::class,
-    TorrentFileFragmentBuilder::class,
-    TorrentDetailsFragmentBuilder::class,
-    SettingsActivityBuilder::class,
-    TorrentBrowseFragmentBuilder::class,
-    TorrentSearchFragmentBuilder::class])
+            //Views
+            AddTorrentActivityBuilder::class,
+            MainActivityBuilder::class,
+            FileFownloadFragmentBuilder::class,
+            AllTorrentsFragmentBuilder::class,
+            TorrentInfoActivityBuilder::class,
+            TorrentFileFragmentBuilder::class,
+            TorrentDetailsFragmentBuilder::class,
+            SettingsActivityBuilder::class,
+            TorrentBrowseFragmentBuilder::class,
+            TorrentSearchFragmentBuilder::class]
+)
 interface AppComponent : AndroidInjector<DaggerApplication> {
     fun inject(app: MyApplication)
 }

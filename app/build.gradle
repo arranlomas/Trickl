@@ -114,6 +114,10 @@ dependencies {
     compile 'com.droidninja:filepicker:2.1.4'
 
 
+    implementation dependencies.room
+    kapt dependencies.roomAnnotationProcessor
+    implementation dependencies.roomRxJava
+
     compile project(':kontent-core')
     compile project(':kontent-dagger-support')
     compile project(':kontent-android-viewmodel')

@@ -2,6 +2,7 @@ package com.shwifty.tex
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.Intent
 import android.support.multidex.MultiDex
@@ -10,6 +11,7 @@ import com.arranlomas.daggerviewmodelhelper.AppInjector
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.shwifty.tex.chromecast.CastHandler
 import com.shwifty.tex.di.DaggerAppComponent
+import com.shwifty.tex.repository.network.di.PersistenceModule
 import com.shwifty.tex.repository.preferences.PreferencesRepository
 import com.shwifty.tex.views.splash.mvp.SplashActivity
 import dagger.android.AndroidInjector
@@ -24,7 +26,10 @@ class MyApplication : DaggerApplication() {
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         AppInjector.init(this)
-        val appComponent = DaggerAppComponent.create()
+        val db = Room.databaseBuilder(applicationContext,
+                Database::class.java, "database-name").build()
+
+        val appComponent = DaggerAppComponent.builder().persistenceModule(PersistenceModule(db)).build()
         appComponent.inject(this)
         return appComponent
     }

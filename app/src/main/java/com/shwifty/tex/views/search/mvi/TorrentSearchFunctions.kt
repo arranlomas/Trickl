@@ -39,7 +39,7 @@ private fun observables(
 }
 
 fun loadSearchHistory(searchHistoryRepository: ISearchHistoryRepository) = ObservableTransformer<SearchActions.LoadSearchHistory, SearchResult> {
-    it.flatMap { action ->
+    it.flatMap {
         searchHistoryRepository.getItems()
             .networkMapper(
                 error = { SearchResult.SearchHistoryError(it) },

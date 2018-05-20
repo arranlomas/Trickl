@@ -8,6 +8,7 @@ import com.shwifty.tex.repository.network.torrentSearch.TorrentSearchRepository
 import com.shwifty.tex.repository.preferences.IPreferenceRepository
 import com.shwifty.tex.repository.preferences.PreferencesRepository
 import com.shwifty.tex.repository.searchhistory.ISearchHistoryRepository
+import com.shwifty.tex.repository.searchhistory.SearchHistoryDao
 import com.shwifty.tex.repository.searchhistory.SearchHistoryRepository
 import dagger.Module
 import dagger.Provides
@@ -35,7 +36,7 @@ class RepositoryModule {
     }
 
     @Provides
-    fun providesSearchHistoryRepository(): ISearchHistoryRepository {
-        return SearchHistoryRepository()
+    fun providesSearchHistoryRepository(searchHistoryDao: SearchHistoryDao): ISearchHistoryRepository {
+        return SearchHistoryRepository(searchHistoryDao)
     }
 }
