@@ -144,6 +144,10 @@ fun Activity.onCreateSetThemeAndCallSuper(onLoaded: () -> Unit) {
                         setTheme(R.style.AppTheme)
                         window.decorView.clearLightStatusBar()
                     }
+                    AppTheme.OLED -> {
+                        setTheme(R.style.AppTheme_OLED)
+                        window.decorView.clearLightStatusBar()
+                    }
                     else -> {
                     }
                 }

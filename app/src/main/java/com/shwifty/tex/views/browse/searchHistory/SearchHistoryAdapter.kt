@@ -10,7 +10,7 @@ import com.shwifty.tex.utils.onClick
 /**
  * Created by arran on 19/04/2017.
  */
-class SearchHistoryAdapter(val itemClickListener: (SearchHistoryItem) -> Unit) : RecyclerView.Adapter<SearchHistoryCardHolder>() {
+class SearchHistoryAdapter(private val itemClickListener: (SearchHistoryItem) -> Unit) : RecyclerView.Adapter<SearchHistoryCardHolder>() {
     private var searchHistoryList: MutableList<SearchHistoryItem> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHistoryCardHolder {

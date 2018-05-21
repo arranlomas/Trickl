@@ -5,5 +5,6 @@ package com.shwifty.tex.models
  */
 enum class AppTheme {
     LIGHT,
-    DARK
+    DARK,
+    OLED
 }

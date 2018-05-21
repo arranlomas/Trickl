@@ -32,13 +32,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/default_small_padding"
-                android:background="?fragmentBackground"
+                android:background="?cardBackground"
                 card_view:cardCornerRadius="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:background="?cardBackground">
 
 
                     <LinearLayout
@@ -93,14 +94,15 @@
                 android:id="@+id/wifiOnlyRootLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?fragmentBackground"
+                android:background="?cardBackground"
                 android:visibility="gone"
                 card_view:cardCornerRadius="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:background="?cardBackground">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -154,13 +156,14 @@
                 android:id="@+id/themeRootLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?fragmentBackground"
+                android:background="?cardBackground"
                 card_view:cardCornerRadius="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:background="?cardBackground">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -186,13 +189,25 @@
                                 android:id="@+id/radioThemeDark"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/settings_theme_1" />
+                                android:text="@string/settings_theme_1"
+                                android:textColor="?cardTextColor"
+                                android:theme="@style/RadioTheme"/>
 
                             <RadioButton
                                 android:id="@+id/radioThemeLight"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/settings_theme_2" />
+                                android:text="@string/settings_theme_2"
+                                android:textColor="?cardTextColor"
+                                android:theme="@style/RadioTheme"/>
+
+                            <RadioButton
+                                android:id="@+id/radioThemeOled"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_theme_3"
+                                android:textColor="?cardTextColor"
+                                android:theme="@style/RadioTheme"/>
                         </RadioGroup>
 
 

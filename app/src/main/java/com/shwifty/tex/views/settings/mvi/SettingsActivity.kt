@@ -95,6 +95,7 @@ class SettingsActivity : BaseDaggerMviActivity<SettingsActions, SettingsResult, 
                 when (it) {
                     R.id.radioThemeDark -> SettingsActions.ChangeTheme(this, AppTheme.DARK)
                     R.id.radioThemeLight -> SettingsActions.ChangeTheme(this, AppTheme.LIGHT)
+                    R.id.radioThemeOled -> SettingsActions.ChangeTheme(this, AppTheme.OLED)
                     else -> {
                         Log.v("Error", "Error changing theme")
                         SettingsActions.ChangeTheme(this, AppTheme.DARK)
@@ -121,6 +122,7 @@ class SettingsActivity : BaseDaggerMviActivity<SettingsActions, SettingsResult, 
             when (it) {
                 AppTheme.LIGHT -> themeRadioGroup.check(R.id.radioThemeLight)
                 AppTheme.DARK -> themeRadioGroup.check(R.id.radioThemeDark)
+                AppTheme.OLED -> themeRadioGroup.check(R.id.radioThemeOled)
             }
         }
 

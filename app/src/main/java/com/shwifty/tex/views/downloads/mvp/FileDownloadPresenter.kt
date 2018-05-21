@@ -54,7 +54,7 @@ class FileDownloadPresenter(val torrentRepository: ITorrentRepository,
             mvpView.showError(error)
         }
         when (action) {
-            FileDownloadAdapter.Companion.ClickTypes.DOWNLOAD -> actionManager.startDownload(context, torrentFile, onError)
+            FileDownloadAdapter.Companion.ClickTypes.DOWNLOAD -> actionManager.startDownload(context, torrentFile, false, onError)
             FileDownloadAdapter.Companion.ClickTypes.OPEN -> actionManager.openTorrentFile(context, torrentFile, onError)
             FileDownloadAdapter.Companion.ClickTypes.DELETE -> actionManager.openDeleteTorrentDialog(context, torrentFile)
             FileDownloadAdapter.Companion.ClickTypes.CHROMECAST -> actionManager.startChromecast(context, torrentFile, onError)

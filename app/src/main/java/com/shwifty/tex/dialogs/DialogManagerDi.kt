@@ -1,6 +1,7 @@
 package com.shwifty.tex.dialogs
 
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.shwifty.tex.actions.IActionManager
 import dagger.Module
 import dagger.Provides
 

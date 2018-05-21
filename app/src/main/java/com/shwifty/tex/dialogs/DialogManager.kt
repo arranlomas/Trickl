@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import com.afollestad.materialdialogs.MaterialDialog
-import com.schiwfty.torrentwrapper.dagger.network.TorrentRepositoryComponent
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
@@ -28,6 +27,9 @@ class DialogManager(private val torrentRepository: ITorrentRepository) : IDialog
                 .positiveText(R.string.dialog_positive_no_wifi)
                 .onPositive({ _, _ ->
                     torrentRepository.startFileDownloading(torrentFile, context, false)
+//                    actionManager.startDownload(context, torrentFile, true, {
+//                        Log.v("Error", it)
+//                    })
                 })
                 .negativeText(R.string.dialog_negative_no_wifi)
                 .show()

@@ -147,6 +147,7 @@
     <string name="settings_description_wifi_only">Only allow downloading and streaming while on wifi</string>
     <string name="settings_theme_1">Material Dark</string>
     <string name="settings_theme_2">Material Light</string>
+    <string name="settings_theme_3">Dark Oled</string>
     <string name="settings_restart_required">Application restart required\n(this will stop all downloads and streams)</string>
     <string name="settings_restart">Restart</string>
 

@@ -15,7 +15,11 @@ import com.shwifty.tex.utils.getConnectivityStatus
  * Created by arran on 4/03/2018.
  */
 class ActionManager(val torrentRepository: ITorrentRepository, val dialogManager: IDialogManager, val castHandler: ICastHandler) : IActionManager {
-    override fun startDownload(context: Context, torrentFile: TorrentFile, onError: (String) -> Unit) {
+    override fun startDownload(context: Context, torrentFile: TorrentFile, forceDownloadEvenWithoutWifi: Boolean, onError: (String) -> Unit) {
+        if (forceDownloadEvenWithoutWifi){
+            torrentRepository.startFileDownloading(torrentFile, context, false)
+            return
+        }
         when (context.getConnectivityStatus()) {
             CONNECTIVITY_STATUS.WIFI -> {
                 torrentRepository.startFileDownloading(torrentFile, context, true)

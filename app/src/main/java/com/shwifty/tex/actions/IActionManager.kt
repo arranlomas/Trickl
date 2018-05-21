@@ -7,7 +7,7 @@ import com.schiwfty.torrentwrapper.models.TorrentFile
  * Created by arran on 4/03/2018.
  */
 interface IActionManager {
-    fun startDownload(context: Context, torrentFile: TorrentFile, onError: (String) -> Unit)
+    fun startDownload(context: Context, torrentFile: TorrentFile, forceDownloadEvenWithoutWifi: Boolean, onError: (String) -> Unit)
 
     fun startChromecast(context: Context, torrentFile: TorrentFile, onError: (String) -> Unit)
 
