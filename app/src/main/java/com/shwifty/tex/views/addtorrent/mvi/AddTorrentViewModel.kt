@@ -4,12 +4,16 @@ import android.util.Log
 import com.arranlomas.kontent.commons.functions.KontentActionProcessor
 import com.arranlomas.kontent.commons.functions.KontentMasterProcessor
 import com.arranlomas.kontent.commons.functions.KontentReducer
+import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.schiwfty.torrentwrapper.utils.ParseTorrentResult
+import com.schiwfty.torrentwrapper.utils.getAsTorrentObject
 import com.shwifty.tex.utils.logTorrentParseError
+import com.shwifty.tex.utils.torrentAlreadyExists
 import com.shwifty.tex.views.base.mvi.BaseMviViewModel
 import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
+import java.io.File
 import javax.inject.Inject
 
 /**
@@ -36,27 +40,12 @@ private fun observables(shared: Observable<AddTorrentActions>, torrentRepository
 fun loadTorrent(torrentRepository: ITorrentRepository) =
         KontentActionProcessor<AddTorrentActions.Load, AddTorrentResult, Pair<Boolean, TorrentInfo>>(
                 action = { action ->
-                    val alreadyExistedObs = torrentRepository.getAllTorrentsFromStorage()
-                            .map { results ->
-                                var alreadyExists = false
-                                results.forEach { result ->
-                                    result.unwrapIfSuccess {
-                                        if (it.info_hash == action.torrentHash) alreadyExists = true
-                                    } ?: result.logTorrentParseError()
-                                }
-                                alreadyExists
+                    isAlreadyDownloadObs(torrentRepository, action.torrentHash, action.torrentFilePath)
+                            .flatMap { alreadyDownloaded ->
+                                getTorrentInfoObs(torrentRepository, action.torrentHash, action.trackers
+                                        ?: emptyList(), action.torrentFilePath, alreadyDownloaded)
+                                        .map { it.unwrapIfSuccess { alreadyDownloaded to it } }
                             }
-
-                    val trackerList = action.trackers ?: emptyList()
-                    val downloadInfoObs = torrentRepository.downloadTorrentInfo(action.torrentHash, trackers = trackerList)
-                            .map {
-                                it.unwrapIfSuccess { it }
-                                        ?: throw IllegalStateException("Torrent not found")
-                            }
-
-                    Observable.zip(alreadyExistedObs, downloadInfoObs, BiFunction { alreadyExisted, torrentInfo ->
-                        alreadyExisted to torrentInfo
-                    })
                 },
                 success = {
                     val (alreadyAdded, torrentInfo) = it
@@ -67,6 +56,52 @@ fun loadTorrent(torrentRepository: ITorrentRepository) =
                 },
                 loading = AddTorrentResult.LoadInFlight()
         )
+
+private fun isAlreadyDownloadObs(
+        torrentRepository: ITorrentRepository,
+        torrentHash: String?,
+        torrentFilePath: String?
+): Observable<Boolean> = when {
+    torrentHash != null -> torrentRepository.torrentAlreadyExists(torrentHash)
+    torrentFilePath != null -> {
+        val originalFile = File(torrentFilePath)
+        originalFile.getAsTorrentObject()
+                .flatMap {
+                    it.unwrapIfSuccess {
+                        torrentRepository.torrentAlreadyExists(it.info_hash)
+                    }
+                }
+
+    }
+    else -> Observable.just(false)
+}
+
+private fun getTorrentInfoObs(
+        torrentRepository: ITorrentRepository,
+        torrentHash: String?,
+        trackers: List<String>,
+        torrentFilePath: String?,
+        alreadyExisted: Boolean
+): Observable<ParseTorrentResult> = when {
+    torrentHash != null -> torrentRepository.downloadTorrentInfo(torrentHash, trackers = trackers)
+    torrentFilePath != null -> {
+        val originalFile = File(torrentFilePath)
+        originalFile.getAsTorrentObject()
+                .map { result ->
+                    result.unwrapIfSuccess {
+                        val correctName = "${it.info_hash}.torrent"
+                        val hasCorrectName = originalFile.name == correctName
+                        if (alreadyExisted && !hasCorrectName) {
+                            originalFile.renameTo(File(originalFile.parent, correctName))
+                        } else if (!alreadyExisted) {
+                            originalFile.copyTo(File(Confluence.torrentInfoStorage.absolutePath, correctName))
+                        }
+                        result
+                    } ?: throw IllegalArgumentException("Could not parse torrent info")
+                }
+    }
+    else -> Observable.just(null)
+}
 
 fun removeTorrent(torrentRepository: ITorrentRepository) =
         KontentActionProcessor<AddTorrentActions.RemoveTorrent, AddTorrentResult, Boolean>(

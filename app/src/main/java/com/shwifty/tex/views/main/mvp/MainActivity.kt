@@ -8,6 +8,7 @@ import android.support.design.widget.CoordinatorLayout
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Space
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.cast.framework.CastButtonFactory
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
@@ -77,6 +78,8 @@ class MainActivity : BaseDaggerActivity(), MainContract.View {
 
         if (intent.hasExtra(SplashActivity.TAG_MAGNET_FROM_INTENT)) {
             navigation.goTo(NavigationKey.AddTorrent(this, magnet = intent.getStringExtra(SplashActivity.TAG_MAGNET_FROM_INTENT)))
+        } else if (intent.hasExtra(SplashActivity.TAG_TORRENT_FILE_FROM_INTENT)){
+            navigation.goTo(NavigationKey.AddTorrent(this, torrentFilePath = intent.getStringExtra(SplashActivity.TAG_TORRENT_FILE_FROM_INTENT)))
         }
     }
 

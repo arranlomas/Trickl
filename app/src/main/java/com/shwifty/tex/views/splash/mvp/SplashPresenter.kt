@@ -1,10 +1,14 @@
 package com.shwifty.tex.views.splash.mvp
 
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.R
+import com.shwifty.tex.utils.getRealFilePath
 import com.shwifty.tex.views.base.mvp.BasePresenter
 
 /**
@@ -13,11 +17,18 @@ import com.shwifty.tex.views.base.mvp.BasePresenter
 class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Presenter {
 
     override var magnet: String? = null
+    override var torrentFile: String? = null
 
-    override fun handleIntent(intent: Intent) {
-        val magnetCandidate = intent.dataString ?: return
-        if (magnetCandidate.startsWith("magnet")) {
-            magnet = magnetCandidate
+    override fun handleIntent(intent: Intent, contentResolver: ContentResolver) {
+        val dataString = intent.dataString ?: return
+        if (dataString.startsWith("magnet")) {
+            magnet = dataString
+        } else if (dataString.startsWith("content://")) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Uri.parse(dataString).getRealFilePath(contentResolver)?.let {
+                    torrentFile = it
+                }
+            }
         }
     }
 

@@ -3,10 +3,14 @@ package com.shwifty.tex.utils
 import android.animation.Animator
 import android.animation.ValueAnimator
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
 import android.support.v7.widget.SearchView
 import android.text.Editable
@@ -197,6 +201,13 @@ fun Activity.getMagnetFromIntent(): String? {
     } else null
 }
 
+fun Activity.getTorrentFilePathFromIntent(): String? {
+    val arguments = intent.extras
+    return if (arguments != null && arguments.containsKey(ARG_TORRENT_FILE_PATH)) {
+        arguments.getString(ARG_TORRENT_FILE_PATH)
+    } else null
+}
+
 fun Fragment.getTorrentNameFromMagnet(): String? = getMagnetFromIntent()?.findNameFromMagnet()
 
 fun Fragment.getTrackersFromMagnet(): List<String>? = getMagnetFromIntent()?.findTrackersFromMagnet()
@@ -206,3 +217,10 @@ fun Fragment.getHashFromIntent(): String? = arguments?.getString(ARG_TORRENT_HAS
 
 fun Fragment.getMagnetFromIntent(): String? = arguments?.getString(ARG_TORRENT_MAGNET)
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun Uri.getRealFilePath(contentResolver: ContentResolver): String? =
+        contentResolver.query(this, null, null, null).use { cursor ->
+            val columnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            cursor.getString(columnIndex)
+        }

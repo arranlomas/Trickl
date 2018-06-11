@@ -16,7 +16,8 @@ class SplashActivity : BaseActivity(), SplashContract.View {
     lateinit var rxPermissions: RxPermissions
 
     companion object {
-        val TAG_MAGNET_FROM_INTENT = "arg_magnet_from_intent"
+        const val TAG_MAGNET_FROM_INTENT = "arg_magnet_from_intent"
+        const val TAG_TORRENT_FILE_FROM_INTENT = "arg_torrent_file_from_intent"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +25,7 @@ class SplashActivity : BaseActivity(), SplashContract.View {
         setContentView(R.layout.activity_splash)
         rxPermissions = RxPermissions(this)
         presenter.attachView(this)
-        presenter.handleIntent(intent)
+        presenter.handleIntent(intent, contentResolver)
     }
 
     override fun onDestroy() {
@@ -51,6 +52,7 @@ class SplashActivity : BaseActivity(), SplashContract.View {
         finish()
         intent = Intent(this, MainActivity::class.java)
         if (presenter.magnet != null) intent.putExtra(TAG_MAGNET_FROM_INTENT, presenter.magnet)
+        if (presenter.torrentFile != null) intent.putExtra(TAG_TORRENT_FILE_FROM_INTENT, presenter.torrentFile)
         startActivity(intent)
     }
 
