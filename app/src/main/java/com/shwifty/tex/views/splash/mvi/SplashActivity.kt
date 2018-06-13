@@ -4,6 +4,8 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.shwifty.tex.R
 import com.shwifty.tex.views.base.mvi.BaseDaggerMviActivity
 import com.shwifty.tex.views.main.mvp.MainActivity
@@ -21,7 +23,8 @@ class SplashActivity : BaseDaggerMviActivity<SplashActions, SplashResult, Splash
 
     lateinit var rxPermissions: RxPermissions
 
-    private val requestPermissionSubjects = PublishSubject.create<SplashActions.StartConfluence>()
+    private val requestPermissionSubject = PublishSubject.create<SplashActions.RequestPermissions>()
+    private val startConfluenceSubject = PublishSubject.create<SplashActions.StartConfluence>()
 
     companion object {
         const val TAG_MAGNET_FROM_INTENT = "arg_magnet_from_intent"
@@ -32,7 +35,7 @@ class SplashActivity : BaseDaggerMviActivity<SplashActions, SplashResult, Splash
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         rxPermissions = RxPermissions(this)
-        viewModel =  ViewModelProviders.of(this, viewModelFactory).get(SplashViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SplashViewModel::class.java)
 
         super.setup(viewModel, { error ->
             Toasty.error(this, error.localizedMessage).show()
@@ -44,14 +47,15 @@ class SplashActivity : BaseDaggerMviActivity<SplashActions, SplashResult, Splash
 
     private fun observables() = listOf(
             handleIntentAction(),
-            requestPermissionSubjects
+            requestPermissionSubject,
+            startConfluenceSubject
     )
 
     private fun handleIntentAction(): Observable<SplashActions> = Observable.just(SplashActions.HandleIntent(intent, contentResolver))
 
     override fun onStart() {
         super.onStart()
-        requestPermissionSubjects.onNext(SplashActions.StartConfluence(rxPermissions))
+        requestPermissionSubject.onNext(SplashActions.RequestPermissions(rxPermissions))
     }
 
     private fun progressToMain() {
@@ -64,5 +68,12 @@ class SplashActivity : BaseDaggerMviActivity<SplashActions, SplashResult, Splash
 
 
     override fun render(state: SplashViewState) {
+        if (state.permissionGranted == true && state.waitingForConfluenceToStart == null) {
+            startConfluenceSubject.onNext(SplashActions.StartConfluence(this))
+        }
+
+        if (state.confluenceStarted == true && state.waitingForConfluenceToStart == false) {
+            progressToMain()
+        }
     }
 }

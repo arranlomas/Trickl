@@ -1,12 +1,16 @@
 package com.shwifty.tex.views.splash.mvi
 
 import android.Manifest
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import com.arranlomas.kontent.commons.functions.KontentActionProcessor
 import com.arranlomas.kontent.commons.functions.KontentMasterProcessor
 import com.arranlomas.kontent.commons.functions.KontentReducer
+import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
+import com.shwifty.tex.R
 import com.shwifty.tex.utils.getRealFilePath
 import com.shwifty.tex.views.base.mvi.BaseMviViewModel
 import io.reactivex.Observable
@@ -27,11 +31,12 @@ fun torrentInfoActionProcessor(torrentRepository: ITorrentRepository) = KontentM
 private fun observables(shared: Observable<SplashActions>, torrentRepository: ITorrentRepository): List<Observable<SplashResult>> {
     return listOf<Observable<SplashResult>>(
             shared.ofType(SplashActions.HandleIntent::class.java).compose(handleIntent()),
-            shared.ofType(SplashActions.StartConfluence::class.java).compose(requestPermission())
+            shared.ofType(SplashActions.RequestPermissions::class.java).compose(requestPermission()),
+            shared.ofType(SplashActions.StartConfluence::class.java).compose(startConfluence(torrentRepository))
     )
 }
 
-fun handleIntent() =
+private fun handleIntent() =
         KontentActionProcessor<SplashActions.HandleIntent, SplashResult, Pair<String?, String?>>(
                 action = { action ->
                     var magnet: String? = null
@@ -58,8 +63,8 @@ fun handleIntent() =
                 loading = SplashResult.HandleIntentInFlight()
         )
 
-fun requestPermission() =
-        KontentActionProcessor<SplashActions.StartConfluence, SplashResult, Boolean>(
+private fun requestPermission() =
+        KontentActionProcessor<SplashActions.RequestPermissions, SplashResult, Boolean>(
                 action = {
                     it.rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 },
@@ -73,7 +78,33 @@ fun requestPermission() =
 
         )
 
-val splashReducer = KontentReducer { result: SplashResult, previousState: SplashViewState ->
+private fun startConfluence(torrentRepository: ITorrentRepository) =
+        KontentActionProcessor<SplashActions.StartConfluence, SplashResult, Boolean>(
+                action = { action ->
+                    val notificationIntent = Intent(action.activity, SplashActivity::class.java)
+                    val seed = false
+                    val stopActionInNotification = true
+                    val notificationChannelId = "trickl_daemon_notif"
+                    val notificationChannelName = "Trick Client Daemon"
+                    Confluence.start(action.activity, R.drawable.trickl_notification, notificationChannelId, notificationChannelName, seed, stopActionInNotification, notificationIntent, {
+                        Log.v("Arran", "Storage permissions is required to start the client")
+                    })
+                    torrentRepository.isConnected()
+                            .filter { !it }
+                            .retry()
+                },
+                success = {
+                    SplashResult.ConfluenceIsConnected(it)
+                },
+                error = {
+                    SplashResult.StartConfluenceError(it)
+                },
+                loading = SplashResult.ConfluenceConnectionInFlight()
+
+        )
+
+
+private val splashReducer = KontentReducer { result: SplashResult, previousState: SplashViewState ->
     when (result) {
         is SplashResult.HandleIntentSuccess -> previousState.copy(isLoading = false, error = null, magnet = result.magnet, torrentFile = result.torrentFile)
         is SplashResult.HandleIntentError -> previousState.copy(isLoading = false, error = result.error.localizedMessage, magnet = null, torrentFile = null)
@@ -81,5 +112,8 @@ val splashReducer = KontentReducer { result: SplashResult, previousState: Splash
         is SplashResult.StoragePermissionRequestResult -> previousState.copy(permissionGranted = result.granted)
         is SplashResult.StoragePermissionError -> previousState.copy(permissionGranted = false, error = result.error.localizedMessage)
         is SplashResult.StoragePermissionRequestInFlight -> previousState.copy(permissionRequested = true)
+        is SplashResult.ConfluenceIsConnected -> previousState.copy(confluenceStarted = true, isLoading = false, waitingForConfluenceToStart = false)
+        is SplashResult.StartConfluenceError -> previousState.copy(error = result.error.localizedMessage, isLoading = false, waitingForConfluenceToStart = false)
+        is SplashResult.ConfluenceConnectionInFlight -> previousState.copy(isLoading = true, waitingForConfluenceToStart = true)
     }
 }

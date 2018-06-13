@@ -17,4 +17,8 @@ sealed class SplashResult : KontentResult() {
     data class StoragePermissionRequestResult(val granted: Boolean): SplashResult()
     data class StoragePermissionError(val error: Throwable) : SplashResult()
     class StoragePermissionRequestInFlight : SplashResult()
+    data class ConfluenceIsConnected(val connected: Boolean): SplashResult()
+    data class StartConfluenceError(val error: Throwable) : SplashResult()
+    class ConfluenceConnectionInFlight : SplashResult()
+
 }

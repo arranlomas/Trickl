@@ -13,7 +13,9 @@ data class SplashViewState(
         val torrentFile: String? = null,
         val magnet: String? = null,
         val permissionRequested: Boolean? = null,
-        val permissionGranted: Boolean? = null
+        val permissionGranted: Boolean? = null,
+        val confluenceStarted: Boolean? = null,
+        val waitingForConfluenceToStart: Boolean? = null
 ) : KontentViewState() {
     companion object Factory {
         fun default(): SplashViewState {
