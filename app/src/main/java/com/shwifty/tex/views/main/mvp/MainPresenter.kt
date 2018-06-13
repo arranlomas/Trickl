@@ -1,20 +1,12 @@
 package com.shwifty.tex.views.main.mvp
 
 import android.content.Context
-import android.content.Intent
-import com.schiwfty.torrentwrapper.models.TorrentFile
-import com.schiwfty.torrentwrapper.models.TorrentInfo
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
-import com.schiwfty.torrentwrapper.utils.canCast
 import com.shwifty.tex.R
 import com.shwifty.tex.chromecast.ICastHandler
 import com.shwifty.tex.navigation.INavigation
-import com.shwifty.tex.utils.CONNECTIVITY_STATUS
 import com.shwifty.tex.utils.isChromecastAvailable
 import com.shwifty.tex.views.base.mvp.BasePresenter
-import com.shwifty.tex.navigation.Navigation
-import com.shwifty.tex.navigation.NavigationKey
-import com.shwifty.tex.views.splash.mvp.SplashActivity
 
 /**
  * Created by arran on 16/04/2017.

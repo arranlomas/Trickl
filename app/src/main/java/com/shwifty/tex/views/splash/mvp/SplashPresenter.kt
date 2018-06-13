@@ -10,6 +10,7 @@ import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.R
 import com.shwifty.tex.utils.getRealFilePath
 import com.shwifty.tex.views.base.mvp.BasePresenter
+import com.shwifty.tex.views.splash.mvi.SplashActivity
 
 /**
  * Created by arran on 16/04/2017.
@@ -20,16 +21,7 @@ class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Pre
     override var torrentFile: String? = null
 
     override fun handleIntent(intent: Intent, contentResolver: ContentResolver) {
-        val dataString = intent.dataString ?: return
-        if (dataString.startsWith("magnet")) {
-            magnet = dataString
-        } else if (dataString.startsWith("content://")) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Uri.parse(dataString).getRealFilePath(contentResolver)?.let {
-                    torrentFile = it
-                }
-            }
-        }
+
     }
 
     lateinit var torrentRepository: ITorrentRepository

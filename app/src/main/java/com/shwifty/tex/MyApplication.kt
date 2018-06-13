@@ -13,7 +13,7 @@ import com.shwifty.tex.chromecast.CastHandler
 import com.shwifty.tex.di.DaggerAppComponent
 import com.shwifty.tex.repository.network.di.PersistenceModule
 import com.shwifty.tex.repository.preferences.PreferencesRepository
-import com.shwifty.tex.views.splash.mvp.SplashActivity
+import com.shwifty.tex.views.splash.mvi.SplashActivity
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import es.dmoral.toasty.Toasty

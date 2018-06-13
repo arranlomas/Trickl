@@ -16,6 +16,7 @@ import com.shwifty.tex.views.main.di.MainActivityBuilder
 import com.shwifty.tex.views.search.di.TorrentSearchFragmentBuilder
 import com.shwifty.tex.views.settings.di.SettingsActivityBuilder
 import com.shwifty.tex.views.showtorrent.di.TorrentInfoActivityBuilder
+import com.shwifty.tex.views.splash.di.SplashActivityBuilder
 import com.shwifty.tex.views.torrentdetails.TorrentDetailsFragmentBuilder
 import com.shwifty.tex.views.torrentfiles.TorrentFileFragmentBuilder
 import dagger.Component
@@ -45,6 +46,7 @@ import javax.inject.Singleton
             FileFownloadFragmentBuilder::class,
             AllTorrentsFragmentBuilder::class,
             TorrentInfoActivityBuilder::class,
+            SplashActivityBuilder::class,
             TorrentFileFragmentBuilder::class,
             TorrentDetailsFragmentBuilder::class,
             SettingsActivityBuilder::class,

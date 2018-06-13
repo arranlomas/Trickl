@@ -8,7 +8,6 @@ import android.support.design.widget.CoordinatorLayout
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Space
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.cast.framework.CastButtonFactory
 import com.schiwfty.kotlinfilebrowser.FileBrowserActivity
@@ -22,7 +21,7 @@ import com.shwifty.tex.views.base.mvp.BaseDaggerActivity
 import com.shwifty.tex.views.chromecast.mvp.ChromecastControllerContract
 import com.shwifty.tex.views.main.MainPagerAdapter
 import com.shwifty.tex.views.settings.mvi.SettingsActivity
-import com.shwifty.tex.views.splash.mvp.SplashActivity
+import com.shwifty.tex.views.splash.mvi.SplashActivity
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet_main_activity.*
