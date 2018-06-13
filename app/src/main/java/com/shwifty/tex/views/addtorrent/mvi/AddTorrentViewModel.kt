@@ -93,7 +93,7 @@ private fun getTorrentInfoObs(
                         val hasCorrectName = originalFile.name == correctName
                         if (alreadyExisted && !hasCorrectName) {
                             originalFile.renameTo(File(originalFile.parent, correctName))
-                        } else if (!alreadyExisted) {
+                        } else if (!alreadyExisted && !File(Confluence.torrentInfoStorage.absolutePath, correctName).exists()) {
                             originalFile.copyTo(File(Confluence.torrentInfoStorage.absolutePath, correctName))
                         }
                         result
