@@ -90,7 +90,6 @@ private fun startConfluence(torrentRepository: ITorrentRepository) =
                         Log.v("Arran", "Storage permissions is required to start the client")
                     })
                     torrentRepository.isConnected()
-                            .filter { !it }
                             .retry()
                 },
                 success = {
