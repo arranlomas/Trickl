@@ -50,6 +50,8 @@ dependencies {
     })
     androidTestImplementation dependencies.testRunner
     testCompile dependencies.jUnit
+    testImplementation dependencies.rxAndroid
+    testImplementation dependencies.rxAndroid2
 
     implementation dependencies.kotlinStdLib
 

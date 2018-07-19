@@ -36,7 +36,7 @@ ext {
 
             rxKotlin         : 'io.reactivex:rxkotlin:1.0.0',
             rxAndroid           : 'io.reactivex:rxandroid:1.2.1',
-            rxAndroid2         : 'io.reactivex.rxjava2:rxandroid:2.0.1',
+            rxAndroid2         : 'io.reactivex.rxjava2:rxandroid:2.0.2',
             rxJava2           : 'io.reactivex.rxjava2:rxjava:2.1.6',
 
             rxPermissions2       : 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar',
