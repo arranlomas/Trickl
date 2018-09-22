@@ -6,17 +6,18 @@ import com.google.android.gms.cast.MediaMetadata
 import com.schiwfty.torrentwrapper.models.TorrentFile
 import com.schiwfty.torrentwrapper.utils.ParseTorrentResult
 import com.schiwfty.torrentwrapper.utils.getFullPath
+import com.schiwfty.torrentwrapper.utils.getMimeType
 import com.schiwfty.torrentwrapper.utils.getShareableDataUrl
 
 /**
  * Created by arran on 30/04/2017.
  */
-fun TorrentFile.buildMediaInfo(mime: String): MediaInfo {
+fun TorrentFile.buildMediaInfo(): MediaInfo {
     val movieMetadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE)
     movieMetadata.putString(MediaMetadata.KEY_TITLE, getFullPath())
     return MediaInfo.Builder(getShareableDataUrl())
             .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
-            .setContentType(mime)
+            .setContentType(getMimeType())
             .setMetadata(movieMetadata)
             .build()
 }

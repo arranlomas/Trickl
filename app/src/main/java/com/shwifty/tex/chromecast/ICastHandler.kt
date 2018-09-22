@@ -29,7 +29,7 @@ interface ICastHandler {
 
     fun initializeCastContext(context: Context)
 
-    fun loadRemoteMedia(torrentFile: TorrentFile): Boolean
+    fun loadRemoteMedia(torrentFile: TorrentFile, result: (Int) -> Unit)
 
     fun addSessionListener()
 

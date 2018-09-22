@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.SeekBar
 import com.shwifty.tex.R
 import com.shwifty.tex.chromecast.ICastHandler
+import com.shwifty.tex.utils.convertToHumanTime
 import com.shwifty.tex.views.base.mvp.BaseNestedScrollView
 import kotlinx.android.synthetic.main.bottom_sheet_chromecast_full.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_chromecast_peek.view.*
@@ -95,6 +96,8 @@ class ChromecastBottomSheet : BaseNestedScrollView, ChromecastControllerContract
         chromecastSeekbarFull.max = duration.toInt()
         chromecastSeekbarFull.progress = position.toInt()
         chromecastSeekbarFull.setOnSeekBarChangeListener(seeckBarChangedListener)
+        currentTimeText.text = position.convertToHumanTime()
+        totalTimeText.text = duration.convertToHumanTime()
     }
 
     fun onDestroy() {

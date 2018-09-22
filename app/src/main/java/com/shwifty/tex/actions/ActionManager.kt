@@ -16,7 +16,7 @@ import com.shwifty.tex.utils.getConnectivityStatus
  */
 class ActionManager(val torrentRepository: ITorrentRepository, val dialogManager: IDialogManager, val castHandler: ICastHandler) : IActionManager {
     override fun startDownload(context: Context, torrentFile: TorrentFile, forceDownloadEvenWithoutWifi: Boolean, onError: (String) -> Unit) {
-        if (forceDownloadEvenWithoutWifi){
+        if (forceDownloadEvenWithoutWifi) {
             torrentRepository.startFileDownloading(torrentFile, context, false)
             return
         }
@@ -35,8 +35,9 @@ class ActionManager(val torrentRepository: ITorrentRepository, val dialogManager
 
     override fun startChromecast(context: Context, torrentFile: TorrentFile, onError: (String) -> Unit) {
         if (torrentFile.canCast()) {
-            val casted = castHandler.loadRemoteMedia(torrentFile)
-            if (!casted) onError.invoke(context.getString(R.string.chromecast_not_connect))
+            castHandler.loadRemoteMedia(torrentFile, {
+               onError(context.getString(it))
+            })
         } else {
             onError.invoke(context.getString(R.string.error_file_not_supported_by_chromecast))
         }

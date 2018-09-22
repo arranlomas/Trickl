@@ -51,7 +51,7 @@ class SplashActivity : BaseDaggerMviActivity<SplashActions, SplashResult, Splash
             startConfluenceSubject
     )
 
-    private fun handleIntentAction(): Observable<SplashActions> = Observable.just(SplashActions.HandleIntent(intent, contentResolver))
+    private fun handleIntentAction(): Observable<SplashActions> = Observable.just(SplashActions.HandleIntent(intent, this))
 
     override fun onStart() {
         super.onStart()

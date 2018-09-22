@@ -74,6 +74,8 @@
     <string name="chromecast">Chromecast</string>
     <string name="error_not_connected_to_wifi">Error: Not connected to wifi</string>
     <string name="chromecast_not_connect">Chromecast not connected</string>
+    <string name="chromecast_not_on_local_network">Chromecast must be on the same network as your device</string>
+    <string name="chromecast_generic_error">Something went wrong while casting</string>
     <string name="error_file_not_supported_by_chromecast">Error: file format not supported by chromecast</string>
 
     <!--startActivity file-->

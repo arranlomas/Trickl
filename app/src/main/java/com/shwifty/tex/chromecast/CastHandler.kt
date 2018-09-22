@@ -17,6 +17,7 @@ import rx.Observable
 import rx.subjects.BehaviorSubject
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.common.ConnectionResult
+import com.shwifty.tex.R
 import com.shwifty.tex.utils.isChromecastAvailable
 
 
@@ -125,13 +126,22 @@ class CastHandler : ICastHandler {
         }
     }
 
-    override fun loadRemoteMedia(torrentFile: TorrentFile): Boolean {
+    override fun loadRemoteMedia(torrentFile: TorrentFile, result: (Int) -> Unit) {
         if (mCastSession == null) {
-            return false
+            result(R.string.chromecast_not_connect)
         }
-        val remoteMediaClient = mCastSession?.remoteMediaClient ?: return false
-        remoteMediaClient.load(torrentFile.buildMediaInfo(torrentFile.getMimeType()), MediaLoadOptions.Builder().build())
-        return true
+        if(mCastSession?.castDevice?.isOnLocalNetwork == false){
+            result(R.string.chromecast_not_on_local_network)
+        }
+        val remoteMediaClient = mCastSession?.remoteMediaClient
+        if (remoteMediaClient == null){
+            result(R.string.chromecast_not_connect)
+            return
+        }
+        val pendingResult = remoteMediaClient.load(torrentFile.buildMediaInfo(), MediaLoadOptions.Builder().build())
+        pendingResult.setResultCallback {
+            result(R.string.chromecast_generic_error)
+        }
     }
 
     override fun addSessionListener() {

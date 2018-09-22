@@ -3,7 +3,6 @@ package com.shwifty.tex.views.splash.mvi
 import android.Manifest
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.util.Log
 import com.arranlomas.kontent.commons.functions.KontentActionProcessor
 import com.arranlomas.kontent.commons.functions.KontentMasterProcessor
@@ -11,7 +10,7 @@ import com.arranlomas.kontent.commons.functions.KontentReducer
 import com.schiwfty.torrentwrapper.confluence.Confluence
 import com.schiwfty.torrentwrapper.repositories.ITorrentRepository
 import com.shwifty.tex.R
-import com.shwifty.tex.utils.getRealFilePath
+import com.shwifty.tex.utils.getRealPathFromUri
 import com.shwifty.tex.views.base.mvi.BaseMviViewModel
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -44,11 +43,9 @@ private fun handleIntent() =
                     action.intent.dataString?.let { dataString ->
                         if (dataString.startsWith("magnet")) {
                             magnet = dataString
-                        } else if (dataString.startsWith("content://")) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                Uri.parse(dataString).getRealFilePath(action.contentResolver)?.let {
-                                    torrentFile = it
-                                }
+                        } else {
+                            action.intent.data.getRealPathFromUri(action.context)?.let {
+                                torrentFile = it
                             }
                         }
                     }
