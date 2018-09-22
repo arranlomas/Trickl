@@ -75,5 +75,8 @@ class SplashActivity : BaseDaggerMviActivity<SplashActions, SplashResult, Splash
         if (state.confluenceStarted == true && state.waitingForConfluenceToStart == false) {
             progressToMain()
         }
+        state.error?.let {
+            Toasty.error(this, it).show()
+        }
     }
 }

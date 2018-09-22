@@ -2,7 +2,6 @@ package com.shwifty.tex.views.splash.mvi
 
 import android.Manifest
 import android.content.Intent
-import android.net.Uri
 import android.util.Log
 import com.arranlomas.kontent.commons.functions.KontentActionProcessor
 import com.arranlomas.kontent.commons.functions.KontentMasterProcessor
@@ -36,11 +35,13 @@ private fun observables(shared: Observable<SplashActions>, torrentRepository: IT
 }
 
 private fun handleIntent() =
-        KontentActionProcessor<SplashActions.HandleIntent, SplashResult, Pair<String?, String?>>(
+        KontentActionProcessor<SplashActions.HandleIntent, SplashResult, Triple<Boolean, String?, String?>>(
                 action = { action ->
+                    var didHaveData = false
                     var magnet: String? = null
                     var torrentFile: String? = null
                     action.intent.dataString?.let { dataString ->
+                        didHaveData = true
                         if (dataString.startsWith("magnet")) {
                             magnet = dataString
                         } else {
@@ -49,10 +50,15 @@ private fun handleIntent() =
                             }
                         }
                     }
-                    Observable.just(magnet to torrentFile)
+                    Observable.just(Triple(didHaveData, magnet, torrentFile))
                 },
                 success = {
-                    SplashResult.HandleIntentSuccess(it.first, it.second)
+                    val (didHaveData, magnet, torrentFile) = it
+                    if (didHaveData && (magnet == null && torrentFile == null)) {
+                        SplashResult.HandleIntentError(CouldNotLoadTorrentError())
+                    } else {
+                        SplashResult.HandleIntentSuccess(magnet, torrentFile)
+                    }
                 },
                 error = {
                     SplashResult.HandleIntentError(it)
@@ -103,7 +109,7 @@ private fun startConfluence(torrentRepository: ITorrentRepository) =
 private val splashReducer = KontentReducer { result: SplashResult, previousState: SplashViewState ->
     when (result) {
         is SplashResult.HandleIntentSuccess -> previousState.copy(isLoading = false, error = null, magnet = result.magnet, torrentFile = result.torrentFile)
-        is SplashResult.HandleIntentError -> previousState.copy(isLoading = false, error = result.error.localizedMessage, magnet = null, torrentFile = null)
+        is SplashResult.HandleIntentError -> previousState.copy(isLoading = false, error = if (result.error is CouldNotLoadTorrentError) "Error loading torrent" else result.error.localizedMessage, magnet = null, torrentFile = null)
         is SplashResult.HandleIntentInFlight -> previousState.copy(isLoading = true)
         is SplashResult.StoragePermissionRequestResult -> previousState.copy(permissionGranted = result.granted)
         is SplashResult.StoragePermissionError -> previousState.copy(permissionGranted = false, error = result.error.localizedMessage)

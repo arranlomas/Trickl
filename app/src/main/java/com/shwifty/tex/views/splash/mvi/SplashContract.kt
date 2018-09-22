@@ -8,3 +8,6 @@ import com.arranlomas.kontent.commons.objects.KontentContract
 interface SplashContract {
     interface ViewModel : KontentContract.ViewModel<SplashActions, SplashResult, SplashViewState>
 }
+
+
+class CouldNotLoadTorrentError(): Throwable()
